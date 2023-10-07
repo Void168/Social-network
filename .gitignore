@@ -1,0 +1,4 @@
+env/
+sn_backend/*.pyc
+sn_backend/*/*.pyc
+sn_backend/*/*/*.pyc

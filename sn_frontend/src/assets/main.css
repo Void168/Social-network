@@ -1,3 +1,9 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+@layer components {
+    button {
+        @apply py-3 px-6 text-black bg-emerald-400 font-semibold  rounded-lg transition-colors hover:bg-emerald-600 hover:text-white
+    } 
+}

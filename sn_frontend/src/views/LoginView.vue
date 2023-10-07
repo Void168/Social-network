@@ -1,9 +1,8 @@
-
 <template>
   <div class="max-w-7xl mx-auto grid md:grid-cols-2 xs:grid-cols-1 gap-4">
     <div class="main-left md:block xs:hidden">
       <div class="p-12 bg-white border border-gray-200 rounded-lg">
-        <h1 class="mb-6 text-2xl">Đăng nhập</h1>
+        <h1 class="mb-6 text-2xl">Đăng ký</h1>
         <p class="mb-6 text-gray-500">
           Lorem ipsum dolor sit amet, consectetur adipisicing elit. Eaque
           delectus voluptatum sed ipsam, omnis voluptates et tempore temporibus
@@ -14,22 +13,15 @@
           suscipit, dolor veritatis perspiciatis soluta.
         </p>
         <p class="font-bold">
-          Đã có tài khoản? <RouterLink :to="{'name': 'login'}" class="underline">Bấm để đăng nhập</RouterLink>
+          Chưa có tài khoản?
+          <RouterLink :to="{'name': 'signup'}" class="underline">Bấm để tạo tài khoản</RouterLink>
         </p>
       </div>
     </div>
 
-    <div class="main-right flex justify-center">
+    <div class="main-right flex justify-center items-center">
       <div class="p-12 bg-white border boder-gray-200 rounded-lg">
         <form action="" class="space-y-6">
-          <div>
-            <label for="">Tên người dùng</label>
-            <input
-              type="text"
-              placeholder="Họ và tên"
-              class="w-full mt-2 py-2 px-6 border border-gray-200 rounded-lg"
-            />
-          </div>
           <div>
             <label for="">E-mail</label>
             <input
@@ -46,21 +38,14 @@
               class="w-full mt-2 py-2 px-6 border border-gray-200 rounded-lg"
             />
           </div>
-          <div>
-            <label for="">Nhập lại mật khẩu</label>
-            <input
-              type="password"
-              placeholder="Nhập lại mật khẩu"
-              class="w-full mt-2 py-2 px-6 border border-gray-200 rounded-lg"
-            />
-          </div>
-          <div class="flex  items-center justify-center">
-            <button class="w-full">Đăng ký</button>
+
+          <div class="flex items-center justify-center">
+            <button class="w-full">Đăng nhập</button>
           </div>
           <p class="font-bold md:hidden xs:block">
-              Đã có tài khoản?
-              <a href="#" class="underline">Bấm để đăng nhập</a>
-            </p>
+            Chưa có tài khoản?
+            <a href="#" class="underline">Bấm để tạo tài khoản</a>
+          </p>
         </form>
       </div>
     </div>
@@ -68,6 +53,5 @@
 </template>
 
 <script setup>
-import { RouterLink } from 'vue-router';
-
+import { RouterLink } from "vue-router";
 </script>

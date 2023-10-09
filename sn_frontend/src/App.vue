@@ -7,7 +7,10 @@
             <a href="#" class="text-xl">SN</a>
           </div>
 
-          <div class="menu-center flex space-x-12">
+          <div
+            class="menu-center flex space-x-12"
+            v-if="userStore.user.isAuthenticated"
+          >
             <a to="#" class="text-emerald-700">
               <svg
                 xmlns="http://www.w3.org/2000/svg"
@@ -78,13 +81,27 @@
           </div>
 
           <div class="menu-right">
-              <a to="#">
-                <img
-                  src="https://i.pinimg.com/736x/fa/81/55/fa81555d2190e9c91a7d584ce7174a5f.jpg"
-                  class="rounded-full w-12 h-12"
-                  alt="avatar"
-                />
-              </a>
+            <template v-if="userStore.user.isAuthenticated">
+              <div class="flex flex-row items-center gap-3">
+                <a to="#">
+                  <img
+                    src="https://i.pinimg.com/736x/fa/81/55/fa81555d2190e9c91a7d584ce7174a5f.jpg"
+                    class="rounded-full w-12 h-12"
+                    alt="avatar"
+                  />
+                </a>
+                <p class="font-semibold text-lg">{{ userStore.user.name }}</p>
+              </div>
+            </template>
+
+            <template v-else>
+              <div class="flex justify-between items-center gap-3">
+                <RouterLink to="/login"><button>Đăng nhập</button></RouterLink>
+                <RouterLink to="/signup"
+                  ><button class="bg-gray-300">Đăng ký</button></RouterLink
+                >
+              </div>
+            </template>
           </div>
         </div>
       </div>
@@ -94,18 +111,42 @@
       <RouterView />
     </main>
 
-    <toast></toast>
+    <toast />
   </div>
 </template>
 
 <script>
-import Toast from '@/components/Toast.vue'
+import Toast from "@/components/Toast.vue";
+import { useUserStore } from "./stores/user";
+import axios from "axios";
+import { RouterLink } from "vue-router";
 
 export default {
+  setup() {
+    const userStore = useUserStore();
+
+    return {
+      userStore,
+    };
+  },
+
   components: {
-    'toast': Toast
-  }
-}
+    toast: Toast,
+    RouterLink,
+  },
+
+  beforeCreate() {
+    this.userStore.initStore();
+
+    const token = this.userStore.user.access;
+
+    if (token) {
+      axios.defaults.headers.common["Authorization"] = "Bearer " + token;
+    } else {
+      axios.defaults.headers.common["Authorization"] = "";
+    }
+  },
+};
 </script>
 
 <style scoped></style>

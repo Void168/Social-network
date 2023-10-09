@@ -22,12 +22,14 @@
     </div>
 
     <div class="main-right flex justify-center">
-      <div class="p-12 bg-white border boder-gray-200 rounded-lg">
+      <div class="p-12 bg-white border boder-gray-200 rounded-lg w-full">
         <template v-if="errors.length > 0">
-            <div class="bg-rose-400 text-white text-center rounded-lg px-6 py-3 mb-4">
-              <p v-for="error in errors" v-bind:key="error">{{ error }}</p>
-            </div>
-          </template>
+          <div
+            class="bg-rose-400 text-white text-center rounded-lg px-6 py-3 mb-4"
+          >
+            <p v-for="error in errors" v-bind:key="error">{{ error }}</p>
+          </div>
+        </template>
         <form action="" class="space-y-6" v-on:submit.prevent="submitForm">
           <div>
             <label for="">Tên người dùng</label>
@@ -128,7 +130,6 @@ export default {
         axios
           .post("/api/signup/", this.form)
           .then((res) => {
-            console.log(res.data)
             if (res.data.status === "success") {
               this.toastStore.showToast(
                 5000,

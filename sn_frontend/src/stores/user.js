@@ -13,6 +13,7 @@ export const useUserStore = defineStore({
       email: null,
       access: null,
       refresh: null,
+      avatar: null
     },
   }),
 
@@ -24,6 +25,7 @@ export const useUserStore = defineStore({
         this.user.id = localStorage.getItem("user.id");
         this.user.name = localStorage.getItem("user.name");
         this.user.email = localStorage.getItem("user.email");
+        this.user.avatar = localStorage.getItem('user.avatar')
         this.user.isAuthenticated = true;
 
         this.refreshToken();
@@ -51,6 +53,7 @@ export const useUserStore = defineStore({
       this.user.id = false;
       this.user.name = false;
       this.user.email = false;
+      this.user.avatar = null
       this.user.isAuthenticated = false;
 
       localStorage.setItem("user.access", "");
@@ -58,6 +61,7 @@ export const useUserStore = defineStore({
       localStorage.setItem("user.id", "");
       localStorage.setItem("user.name", "");
       localStorage.setItem("user.email", "");
+      localStorage.setItem('user.avatar', '')
     },
 
     setUserInfo(user) {
@@ -66,26 +70,28 @@ export const useUserStore = defineStore({
       this.user.id = user.id;
       this.user.name = user.name;
       this.user.email = user.email;
+      this.user.avatar = user.avatar
 
       localStorage.setItem("user.id", this.user.id);
       localStorage.setItem("user.name", this.user.name);
       localStorage.setItem("user.email", this.user.email);
+      localStorage.setItem('user.avatar', this.user.avatar)
 
       console.log("User ", this.user);
     },
 
     refreshToken() {
       axios
-        .post("/api/v1/auth/refresh", {
+        .post("/api/account/refresh/", {
           refresh: this.user.refresh,
         })
-        .then((res) => {
-          this.user.access = res.data.access;
+        .then((response) => {
+          this.user.access = response.data.access;
 
-          localStorage.setItem("user.access", res.data.access);
+          localStorage.setItem("user.access", response.data.access);
 
           axios.defaults.headers.common["Authorization"] =
-            "Bearer " + res.data.access;
+            "Bearer " + response.data.access;
         })
         .catch((error) => {
           console.log(error);

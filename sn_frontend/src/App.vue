@@ -93,11 +93,19 @@
     <main class="px-8 py-6 bg-gray-100 min-h-screen">
       <RouterView />
     </main>
+
+    <toast></toast>
   </div>
 </template>
 
-<script setup>
-import { RouterLink, RouterView } from "vue-router";
+<script>
+import Toast from '@/components/Toast.vue'
+
+export default {
+  components: {
+    'toast': Toast
+  }
+}
 </script>
 
 <style scoped></style>

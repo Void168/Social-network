@@ -19,25 +19,26 @@
 
     <div class="main-center col-span-2 space-y-4">
       <div class="p-4 bg-white border border-gray-200 rounded-lg">
-        <div class="p-4">
-          <textarea
-            class="p-4 w-full bg-gray-100 rounded-lg"
-            cols="30"
-            rows="4"
-            placeholder="Bạn đang nghĩ gì?"
-          ></textarea>
-        </div>
+        <form v-on:submit.prevent="submitForm" method="post">
+          <div class="p-4">
+            <textarea
+              v-model="body"
+              class="p-4 w-full bg-gray-100 rounded-lg"
+              cols="30"
+              rows="4"
+              placeholder="Bạn đang nghĩ gì?"
+            ></textarea>
+          </div>
 
-        <div class="p-4 border-t border-gray-100 flex justify-between">
-          <a
-            href="#"
-            class="inline-block py-3 px-6 bg-gray-600 text-white rounded-lg"
-            >Đăng ảnh</a
-          >
-          <a href="#" class="inline-block text-white rounded-lg"
-            ><button>Đăng bài viết</button></a
-          >
-        </div>
+          <div class="p-4 border-t border-gray-100 flex justify-between">
+            <a
+              href="#"
+              class="inline-block py-3 px-6 bg-gray-600 text-white rounded-lg"
+              >Đăng ảnh</a
+            >
+            <button>Đăng bài viết</button>
+          </div>
+        </form>
 
         <div
           class="p-4 bg-white border border-gray-200 rounded-lg mt-4"
@@ -51,7 +52,9 @@
                 class="w-[40px] rounded-full"
               />
 
-              <p><strong>{{ post.created_by.name }}</strong></p>
+              <p>
+                <strong>{{ post.created_by.name }}</strong>
+              </p>
             </div>
 
             <p class="text-gray-600">{{ post.created_at_formatted }} trước</p>
@@ -61,10 +64,10 @@
             {{ post.body }}
           </p>
 
-          <img
+          <!-- <img
             src="https://th.bing.com/th/id/OIP.5SOFKPjL7kQyUxxyYEk26wHaE9?pid=ImgDet&rs=1"
             class="w-full rounded-lg mt-6"
-          />
+          /> -->
           <div class="my-6 flex justify-between">
             <div class="flex space-x-6">
               <div class="flex items-center space-x-2">
@@ -148,6 +151,7 @@ export default {
   data() {
     return {
       posts: [],
+      body: "",
     };
   },
 
@@ -160,12 +164,28 @@ export default {
       axios
         .get("/api/posts/")
         .then((res) => {
-          console.log("data", res.data);
-
           this.posts = res.data;
         })
         .catch((error) => {
           console.log(error);
+        });
+    },
+
+    submitForm() {
+      console.log("submitForm", this.body);
+
+      axios
+        .post("/api/posts/create/", {
+          body: this.body,
+        })
+        .then((res) => {
+          console.log("data", res.data);
+
+          this.posts.unshift(res.data)
+          this.body = ''
+        })
+        .catch((error) => {
+          console.log("error", error);
         });
     },
   },

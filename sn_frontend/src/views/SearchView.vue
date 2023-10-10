@@ -23,22 +23,28 @@
           v-bind:key="user.id"
           class="p-4 bg-gray-200 text-center rounded-lg"
         >
-          <img
-            src="https://i.pinimg.com/736x/fa/81/55/fa81555d2190e9c91a7d584ce7174a5f.jpg"
-            alt=""
-            class="mb-6 rounded-full"
-          />
-          <p>
-            <strong>{{ user.name }}</strong>
-          </p>
-          <div class="mt-6 flex space-x-8 justify-around">
-            <p class="text-xs text-gray-500">229 người bạn</p>
-            <p class="text-xs text-gray-500">168 bài đăng</p>
-          </div>
+          <RouterLink :to="{ name: 'profile', params: { id: user.id } }">
+            <img
+              src="https://i.pinimg.com/736x/fa/81/55/fa81555d2190e9c91a7d584ce7174a5f.jpg"
+              alt=""
+              class="mb-6 rounded-full"
+            />
+            <p>
+              <strong> {{ user.name }}</strong>
+            </p>
+            <div class="mt-6 flex space-x-8 justify-around">
+              <p class="text-xs text-gray-500">229 người bạn</p>
+              <p class="text-xs text-gray-500">168 bài đăng</p>
+            </div>
+          </RouterLink>
         </div>
       </div>
 
-      <div class="p-4 bg-white border border-gray-200 rounded-lg mt-4">
+      <div
+        v-for="post in posts"
+        v-bind:key="post.id"
+        class="p-4 bg-white border border-gray-200 rounded-lg mt-4"
+      >
         <div class="mb-6 flex items-center justify-between">
           <div class="flex items-center space-x-6">
             <img
@@ -46,18 +52,20 @@
               class="w-[40px] rounded-full"
             />
 
-            <p><strong>Picking phone Tom</strong></p>
+            <p>
+              <strong>
+                <RouterLink
+                  :to="{ name: 'profile', params: { id: post.created_by.id } }"
+                  >{{ post.created_by.name }}</RouterLink
+                >
+              </strong>
+            </p>
           </div>
 
-          <p class="text-gray-600">18 phút trước</p>
+          <p class="text-gray-600">{{ post.created_at_formatted }} trước</p>
         </div>
 
-        <p>
-          Lorem ipsum dolor sit amet consectetur, adipisicing elit. Fugit sit
-          soluta dignissimos quasi beatae ea qui, error, eum vel veritatis
-          adipisci accusantium excepturi quas voluptates officia deleniti nam
-          dolorem? Minus!
-        </p>
+        <p>{{ post.body }}</p>
 
         <img
           src="https://th.bing.com/th/id/OIP.5SOFKPjL7kQyUxxyYEk26wHaE9?pid=ImgDet&rs=1"
@@ -146,9 +154,11 @@ export default {
   data() {
     return {
       query: "",
-      users: []
+      users: [],
+      posts: [],
     };
   },
+
   methods: {
     submitForm() {
       console.log("submitForm", this.query);
@@ -160,10 +170,11 @@ export default {
         .then((res) => {
           console.log("response:", res.data);
 
-          this.users = res.data;
+          this.users = res.data.users;
+          this.posts = res.data.posts;
         })
         .catch((error) => {
-          console.log("error", error);
+          console.log("error:", error);
         });
     },
   },

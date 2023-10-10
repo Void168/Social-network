@@ -1,7 +1,27 @@
 <template>
   <div class="max-w-7xl mx-auto grid grid-cols-4 gap-4">
-    <div class="main-center col-span-3 space-y-4">
-      <div class="p-4 bg-white border border-gray-200 rounded-lg">
+    <div class="main-left col-span-1">
+      <div class="p-4 bg-white border border-gray-200 text-center rounded-lg">
+        <img
+          src="https://i.pinimg.com/736x/fa/81/55/fa81555d2190e9c91a7d584ce7174a5f.jpg"
+          alt=""
+          class="mb-6 rounded-full"
+        />
+        <p>
+          <strong class="text-2xl">{{ user.name }}</strong>
+        </p>
+        <div class="mt-6 flex space-x-8 justify-around">
+          <p class="text-xs text-gray-500">229 người bạn</p>
+          <p class="text-xs text-gray-500">168 bài đăng</p>
+        </div>
+      </div>
+    </div>
+
+    <div class="main-center col-span-2 space-y-4">
+      <div
+        v-if="userStore.user.id === user.id"
+        class="p-4 bg-white border border-gray-200 rounded-lg"
+      >
         <form v-on:submit.prevent="submitForm" method="post">
           <div class="p-4">
             <textarea
@@ -48,9 +68,9 @@
           </p>
 
           <!-- <img
-            src="https://th.bing.com/th/id/OIP.5SOFKPjL7kQyUxxyYEk26wHaE9?pid=ImgDet&rs=1"
-            class="w-full rounded-lg mt-6"
-          /> -->
+              src="https://th.bing.com/th/id/OIP.5SOFKPjL7kQyUxxyYEk26wHaE9?pid=ImgDet&rs=1"
+              class="w-full rounded-lg mt-6"
+            /> -->
           <div class="my-6 flex justify-between">
             <div class="flex space-x-6">
               <div class="flex items-center space-x-2">
@@ -123,8 +143,16 @@
 import axios from "axios";
 import PeopleYouMayKnow from "../components/PeopleYouMayKnow.vue";
 import Trends from "../components/Trends.vue";
+import { useUserStore } from "../stores/user";
 
 export default {
+  setup() {
+    const userStore = useUserStore();
+
+    return {
+      userStore,
+    };
+  },
   name: "FeedView",
   components: {
     PeopleYouMayKnow,
@@ -134,6 +162,7 @@ export default {
   data() {
     return {
       posts: [],
+      user: {},
       body: "",
     };
   },
@@ -143,11 +172,12 @@ export default {
   },
 
   methods: {
-    getFeed() {
-      axios
-        .get("/api/posts/")
+    async getFeed() {
+      await axios
+        .get(`/api/posts/profile/${this.$route.params.id}/`)
         .then((res) => {
-          this.posts = res.data;
+          this.posts = res.data.posts;
+          this.user = res.data.user;
         })
         .catch((error) => {
           console.log(error);
@@ -164,8 +194,8 @@ export default {
         .then((res) => {
           console.log("data", res.data);
 
-          this.posts.unshift(res.data)
-          this.body = ''
+          this.posts.unshift(res.data);
+          this.body = "";
         })
         .catch((error) => {
           console.log("error", error);

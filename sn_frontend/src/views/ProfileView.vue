@@ -192,6 +192,8 @@ export default {
         .post(`/api/friends/request/${this.$route.params.id}/`)
         .then((res) => {
           console.log("data", res.data);
+
+          // this.user = res.data.user;
         })
         .catch((error) => {
           console.log(error);

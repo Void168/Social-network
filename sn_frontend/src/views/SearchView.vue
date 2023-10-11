@@ -31,6 +31,7 @@
       </div>
 
       <div
+        v-if="users.length"
         class="p-4 bg-white border border-gray-200 rounded-lg grid grid-cols-4 gap-4"
       >
         <div
@@ -81,7 +82,7 @@ export default {
   components: {
     PeopleYouMayKnow,
     Trends,
-    FeedItem
+    FeedItem,
   },
 
   data() {

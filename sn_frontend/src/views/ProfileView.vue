@@ -11,7 +11,20 @@
           <strong class="text-2xl">{{ user.name }}</strong>
         </p>
         <div class="mt-6 flex space-x-8 justify-around">
-          <p class="text-xs text-gray-500">229 người bạn</p>
+          <div>
+            <p class="text-xs text-gray-500">229 người bạn</p>
+            <router-link
+              :to="{ name: 'friends', params: { id: user.id } }"
+              v-if="userStore.user.id === user.id"
+              ><p class="text-sm  mt-4">
+                <span class="bg-rose-400 py-1 px-[0.7rem] rounded-full font-semibold">{{
+                  friendshipRequest.length
+                }}</span>
+                lời mời kết bạn mới
+              </p></router-link
+            >
+          </div>
+
           <p class="text-xs text-gray-500">168 bài đăng</p>
         </div>
 
@@ -22,8 +35,7 @@
     </div>
 
     <div class="main-center col-span-2 space-y-4">
-      <!-- v-if="userStore.user.id === user.id" -->
-      <div class="p-4 bg-white border border-gray-200 rounded-lg">
+      <div v-if="userStore.user.id === user.id" class="p-4 bg-white border border-gray-200 rounded-lg">
         <form v-on:submit.prevent="submitForm" method="post">
           <div class="p-4">
             <textarea
@@ -169,11 +181,13 @@ export default {
       posts: [],
       user: {},
       body: "",
+      friendshipRequest: [],
     };
   },
 
   mounted() {
     this.getFeed();
+    this.getFriends();
   },
 
   watch: {
@@ -189,7 +203,7 @@ export default {
   methods: {
     sendFriendshipRequest() {
       axios
-        .post(`/api/friends/request/${this.$route.params.id}/`)
+        .post(`/api/friends/${this.$route.params.id}/request/`)
         .then((res) => {
           console.log("data", res.data);
 
@@ -205,6 +219,20 @@ export default {
         .get(`/api/posts/profile/${this.$route.params.id}/`)
         .then((res) => {
           this.posts = res.data.posts;
+          this.user = res.data.user;
+        })
+        .catch((error) => {
+          console.log(error);
+        });
+    },
+
+    getFriends() {
+      axios
+        .get(`/api/friends/${this.$route.params.id}/`)
+        .then((res) => {
+          console.log(res.data);
+
+          this.friendshipRequest = res.data.requests;
           this.user = res.data.user;
         })
         .catch((error) => {

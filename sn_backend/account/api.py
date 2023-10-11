@@ -34,3 +34,9 @@ def signup(request):
         message = 'error'
     
     return JsonResponse({'status': message}, safe=False)
+
+@api_view(['POST'])
+def send_friendship_request(request, pk):
+    print('send_friendship_request', pk)
+    
+    return JsonResponse({'message': 'hello'})

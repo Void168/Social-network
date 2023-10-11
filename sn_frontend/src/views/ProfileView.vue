@@ -14,14 +14,16 @@
           <p class="text-xs text-gray-500">229 người bạn</p>
           <p class="text-xs text-gray-500">168 bài đăng</p>
         </div>
+
+        <div v-if="userStore.user.id !== user.id" class="mt-6">
+          <button @click="sendFriendshipRequest">Thêm bạn bè</button>
+        </div>
       </div>
     </div>
 
     <div class="main-center col-span-2 space-y-4">
       <!-- v-if="userStore.user.id === user.id" -->
-      <div
-        class="p-4 bg-white border border-gray-200 rounded-lg"
-      >
+      <div class="p-4 bg-white border border-gray-200 rounded-lg">
         <form v-on:submit.prevent="submitForm" method="post">
           <div class="p-4">
             <textarea
@@ -185,6 +187,17 @@ export default {
   },
 
   methods: {
+    sendFriendshipRequest() {
+      axios
+        .post(`/api/friends/request/${this.$route.params.id}/`)
+        .then((res) => {
+          console.log("data", res.data);
+        })
+        .catch((error) => {
+          console.log(error);
+        });
+    },
+
     async getFeed() {
       await axios
         .get(`/api/posts/profile/${this.$route.params.id}/`)

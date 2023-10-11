@@ -18,8 +18,8 @@
     </div>
 
     <div class="main-center col-span-2 space-y-4">
+      <!-- v-if="userStore.user.id === user.id" -->
       <div
-        v-if="userStore.user.id === user.id"
         class="p-4 bg-white border border-gray-200 rounded-lg"
       >
         <form v-on:submit.prevent="submitForm" method="post">
@@ -143,6 +143,8 @@
 import axios from "axios";
 import PeopleYouMayKnow from "../components/PeopleYouMayKnow.vue";
 import Trends from "../components/Trends.vue";
+import FeedItem from "../components/FeedItem.vue";
+
 import { useUserStore } from "../stores/user";
 
 export default {
@@ -157,6 +159,7 @@ export default {
   components: {
     PeopleYouMayKnow,
     Trends,
+    FeedItem,
   },
 
   data() {
@@ -169,6 +172,16 @@ export default {
 
   mounted() {
     this.getFeed();
+  },
+
+  watch: {
+    "$route.params.id": {
+      handler: function () {
+        this.getFeed();
+      },
+      deep: true,
+      immediate: true,
+    },
   },
 
   methods: {

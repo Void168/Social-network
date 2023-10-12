@@ -38,6 +38,9 @@
           </button>
           <button v-else @click="sendFriendshipRequest">Thêm bạn bè</button>
         </div>
+        <button v-if="userStore.user.id === user.id" @click="logout" class="mt-6 bg-gray-400 hover:bg-gray-600">
+           Đăng xuất
+        </button>
       </div>
     </div>
 
@@ -60,7 +63,7 @@
           <div class="p-4 border-t border-gray-100 flex justify-between">
             <a
               href="#"
-              class="inline-block py-3 px-6 bg-gray-600 text-white rounded-lg"
+              class="inline-block py-3 px-6 bg-gray-600 text-white font-semibold rounded-lg"
               >Đăng ảnh</a
             >
             <button>Đăng bài viết</button>
@@ -286,6 +289,14 @@ export default {
           console.log("error", error);
         });
     },
+
+    logout() {
+      console.log('log out')
+
+      this.userStore.removeToken()
+
+      this.$router.push('/login')
+    }
   },
 };
 </script>

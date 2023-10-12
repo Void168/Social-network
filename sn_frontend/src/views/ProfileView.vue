@@ -16,10 +16,11 @@
             <router-link
               :to="{ name: 'friends', params: { id: user.id } }"
               v-if="userStore.user.id === user.id"
-              ><p class="text-sm  mt-4">
-                <span class="bg-rose-400 py-1 px-[0.7rem] rounded-full font-semibold">{{
-                  friendshipRequest.length
-                }}</span>
+              ><p class="text-sm mt-4">
+                <span
+                  class="bg-rose-400 py-1 px-[0.7rem] rounded-full font-semibold"
+                  >{{ friendshipRequest.length }}</span
+                >
                 lời mời kết bạn mới
               </p></router-link
             >
@@ -29,13 +30,22 @@
         </div>
 
         <div v-if="userStore.user.id !== user.id" class="mt-6">
-          <button @click="sendFriendshipRequest">Thêm bạn bè</button>
+          <button
+            v-if="status === 'request already sent'"
+            @click="sendFriendshipRequest"
+          >
+            Đã gửi lời mời kết bạn
+          </button>
+          <button v-else @click="sendFriendshipRequest">Thêm bạn bè</button>
         </div>
       </div>
     </div>
 
     <div class="main-center col-span-2 space-y-4">
-      <div v-if="userStore.user.id === user.id" class="p-4 bg-white border border-gray-200 rounded-lg">
+      <div
+        v-if="userStore.user.id === user.id"
+        class="p-4 bg-white border border-gray-200 rounded-lg"
+      >
         <form v-on:submit.prevent="submitForm" method="post">
           <div class="p-4">
             <textarea
@@ -160,13 +170,16 @@ import Trends from "../components/Trends.vue";
 import FeedItem from "../components/FeedItem.vue";
 
 import { useUserStore } from "../stores/user";
+import { useToastStore } from "../stores/toast";
 
 export default {
   setup() {
     const userStore = useUserStore();
+    const toastStore = useToastStore();
 
     return {
       userStore,
+      toastStore,
     };
   },
   name: "FeedView",
@@ -179,9 +192,12 @@ export default {
   data() {
     return {
       posts: [],
-      user: {},
+      user: {
+        id: null,
+      },
       body: "",
       friendshipRequest: [],
+      status: "",
     };
   },
 
@@ -206,8 +222,21 @@ export default {
         .post(`/api/friends/${this.$route.params.id}/request/`)
         .then((res) => {
           console.log("data", res.data);
+          this.status = res.data.message;
 
-          // this.user = res.data.user;
+          if (this.status === "request already sent") {
+            this.toastStore.showToast(
+              5000,
+              "Không thể gửi lần 2",
+              "bg-rose-400 text-white"
+            );
+          } else {
+            this.toastStore.showToast(
+              5000,
+              "Đã gửi lời mời kết bạn",
+              "bg-emerald-400 text-white"
+            );
+          }
         })
         .catch((error) => {
           console.log(error);

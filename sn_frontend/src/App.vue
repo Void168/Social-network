@@ -4,14 +4,14 @@
       <div class="max-w-7xl mx-auto">
         <div class="flex items-center justify-between">
           <div class="menu-left">
-            <a href="/" class="text-xl">SN</a>
+            <RouterLink to="/feed" class="text-xl">SN</RouterLink>
           </div>
 
           <div
             class="menu-center flex space-x-12"
             v-if="userStore.user.isAuthenticated"
           >
-            <RouterLink to="/" class="text-emerald-700">
+            <RouterLink to="/feed" class="text-emerald-700">
               <svg
                 xmlns="http://www.w3.org/2000/svg"
                 fill="none"

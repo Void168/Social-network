@@ -8,7 +8,7 @@ from account.serializers import UserSerializer
 
 from .forms import PostForm
 from .models import Post
-from .serializers import PostSerializer
+from .serializers import PostSerializer, PostDetailSerializer
 
 # Create your views here.
 @api_view(['GET'])
@@ -23,6 +23,14 @@ def post_list(request):
     serializer = PostSerializer(posts, many=True)
     
     return JsonResponse(serializer.data, safe=False)
+
+@api_view(['GET'])
+def post_detail(request, pk):
+    post =Post.objects.get(pk=pk)
+    
+    return JsonResponse({
+        'post': PostDetailSerializer(post).data
+    })
 
 @api_view(['GET'])
 def post_list_profile(request, id):

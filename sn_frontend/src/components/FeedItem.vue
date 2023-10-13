@@ -66,7 +66,7 @@
             />
           </svg>
 
-          <span class="text-gray-500 text-xs">0 bình luận</span>
+          <RouterLink :to="{name: 'postview', params: {id: post.id}}" class="text-gray-500 text-xs">0 bình luận</RouterLink>
         </div>
       </div>
 
@@ -92,28 +92,28 @@
 
 <script>
 import axios from "axios";
+import { RouterLink } from "vue-router";
 
 export default (await import("vue")).defineComponent({
-  props: {
-    post: Object,
-  },
-  methods: {
-    likePost(id) {
-      console.log("likePost", id);
-
-      axios
-        .post(`/api/posts/${id}/like/`)
-        .then((res) => {
-          console.log(res.data);
-
-          if(res.data.message == 'like created'){
-            this.post.likes_count += 1
-          }
-        })
-        .catch((error) => {
-          console.log(error);
-        });
+    props: {
+        post: Object,
     },
-  },
+    methods: {
+        likePost(id) {
+            console.log("likePost", id);
+            axios
+                .post(`/api/posts/${id}/like/`)
+                .then((res) => {
+                console.log(res.data);
+                if (res.data.message == 'like created') {
+                    this.post.likes_count += 1;
+                }
+            })
+                .catch((error) => {
+                console.log(error);
+            });
+        },
+    },
+    components: { RouterLink }
 });
 </script>

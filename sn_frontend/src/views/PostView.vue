@@ -1,7 +1,23 @@
 <template>
   <div class="max-w-7xl mx-auto grid grid-cols-4 gap-4">
     <div class="main-center col-span-3 space-y-4">
-      <!-- <div class="p-4 bg-white border border-gray-200 rounded-lg">
+      <div
+        v-if="post.id"
+        class="p-4 bg-white border border-gray-200 rounded-lg mt-4"
+      >
+        <FeedItem v-bind:post="post" />
+      </div>
+
+      <div class="p-4 bg-white border border-gray-200 rounded-lg ml-10">
+        <div
+          class="bg-white rounded-lg"
+          v-for="comment in post.comments.reverse()"
+          v-bind:key="comment.id"
+        >
+          <CommentItem v-bind:comment="comment" />
+        </div>
+      </div>
+      <div class="p-4 bg-white border border-gray-200 rounded-lg">
         <form v-on:submit.prevent="submitForm" method="post">
           <div class="p-4">
             <textarea
@@ -9,26 +25,14 @@
               class="p-4 w-full bg-gray-100 rounded-lg"
               cols="30"
               rows="4"
-              placeholder="Bạn đang nghĩ gì?"
+              placeholder="Viết bình luận..."
             ></textarea>
           </div>
 
-          <div class="p-4 border-t border-gray-100 flex justify-between">
-            <a
-              href="#"
-              class="inline-block py-3 px-6 bg-gray-600 text-white rounded-lg"
-              >Đăng ảnh</a
-            >
-            <button>Đăng bài viết</button>
+          <div class="p-4 border-t border-gray-100 flex justify-end">
+            <button>Bình luận</button>
           </div>
         </form>
-      </div> -->
-
-      <div
-        v-if="post.id"
-        class="p-4 bg-white border border-gray-200 rounded-lg mt-4"
-      >
-        <FeedItem v-bind:post="post" />
       </div>
     </div>
     <div class="main-right col-span-1 space-y-4">
@@ -43,6 +47,7 @@ import axios from "axios";
 import PeopleYouMayKnow from "../components/PeopleYouMayKnow.vue";
 import Trends from "../components/Trends.vue";
 import FeedItem from "../components/FeedItem.vue";
+import CommentItem from "../components/CommentItem.vue";
 
 export default {
   name: "PostView",
@@ -50,11 +55,16 @@ export default {
     PeopleYouMayKnow,
     Trends,
     FeedItem,
+    CommentItem,
   },
 
   data() {
     return {
-      post: {},
+      post: {
+        id: null,
+        comments: [],
+      },
+      body: "",
     };
   },
 
@@ -76,23 +86,24 @@ export default {
         });
     },
 
-    //   submitForm() {
-    //     console.log("submitForm", this.body);
+    submitForm() {
+      console.log("submitForm", this.body);
 
-    //     axios
-    //       .post("/api/posts/create/", {
-    //         body: this.body,
-    //       })
-    //       .then((res) => {
-    //         console.log("data", res.data);
+      axios
+        .post(`/api/posts/${this.$route.params.id}/comment/`, {
+          body: this.body,
+        })
+        .then((res) => {
+          console.log("data", res.data);
 
-    //         this.posts.unshift(res.data)
-    //         this.body = ''
-    //       })
-    //       .catch((error) => {
-    //         console.log("error", error);
-    //       });
-    //   },
+          this.post.comments.unshift(res.data);
+          this.post.comments_count += 1
+          this.body = "";
+        })
+        .catch((error) => {
+          console.log("error", error);
+        });
+    },
   },
 };
 </script>

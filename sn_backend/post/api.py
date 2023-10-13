@@ -3,12 +3,11 @@ from django.http import JsonResponse
 from rest_framework.decorators import api_view, authentication_classes, permission_classes
 
 from account.models import User
-from .models import Like
 from account.serializers import UserSerializer
 
 from .forms import PostForm
-from .models import Post
-from .serializers import PostSerializer, PostDetailSerializer
+from .models import Post, Comment, Like
+from .serializers import PostSerializer, PostDetailSerializer, CommentSerializer
 
 # Create your views here.
 @api_view(['GET'])
@@ -77,3 +76,15 @@ def post_like(request,pk):
     else:
         return JsonResponse({'message': 'post already liked'})
         
+@api_view(['POST'])
+def post_create_comment(request, pk):
+    comment = Comment.objects.create(body=request.data.get('body'), created_by=request.user)
+    
+    post = Post.objects.get(pk=pk)
+    post.comments.add(comment)
+    post.comments_count = post.comments_count + 1
+    post.save()
+    
+    serializer = CommentSerializer(comment)
+    
+    return JsonResponse(serializer.data, safe=False)

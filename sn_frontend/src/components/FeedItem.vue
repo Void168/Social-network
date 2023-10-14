@@ -66,7 +66,7 @@
             />
           </svg>
 
-          <RouterLink :to="{name: 'postview', params: {id: post.id}}" class="text-gray-500 text-xs">{{ post.comments.length }} bình luận</RouterLink>
+          <RouterLink :to="{name: 'postview', params: {id: post.id}}" class="text-gray-500 text-xs">{{ post?.comments_count }} bình luận</RouterLink>
         </div>
       </div>
 

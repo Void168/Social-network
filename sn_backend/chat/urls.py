@@ -1,10 +1,6 @@
-from django.contrib import admin
-from django.urls import path, include
+from django.urls import path
+from . import api
 
 urlpatterns = [
-    path('api/', include('account.urls')),
-    path('api/posts/', include('post.urls')),
-    path('api/search/', include('search.urls')),
-    path('api/chat/', include('chat.urls')),
-    path('admin/', admin.site.urls),
+    path('', api.conversation_list, name='conversation_list'),
 ]

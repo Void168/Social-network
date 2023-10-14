@@ -5,10 +5,9 @@ from rest_framework.decorators import api_view, authentication_classes, permissi
 from .models import Conversation, ConversationMessage
 from .serializers import ConversationSerializer, ConversationDetailSerializers, ConversationMessageSerializer
 
-@api_view
+@api_view(['GET'])
 def conversation_list(request):
     conversations = Conversation.objects.filter(users__in=list([request.user]))
-    
-    print(conversations)
-    
-    return JsonResponse({'message': 'Conversation'})
+    serializer = ConversationSerializer(conversations, many=True)
+        
+    return JsonResponse(serializer.data, safe=False)

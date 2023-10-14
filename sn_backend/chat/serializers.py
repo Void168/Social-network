@@ -5,6 +5,7 @@ from account.serializers import UserSerializer
 from .models import Conversation, ConversationMessage
 
 class ConversationSerializer(serializers.ModelSerializer):
+    users = UserSerializer(read_only=True, many=True)
     class Meta:
         model = Conversation
         fields = ('id', 'users', 'modified_at_formatted')

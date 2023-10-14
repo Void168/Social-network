@@ -141,6 +141,7 @@ export default (await import("vue")).defineComponent({
   data() {
     return {
       conversations: [],
+      activeConversation: {},
     };
   },
 
@@ -156,6 +157,23 @@ export default (await import("vue")).defineComponent({
           console.log(res.data);
 
           this.conversations = res.data;
+
+          if (this.conversations.length) {
+            this.activeConversation = this.conversations[0];
+          }
+
+          this.getMessages()
+        })
+        .catch((error) => {
+          console.log(error);
+        });
+    },
+
+    getMessages() {
+      axios
+        .get(`/api/chat/${this.activeConversation.id}/`)
+        .then((res) => {
+          console.log(res.data);
         })
         .catch((error) => {
           console.log(error);

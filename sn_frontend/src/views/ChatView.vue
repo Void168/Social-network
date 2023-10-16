@@ -8,6 +8,7 @@
             v-for="conversation in conversations"
             v-bind:key="conversation.id"
             class="flex items-center justify-between"
+            v-on:click="setActiveConversation(conversation.id)"
           >
             <div class="flex items-center space-x-2">
               <img
@@ -42,12 +43,7 @@
                 alt=""
                 class="w-[40px] rounded-full"
               />
-              <span
-                class="font-bold"
-                v-for="(value, index) in filtered"
-                :key="index"
-                >{{ value }}</span
-              >
+              <span class="font-bold">{{ receiveUser }}</span>
             </div>
 
             <span>Đang hoạt động</span>
@@ -84,10 +80,7 @@
                 />
               </div>
             </div>
-            <div
-              class="flex w-full mt-2 space-x-3 max-w-md"
-              v-else
-            >
+            <div class="flex w-full mt-2 space-x-3 max-w-md" v-else>
               <div class="flex-shrink-0 h-10 w-10 rounded-full bg-gray-300">
                 <img
                   src="https://i.pinimg.com/736x/fa/81/55/fa81555d2190e9c91a7d584ce7174a5f.jpg"
@@ -165,21 +158,8 @@ export default (await import("vue")).defineComponent({
       conversations: [],
       activeConversation: {},
       body: "",
-      receiveUser: [],
+      receiveUser: "",
     };
-  },
-
-  computed: {
-    filtered() {
-      return this.receiveUser.filter(
-        (name) => name !== this.userStore.user.name
-      );
-    },
-    filteredName() {
-      return this.receiveUser.filter(
-        (name) => name === this.userStore.user.name
-      );
-    },
   },
 
   mounted() {
@@ -187,6 +167,12 @@ export default (await import("vue")).defineComponent({
   },
 
   methods: {
+    setActiveConversation(id) {
+      console.log("setActiveConversation", id);
+
+      this.activeConversation = id;
+      this.getMessages();
+    },
     getConversations() {
       axios
         .get("/api/chat/")
@@ -194,10 +180,9 @@ export default (await import("vue")).defineComponent({
           this.conversations = res.data;
 
           if (this.conversations.length) {
-            this.activeConversation = this.conversations[0];
+            this.activeConversation = this.conversations[0].id;
           }
           this.getMessages();
-          console.log("Conversation", this.conversations);
         })
         .catch((error) => {
           console.log(error);
@@ -206,14 +191,17 @@ export default (await import("vue")).defineComponent({
 
     getMessages() {
       axios
-        .get(`/api/chat/${this.activeConversation.id}/`)
+        .get(`/api/chat/${this.activeConversation}/`)
         .then((res) => {
           this.activeConversation = res.data;
-          const sendToSet = new Set(
-            Object.values(this.activeConversation)[3].map((s) => s.sent_to.name)
-          );
-          const sendtoArray = [...sendToSet];
-          this.receiveUser = sendtoArray;
+
+          const sendToId = this.activeConversation.users.filter(
+            (id) => id !== this.userStore.user.id
+          )[0];
+
+          this.receiveUser = this.conversations[0].users.find(
+            (x) => x.id === sendToId
+          ).name;
         })
         .catch((error) => {
           console.log(error);

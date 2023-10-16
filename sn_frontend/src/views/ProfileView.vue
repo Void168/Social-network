@@ -39,7 +39,14 @@
           <button v-else @click="sendFriendshipRequest">Thêm bạn bè</button>
         </div>
         <button
-          v-if="userStore.user.id === user.id"
+          v-if="userStore.user.id !== user.id"
+          @click="sendDirectMessage"
+          class="mt-6 bg-violet-400 hover:bg-violet-600"
+        >
+          Nhắn tin
+        </button>
+        <button
+          v-else
           @click="logout"
           class="mt-6 bg-gray-400 hover:bg-gray-600"
         >
@@ -144,6 +151,20 @@ export default {
   },
 
   methods: {
+    sendDirectMessage() {
+      console.log("sendDirectMessage");
+
+      axios
+        .get(`/api/chat/${this.$route.params.id}/get-or-create/`)
+        .then((res) => {
+          console.log(res.data);
+
+          this.$router.push('/chat')
+        })
+        .catch((error) => {
+          console.log("error", error);
+        });
+    },
     sendFriendshipRequest() {
       axios
         .post(`/api/friends/${this.$route.params.id}/request/`)

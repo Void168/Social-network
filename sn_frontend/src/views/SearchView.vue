@@ -49,8 +49,8 @@
               <strong> {{ user.name }}</strong>
             </p>
             <div class="mt-6 flex space-x-8 justify-around">
-              <p class="text-xs text-gray-500">229 người bạn</p>
-              <p class="text-xs text-gray-500">168 bài đăng</p>
+              <p class="text-xs text-gray-500">{{user.friends_count}} người bạn</p>
+              <p class="text-xs text-gray-500">{{user.posts_count}} bài đăng</p>
             </div>
           </RouterLink>
         </div>

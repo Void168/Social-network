@@ -12,7 +12,7 @@
         </p>
         <div class="mt-6 flex space-x-8 justify-around">
           <div>
-            <p class="text-xs text-gray-500">229 người bạn</p>
+            <p class="text-xs text-gray-500">{{user.friends_count}} người bạn</p>
             <router-link
               :to="{ name: 'friends', params: { id: user.id } }"
               v-if="userStore.user.id === user.id"
@@ -26,7 +26,7 @@
             >
           </div>
 
-          <p class="text-xs text-gray-500">168 bài đăng</p>
+          <p class="text-xs text-gray-500">{{user.posts_count}} bài đăng</p>
         </div>
 
         <div v-if="userStore.user.id !== user.id" class="mt-6">
@@ -152,8 +152,6 @@ export default {
 
   methods: {
     sendDirectMessage() {
-      console.log("sendDirectMessage");
-
       axios
         .get(`/api/chat/${this.$route.params.id}/get-or-create/`)
         .then((res) => {

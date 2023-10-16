@@ -12,7 +12,7 @@
         </p>
         <div class="mt-6 flex space-x-8 justify-around">
           <p class="text-xs text-gray-500">{{ user.friends_count }} người bạn</p>
-          <p class="text-xs text-gray-500">168 bài đăng</p>
+          <p class="text-xs text-gray-500">{{user.posts_count}} bài đăng</p>
         </div>
       </div>
     </div>
@@ -45,7 +45,7 @@
             </p>
             <div class="mt-6 flex space-x-8 justify-around">
               <p class="text-xs text-gray-500">{{ user.friends_count }} người bạn</p>
-              <p class="text-xs text-gray-500">168 bài đăng</p>
+              <p class="text-xs text-gray-500">{{user.posts_count}} bài đăng</p>
             </div>
           </RouterLink>
           <div class="mt-6 space-x-4">
@@ -89,7 +89,7 @@
             </p>
             <div class="mt-6 flex space-x-8 justify-around">
               <p class="text-xs text-gray-500">{{ user.friends_count }} người bạn</p>
-              <p class="text-xs text-gray-500">168 bài đăng</p>
+              <p class="text-xs text-gray-500">{{user.posts_count}} bài đăng</p>
             </div>
           </RouterLink>
         </div>

@@ -7,7 +7,7 @@
         <div class="flex items-center space-x-2">
           <p class="text-xs">
             <strong>#tomandjerry</strong><br />
-            <span class="text-gray-500">180 bài viết</span>
+            <span class="text-gray-500"> 180 bài viết</span>
           </p>
         </div>
 

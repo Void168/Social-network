@@ -3,11 +3,12 @@ from django.http import JsonResponse
 from rest_framework.decorators import api_view, authentication_classes, permission_classes
 
 from account.models import User
+from post.models import Trend
 from account.serializers import UserSerializer
 
 from .forms import PostForm
 from .models import Post, Comment, Like
-from .serializers import PostSerializer, PostDetailSerializer, CommentSerializer
+from .serializers import PostSerializer, PostDetailSerializer, CommentSerializer, TrendSerializer
 
 # Create your views here.
 @api_view(['GET'])
@@ -87,4 +88,10 @@ def post_create_comment(request, pk):
     
     serializer = CommentSerializer(comment)
     
+    return JsonResponse(serializer.data, safe=False)
+
+@api_view(['GET'])
+def get_trends(request):
+    serializer = TrendSerializer(Trend.objects.all(), many=True)
+
     return JsonResponse(serializer.data, safe=False)

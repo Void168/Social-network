@@ -33,6 +33,7 @@ def signup(request):
         form.save()
         
         # Send verification email later!
+    
     else:
         message = 'error'
     
@@ -71,7 +72,9 @@ def edit_profile(request):
         if form.is_valid:
             form.save()
         
-        return JsonResponse({'message': 'information updated'})
+        serializer = UserSerializer(user)
+        
+        return JsonResponse({'message': 'information updated', 'user': serializer.data})
     
 
 @api_view(['POST'])

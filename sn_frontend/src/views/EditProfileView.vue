@@ -123,6 +123,7 @@ export default (await import("vue")).defineComponent({
                 id: this.userStore.user.id,
                 name: this.form.name,
                 email: this.form.email,
+                avatar: res.data.user.get_avatar
               });
 
               this.$router.go(-1);

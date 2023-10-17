@@ -147,6 +147,7 @@ export default {
                 "Đăng ký thất bại. Vui lòng thử lại",
                 "bg-rose-400 text-white"
               );
+              this.errors.push("Có thể e-mail đã được đăng ký");
             }
           })
           .catch((error) => {

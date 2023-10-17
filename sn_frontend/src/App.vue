@@ -85,7 +85,7 @@
               <div class="flex flex-row items-center gap-3">
                 <RouterLink :to="{'name': 'profile', params:{'id': userStore.user.id}}">
                   <img
-                    src="https://i.pinimg.com/736x/fa/81/55/fa81555d2190e9c91a7d584ce7174a5f.jpg"
+                    :src="userStore.user.avatar"
                     class="rounded-full w-12 h-12"
                     alt="avatar"
                   />

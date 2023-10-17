@@ -3,8 +3,8 @@
     <div class="mb-6 flex items-center justify-between">
       <div class="flex items-center space-x-6">
         <img
-          src="https://i.pinimg.com/736x/fa/81/55/fa81555d2190e9c91a7d584ce7174a5f.jpg"
-          class="w-[40px] rounded-full"
+          :src="post.created_by.get_avatar"
+          class="w-10 h-10 rounded-full"
         />
 
         <p>
@@ -21,11 +21,6 @@
     </div>
 
     <p>{{ post.body }}</p>
-
-    <!-- <img
-      src="https://th.bing.com/th/id/OIP.5SOFKPjL7kQyUxxyYEk26wHaE9?pid=ImgDet&rs=1"
-      class="w-full rounded-lg mt-6"
-    /> -->
 
     <div class="my-6 flex justify-between">
       <div class="flex space-x-6">

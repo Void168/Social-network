@@ -1,11 +1,11 @@
 <template>
   <div class="max-w-7xl mx-auto grid grid-cols-4 gap-4">
     <div class="main-left col-span-1">
-      <div class="p-4 bg-white border border-gray-200 text-center rounded-lg">
+      <div class="p-4 bg-white border border-gray-200 flex flex-col justify-center items-center rounded-lg shadow-md">
         <img
-          src="https://i.pinimg.com/736x/fa/81/55/fa81555d2190e9c91a7d584ce7174a5f.jpg"
+          :src="user.get_avatar"
           alt=""
-          class="mb-6 rounded-full"
+          class="mb-6 rounded-full w-64 h-64 shadow-md"
         />
         <p>
           <strong class="text-2xl">{{ user.name }}</strong>
@@ -213,6 +213,8 @@ export default {
         .then((res) => {
           this.friendshipRequest = res.data.requests;
           this.user = res.data.user;
+
+          console.log(this.user)
         })
         .catch((error) => {
           console.log(error);
@@ -227,10 +229,9 @@ export default {
           body: this.body,
         })
         .then((res) => {
-          console.log("data", res.data);
-
           this.posts.unshift(res.data);
           this.body = "";
+          this.user.posts_count += 1
         })
         .catch((error) => {
           console.log("error", error);

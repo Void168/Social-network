@@ -3,7 +3,7 @@
     <div class="mb-6 flex items-center justify-between">
       <div class="flex items-start space-x-6 w-full">
         <img
-          src="https://i.pinimg.com/736x/fa/81/55/fa81555d2190e9c91a7d584ce7174a5f.jpg"
+          :src="comment.created_by.get_avatar"
           class="w-[40px] rounded-full"
         />
         <div class="flex justify-between border-none bg-gray-200 rounded-2xl w-full p-4">

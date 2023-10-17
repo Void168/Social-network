@@ -50,6 +50,12 @@ class User(AbstractBaseUser, PermissionsMixin):
     EMAIL_FIELD = 'email'
     REQUIRED_FIELDS = []
     
+    def get_avatar(self):
+        if self.avatar:
+            return 'http://127.0.0.1:8000' + self.avatar.url
+        else: 
+            return 'https://www.pngkey.com/png/full/115-1150152_default-profile-picture-avatar-png-green.png'
+    
 class FriendshipRequest(models.Model):
     SENT= 'sent'
     ACCEPTED = 'accepted'

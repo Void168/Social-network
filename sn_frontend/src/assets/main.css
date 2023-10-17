@@ -9,4 +9,11 @@
     .btn-sm {
         @apply text-sm py-2 px-4
     }
+
+    img,
+    .main-left > div,
+    .main-center > div,
+    .main-right > div {
+        @apply shadow-md
+    }
 }

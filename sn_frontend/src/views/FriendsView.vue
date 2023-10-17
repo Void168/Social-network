@@ -1,18 +1,22 @@
 <template>
   <div class="max-w-7xl mx-auto grid grid-cols-4 gap-4">
     <div class="main-left col-span-1">
-      <div class="p-4 bg-white border border-gray-200 text-center rounded-lg">
+      <div
+        class="flex flex-col justify-center items-center p-4 bg-white border border-gray-200 text-center rounded-lg"
+      >
         <img
-          src="https://i.pinimg.com/736x/fa/81/55/fa81555d2190e9c91a7d584ce7174a5f.jpg"
+          :src="user.get_avatar"
           alt=""
-          class="mb-6 rounded-full"
+          class="w-64 h-64 mb-6 rounded-full"
         />
         <p>
           <strong class="text-2xl">{{ user.name }}</strong>
         </p>
         <div class="mt-6 flex space-x-8 justify-around">
-          <p class="text-xs text-gray-500">{{ user.friends_count }} người bạn</p>
-          <p class="text-xs text-gray-500">{{user.posts_count}} bài đăng</p>
+          <p class="text-xs text-gray-500">
+            {{ user.friends_count }} người bạn
+          </p>
+          <p class="text-xs text-gray-500">{{ user.posts_count }} bài đăng</p>
         </div>
       </div>
     </div>
@@ -35,7 +39,7 @@
             }"
           >
             <img
-              src="https://i.pinimg.com/736x/fa/81/55/fa81555d2190e9c91a7d584ce7174a5f.jpg"
+              :src="user.get_avatar"
               alt=""
               class="mb-6 rounded-full mx-auto"
             />
@@ -44,8 +48,12 @@
               <strong> {{ friendshipRequest.created_by.name }}</strong>
             </p>
             <div class="mt-6 flex space-x-8 justify-around">
-              <p class="text-xs text-gray-500">{{ user.friends_count }} người bạn</p>
-              <p class="text-xs text-gray-500">{{user.posts_count}} bài đăng</p>
+              <p class="text-xs text-gray-500">
+                {{ user.friends_count }} người bạn
+              </p>
+              <p class="text-xs text-gray-500">
+                {{ user.posts_count }} bài đăng
+              </p>
             </div>
           </RouterLink>
           <div class="mt-6 space-x-4">
@@ -79,17 +87,17 @@
           class="p-4 bg-gray-200 text-center rounded-lg"
         >
           <RouterLink :to="{ name: 'profile', params: { id: friend.id } }">
-            <img
-              src="https://i.pinimg.com/736x/fa/81/55/fa81555d2190e9c91a7d584ce7174a5f.jpg"
-              alt=""
-              class="mb-6 rounded-full"
-            />
+            <img :src="friend.get_avatar" alt="" class="w-64 h-64 mb-6 rounded-full" />
             <p>
               <strong> {{ friend.name }}</strong>
             </p>
             <div class="mt-6 flex space-x-8 justify-around">
-              <p class="text-xs text-gray-500">{{ user.friends_count }} người bạn</p>
-              <p class="text-xs text-gray-500">{{user.posts_count}} bài đăng</p>
+              <p class="text-xs text-gray-500">
+                {{ user.friends_count }} người bạn
+              </p>
+              <p class="text-xs text-gray-500">
+                {{ user.posts_count }} bài đăng
+              </p>
             </div>
           </RouterLink>
         </div>

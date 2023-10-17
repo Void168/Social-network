@@ -12,9 +12,9 @@
           >
             <div class="flex items-center space-x-2">
               <img
-                src="https://i.pinimg.com/736x/fa/81/55/fa81555d2190e9c91a7d584ce7174a5f.jpg"
+                :src="receiveUser.get_avatar"
                 alt=""
-                class="w-[40px] rounded-full"
+                class="w-10 h-10 rounded-full"
               />
               <div v-for="user in conversation.users" v-bind:key="user.id">
                 <p
@@ -39,11 +39,11 @@
           <div class="p-4 flex justify-between items-center">
             <div class="flex items-center gap-2">
               <img
-                src="https://i.pinimg.com/736x/fa/81/55/fa81555d2190e9c91a7d584ce7174a5f.jpg"
+                :src="receiveUser.get_avatar"
                 alt=""
-                class="w-[40px] rounded-full"
+                class="w-10 h-10 rounded-full"
               />
-              <span class="font-bold">{{ receiveUser }}</span>
+              <span class="font-bold">{{ receiveUser.name }}</span>
             </div>
 
             <span>Đang hoạt động</span>
@@ -74,18 +74,18 @@
               </div>
               <div class="flex-shrink-0 h-10 w-10 rounded-full bg-gray-300">
                 <img
-                  src="https://i.pinimg.com/736x/fa/81/55/fa81555d2190e9c91a7d584ce7174a5f.jpg"
+                  :src="message.created_by.get_avatar"
                   alt=""
-                  class="w-[40px] rounded-full"
+                  class="w-10 h-10 rounded-full"
                 />
               </div>
             </div>
             <div class="flex w-full mt-2 space-x-3 max-w-md" v-else>
               <div class="flex-shrink-0 h-10 w-10 rounded-full bg-gray-300">
                 <img
-                  src="https://i.pinimg.com/736x/fa/81/55/fa81555d2190e9c91a7d584ce7174a5f.jpg"
+                  :src="message.created_by.get_avatar"
                   alt=""
-                  class="w-[40px] rounded-full"
+                  class="w-10 h-10 rounded-full"
                 />
               </div>
               <div>
@@ -158,7 +158,7 @@ export default (await import("vue")).defineComponent({
       conversations: [],
       activeConversation: {},
       body: "",
-      receiveUser: "",
+      receiveUser: {},
     };
   },
 
@@ -201,7 +201,7 @@ export default (await import("vue")).defineComponent({
 
           this.receiveUser = this.conversations[0].users.find(
             (x) => x.id === sendToId
-          ).name;
+          );
         })
         .catch((error) => {
           console.log(error);

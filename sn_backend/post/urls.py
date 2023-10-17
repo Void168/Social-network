@@ -9,5 +9,6 @@ urlpatterns = [
     path('<uuid:pk>/comment/', api.post_create_comment, name='post_create_comment'),
     path('profile/<uuid:id>/', api.post_list_profile, name='post_list_profile'),
     path('create/', api.post_create, name='post_create'),
-    path('trends/', api.get_trends, name='get_trends')
+    path('trends/', api.get_trends, name='get_trends'),
+    path('posts-trend-list/',api.posts_trend_list, name='posts_trend_list'),
 ]

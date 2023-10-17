@@ -10,11 +10,14 @@
       >
         <div class="flex items-center space-x-2">
           <p class="text-xs">
-            <strong>#{{ trend.hashtag }}</strong><br />
+            <strong>#{{ trend.hashtag }}</strong
+            ><br />
             <span class="text-gray-500">{{ trend.occurences }} bài viết</span>
           </p>
         </div>
-        <a href="#"><button class="btn-sm">Khám phá</button></a>
+        <RouterLink :to="{ name: 'trendview', params: { id: trend.hashtag } }"
+          ><button class="btn-sm">Khám phá</button></RouterLink
+        >
       </div>
     </div>
   </div>
@@ -22,6 +25,7 @@
 
 <script>
 import axios from "axios";
+import { RouterLink } from "vue-router";
 
 export default (await import("vue")).defineComponent({
   data() {
@@ -29,22 +33,20 @@ export default (await import("vue")).defineComponent({
       trends: [],
     };
   },
-
   mounted() {
     this.getTrends();
   },
-
   methods: {
     getTrends() {
       axios
-        .get("/api/posts/trends/")
+        .get(`/api/posts/trends/`)
         .then((res) => {
           console.log(res.data);
-
           this.trends = res.data;
         })
         .catch((error) => console.log(error));
     },
   },
+  components: { RouterLink },
 });
 </script>

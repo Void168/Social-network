@@ -17,11 +17,28 @@ def post_list(request):
     
     for user in request.user.friends.all():
         user_ids.append(user.id)
-    
+            
     posts = Post.objects.filter(created_by__in=list(user_ids))
     
     serializer = PostSerializer(posts, many=True)
     
+    return JsonResponse(serializer.data, safe=False)
+
+@api_view(['GET'])
+def posts_trend_list(request):
+    user_ids = [request.user.id]
+    trend = request.GET.get('trend', '')
+        
+    for user in User.objects.all():
+        user_ids.append(user.id)
+        
+    posts_trend = Post.objects.filter(created_by__in=list(user_ids))
+    
+    if trend:
+        posts_trend = posts_trend.filter(body__icontains='#' + trend)
+        
+    
+    serializer = PostSerializer(posts_trend, many=True)
     return JsonResponse(serializer.data, safe=False)
 
 @api_view(['GET'])

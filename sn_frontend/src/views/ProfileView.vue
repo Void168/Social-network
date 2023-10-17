@@ -164,8 +164,6 @@ export default {
       axios
         .get(`/api/chat/${this.$route.params.id}/get-or-create/`)
         .then((res) => {
-          console.log(res.data);
-
           this.$router.push("/chat");
         })
         .catch((error) => {
@@ -176,7 +174,6 @@ export default {
       axios
         .post(`/api/friends/${this.$route.params.id}/request/`)
         .then((res) => {
-          console.log("data", res.data);
           this.status = res.data.message;
 
           if (this.status === "request already sent") {
@@ -214,8 +211,6 @@ export default {
       axios
         .get(`/api/friends/${this.$route.params.id}/`)
         .then((res) => {
-          console.log(res.data);
-
           this.friendshipRequest = res.data.requests;
           this.user = res.data.user;
         })

@@ -1,66 +1,63 @@
 <template>
-    <div class="max-w-7xl mx-auto grid md:grid-cols-2 xs:grid-cols-1 gap-4">
-      <div class="main-left md:block xs:hidden">
-        <div class="p-12 bg-white border border-gray-200 rounded-lg">
-          <h1 class="mb-6 text-2xl">Chỉnh sửa thông tin</h1>
-          <p class="mb-6 text-gray-500">
-            Lorem ipsum dolor sit amet, consectetur adipisicing elit. Eaque
-            delectus voluptatum sed ipsam, omnis voluptates et tempore temporibus
-            hic harum veritatis eveniet, alias pariatur, at ad architecto cumque
-            inventore illo. Lorem ipsum dolor sit amet, consectetur adipisicing
-            elit. Beatae, nostrum harum facere necessitatibus esse dolorum! Cum
-            provident, tenetur ipsa minus quam eos voluptas nostrum assumenda
-            suscipit, dolor veritatis perspiciatis soluta.
-          </p>
-          <p class="font-bold">
-            Đã có tài khoản?
-            <RouterLink :to="{ name: 'login' }" class="underline"
-              >Bấm để đăng nhập</RouterLink
-            >
-          </p>
-        </div>
-      </div>
-  
-      <div class="main-right flex justify-center">
-        <div class="p-12 bg-white border boder-gray-200 rounded-lg w-full">
-          <template v-if="errors.length > 0">
-            <div
-              class="bg-rose-400 text-white text-center rounded-lg px-6 py-3 mb-4"
-            >
-              <p v-for="error in errors" v-bind:key="error">{{ error }}</p>
-            </div>
-          </template>
-          <form action="" class="space-y-6" v-on:submit.prevent="submitForm">
-            <div>
-              <label for="">Tên người dùng</label>
-              <input
-                v-model="form.name"
-                type="text"
-                placeholder="Họ và tên"
-                class="w-full mt-2 py-2 px-6 border border-gray-200 rounded-lg"
-              />
-            </div>
-            <div>
-              <label for="">E-mail</label>
-              <input
-                type="email"
-                v-model="form.email"
-                placeholder="E-mail của bạn"
-                class="w-full mt-2 py-2 px-6 border border-gray-200 rounded-lg"
-              />
-            </div>
-            <div class="flex items-center justify-center">
-              <button class="w-full">Lưu thay đổi</button>
-            </div>
-            <p class="font-bold md:hidden xs:block">
-              Đã có tài khoản?
-              <a href="#" class="underline">Bấm để đăng nhập</a>
-            </p>
-          </form>
-        </div>
+  <div class="max-w-7xl mx-auto grid md:grid-cols-2 xs:grid-cols-1 gap-4">
+    <div class="main-left md:block xs:hidden">
+      <div class="p-12 bg-white border border-gray-200 rounded-lg">
+        <h1 class="mb-6 text-2xl">Chỉnh sửa thông tin</h1>
+        <p class="mb-6 text-gray-500">
+          Lorem ipsum dolor sit amet, consectetur adipisicing elit. Eaque
+          delectus voluptatum sed ipsam, omnis voluptates et tempore temporibus
+          hic harum veritatis eveniet, alias pariatur, at ad architecto cumque
+          inventore illo. Lorem ipsum dolor sit amet, consectetur adipisicing
+          elit. Beatae, nostrum harum facere necessitatibus esse dolorum! Cum
+          provident, tenetur ipsa minus quam eos voluptas nostrum assumenda
+          suscipit, dolor veritatis perspiciatis soluta.
+        </p>
       </div>
     </div>
-  </template>
+
+    <div class="main-right flex justify-center">
+      <div class="p-12 bg-white border boder-gray-200 rounded-lg w-full">
+        <template v-if="errors.length > 0">
+          <div
+            class="bg-rose-400 text-white text-center rounded-lg px-6 py-3 mb-4"
+          >
+            <p v-for="error in errors" v-bind:key="error">{{ error }}</p>
+          </div>
+        </template>
+        <form action="" class="space-y-6" v-on:submit.prevent="submitForm">
+          <div>
+            <label for="">Tên người dùng</label>
+            <input
+              v-model="form.name"
+              type="text"
+              placeholder="Họ và tên"
+              class="w-full mt-2 py-2 px-6 border border-gray-200 rounded-lg"
+            />
+          </div>
+          <div>
+            <label for="">E-mail</label>
+            <input
+              type="email"
+              v-model="form.email"
+              placeholder="E-mail của bạn"
+              class="w-full mt-2 py-2 px-6 border border-gray-200 rounded-lg"
+            />
+          </div>
+          <div class="flex flex-col">
+            <label class="text-center">Ảnh đại diện</label>
+            <input
+              type="file"
+              ref="file"
+            />
+          </div>
+          <div class="flex items-center justify-center">
+            <button class="w-full">Lưu thay đổi</button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+</template>
 
 <script>
 import axios from "axios";
@@ -70,11 +67,11 @@ import { useUserStore } from "../stores/user";
 export default (await import("vue")).defineComponent({
   setup() {
     const toastStore = useToastStore();
-    const userStore = useUserStore()
+    const userStore = useUserStore();
 
     return {
       toastStore,
-      userStore
+      userStore,
     };
   },
 
@@ -83,6 +80,7 @@ export default (await import("vue")).defineComponent({
       form: {
         email: this.userStore.user.email,
         name: this.userStore.user.name,
+        avatar: null,
       },
 
       errors: [],
@@ -102,10 +100,18 @@ export default (await import("vue")).defineComponent({
       }
 
       if (this.errors.length === 0) {
+        let formData = new FormData()
+        formData.append('avatar', this.$refs.file.files[0])
+        formData.append('name', this.form.name)
+        formData.append('email', this.form.email)
+
         axios
-          .post("/api/edit-profile/", this.form)
+          .post("/api/edit-profile/", formData, {
+            headers: {
+                "Content-Type": "multipart/form-data"
+            }
+          })
           .then((res) => {
-            console.log(res.data)
             if (res.data.message === "information updated") {
               this.toastStore.showToast(
                 5000,
@@ -116,10 +122,10 @@ export default (await import("vue")).defineComponent({
               this.userStore.setUserInfo({
                 id: this.userStore.user.id,
                 name: this.form.name,
-                email: this.form.name,
-              })
+                email: this.form.email,
+              });
 
-              this.$route.back()
+              this.$router.go(-1);
             } else {
               this.toastStore.showToast(
                 5000,
@@ -132,7 +138,7 @@ export default (await import("vue")).defineComponent({
             console.log("error", error);
           });
       }
-    }
-  }
+    },
+  },
 });
 </script>

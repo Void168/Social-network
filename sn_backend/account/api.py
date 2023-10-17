@@ -56,6 +56,21 @@ def friends(request, pk):
     }, safe=False)
 
 @api_view(['POST'])
+def edit_profile(request):
+    user = request.user
+    email = request.data.get('email')
+    
+    if User.objects.exclude(id=user.id).filter(email=email).exists():
+        return JsonResponse({'message': 'Email đã được đăng ký. Vui lòng thử lại'})
+    else:
+        user.email = email
+        user.name = request.data.get('name')
+        user.save()
+        
+        return JsonResponse({'message': 'information updated'})
+    
+
+@api_view(['POST'])
 def send_friendship_request(request, pk):
     user = User.objects.get(pk=pk)
     

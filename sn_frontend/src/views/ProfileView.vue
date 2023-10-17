@@ -12,7 +12,9 @@
         </p>
         <div class="mt-6 flex space-x-8 justify-around">
           <div>
-            <p class="text-xs text-gray-500">{{user.friends_count}} người bạn</p>
+            <p class="text-xs text-gray-500">
+              {{ user.friends_count }} người bạn
+            </p>
             <router-link
               :to="{ name: 'friends', params: { id: user.id } }"
               v-if="userStore.user.id === user.id"
@@ -26,18 +28,23 @@
             >
           </div>
 
-          <p class="text-xs text-gray-500">{{user.posts_count}} bài đăng</p>
+          <p class="text-xs text-gray-500">{{ user.posts_count }} bài đăng</p>
+        </div>
+        <div class="flex flex-col mt-4">
+          <div v-if="userStore.user.id !== user.id" class="mt-6">
+            <button
+              v-if="status === 'request already sent'"
+              @click="sendFriendshipRequest"
+            >
+              Đã gửi lời mời kết bạn
+            </button>
+            <button v-else @click="sendFriendshipRequest">Thêm bạn bè</button>
+          </div>
+          <RouterLink v-else to="/profile/edit">
+            <button @click="edit">Sửa thông tin</button>
+          </RouterLink>
         </div>
 
-        <div v-if="userStore.user.id !== user.id" class="mt-6">
-          <button
-            v-if="status === 'request already sent'"
-            @click="sendFriendshipRequest"
-          >
-            Đã gửi lời mời kết bạn
-          </button>
-          <button v-else @click="sendFriendshipRequest">Thêm bạn bè</button>
-        </div>
         <button
           v-if="userStore.user.id !== user.id"
           @click="sendDirectMessage"
@@ -102,6 +109,7 @@ import axios from "axios";
 import PeopleYouMayKnow from "../components/PeopleYouMayKnow.vue";
 import Trends from "../components/Trends.vue";
 import FeedItem from "../components/FeedItem.vue";
+import { RouterLink } from "vue-router";
 
 import { useUserStore } from "../stores/user";
 import { useToastStore } from "../stores/toast";
@@ -121,6 +129,7 @@ export default {
     PeopleYouMayKnow,
     Trends,
     FeedItem,
+    RouterLink
   },
 
   data() {
@@ -157,7 +166,7 @@ export default {
         .then((res) => {
           console.log(res.data);
 
-          this.$router.push('/chat')
+          this.$router.push("/chat");
         })
         .catch((error) => {
           console.log("error", error);

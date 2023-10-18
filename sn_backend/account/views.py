@@ -14,7 +14,7 @@ def activate_email(request):
         user.is_active = True
         user.save()
         
-        return render(request, 'ActivatePage.html', {
+        return render(request, 'VerifiedPage.html', {
             'user': user
         })
         

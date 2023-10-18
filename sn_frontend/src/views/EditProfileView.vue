@@ -12,6 +12,8 @@
           provident, tenetur ipsa minus quam eos voluptas nostrum assumenda
           suscipit, dolor veritatis perspiciatis soluta.
         </p>
+
+        <RouterLink to="/profile/edit/password" class="hover:underline flex justify-end">Đổi mật khẩu</RouterLink>
       </div>
     </div>
 

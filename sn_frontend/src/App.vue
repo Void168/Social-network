@@ -81,7 +81,7 @@
           </div>
 
           <div class="menu-right">
-            <template v-if="userStore.user.isAuthenticated">
+            <template v-if="userStore.user.isAuthenticated && userStore.user.id">
               <div class="flex flex-row items-center gap-3">
                 <RouterLink :to="{'name': 'profile', params:{'id': userStore.user.id}}">
                   <img

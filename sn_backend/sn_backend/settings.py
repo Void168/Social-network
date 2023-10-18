@@ -20,6 +20,12 @@ WEBSITE_URL = 'http://127.0.0.1:8000'
 
 
 # Application definition
+EMAIL_HOST = 'smtp.gmail.com'
+EMAIL_HOST_USER = 'snsocialnetwork168@gmail.com'
+EMAIL_HOST_PASSWORD = 'wdxpmiodgaipzvky'
+EMAIL_PORT = 587
+EMAIL_USE_TLS = True
+EMAIL_BACKEND= 'django.core.mail.backends.smtp.EmailBackend'
 
 AUTH_USER_MODEL ='account.User'
 

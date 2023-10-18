@@ -1,4 +1,5 @@
 from django.http import JsonResponse
+from django.core.mail import send_mail
 from django.contrib.auth.forms import PasswordChangeForm
 
 from rest_framework.decorators import api_view, authentication_classes, permission_classes
@@ -31,9 +32,19 @@ def signup(request):
     })
     
     if form.is_valid():
-        form.save()
+        user = form.save()
+        user.is_active = False
+        user.save()
         
-        # Send verification email later!
+        url= f'http://127.0.0.1:8000/activate-email/?email={user.email}&id={user.id}'
+        
+        send_mail(
+            "Xác thực tài khoản của bạn",
+            f"Link xác thực tài khoản của bạn: {url}",
+            'settings.EMAIL_HOST_USER',
+            [user.email],
+            fail_silently=False,
+        )
     
     else:
         message = 'error'

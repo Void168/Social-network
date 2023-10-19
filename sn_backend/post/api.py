@@ -6,6 +6,8 @@ from account.models import User
 from post.models import Trend
 from account.serializers import UserSerializer
 
+from notification.utils import create_notification
+
 from .forms import PostForm, AttachmentForm
 from .models import Post, Comment, Like
 from .serializers import PostSerializer, PostDetailSerializer, CommentSerializer, TrendSerializer
@@ -103,6 +105,8 @@ def post_like(request,pk):
         post.likes_count = post.likes_count + 1
         post.likes.add(like)
         post.save()
+        
+        notification = create_notification(request, 'post_like', post_id=post.id)
         
         return JsonResponse({'message': 'like created'})
     else:

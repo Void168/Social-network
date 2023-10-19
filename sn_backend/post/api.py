@@ -6,7 +6,7 @@ from account.models import User
 from post.models import Trend
 from account.serializers import UserSerializer
 
-from .forms import PostForm
+from .forms import PostForm, AttachmentForm
 from .models import Post, Comment, Like
 from .serializers import PostSerializer, PostDetailSerializer, CommentSerializer, TrendSerializer
 
@@ -64,19 +64,29 @@ def post_list_profile(request, id):
 
 @api_view(['POST'])
 def post_create(request):
-    form = PostForm(request.data)
-    
+    form = PostForm(request.POST)
+    attachment = None
+    attachment_form = AttachmentForm(request.POST, request.FILES)
+
+    if attachment_form.is_valid():
+        attachment = attachment_form.save(commit=False)
+        attachment.created_by = request.user
+        attachment.save()
+
     if form.is_valid():
         post = form.save(commit=False)
         post.created_by = request.user
         post.save()
-        
+
+        if attachment:
+            post.attachments.add(attachment)
+
         user = request.user
         user.posts_count = user.posts_count + 1
         user.save()
-        
+
         serializer = PostSerializer(post)
-        
+
         return JsonResponse(serializer.data, safe=False)
     else:
         return JsonResponse({'error': 'add something here later!...'})

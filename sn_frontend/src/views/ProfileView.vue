@@ -1,7 +1,9 @@
 <template>
   <div class="max-w-7xl mx-auto grid grid-cols-4 gap-4">
     <div class="main-left col-span-1">
-      <div class="p-4 bg-white border border-gray-200 flex flex-col justify-center items-center rounded-lg shadow-md">
+      <div
+        class="p-4 bg-white border border-gray-200 flex flex-col justify-center items-center rounded-lg shadow-md"
+      >
         <img
           :src="user.get_avatar"
           alt=""
@@ -76,14 +78,48 @@
               rows="4"
               placeholder="Bạn đang nghĩ gì?"
             ></textarea>
+            <div
+              id="preview"
+              v-if="url"
+              class="flex relative justify-center items-center w-full p-4 border-[1px] rounded-lg"
+            >
+              <img :src="url" class="w-full rounded-lg" />
+              <span class="absolute top-5 right-5 cursor-pointer" @click="removeImage"
+                ><svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  fill="none"
+                  viewBox="0 0 24 24"
+                  stroke-width="1.5"
+                  stroke="currentColor"
+                  class="w-8 h-8"
+                >
+                  <path
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                    d="M9.75 9.75l4.5 4.5m0-4.5l-4.5 4.5M21 12a9 9 0 11-18 0 9 9 0 0118 0z"
+                  />
+                </svg>
+              </span>
+            </div>
           </div>
 
           <div class="p-4 border-t border-gray-100 flex justify-between">
-            <a
-              href="#"
-              class="inline-block py-3 px-6 bg-gray-600 text-white font-semibold rounded-lg"
-              >Đăng ảnh</a
-            >
+            <label for="doc">
+              <div
+                class="py-3 px-6 text-black bg-gray-400 font-semibold rounded-lg transition-colors hover:bg-gray-600 hover:text-white cursor-pointer"
+              >
+                <span>Chọn ảnh</span>
+              </div>
+              <input
+                type="file"
+                ref="file"
+                id="doc"
+                name="doc"
+                hidden
+                @change="onFileChange"
+              />
+            </label>
+
             <button>Đăng bài viết</button>
           </div>
         </form>
@@ -129,7 +165,7 @@ export default {
     PeopleYouMayKnow,
     Trends,
     FeedItem,
-    RouterLink
+    RouterLink,
   },
 
   data() {
@@ -141,6 +177,7 @@ export default {
       body: "",
       friendshipRequest: [],
       status: "",
+      url: null,
     };
   },
 
@@ -160,6 +197,15 @@ export default {
   },
 
   methods: {
+    onFileChange(e) {
+      const file = e.target.files[0];
+      this.url = URL.createObjectURL(file);
+    },
+
+    removeImage() {
+      this.url = null
+    },
+
     sendDirectMessage() {
       axios
         .get(`/api/chat/${this.$route.params.id}/get-or-create/`)
@@ -195,15 +241,17 @@ export default {
         });
     },
 
-    async getFeed() {
-      await axios
+    getFeed() {
+      axios
         .get(`/api/posts/profile/${this.$route.params.id}/`)
-        .then((res) => {
-          this.posts = res.data.posts;
-          this.user = res.data.user;
+        .then((response) => {
+          console.log("data", response.data);
+
+          this.posts = response.data.posts;
+          this.user = response.data.user;
         })
         .catch((error) => {
-          console.log(error);
+          console.log("error", error);
         });
     },
 
@@ -214,7 +262,7 @@ export default {
           this.friendshipRequest = res.data.requests;
           this.user = res.data.user;
 
-          console.log(this.user)
+          console.log(this.user);
         })
         .catch((error) => {
           console.log(error);
@@ -224,14 +272,27 @@ export default {
     submitForm() {
       console.log("submitForm", this.body);
 
+      let formData = new FormData();
+      formData.append("image", this.$refs.file.files[0]);
+      formData.append("body", this.body);
+
       axios
-        .post("/api/posts/create/", {
-          body: this.body,
+        .post("/api/posts/create/", formData, {
+          headers: {
+            "Content-Type": "multipart/form-data",
+          },
         })
-        .then((res) => {
-          this.posts.unshift(res.data);
+        .then((response) => {
+          console.log("data", response.data);
+
+          this.posts.unshift(response.data);
           this.body = "";
-          this.user.posts_count += 1
+          this.$refs.file.value = null;
+          this.url = null;
+
+          if (this.user) {
+            this.user.posts_count += 1;
+          }
         })
         .catch((error) => {
           console.log("error", error);

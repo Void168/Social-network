@@ -22,6 +22,10 @@
 
     <p>{{ post.body }}</p>
 
+    <div v-if="post.attachments.length" class="mt-4">
+      <img v-for="image in post.attachments" v-bind:key="image.id" :src="image.get_image" class="w-full mb-4 rounded-xl">
+    </div>
+
     <div class="my-6 flex justify-between">
       <div class="flex space-x-6">
         <div class="flex items-center space-x-2" @click="likePost(post.id)">

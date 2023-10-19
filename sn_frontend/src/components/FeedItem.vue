@@ -2,10 +2,7 @@
   <div>
     <div class="mb-6 flex items-center justify-between">
       <div class="flex items-center space-x-6">
-        <img
-          :src="post.created_by.get_avatar"
-          class="w-10 h-10 rounded-full"
-        />
+        <img :src="post.created_by.get_avatar" class="w-10 h-10 rounded-full" />
 
         <p>
           <strong>
@@ -23,7 +20,12 @@
     <p>{{ post.body }}</p>
 
     <div v-if="post.attachments.length" class="mt-4">
-      <img v-for="image in post.attachments" v-bind:key="image.id" :src="image.get_image" class="w-full mb-4 rounded-xl">
+      <img
+        v-for="image in post.attachments"
+        v-bind:key="image.id"
+        :src="image.get_image"
+        class="w-full mb-4 rounded-xl"
+      />
     </div>
 
     <div class="my-6 flex justify-between">
@@ -65,7 +67,11 @@
             />
           </svg>
 
-          <RouterLink :to="{name: 'postview', params: {id: post.id}}" class="text-gray-500 text-xs">{{ post?.comments_count }} bình luận</RouterLink>
+          <RouterLink
+            :to="{ name: 'postview', params: { id: post.id } }"
+            class="text-gray-500 text-xs"
+            >{{ post?.comments_count }} bình luận</RouterLink
+          >
         </div>
       </div>
 
@@ -94,25 +100,25 @@ import axios from "axios";
 import { RouterLink } from "vue-router";
 
 export default (await import("vue")).defineComponent({
-    props: {
-        post: Object,
+  props: {
+    post: Object,
+  },
+  methods: {
+    likePost(id) {
+      console.log("likePost", id);
+      axios
+        .post(`/api/posts/${id}/like/`)
+        .then((res) => {
+          console.log(res.data);
+          if (res.data.message == "like created") {
+            this.post.likes_count += 1;
+          }
+        })
+        .catch((error) => {
+          console.log(error);
+        });
     },
-    methods: {
-        likePost(id) {
-            console.log("likePost", id);
-            axios
-                .post(`/api/posts/${id}/like/`)
-                .then((res) => {
-                console.log(res.data);
-                if (res.data.message == 'like created') {
-                    this.post.likes_count += 1;
-                }
-            })
-                .catch((error) => {
-                console.log(error);
-            });
-        },
-    },
-    components: { RouterLink }
+  },
+  components: { RouterLink },
 });
 </script>

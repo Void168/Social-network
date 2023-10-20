@@ -14,6 +14,7 @@ setup()
 
 from post.models import Post, Trend
 
+trends = []
 def extract_hashtags(text, trends):
     for word in text.split():
         if word[0] == '#':
@@ -24,7 +25,6 @@ def extract_hashtags(text, trends):
 for trend in Trend.objects.all():
     trend.delete()
 
-trends = []
 this_hour = timezone.now().replace(minute=0, second=0, microsecond=0)
 twenty_four_hours = this_hour - timedelta(hours=24)
 

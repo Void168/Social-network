@@ -19,7 +19,7 @@
 
     <p>{{ post.body }}</p>
 
-    <div v-if="post.attachments.length" class="mt-4">
+    <div v-if="post.attachments?.length" class="mt-4">
       <img
         v-for="image in post.attachments"
         v-bind:key="image.id"
@@ -105,7 +105,7 @@ export default (await import("vue")).defineComponent({
   },
   methods: {
     likePost(id) {
-      console.log("likePost", id);
+
       axios
         .post(`/api/posts/${id}/like/`)
         .then((res) => {

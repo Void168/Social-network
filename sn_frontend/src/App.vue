@@ -1,17 +1,19 @@
 <template>
   <div>
-    <nav class="py-10 px-8 border-b border-gray-200">
+    <nav
+      class="py-10 px-8 border-b border-gray-200 bg-gray-200 shadow-lg sticky w-full z-50 top-0"
+    >
       <div class="max-w-7xl mx-auto">
         <div class="flex items-center justify-between">
           <div class="menu-left">
-            <RouterLink to="/feed" class="text-xl">SN</RouterLink>
+            <a href="/" class="text-xl">SN</a>
           </div>
 
           <div
             class="menu-center flex space-x-12"
             v-if="userStore.user.isAuthenticated"
           >
-            <RouterLink to="/feed" class="text-emerald-700">
+            <RouterLink to="/">
               <svg
                 xmlns="http://www.w3.org/2000/svg"
                 fill="none"
@@ -81,9 +83,13 @@
           </div>
 
           <div class="menu-right">
-            <template v-if="userStore.user.isAuthenticated && userStore.user.id">
+            <template
+              v-if="userStore.user.isAuthenticated && userStore.user.id"
+            >
               <div class="flex flex-row items-center gap-3">
-                <RouterLink :to="{'name': 'profile', params:{'id': userStore.user.id}}">
+                <RouterLink
+                  :to="{ name: 'profile', params: { id: userStore.user.id } }"
+                >
                   <img
                     :src="userStore.user.avatar"
                     class="rounded-full w-12 h-12"
@@ -107,7 +113,7 @@
       </div>
     </nav>
 
-    <main class="px-8 py-6 bg-gray-100 min-h-screen">
+    <main class="px-8 py-6 bg-gray-100 min-h-screen relative">
       <RouterView />
     </main>
 
@@ -149,4 +155,9 @@ export default {
 };
 </script>
 
-<style scoped></style>
+<style scoped>
+.router-link-active {
+  --tw-text-opacity: 1;
+  color: rgb(16 185 129 / var(--tw-text-opacity));
+}
+</style>

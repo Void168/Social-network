@@ -3,7 +3,7 @@
     <div class="p-4">
       <textarea
         v-model="body"
-        class="p-4 w-full bg-gray-100 rounded-lg"
+        class="p-4 w-full bg-gray-100 rounded-lg resize-none"
         cols="30"
         rows="4"
         placeholder="Bạn đang nghĩ gì?"

@@ -1,7 +1,7 @@
 <template>
   <div class="max-w-7xl mx-auto grid grid-cols-4 gap-4">
     <div class="main-left col-span-3">
-      <div class="bg-white border border-gray-200 rounded-lg">
+      <div class="bg-white border border-gray-200 rounded-lg mb-4">
         <form v-on:submit.prevent="submitForm" class="p-4 flex space-x-4">
           <input
             v-model="query"
@@ -37,13 +37,13 @@
         <div
           v-for="user in users"
           v-bind:key="user.id"
-          class="p-4 bg-gray-200 text-center rounded-lg"
+          class="p-4 bg-gray-200 text-center rounded-lg shadow-md"
         >
           <RouterLink :to="{ name: 'profile', params: { id: user.id } }">
             <img
-              src="https://i.pinimg.com/736x/fa/81/55/fa81555d2190e9c91a7d584ce7174a5f.jpg"
+              :src="user.get_avatar"
               alt=""
-              class="mb-6 rounded-full"
+              class="mb-6 rounded-full w-48 h-48"
             />
             <p>
               <strong> {{ user.name }}</strong>

@@ -11,3 +11,11 @@ def notifications(request):
     serializer = NotificationSerializer(received_notifications, many=True)
 
     return JsonResponse(serializer.data, safe=False)
+
+@api_view(['POST'])
+def read_notification(request, pk):
+    notification = Notification.objects.filter(created_for=request.user).get(pk=pk)
+    notification.is_read = True
+    notification.save()
+    
+    return JsonResponse({'message': 'notification read'})

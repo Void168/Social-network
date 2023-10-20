@@ -9,7 +9,9 @@
       </div>
 
       <div class="p-4 bg-white border border-gray-200 rounded-lg ml-10">
+        <div v-if="!post.comments?.length" class="flex justify-center items-center">Chưa có bình luận nào</div>
         <div
+          v-else
           class="bg-white rounded-lg"
           v-for="comment in post.comments.reverse()"
           v-bind:key="comment.id"

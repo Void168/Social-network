@@ -40,6 +40,9 @@
             >
               Đã gửi lời mời kết bạn
             </button>
+            <button v-else-if="!can_friendship_request">
+              Bạn bè
+            </button>
             <button v-else @click="sendFriendshipRequest">Thêm bạn bè</button>
           </div>
           <RouterLink v-else to="/profile/edit">
@@ -70,6 +73,9 @@
         class="p-4 bg-white border border-gray-200 rounded-lg"
       >
         <PostForm v-bind:user="user" v-bind:posts="posts" />
+      </div>
+      <p class="font-semibold text-2xl">Bài viết của {{ user.name }}</p>
+      <div v-if="posts?.length">
         <div
           class="p-4 bg-white border border-gray-200 rounded-lg mt-4"
           v-for="post in posts"
@@ -78,6 +84,9 @@
           <FeedItem v-bind:post="post" />
         </div>
       </div>
+      <p v-else class="text-center text-lg">
+        {{ user.name }} Chưa có bài viết nào
+      </p>
     </div>
     <div class="main-right col-span-1 space-y-4">
       <PeopleYouMayKnow />
@@ -122,6 +131,7 @@ export default {
       user: {
         id: null,
       },
+      can_friendship_request: null,
       friendshipRequest: [],
     };
   },
@@ -185,6 +195,7 @@ export default {
 
           this.posts = response.data.posts;
           this.user = response.data.user;
+          this.can_friendship_request = res.data.can_friendship_request;
         })
         .catch((error) => {
           console.log("error", error);

@@ -59,16 +59,16 @@ class User(AbstractBaseUser, PermissionsMixin):
             return 'https://www.pngkey.com/png/full/115-1150152_default-profile-picture-avatar-png-green.png'
     
 class FriendshipRequest(models.Model):
-    SENT= 'sent'
+    SENT = 'sent'
     ACCEPTED = 'accepted'
     REJECTED = 'rejected'
-    
+
     STATUS_CHOICES = (
         (SENT, 'Sent'),
         (ACCEPTED, 'Accepted'),
         (REJECTED, 'Rejected'),
     )
-    
+
     id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
     created_for = models.ForeignKey(User, related_name='received_friendshiprequests', on_delete=models.CASCADE)
     created_at = models.DateTimeField(auto_now_add=True)

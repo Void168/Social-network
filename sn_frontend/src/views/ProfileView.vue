@@ -34,16 +34,15 @@
         </div>
         <div class="flex flex-col mt-4">
           <div v-if="userStore.user.id !== user.id" class="mt-6">
-            <button
-              v-if="status === 'request already sent'"
-              @click="sendFriendshipRequest"
-            >
-              Đã gửi lời mời kết bạn
-            </button>
-            <button v-else-if="!can_friendship_request">
-              Bạn bè
-            </button>
-            <button v-else @click="sendFriendshipRequest">Thêm bạn bè</button>
+            <div v-if="can_send_friendship_request === false">
+              <button v-if="friends.includes(this.userStore.user.id) === false">
+                Đã gửi lời mời kết bạn
+              </button>
+              <button v-else>Bạn bè</button>
+            </div>
+            <div v-else>
+              <button @click="sendFriendshipRequest">Thêm bạn bè</button>
+            </div>
           </div>
           <RouterLink v-else to="/profile/edit">
             <button @click="edit">Sửa thông tin</button>
@@ -131,8 +130,10 @@ export default {
       user: {
         id: null,
       },
-      can_friendship_request: null,
+      can_send_friendship_request: null,
       friendshipRequest: [],
+      status: "",
+      friends: [],
     };
   },
 
@@ -166,8 +167,8 @@ export default {
       axios
         .post(`/api/friends/${this.$route.params.id}/request/`)
         .then((res) => {
+          console.log(res.data);
           this.status = res.data.message;
-
           if (this.status === "request already sent") {
             this.toastStore.showToast(
               5000,
@@ -176,11 +177,14 @@ export default {
             );
           } else {
             this.toastStore.showToast(
-              5000,
+              3000,
               "Đã gửi lời mời kết bạn",
               "bg-emerald-400 text-white"
             );
           }
+          setTimeout(() => {
+            this.$router.go();
+          }, 3500);
         })
         .catch((error) => {
           console.log(error);
@@ -190,12 +194,13 @@ export default {
     getFeed() {
       axios
         .get(`/api/posts/profile/${this.$route.params.id}/`)
-        .then((response) => {
-          console.log("data", response.data);
+        .then((res) => {
+          this.posts = res.data.posts;
+          this.user = res.data.user;
+          this.can_send_friendship_request =
+            res.data.can_send_friendship_request;
 
-          this.posts = response.data.posts;
-          this.user = response.data.user;
-          this.can_friendship_request = res.data.can_friendship_request;
+          console.log(res.data);
         })
         .catch((error) => {
           console.log("error", error);
@@ -208,8 +213,8 @@ export default {
         .then((res) => {
           this.friendshipRequest = res.data.requests;
           this.user = res.data.user;
-
-          console.log(this.user);
+          this.friends = res.data.friends;
+          console.log(res.data.friends);
         })
         .catch((error) => {
           console.log(error);

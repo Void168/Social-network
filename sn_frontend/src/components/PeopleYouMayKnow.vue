@@ -42,7 +42,6 @@ export default (await import("vue")).defineComponent({
       axios
         .get("/api/friends/suggested/")
         .then((res) => {
-          console.log(res.data);
           this.users = res.data;
         })
         .catch((error) => {

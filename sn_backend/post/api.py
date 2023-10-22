@@ -72,6 +72,12 @@ def post_list_profile(request, id):
 
     if check1 or check2:
         can_send_friendship_request = False
+    
+    check3 = FriendshipRequest.objects.filter(created_for=request.user).filter(created_by=user).filter(status=FriendshipRequest.REJECTED)
+    check4 = FriendshipRequest.objects.filter(created_for=user).filter(created_by=request.user).filter(status=FriendshipRequest.REJECTED)
+    
+    if check3 or check4:
+        can_send_friendship_request = True
 
     return JsonResponse({
         'posts': posts_serializer.data,

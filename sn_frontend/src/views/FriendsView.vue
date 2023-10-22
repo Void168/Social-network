@@ -177,14 +177,25 @@ export default {
         .then((res) => {
           console.log("data", res.data);
 
-          if (res.data.message === "friendship request updated") {
+          if (status === "accepted") {
             this.toastStore.showToast(
               5000,
               "Đã đồng ý lời mời kết bạn",
               "bg-emerald-500 text-white"
             );
-            this.$router.back(-1);
-          } else {
+            this.$router.push(`/profile/${this.$route.params.id}/friends`);
+          }
+          if (status === "rejected") {
+            this.toastStore.showToast(
+              5000,
+              "Đã từ chối lời mời kết bạn",
+              "bg-amber-500 text-white"
+            );
+            setTimeout(() => {
+              this.$router.go()
+            },5500)
+          }
+           else {
             this.toastStore.showToast(
               5000,
               "Chấp nhận lời mời thất bại",

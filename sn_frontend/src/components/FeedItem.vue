@@ -125,7 +125,7 @@
                 </MenuItem>
               </div>
               <div class="py-1" v-else>
-                <MenuItem v-slot="{ active }">
+                <MenuItem v-slot="{ active }" @click="reportPost">
                   <div
                     href="#"
                     :class="[
@@ -218,6 +218,26 @@ export default (await import("vue")).defineComponent({
           this.toastStore.showToast(
             5000,
             "Xóa bài viết thất bại",
+            "bg-rose-500 text-white"
+          );
+        });
+    },
+    reportPost() {
+      axios
+        .post(`/api/posts/${this.post.id}/report/`)
+        .then((res) => {
+          console.log(res.data)
+          this.toastStore.showToast(
+            5000,
+            "Đã báo cáo bài viết",
+            "bg-emerald-500 text-white"
+          );
+        })
+        .catch((error) => {
+          console.log(error);
+          this.toastStore.showToast(
+            5000,
+            "Báo cáo bài viết thất bại",
             "bg-rose-500 text-white"
           );
         });

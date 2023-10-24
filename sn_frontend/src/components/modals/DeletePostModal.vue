@@ -1,6 +1,6 @@
 <template>
-  <TransitionRoot appear :show="isOpen" as="template">
-    <Dialog as="div" @close="closeModal" class="relative z-10">
+  <TransitionRoot appear as="template">
+    <Dialog as="div" class="relative z-10">
       <TransitionChild
         as="template"
         enter="duration-300 ease-out"
@@ -83,5 +83,8 @@ export default (await import("vue")).defineComponent({
     DialogPanel,
     DialogTitle,
   },
+  props: {
+    isOpen: Boolean
+  }
 });
 </script>

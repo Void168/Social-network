@@ -20,12 +20,12 @@
             <router-link
               :to="{ name: 'friends', params: { id: user.id } }"
               v-if="userStore.user.id === user.id"
-              ><p class="text-sm mt-4">
+              ><p class="text-sm mt-4 relative gap-3 flex justify-center items-center">
                 <span
-                  class="bg-rose-400 py-1 px-[0.7rem] rounded-full font-semibold"
+                  class="bg-rose-400 h-6 w-6 text-center rounded-full font-semibold flex justify-center items-center"
                   >{{ friendshipRequest.length }}</span
                 >
-                lời mời kết bạn mới
+                <span>lời mời kết bạn mới</span>
               </p></router-link
             >
           </div>

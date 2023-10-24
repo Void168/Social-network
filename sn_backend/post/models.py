@@ -40,6 +40,8 @@ class Post(models.Model):
     body = models.TextField(blank=True, null=True)
     
     attachments = models.ManyToManyField(PostAttachment, blank=True)
+    is_private = models.BooleanField(default=False)
+    
     likes = models.ManyToManyField(Like , blank=True)
     likes_count = models.IntegerField(default=0)
     

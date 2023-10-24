@@ -8,7 +8,7 @@
           v-for="post in posts"
           v-bind:key="post.id"
         >
-        <FeedItem v-bind:post="post" />
+          <FeedItem v-bind:post="post" v-on:deletePost="deletePost"/>
         </div>
       </div>
     </div>
@@ -56,6 +56,9 @@ export default {
         .catch((error) => {
           console.log(error);
         });
+    },
+    deletePost(id) {
+      this.posts = this.posts.filter((post) => post.id !== id)
     },
   },
 };

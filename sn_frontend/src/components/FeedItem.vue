@@ -110,33 +110,43 @@
             <MenuItems
               class="absolute right-0 z-10 mt-2 w-56 origin-top-right divide-y divide-gray-100 rounded-md bg-white shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none"
             >
-              <div class="py-1">
-                <MenuItem v-slot="{ active }">
-                  <a
-                    href="#"
+              <div class="py-1" v-if="userStore.user.id === post.created_by.id">
+                <MenuItem v-slot="{ active }" @click="openModal">
+                  <div
                     :class="[
-                      active ? 'bg-gray-100 text-gray-900' : 'text-gray-700',
-                      'block px-4 py-2 text-sm',
+                      active ? 'bg-gray-100 text-rose-700' : 'text-rose-700',
+                      'block px-4 py-2 text-sm cursor-pointer',
                     ]"
-                    >Báo cáo bài viết</a
                   >
+                    <span class="flex items-center gap-3"
+                      ><TrashIcon class="w-5 h-5" />Xóa bài viết</span
+                    >
+                  </div>
                 </MenuItem>
               </div>
-              <div class="py-1">
+              <div class="py-1" v-else>
                 <MenuItem v-slot="{ active }">
-                  <a
+                  <div
                     href="#"
                     :class="[
                       active ? 'bg-gray-100 text-gray-900' : 'text-gray-700',
-                      'block px-4 py-2 text-sm',
+                      'block px-4 py-2 text-sm cursor-pointer',
                     ]"
-                    >Xóa bài viết</a
                   >
+                    <span class="flex items-center gap-3"
+                      ><ShieldCheckIcon class="w-5 h-5" />Báo cáo bài viết</span
+                    >
+                  </div>
                 </MenuItem>
               </div>
             </MenuItems>
           </transition>
         </Menu>
+        <DeletePostModal
+          :show="isOpen"
+          @closeModal="closeModal"
+          @deletePost="deletePost"
+        />
       </div>
     </div>
   </div>
@@ -144,16 +154,33 @@
 
 <script>
 import axios from "axios";
+
 import { RouterLink } from "vue-router";
 import { Menu, MenuButton, MenuItem, MenuItems } from "@headlessui/vue";
+import { ShieldCheckIcon } from "@heroicons/vue/24/solid";
+import { TrashIcon } from "@heroicons/vue/24/solid";
+import { useUserStore } from "../stores/user";
+import { useToastStore } from "../stores/toast";
+import DeletePostModal from "../components/modals/DeletePostModal.vue";
 
 export default (await import("vue")).defineComponent({
   props: {
     post: Object,
   },
+
   data() {
     return {
-      showExtraModal: false,
+      isOpen: false,
+    };
+  },
+
+  setup() {
+    const userStore = useUserStore();
+    const toastStore = useToastStore();
+
+    return {
+      userStore,
+      toastStore,
     };
   },
 
@@ -171,12 +198,46 @@ export default (await import("vue")).defineComponent({
           console.log(error);
         });
     },
-    toggleExtraModal() {
-      console.log("hello");
+    deletePost() {
+      this.$emit("deletePost", this.post.id);
 
-      this.showExtraModal = !this.showExtraModal;
+      axios
+        .delete(`/api/posts/${this.post.id}/delete/`)
+        .then((res) => {
+          setTimeout(() => {
+            this.closeModal();
+          }, 1000);
+          this.toastStore.showToast(
+            5000,
+            "Bài viết đã được xóa",
+            "bg-emerald-500 text-white"
+          );
+        })
+        .catch((error) => {
+          console.log(error);
+          this.toastStore.showToast(
+            5000,
+            "Xóa bài viết thất bại",
+            "bg-rose-500 text-white"
+          );
+        });
+    },
+    closeModal() {
+      this.isOpen = false;
+    },
+    openModal() {
+      this.isOpen = true;
     },
   },
-  components: { RouterLink, Menu, MenuButton, MenuItem, MenuItems },
+  components: {
+    RouterLink,
+    Menu,
+    MenuButton,
+    MenuItem,
+    MenuItems,
+    ShieldCheckIcon,
+    TrashIcon,
+    DeletePostModal,
+  },
 });
 </script>

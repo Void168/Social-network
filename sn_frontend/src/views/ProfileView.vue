@@ -20,7 +20,9 @@
             <router-link
               :to="{ name: 'friends', params: { id: user.id } }"
               v-if="userStore.user.id === user.id"
-              ><p class="text-sm mt-4 relative gap-3 flex justify-center items-center">
+              ><p
+                class="text-sm mt-4 relative gap-3 flex justify-center items-center"
+              >
                 <span
                   class="bg-rose-400 h-6 w-6 text-center rounded-full font-semibold flex justify-center items-center"
                   >{{ friendshipRequest.length }}</span
@@ -35,10 +37,12 @@
         <div class="flex flex-col mt-4">
           <div v-if="userStore.user.id !== user.id" class="mt-6">
             <div v-if="can_send_friendship_request === false">
-              <button v-if="friends.includes(this.userStore.user.id) === false">
-                Đã gửi lời mời kết bạn
-              </button>
-              <button v-else>Bạn bè</button>
+              <div v-for="(value, index) in filtered" :key="index">
+                <button v-if="value === userStore.user.id">
+                  Bạn bè
+                </button>
+                <button v-else>Đã gửi lời mời kết bạn</button>
+              </div>
             </div>
             <div v-else>
               <button @click="sendFriendshipRequest">Thêm bạn bè</button>
@@ -66,10 +70,10 @@
       </div>
     </div>
 
-    <div class="main-center col-span-2 space-y-4">
+    <div class="main-center col-span-2 space-y-4 bg-white p-4 shadow-sm">
       <div
         v-if="userStore.user.id === user.id"
-        class="p-4 bg-white border border-gray-200 rounded-lg"
+        class="p-4 bg-white rounded-lg"
       >
         <PostForm v-bind:user="user" v-bind:posts="posts" />
       </div>
@@ -135,6 +139,14 @@ export default {
       status: "",
       friends: [],
     };
+  },
+
+  computed: {
+    filtered() {
+      return this.friends
+        .map((friend) => friend.id)
+        .filter((id) => id === this.userStore.user.id);
+    },
   },
 
   mounted() {

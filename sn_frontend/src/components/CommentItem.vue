@@ -4,7 +4,7 @@
       <div class="flex items-start space-x-6 w-full">
         <img
           :src="comment.created_by.get_avatar"
-          class="w-[40px] rounded-full"
+          class="w-10 h-10 rounded-full"
         />
         <div class="flex justify-between border-none bg-gray-200 rounded-2xl w-full p-4">
           <div>

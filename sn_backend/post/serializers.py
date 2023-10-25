@@ -2,32 +2,42 @@ from rest_framework import serializers
 
 from account.serializers import UserSerializer
 
-from .models import Post, PostAttachment, Comment, Trend
+from .models import Post, PostAttachment, Comment, Trend, Like
 
 class PostAttachmentSerializer(serializers.ModelSerializer):
     class Meta:
         model = PostAttachment
         fields = ('id', 'get_image',)
-
+        
+class LikeSerializer(serializers.ModelSerializer):
+    created_by = UserSerializer(read_only=True)
+    class Meta:
+        model = Like
+        fields = ('id', 'created_by',)
+        
 class PostSerializer(serializers.ModelSerializer):
     created_by = UserSerializer(read_only=True)
     attachments = PostAttachmentSerializer(read_only=True, many=True)
+    likes = LikeSerializer(read_only=True, many=True)
     class Meta:
         model = Post
-        fields = ('id', 'body','is_private', 'likes_count', 'comments_count', 'created_by', 'created_at_formatted', 'attachments')
+        fields = ('id', 'body','is_private', 'likes_count', 'comments_count', 'created_by', 'created_at_formatted', 'attachments','likes',)
+        
+
         
 class CommentSerializer(serializers.ModelSerializer):
     created_by = UserSerializer(read_only=True)
     class Meta:
         model = Comment
-        fields = ('id', 'body', 'created_by', 'created_at_formatted',)
+        fields = ('id','body','created_by', 'created_at_formatted',)
         
 class PostDetailSerializer(serializers.ModelSerializer):
     created_by = UserSerializer(read_only=True)
     comments = CommentSerializer(read_only=True, many=True)
+    likes = LikeSerializer(read_only=True, many=True)
     class Meta:
         model = Post
-        fields = ('id', 'body', 'likes_count', 'created_by', 'created_at_formatted','comments',)
+        fields = ('id', 'body', 'likes_count', 'likes', 'created_by', 'created_at_formatted','comments',)
 
 class TrendSerializer(serializers.ModelSerializer):
     class Meta:

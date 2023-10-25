@@ -11,7 +11,7 @@ from notification.utils import create_notification
 
 from .forms import PostForm, AttachmentForm
 from .models import Post, Comment, Like
-from .serializers import PostSerializer, PostDetailSerializer, CommentSerializer, TrendSerializer
+from .serializers import PostSerializer, PostDetailSerializer, CommentSerializer, TrendSerializer, LikeSerializer
 
 # Create your views here.
 @api_view(['GET'])
@@ -123,11 +123,9 @@ def post_create(request):
 @api_view(['POST'])
 def post_like(request,pk):
     post =Post.objects.get(pk=pk)
+    like = Like.objects.create(created_by=request.user)
     
     if not post.likes.filter(created_by=request.user):
-        print(post.likes.filter(created_by=request.user))
-        like = Like.objects.create(created_by=request.user)
-        
         post =Post.objects.get(pk=pk)
         post.likes_count = post.likes_count + 1
         post.likes.add(like)
@@ -135,7 +133,9 @@ def post_like(request,pk):
         
         notification = create_notification(request, 'post_like', post_id=post.id)
         
-        return JsonResponse({'message': 'like created'})
+        serializer = LikeSerializer(like)
+        
+        return JsonResponse({'message': 'like created'}, serializer.data, safe=False)
     else:
         return JsonResponse({'message': 'post already liked'})
         

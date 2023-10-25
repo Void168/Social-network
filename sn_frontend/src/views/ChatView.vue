@@ -1,22 +1,29 @@
 <template>
   <div class="max-w-7xl mx-auto grid grid-cols-4 gap-4">
     <div class="main-left col-span-1">
-      <div class="p-4 bg-white border border-gray-200 rounded-lg">
-        <h3 class="mb-6 text-xl">Đoạn hội thoại</h3>
-        <div class="space-y-4">
+      <div class="bg-white border border-gray-200 rounded-lg">
+        <h3 class="text-xl p-3">
+          Đoạn hội thoại ({{ conversations.length }})
+        </h3>
+        <div>
           <div
             v-for="conversation in conversations"
             v-bind:key="conversation.id"
-            class="flex items-center justify-between"
+            class="flex items-center justify-between cursor-pointer px-3 py-2 hover:bg-gray-200"
             v-on:click="setActiveConversation(conversation.id)"
           >
             <div class="flex items-center space-x-2">
-              <img
-                :src="receiveUser.get_avatar"
-                alt=""
-                class="w-10 h-10 rounded-full"
-              />
-              <div v-for="user in conversation.users" v-bind:key="user.id">
+              <div
+                v-for="user in conversation.users"
+                v-bind:key="user.id"
+                class="flex justify-center items-center gap-3"
+              >
+                <img
+                  v-if="user.id !== userStore.user.id"
+                  :src="user.get_avatar"
+                  alt=""
+                  class="w-10 h-10 rounded-full"
+                />
                 <p
                   class="text-xs font-bold"
                   v-if="user.id !== userStore.user.id"
@@ -38,12 +45,11 @@
         <div>
           <div class="p-4 flex justify-between items-center">
             <div class="flex items-center gap-2">
-              <img
-                :src="receiveUser.get_avatar"
-                alt=""
-                class="w-10 h-10 rounded-full"
-              />
-              <span class="font-bold">{{ receiveUser.name }}</span>
+              <img :src="receivedUser.get_avatar" alt="" class="w-10 h-10 rounded-full" />
+              <span
+                class="font-bold"
+                >{{ receivedUser.name }}</span
+              >
             </div>
 
             <span>Đang hoạt động</span>
@@ -158,7 +164,7 @@ export default (await import("vue")).defineComponent({
       conversations: [],
       activeConversation: {},
       body: "",
-      receiveUser: {},
+      receivedUser: {},
     };
   },
 
@@ -168,8 +174,6 @@ export default (await import("vue")).defineComponent({
 
   methods: {
     setActiveConversation(id) {
-      console.log("setActiveConversation", id);
-
       this.activeConversation = id;
       this.getMessages();
     },
@@ -194,15 +198,36 @@ export default (await import("vue")).defineComponent({
         .get(`/api/chat/${this.activeConversation}/`)
         .then((res) => {
           this.activeConversation = res.data;
-
-          const sendToId = this.activeConversation.users.filter(
+          let users = [];
+          for (let i = 0; i < this.activeConversation.users.length; i++) {
+            users.push(this.activeConversation.users[i]);
+          }
+          const filteredUser = users.filter(
             (id) => id !== this.userStore.user.id
-          )[0];
-
-          this.receiveUser = this.conversations[0].users.find(
-            (x) => x.id === sendToId
           );
+
+          const allowed = ["created_by", "sent_to"];
+          const messages = this.activeConversation.messages
+            .filter(
+              (data) =>
+                JSON.stringify(data).indexOf(this.userStore.user.id) !== -1
+            )
+            .find((createdby) => createdby.id !== this.userStore.user.id);
+
+          const filtered = Object.keys(messages)
+            .filter((key) => allowed.includes(key))
+            .reduce((obj, key) => {
+              return {
+                ...obj,
+                [key]: messages[key],
+              };
+            }, {});
+          this.receivedUser = Object.values(filtered).filter(
+            (data) =>
+              JSON.stringify(data).toLowerCase().indexOf(filteredUser) !== -1
+          )[0];
         })
+
         .catch((error) => {
           console.log(error);
         });

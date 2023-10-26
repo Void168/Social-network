@@ -17,57 +17,22 @@
       </div>
 
       <hr />
-      <div class="flex flex-col flex-grow p-4 overflow-y-auto max-h-[500px]">
-        <div
-          v-for="message in listMessages"
-          v-bind:key="message.id"
-          :id="message.id"
-        >
+      <div
+        class="flex flex-col flex-grow p-4 overflow-y-auto h-[400px]"
+      >
+        <div v-if="recentConversation?.messages?.length > 0">
           <div
-            class="flex w-full mt-2 space-x-3 max-w-md ml-auto justify-end"
-            v-if="message.created_by.id == userStore.user.id"
+            v-for="message in listMessages"
+            v-bind:key="message.id"
+            :id="message.id"
           >
-            <div>
-              <div
-                class="bg-blue-600 text-white p-3 rounded-l-lg rounded-br-lg"
-              >
-                <p class="text-sm">
-                  {{ message.body }}
-                </p>
-              </div>
-              <span class="text-xs text-gray-500 leading-none"
-                >{{ message.created_at_formatted }} trước</span
-              >
-            </div>
-            <div class="flex-shrink-0 h-10 w-10 rounded-full bg-gray-300">
-              <img
-                :src="message.created_by.get_avatar"
-                alt=""
-                class="w-10 h-10 rounded-full"
-              />
-            </div>
-          </div>
-          <div class="flex w-full mt-2 space-x-3 max-w-md" v-else>
-            <div class="flex-shrink-0 h-10 w-10 rounded-full bg-gray-300">
-              <img
-                :src="message.created_by.get_avatar"
-                alt=""
-                class="w-10 h-10 rounded-full"
-              />
-            </div>
-            <div>
-              <div
-                v-if="
-                  recentConversation?.messages?.filter(
-                    (user) => user.sent_to.id === userStore.user.id
-                  )
-                "
-                v-bind:key="message.id"
-                class="mb-4"
-              >
+            <div
+              class="flex w-full mt-2 space-x-3 max-w-md ml-auto justify-end"
+              v-if="message.created_by.id == userStore.user.id"
+            >
+              <div>
                 <div
-                  class="bg-gray-200 p-3 rounded-r-lg rounded-bl-lg"
-                  v-if="message.created_by !== chats[0]?.users[0].name"
+                  class="bg-blue-600 text-white p-3 rounded-l-lg rounded-br-lg"
                 >
                   <p class="text-sm">
                     {{ message.body }}
@@ -77,8 +42,51 @@
                   >{{ message.created_at_formatted }} trước</span
                 >
               </div>
+              <div class="flex-shrink-0 h-10 w-10 rounded-full bg-gray-300">
+                <img
+                  :src="message.created_by.get_avatar"
+                  alt=""
+                  class="w-10 h-10 rounded-full"
+                />
+              </div>
+            </div>
+            <div class="flex w-full mt-2 space-x-3 max-w-md" v-else>
+              <div class="flex-shrink-0 h-10 w-10 rounded-full bg-gray-300">
+                <img
+                  :src="message.created_by.get_avatar"
+                  alt=""
+                  class="w-10 h-10 rounded-full"
+                />
+              </div>
+              <div>
+                <div
+                  v-if="
+                    recentConversation?.messages?.filter(
+                      (user) => user.sent_to.id === userStore.user.id
+                    )
+                  "
+                  v-bind:key="message.id"
+                  class="mb-4"
+                >
+                  <div
+                    class="bg-gray-200 p-3 rounded-r-lg rounded-bl-lg"
+                    v-if="message.created_by !== chats[0]?.users[0].name"
+                  >
+                    <p class="text-sm">
+                      {{ message.body }}
+                    </p>
+                  </div>
+                  <span class="text-xs text-gray-500 leading-none"
+                    >{{ message.created_at_formatted }} trước</span
+                  >
+                </div>
+              </div>
             </div>
           </div>
+        </div>
+
+        <div v-else class="bg-white h-[500px] flex justify-center items-center">
+          Hãy bắt đầu nói chuyện với nhau
         </div>
       </div>
     </div>
@@ -139,13 +147,14 @@ export default (await import("vue")).defineComponent({
   },
   mounted() {
     this.getActiveConversation();
+    this.getMessages()
   },
   methods: {
     getActiveConversation() {
       axios
         .get(`/api/chat/${this.$route.params.id}/`)
         .then((res) => {
-          this.conversations = res.data;
+          this.recentConversation = res.data;
         })
         .catch((error) => {
           console.log(error);
@@ -161,28 +170,10 @@ export default (await import("vue")).defineComponent({
           for (let i = 0; i < this.recentConversation.users.length; i++) {
             users.push(this.recentConversation.users[i]);
           }
-          const filteredUser = users?.filter(
-            (id) => id !== this.userStore.user.id
-          );
-          const allowed = ["created_by", "sent_to"];
-          const messages = this.recentConversation.messages
-            .filter(
-              (data) =>
-                JSON.stringify(data).indexOf(this.userStore.user.id) !== -1
-            )
-            .find((createdby) => createdby.id !== this.userStore.user.id);
-          const filtered = Object.keys(messages)
-            .filter((key) => allowed.includes(key))
-            .reduce((obj, key) => {
-              return {
-                ...obj,
-                [key]: messages[key],
-              };
-            }, {});
-          this.receivedUser = Object.values(filtered).filter(
-            (data) =>
-              JSON.stringify(data).toLowerCase().indexOf(filteredUser) !== -1
-          )[0];
+          const filteredUser = users
+            ?.map((user) => user.id)
+            .filter((id) => id !== this.userStore.user.id);
+          this.receivedUser = users.filter((user) => user.id === filteredUser[0])[0]
         })
         .catch((error) => {
           console.log(error);

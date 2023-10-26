@@ -16,9 +16,10 @@ class ConversationMessageSerializer(serializers.ModelSerializer):
         
 class ConversationSerializer(serializers.ModelSerializer):
     users = UserSerializer(read_only=True, many=True)
+    messages = ConversationMessageSerializer(read_only=True, many=True)
     class Meta:
         model = Conversation
-        fields = ('id', 'users', 'modified_at_formatted')
+        fields = ('id', 'users', 'modified_at_formatted','messages',)
 
 class LastMessageSerializer(serializers.ModelSerializer):
     sent_to = UserSerializer(read_only=True)
@@ -29,6 +30,7 @@ class LastMessageSerializer(serializers.ModelSerializer):
 
 class ConversationDetailSerializer(serializers.ModelSerializer):
     messages = ConversationMessageSerializer(read_only=True, many=True)
+    users = UserSerializer(read_only=True, many=True)
 
     class Meta:
         model = Conversation

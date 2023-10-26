@@ -16,7 +16,7 @@
           </p>
         </div>
         <RouterLink :to="{ name: 'trendview', params: { id: trend.hashtag } }"
-          ><button class="btn-sm">Khám phá</button></RouterLink
+          ><button type="button" class="btn-sm">Khám phá</button></RouterLink
         >
       </div>
     </div>

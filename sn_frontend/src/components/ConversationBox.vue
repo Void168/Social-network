@@ -1,36 +1,63 @@
 <template>
   <div>
     <RouterLink
-      class="flex items-center justify-between cursor-pointer px-3 py-2 hover:bg-gray-200"
+      class="flex justify-between cursor-pointer"
       :to="{ name: 'conversation', params: { id: conversation.id } }"
       v-for="conversation in conversations"
       v-bind:key="conversation.id"
     >
-      <div class="flex items-center flex-col justify-center">
-        <div
-          v-for="user in conversation.users"
-          v-bind:key="user.id"
-          class="flex justify-center items-center gap-3"
-        >
-          <img
-            v-if="user.id !== userStore.user.id"
-            :src="user.get_avatar"
-            alt=""
-            class="w-10 h-10 rounded-full"
-          />
-          <p class="text-xs font-bold" v-if="user.id !== userStore.user.id">
-            {{ user.name }}
-          </p>
+      <div
+        class="flex flex-col w-full gap-1 px-3 py-2 rounded-lg hover:bg-gray-200"
+      >
+        <div class="flex justify-between items-center">
+          <div
+            v-for="user in conversation.users"
+            v-bind:key="user.id"
+            class="flex justify-center items-center gap-3"
+          >
+            <img
+              v-if="user.id !== userStore.user.id"
+              :src="user.get_avatar"
+              alt=""
+              class="w-10 h-10 rounded-full"
+            />
+            <p class="text-xs font-bold" v-if="user.id !== userStore.user.id">
+              {{ user.name }}
+            </p>
+          </div>
+
+          <span
+            v-if="conversation.messages.length"
+            class="text-xs text-gray-600"
+            >{{
+              conversation.messages[conversation.messages.length - 1]
+                .created_at_formatted
+            }}
+            trước</span
+          >
+          <span v-else></span>
         </div>
-        <div>
-          <!-- <p v-if="getLastMessage(conversation.id)">
-            {{ lastMessage.body }}
-          </p> -->
+
+        <div class="text-sm">
+          <div v-if="conversation.messages.length">
+            <span
+              class="font-semibold"
+              v-if="
+                conversation.messages[conversation.messages.length - 1]
+                  .created_by.id === userStore.user.id
+              "
+              >Bạn:
+            </span>
+            <span v-else>{{
+              conversation.messages[conversation.messages.length - 1].created_by
+                .name
+            }}</span>
+            <span class="truncate">{{
+              conversation.messages[conversation.messages.length - 1].body
+            }}</span>
+          </div>
         </div>
       </div>
-      <span class="text-xs text-gray-600"
-        >{{ conversation.modified_at_formatted }} trước</span
-      >
     </RouterLink>
   </div>
 </template>
@@ -40,9 +67,10 @@ import axios from "axios";
 import { useUserStore } from "../stores/user";
 
 export default (await import("vue")).defineComponent({
-  props: {
-    conversations: Array,
-    // lastMessage: Object,
+  data() {
+    return {
+      conversations: [],
+    };
   },
   setup() {
     const userStore = useUserStore();
@@ -66,17 +94,6 @@ export default (await import("vue")).defineComponent({
           console.log(error);
         });
     },
-    // getLastMessage() {
-    //   this.$emit("getLastMessage", this.conversation.id);
-
-    //   axios
-    //     .get(`/api/chat/${this.conversation.id}/get_last_message/`)
-    //     .then((res) => {
-    //       console.log(res.data);
-    //       this.lastMessage = res.data;
-    //     })
-    //     .catch((error) => console.log(error));
-    // },
   },
 });
 </script>

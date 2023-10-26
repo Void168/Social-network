@@ -1,21 +1,17 @@
 <template>
   <div class="max-w-7xl mx-auto grid grid-cols-4 gap-4">
     <div class="main-left col-span-1">
-      <div class="bg-white border border-gray-200 rounded-lg h-[500px]">
+      <div
+        class="bg-white border border-gray-200 rounded-lg h-[650px] px-2"
+      >
         <h3 class="text-xl p-3">Đoạn hội thoại ({{ conversations.length }})</h3>
-        <div>
-          <ConversationBox
-            v-bind:conversations="conversations"
-            v-on:getConversations="getConversations"
-            />
-        </div>
+
+        <ConversationBox v-bind:conversations="conversations" />
       </div>
     </div>
 
     <div class="main-center col-span-3 space-y-4">
-      <ChatBox
-        v-bind:chats="conversations"
-      />
+      <ChatBox v-bind:chats="conversations" />
     </div>
   </div>
 </template>
@@ -40,7 +36,6 @@ export default (await import("vue")).defineComponent({
       conversations: [],
       activeConversation: {},
       body: "",
-      receivedUser: {},
       listMessages: [],
       lastMessage: {},
     };
@@ -59,19 +54,8 @@ export default (await import("vue")).defineComponent({
   },
   methods: {
     getConversations() {
-        axios
-        .get("/api/chat/")
-        .then((res) => {
-            this.conversations = res.data;
-            console.log(this.conversations)
-        })
-        .catch((error) => {
-          console.log(error);
-        });
-    },
-    getActiveConversation() {
       axios
-        .get(`/api/chat/${this.$route.params.id}/`)
+        .get("/api/chat/")
         .then((res) => {
           this.conversations = res.data;
         })
@@ -84,43 +68,12 @@ export default (await import("vue")).defineComponent({
         .get(`/api/chat/${this.$route.params.id}/`)
         .then((res) => {
           this.activeConversation = res.data;
+          console.log(this.activeConversation);
           this.listMessages = this.activeConversation.messages;
-          let users = [];
-          for (let i = 0; i < this.activeConversation.users.length; i++) {
-            users.push(this.activeConversation.users[i]);
-          }
-          const filteredUser = users?.filter(
-            (id) => id !== this.userStore.user.id
-          );
-          const allowed = ["created_by", "sent_to"];
-          const messages = this.activeConversation.messages
-            .filter(
-              (data) =>
-                JSON.stringify(data).indexOf(this.userStore.user.id) !== -1
-            )
-            .find((createdby) => createdby.id !== this.userStore.user.id);
-          const filtered = Object.keys(messages)
-            .filter((key) => allowed.includes(key))
-            .reduce((obj, key) => {
-              return {
-                ...obj,
-                [key]: messages[key],
-              };
-            }, {});
-          this.receivedUser = Object.values(filtered).filter(
-            (data) =>
-              JSON.stringify(data).toLowerCase().indexOf(filteredUser) !== -1
-          )[0];
         })
         .catch((error) => {
           console.log(error);
         });
-    },
-
-    getLastMessage(id) {
-      this.conversations = this.conversations.filter(
-        (conversation) => conversation.id === id
-      );
     },
 
     submitForm() {
@@ -129,7 +82,6 @@ export default (await import("vue")).defineComponent({
           body: this.body,
         })
         .then((res) => {
-          console.log(res.data);
           this.activeConversation.messages.push(res.data);
           this.body = "";
         })

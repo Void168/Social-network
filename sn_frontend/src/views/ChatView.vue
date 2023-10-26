@@ -1,12 +1,11 @@
 <template>
   <div class="max-w-7xl mx-auto grid grid-cols-4 gap-4">
     <div class="main-left col-span-1">
-      <div class="bg-white border border-gray-200 rounded-lg h-[500px]">
+      <div class="bg-white border border-gray-200 rounded-lg h-[650px] px-2">
         <h3 class="text-xl p-3">Đoạn hội thoại ({{ conversations.length }})</h3>
         <div>
           <ConversationBox
             v-bind:conversations="conversations"
-            v-on:getConversations="getConversations"
           />
         </div>
       </div>
@@ -14,7 +13,7 @@
 
     <div class="main-center col-span-3 space-y-4">
       <div
-        class="bg-white h-[500px] border-gray-200 rounded-lg flex justify-center items-center"
+        class="bg-white h-[650px] border-gray-200 rounded-lg flex justify-center items-center"
       >
         Chưa chọn đoạn hội thoại nào
       </div>
@@ -51,7 +50,6 @@ export default (await import("vue")).defineComponent({
   },
   mounted() {
     this.getConversations();
-    this.getLastMessage();
   },
 
   methods: {
@@ -60,19 +58,11 @@ export default (await import("vue")).defineComponent({
         .get("/api/chat/")
         .then((res) => {
           this.conversations = res.data;
+          console.log(this.conversations)
         })
         .catch((error) => {
           console.log(error);
         });
-    },
-    getLastMessage() {
-      axios
-        .get(`/api/chat/${this.conversations.id}/get_last_message/`)
-        .then((res) => {
-          console.log(res.data);
-          this.lastMessage = res.data;
-        })
-        .catch((error) => console.log(error));
     },
   },
 });

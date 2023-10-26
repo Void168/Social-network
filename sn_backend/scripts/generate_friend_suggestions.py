@@ -20,14 +20,9 @@ for user in users:
     # Clear the suggestion list
     user.people_you_may_know.clear()
 
-    # print('Find friends for:', user)
 
     for friend in user.friends.all():
-        # print('Is friend with:', friend)
-
         for friendsfriend in friend.friends.all():
             if friendsfriend not in user.friends.all() and friendsfriend != user:
                 user.people_you_may_know.add(friendsfriend)
-    
-    # print()
         

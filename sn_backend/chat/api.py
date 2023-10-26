@@ -4,7 +4,7 @@ from rest_framework.decorators import api_view, authentication_classes, permissi
 
 from account.models import User
 from .models import Conversation, ConversationMessage
-from .serializers import ConversationSerializer, ConversationDetailSerializer, ConversationMessageSerializer
+from .serializers import ConversationSerializer, ConversationDetailSerializer, ConversationMessageSerializer, LastMessageSerializer
 
 @api_view(['GET'])
 def conversation_list(request):
@@ -54,4 +54,15 @@ def conversation_send_message(request, pk):
 
     serializer = ConversationMessageSerializer(conversation_message)
 
+    return JsonResponse(serializer.data, safe=False)
+
+@api_view(['GET'])
+def get_last_message(request, pk):
+    conversation = Conversation.objects.filter(users__in=list([request.user])).get(pk=pk)
+    last_message = conversation.messages.order_by('-created_at')[0]
+    if last_message:
+        last_message.is_latest_message=True
+        
+    serializer = LastMessageSerializer(last_message)
+    
     return JsonResponse(serializer.data, safe=False)

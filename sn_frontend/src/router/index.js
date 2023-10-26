@@ -11,6 +11,7 @@ import TrendView from '../views/TrendView.vue'
 import EditProfileView from '../views/EditProfileView.vue'
 import EditPasswordView from '../views/EditPasswordView.vue'
 import NotificationsView from '../views/NotificationsView.vue'
+import ConversationView from '../views/ConversationView.vue'
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
@@ -54,6 +55,11 @@ const router = createRouter({
       path: '/profile/:id',
       name: 'profile',
       component: ProfileView
+    },
+    {
+      path: '/chat/:id',
+      name: 'conversation',
+      component: ConversationView
     },
     {
       path: '/profile/edit',

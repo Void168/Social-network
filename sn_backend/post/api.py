@@ -135,7 +135,7 @@ def post_like(request,pk):
         
         serializer = LikeSerializer(like)
         
-        return JsonResponse({'message': 'like created'}, serializer.data, safe=False)
+        return JsonResponse(serializer.data, safe=False)
     else:
         return JsonResponse({'message': 'post already liked'})
         

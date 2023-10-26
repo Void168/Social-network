@@ -96,10 +96,10 @@ export default {
             "Content-Type": "multipart/form-data",
           },
         })
-        .then((response) => {
-          console.log("data", response.data);
+        .then((res) => {
+          console.log("data", res.data);
 
-          this.posts.unshift(response.data);
+          this.posts.unshift(res.data);
           this.body = "";
           this.$refs.file.value = null;
           this.is_private = false

@@ -30,9 +30,9 @@
 
     <div class="my-6 flex justify-between">
       <div class="flex space-x-6">
-        <div class="flex items-center space-x-2" @click="likePost(post.id)">
-          <HeartLike class="w-6 h-6 text-rose-500" v-if="isLike" />
-          <HeartIcon class="w-6 h-6" v-else />
+        <div class="flex items-center space-x-2">
+          <HeartLike class="w-6 h-6 text-rose-500 cursor-pointer" v-if="isLike" />
+          <HeartIcon v-else @click="likePost(post.id)" class="w-6 h-6 cursor-pointer hover:text-rose-500" />
           <span class="text-gray-500 text-xs"
             >{{ post.likes_count }} lượt thích</span
           >
@@ -190,7 +190,7 @@ export default (await import("vue")).defineComponent({
       axios
         .post(`/api/posts/${id}/like/`)
         .then((res) => {
-          if (res.data.message == "like created") {
+          if (res.data.message !== "post already liked") {
             this.post.likes_count += 1;
           }
         })

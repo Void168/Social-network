@@ -39,22 +39,55 @@
         </div>
 
         <div class="text-sm">
-          <div v-if="conversation.messages.length" class="flex gap-1">
+          <div v-if="conversation.messages.length" class="flex gap-1 justify-between">
+            <div class="flex gap-2">
+              <span
+                class="font-semibold"
+                v-if="
+                  conversation.messages[conversation.messages.length - 1]
+                    .created_by.id === userStore.user.id
+                "
+                >Bạn:
+              </span>
+              <span
+                v-if="
+                  conversation.messages[conversation.messages.length - 1]
+                    .created_by.id !== userStore.user.id &&
+                  conversation.seen === false
+                "
+                class="font-bold text-emerald-500"
+                >{{
+                  conversation.messages[conversation.messages.length - 1]
+                    .created_by.name
+                }}:
+              </span>
+              <span v-else
+                >{{
+                  conversation.messages[conversation.messages.length - 1]
+                    .created_by.name
+                }}:
+              </span>
+              <div class="flex justify-between">
+                <p
+                  class="truncate font-bold text-emerald-500"
+                  v-if="conversation.seen === false"
+                >
+                  {{
+                    conversation.messages[conversation.messages.length - 1].body
+                  }}
+                </p>
+                <p class="truncate" v-else>
+                  {{
+                    conversation.messages[conversation.messages.length - 1].body
+                  }}
+                </p>
+              </div>
+            </div>
+
             <span
-              class="font-semibold"
-              v-if="
-                conversation.messages[conversation.messages.length - 1]
-                  .created_by.id === userStore.user.id
-              "
-              >Bạn:
-            </span>
-            <span v-else>{{
-              conversation.messages[conversation.messages.length - 1].created_by
-                .name
-            }}</span>
-            <p class="truncate">{{
-              conversation.messages[conversation.messages.length - 1].body
-            }}</p>
+              class="bg-emerald-500 w-3 h-3 rounded-full shadow-md"
+              v-if="conversation.seen === false"
+            ></span>
           </div>
         </div>
       </div>
@@ -71,6 +104,9 @@ export default (await import("vue")).defineComponent({
     return {
       conversations: [],
     };
+  },
+  props: {
+    conversation: Object,
   },
   setup() {
     const userStore = useUserStore();
@@ -89,11 +125,19 @@ export default (await import("vue")).defineComponent({
         .get("/api/chat/")
         .then((res) => {
           this.conversations = res.data;
+          // this.setUnseenConversation();
+          // this.setSeenConversation();
         })
         .catch((error) => {
           console.log(error);
         });
     },
+    // setUnseenConversation() {
+    //   axios
+    //     .post(`/api/chat/${this.$route.params.id}/set_unseen/`)
+    //     .then((res) => console.log(res.data))
+    //     .catch((error) => console.log(error));
+    // },
   },
 });
 </script>

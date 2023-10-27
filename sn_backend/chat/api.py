@@ -66,3 +66,31 @@ def get_last_message(request, pk):
     serializer = LastMessageSerializer(last_message)
     
     return JsonResponse(serializer.data, safe=False)
+
+@api_view(['POST'])
+def set_seen(request, pk):
+    conversation = Conversation.objects.filter(users__in=list([request.user])).get(pk=pk)
+    message = conversation.messages.order_by('-created_at')[0]
+    current_user = request.user
+    if message.sent_to.id == current_user.id and conversation.seen == False:
+        conversation.seen = True
+        conversation.save()
+        
+        return JsonResponse({'message': 'Seen'})
+    else:
+        return JsonResponse({'message': 'Unseen'})
+
+# @api_view(['POST'])
+# def set_unseen(request, pk):
+#     conversation = Conversation.objects.filter(users__in=list([request.user])).get(pk=pk)
+#     message = conversation.messages.order_by('-created_at')[0]
+#     current_user = request.user
+    
+#     if message.created_by.id != current_user.id and conversation.seen == True:
+#         conversation.seen = False
+#         conversation.save()
+        
+#         return JsonResponse({'message': 'Unseen'})
+    
+#     else:
+#         return JsonResponse({'message': 'Seen'})

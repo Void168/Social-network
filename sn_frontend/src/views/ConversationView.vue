@@ -1,12 +1,13 @@
 <template>
   <div class="max-w-7xl mx-auto grid grid-cols-4 gap-4">
     <div class="main-left col-span-1">
-      <div
-        class="bg-white border border-gray-200 rounded-lg h-[750px] px-2"
-      >
+      <div class="bg-white border border-gray-200 rounded-lg h-[750px] px-2">
         <h3 class="text-xl p-3">Đoạn hội thoại ({{ conversations.length }})</h3>
 
-        <ConversationBox v-bind:conversations="conversations" />
+        <ConversationBox
+          v-bind:conversations="conversations"
+          v-bind:conversation="activeConversation"
+        />
       </div>
     </div>
 
@@ -58,6 +59,7 @@ export default (await import("vue")).defineComponent({
         .get("/api/chat/")
         .then((res) => {
           this.conversations = res.data;
+          this.setSeenConversation()
         })
         .catch((error) => {
           console.log(error);
@@ -68,11 +70,18 @@ export default (await import("vue")).defineComponent({
         .get(`/api/chat/${this.$route.params.id}/`)
         .then((res) => {
           this.activeConversation = res.data;
+          console.log(this.activeConversation)
           this.listMessages = this.activeConversation.messages;
         })
         .catch((error) => {
           console.log(error);
         });
+    },
+    setSeenConversation() {
+      axios
+        .post(`/api/chat/${this.activeConversation.id}/set_seen/`)
+        .then((res) => console.log(res.data))
+        .catch((error) => console.log(error));
     },
 
     submitForm() {

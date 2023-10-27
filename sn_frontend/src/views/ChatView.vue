@@ -13,7 +13,7 @@
 
     <div class="main-center col-span-3 space-y-4">
       <div
-        class="bg-white h-[650px] border-gray-200 rounded-lg flex justify-center items-center"
+        class="bg-white h-[750px] border-gray-200 rounded-lg flex justify-center items-center"
       >
         Chưa chọn đoạn hội thoại nào
       </div>

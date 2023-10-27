@@ -4,8 +4,6 @@ from account.serializers import UserSerializer
 
 from .models import Conversation, ConversationMessage
 
-
-
 class ConversationMessageSerializer(serializers.ModelSerializer):
     sent_to = UserSerializer(read_only=True)
     created_by = UserSerializer(read_only=True)
@@ -19,7 +17,7 @@ class ConversationSerializer(serializers.ModelSerializer):
     messages = ConversationMessageSerializer(read_only=True, many=True)
     class Meta:
         model = Conversation
-        fields = ('id', 'users', 'modified_at_formatted','messages',)
+        fields = ('id', 'users', 'modified_at_formatted','messages','seen')
 
 class LastMessageSerializer(serializers.ModelSerializer):
     sent_to = UserSerializer(read_only=True)

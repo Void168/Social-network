@@ -51,7 +51,7 @@
           </div>
 
           <div class="flex items-center justify-center">
-            <button class="w-full">Đăng nhập</button>
+            <button class="w-full btn">Đăng nhập</button>
           </div>
           <p class="font-bold md:hidden xs:block">
             Chưa có tài khoản?

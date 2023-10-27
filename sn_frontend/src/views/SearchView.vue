@@ -10,7 +10,7 @@
             placeholder="Bạn đang tìm gì?"
           />
           <div class="flex justify-center items-center">
-            <button>
+            <button class="btn">
               <svg
                 xmlns="http://www.w3.org/2000/svg"
                 fill="none"

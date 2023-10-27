@@ -61,6 +61,7 @@
               @click="
                 handleRequest('accepted', friendshipRequest.created_by.id)
               "
+              class="btn"
             >
               Đồng ý
             </button>
@@ -68,7 +69,7 @@
               @click="
                 handleRequest('rejected', friendshipRequest.created_by.id)
               "
-              class="bg-rose-400 hover:bg-rose-600"
+              class="bg-rose-400 hover:bg-rose-600 btn"
             >
               Từ chối
             </button>

@@ -38,32 +38,32 @@
           <div v-if="userStore.user.id !== user.id" class="mt-6">
             <div v-if="can_send_friendship_request === false">
               <div v-for="(value, index) in filtered" :key="index">
-                <button v-if="value === userStore.user.id">
+                <button class="btn" v-if="value === userStore.user.id">
                   Bạn bè
                 </button>
-                <button v-else>Đã gửi lời mời kết bạn</button>
+                <button class="btn" v-else>Đã gửi lời mời kết bạn</button>
               </div>
             </div>
             <div v-else>
-              <button @click="sendFriendshipRequest">Thêm bạn bè</button>
+              <button class="btn" @click="sendFriendshipRequest">Thêm bạn bè</button>
             </div>
           </div>
           <RouterLink v-else to="/profile/edit">
-            <button @click="edit">Sửa thông tin</button>
+            <button class="btn" @click="edit">Sửa thông tin</button>
           </RouterLink>
         </div>
 
         <button
           v-if="userStore.user.id !== user.id"
           @click="sendDirectMessage"
-          class="mt-6 bg-violet-400 hover:bg-violet-600"
+          class="mt-6 bg-violet-400 hover:bg-violet-600 btn"
         >
           Nhắn tin
         </button>
         <button
           v-else
           @click="logout"
-          class="mt-6 bg-gray-400 hover:bg-gray-600"
+          class="mt-6 bg-gray-400 hover:bg-gray-600 btn"
         >
           Đăng xuất
         </button>

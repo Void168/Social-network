@@ -7,7 +7,7 @@
       v-bind:key="conversation.id"
     >
       <div
-        class="flex flex-col w-full gap-1 px-3 py-2 rounded-lg hover:bg-gray-200"
+        class="flex flex-col w-full gap-1 px-3 py-2 rounded-lg hover:bg-gray-200 duration-100"
       >
         <div class="flex justify-between items-center">
           <div
@@ -18,7 +18,7 @@
             <img
               v-if="user.id !== userStore.user.id"
               :src="user.get_avatar"
-              alt=""
+              alt="avatar"
               class="w-10 h-10 rounded-full"
             />
             <p class="text-xs font-bold" v-if="user.id !== userStore.user.id">

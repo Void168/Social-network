@@ -32,7 +32,7 @@
           </div>
 
           <div class="p-4 border-t border-gray-100 flex justify-end">
-            <button>Bình luận</button>
+            <button class="btn">Bình luận</button>
           </div>
         </form>
       </div>

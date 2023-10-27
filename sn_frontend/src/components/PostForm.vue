@@ -53,7 +53,7 @@
         />
       </label>
 
-      <button>Đăng bài viết</button>
+      <button class="btn">Đăng bài viết</button>
     </div>
   </form>
 </template>

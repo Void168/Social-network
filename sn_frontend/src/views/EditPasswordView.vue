@@ -47,7 +47,7 @@
           <p class="text-rose-400 text-center rounded-lg">{{ errors[2] }}</p>
 
           <div class="flex items-center justify-center">
-            <button class="w-full">Lưu thay đổi</button>
+            <button class="w-full btn">Lưu thay đổi</button>
           </div>
         </form>
       </div>

@@ -17,9 +17,7 @@
       </div>
 
       <hr />
-      <div
-        class="flex flex-col flex-grow p-4 overflow-y-auto h-[400px]"
-      >
+      <div class="flex flex-col flex-grow p-4 overflow-y-auto h-[500px]">
         <div v-if="recentConversation?.messages?.length > 0">
           <div
             v-for="message in listMessages"
@@ -27,28 +25,35 @@
             :id="message.id"
           >
             <div
-              class="flex w-full mt-2 space-x-3 max-w-md ml-auto justify-end"
+              class="flex flex-col w-full mt-2 space-x-3 items-end max-w-md ml-auto justify-end gap-2"
               v-if="message.created_by.id == userStore.user.id"
             >
-              <div>
-                <div
-                  class="bg-blue-600 text-white p-3 rounded-l-lg rounded-br-lg"
-                >
-                  <p class="text-sm">
-                    {{ message.body }}
-                  </p>
+              <div class="flex gap-2">
+                <div>
+                  <div
+                    class="bg-blue-600 text-white p-3 rounded-l-lg rounded-br-lg"
+                  >
+                    <p class="text-sm">
+                      {{ message.body }}
+                    </p>
+                  </div>
                 </div>
-                <span class="text-xs text-gray-500 leading-none"
-                  >{{ message.created_at_formatted }} trước</span
-                >
+                <div class="flex-shrink-0 h-10 w-10 rounded-full bg-gray-300">
+                  <img
+                    :src="message.created_by.get_avatar"
+                    alt=""
+                    class="w-10 h-10 rounded-full"
+                  />
+                </div>
               </div>
-              <div class="flex-shrink-0 h-10 w-10 rounded-full bg-gray-300">
-                <img
-                  :src="message.created_by.get_avatar"
-                  alt=""
-                  class="w-10 h-10 rounded-full"
-                />
-              </div>
+
+              <span
+                class="text-xs text-gray-500 leading-none"
+                v-if="message.id === listMessages[listMessages.length - 1].id"
+                >Đã gửi
+                {{ listMessages[listMessages.length - 1].created_at_formatted }}
+                trước</span
+              >
             </div>
             <div class="flex w-full mt-2 space-x-3 max-w-md" v-else>
               <div class="flex-shrink-0 h-10 w-10 rounded-full bg-gray-300">
@@ -90,9 +95,9 @@
         </div>
       </div>
     </div>
-    <div class="bg-white border border-gray-200 rounded-lg">
+    <div class="bg-white border border-gray-200 rounded-lg relative">
       <form v-on:submit.prevent="submitForm" @keyup.enter="submitForm">
-        <div class="p-4">
+        <div class="p-4 relative">
           <textarea
             v-model="body"
             class="p-4 w-full bg-gray-100 rounded-lg"
@@ -104,9 +109,30 @@
           ></textarea>
         </div>
         <div class="p-4 border-t border-gray-100 flex justify-end">
-          <button>Gửi</button>
+          <button class="btn" type="submit">Gửi</button>
         </div>
       </form>
+      <div class="absolute right-3 p-4 top-4">
+        <Popover class="relative">
+          <transition
+            enter-active-class="transition duration-200 ease-out"
+            enter-from-class="translate-y-1 opacity-0"
+            enter-to-class="translate-y-0 opacity-100"
+            leave-active-class="transition duration-150 ease-in"
+            leave-from-class="translate-y-0 opacity-100"
+            leave-to-class="translate-y-1 opacity-0"
+            ><PopoverPanel
+              class="absolute z-10 bottom-10 right-0 shadow-2xl rounded-lg"
+            >
+              <emoji-picker></emoji-picker>
+            </PopoverPanel>
+          </transition>
+
+          <PopoverButton>
+            <FaceSmileIcon class="w-6 h-6" />
+          </PopoverButton>
+        </Popover>
+      </div>
     </div>
   </div>
 </template>
@@ -116,6 +142,10 @@ import axios from "axios";
 import ConversationBox from "../components/ConversationBox.vue";
 import { useUserStore } from "../stores/user";
 import { RouterLink } from "vue-router";
+
+import { Popover, PopoverButton, PopoverPanel } from "@headlessui/vue";
+import "emoji-picker-element";
+import { FaceSmileIcon } from "@heroicons/vue/24/outline";
 
 export default (await import("vue")).defineComponent({
   props: {
@@ -134,6 +164,7 @@ export default (await import("vue")).defineComponent({
       listMessages: [],
       recentConversation: {},
       body: "",
+      isOpen: false,
     };
   },
   watch: {
@@ -147,7 +178,7 @@ export default (await import("vue")).defineComponent({
   },
   mounted() {
     this.getActiveConversation();
-    this.getMessages()
+    this.getMessages();
   },
   methods: {
     getActiveConversation() {
@@ -173,7 +204,9 @@ export default (await import("vue")).defineComponent({
           const filteredUser = users
             ?.map((user) => user.id)
             .filter((id) => id !== this.userStore.user.id);
-          this.receivedUser = users.filter((user) => user.id === filteredUser[0])[0]
+          this.receivedUser = users.filter(
+            (user) => user.id === filteredUser[0]
+          )[0];
         })
         .catch((error) => {
           console.log(error);
@@ -186,7 +219,6 @@ export default (await import("vue")).defineComponent({
           body: this.body,
         })
         .then((res) => {
-          console.log(res.data);
           this.recentConversation.messages.push(res.data);
           this.body = "";
         })
@@ -195,6 +227,13 @@ export default (await import("vue")).defineComponent({
         });
     },
   },
-  components: { RouterLink, ConversationBox },
+  components: {
+    RouterLink,
+    ConversationBox,
+    Popover,
+    PopoverButton,
+    PopoverPanel,
+    FaceSmileIcon,
+  },
 });
 </script>

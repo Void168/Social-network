@@ -2,7 +2,7 @@
   <div class="max-w-7xl mx-auto grid grid-cols-4 gap-4">
     <div class="main-left col-span-1">
       <div
-        class="bg-white border border-gray-200 rounded-lg h-[650px] px-2"
+        class="bg-white border border-gray-200 rounded-lg h-[750px] px-2"
       >
         <h3 class="text-xl p-3">Đoạn hội thoại ({{ conversations.length }})</h3>
 
@@ -68,7 +68,6 @@ export default (await import("vue")).defineComponent({
         .get(`/api/chat/${this.$route.params.id}/`)
         .then((res) => {
           this.activeConversation = res.data;
-          console.log(this.activeConversation);
           this.listMessages = this.activeConversation.messages;
         })
         .catch((error) => {

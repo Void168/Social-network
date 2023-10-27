@@ -13,14 +13,14 @@
             class="menu-center flex space-x-12"
             v-if="userStore.user.isAuthenticated"
           >
-            <RouterLink to="/">
+            <RouterLink to="/" class="group">
               <svg
                 xmlns="http://www.w3.org/2000/svg"
                 fill="none"
                 viewBox="0 0 24 24"
                 stroke-width="1.5"
                 stroke="currentColor"
-                class="w-6 h-6 m-3"
+                class="w-6 h-6 m-3 group-hover:text-emerald-600 duration-100"
               >
                 <path
                   stroke-linecap="round"
@@ -30,14 +30,14 @@
               </svg>
             </RouterLink>
 
-            <RouterLink to="/chat">
+            <RouterLink to="/chat" class="group">
               <svg
                 xmlns="http://www.w3.org/2000/svg"
                 fill="none"
                 viewBox="0 0 24 24"
                 stroke-width="1.5"
                 stroke="currentColor"
-                class="w-6 h-6 m-3"
+                class="w-6 h-6 m-3 group-hover:text-emerald-600 duration-100"
               >
                 <path
                   stroke-linecap="round"
@@ -47,7 +47,7 @@
               </svg>
             </RouterLink>
 
-            <RouterLink to="/notifications">
+            <RouterLink to="/notifications" class="group">
               <span class="relative">
                 <svg
                   xmlns="http://www.w3.org/2000/svg"
@@ -55,7 +55,7 @@
                   viewBox="0 0 24 24"
                   stroke-width="1.5"
                   stroke="currentColor"
-                  class="w-6 h-6 m-3"
+                  class="w-6 h-6 m-3 group-hover:text-emerald-600"
                 >
                   <path
                     stroke-linecap="round"
@@ -70,14 +70,14 @@
               </span>
             </RouterLink>
 
-            <RouterLink to="/search">
+            <RouterLink to="/search" class="group">
               <svg
                 xmlns="http://www.w3.org/2000/svg"
                 fill="none"
                 viewBox="0 0 24 24"
                 stroke-width="1.5"
                 stroke="currentColor"
-                class="w-6 h-6 m-3"
+                class="w-6 h-6 m-3 group-hover:text-emerald-600 duration-100"
               >
                 <path
                   stroke-linecap="round"
@@ -108,9 +108,9 @@
 
             <template v-else>
               <div class="flex justify-between items-center gap-3">
-                <RouterLink to="/login"><button>Đăng nhập</button></RouterLink>
+                <RouterLink to="/login"><button class="btn">Đăng nhập</button></RouterLink>
                 <RouterLink to="/signup"
-                  ><button class="bg-gray-300">Đăng ký</button></RouterLink
+                  ><button class="bg-gray-300 btn">Đăng ký</button></RouterLink
                 >
               </div>
             </template>

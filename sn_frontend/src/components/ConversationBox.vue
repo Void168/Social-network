@@ -39,7 +39,7 @@
         </div>
 
         <div class="text-sm">
-          <div v-if="conversation.messages.length">
+          <div v-if="conversation.messages.length" class="flex gap-1">
             <span
               class="font-semibold"
               v-if="
@@ -52,9 +52,9 @@
               conversation.messages[conversation.messages.length - 1].created_by
                 .name
             }}</span>
-            <span class="truncate">{{
+            <p class="truncate">{{
               conversation.messages[conversation.messages.length - 1].body
-            }}</span>
+            }}</p>
           </div>
         </div>
       </div>

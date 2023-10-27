@@ -123,6 +123,7 @@
             leave-to-class="translate-y-1 opacity-0"
             ><PopoverPanel
               class="absolute z-10 bottom-10 right-0 shadow-2xl rounded-lg"
+              @click="Pick"
             >
               <emoji-picker></emoji-picker>
             </PopoverPanel>
@@ -213,6 +214,16 @@ export default (await import("vue")).defineComponent({
         });
     },
 
+    Pick() {
+      document
+        .querySelector("emoji-picker")
+        .addEventListener("emoji-click", (event) => {
+          this.body = this.body + event.detail.unicode;
+
+          return this.body;
+        });
+    },
+
     submitForm() {
       axios
         .post(`/api/chat/${this.recentConversation.id}/send/`, {
@@ -221,6 +232,7 @@ export default (await import("vue")).defineComponent({
         .then((res) => {
           this.recentConversation.messages.push(res.data);
           this.body = "";
+          this.emoji = "";
         })
         .catch((error) => {
           console.log(error);
@@ -237,3 +249,12 @@ export default (await import("vue")).defineComponent({
   },
 });
 </script>
+
+<style scoped>
+@media screen and (max-width: 320px) {
+  emoji-picker {
+    --num-columns: 6;
+    --category-emoji-size: 1.125rem;
+  }
+}
+</style>

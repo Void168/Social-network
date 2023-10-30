@@ -1,10 +1,11 @@
 from django.http import JsonResponse
 
 from rest_framework.decorators import api_view, authentication_classes, permission_classes
+from django.db.models import Q
 
 from account.models import User
-from .models import Conversation, ConversationMessage
-from .serializers import ConversationSerializer, ConversationDetailSerializer, ConversationMessageSerializer, LastMessageSerializer
+from .models import Conversation, ConversationMessage, SeenUser
+from .serializers import ConversationSerializer, ConversationDetailSerializer, ConversationMessageSerializer, SeenUserSerializer
 
 @api_view(['GET'])
 def conversation_list(request):
@@ -40,7 +41,8 @@ def conversation_get_or_create(request, user_pk):
 @api_view(['POST'])
 def conversation_send_message(request, pk):
     conversation = Conversation.objects.filter(users__in=list([request.user])).get(pk=pk)
-
+    seenUser = SeenUser.objects.create(created_by=request.user)
+    
     for user in conversation.users.all():
         if user != request.user:
             sent_to = user
@@ -49,48 +51,28 @@ def conversation_send_message(request, pk):
         conversation=conversation,
         body=request.data.get('body'),
         created_by=request.user,
-        sent_to=sent_to
+        sent_to=sent_to,
     )
+    
+    conversation_message.seen_by.add(seenUser)
 
     serializer = ConversationMessageSerializer(conversation_message)
 
     return JsonResponse(serializer.data, safe=False)
 
-@api_view(['GET'])
-def get_last_message(request, pk):
-    conversation = Conversation.objects.filter(users__in=list([request.user])).get(pk=pk)
-    last_message = conversation.messages.order_by('-created_at')[0]
-    if last_message:
-        last_message.is_latest_message=True
-        
-    serializer = LastMessageSerializer(last_message)
-    
-    return JsonResponse(serializer.data, safe=False)
-
 @api_view(['POST'])
 def set_seen(request, pk):
     conversation = Conversation.objects.filter(users__in=list([request.user])).get(pk=pk)
-    message = conversation.messages.order_by('-created_at')[0]
-    current_user = request.user
-    if message.sent_to.id == current_user.id and conversation.seen == False:
-        conversation.seen = True
-        conversation.save()
+    seenUser = SeenUser.objects.create(created_by=request.user)
         
+    if not conversation.messages.filter(created_by=request.user):
+        messages = conversation.messages.all()
+        
+        for message in messages:
+            message.seen_by.add(seenUser)
+            message.save()
+            
         return JsonResponse({'message': 'Seen'})
-    else:
-        return JsonResponse({'message': 'Unseen'})
-
-# @api_view(['POST'])
-# def set_unseen(request, pk):
-#     conversation = Conversation.objects.filter(users__in=list([request.user])).get(pk=pk)
-#     message = conversation.messages.order_by('-created_at')[0]
-#     current_user = request.user
+    else: 
+        return JsonResponse({'message':'Unseen'})
     
-#     if message.created_by.id != current_user.id and conversation.seen == True:
-#         conversation.seen = False
-#         conversation.save()
-        
-#         return JsonResponse({'message': 'Unseen'})
-    
-#     else:
-#         return JsonResponse({'message': 'Seen'})

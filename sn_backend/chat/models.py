@@ -11,9 +11,16 @@ class Conversation(models.Model):
     users = models.ManyToManyField(User, related_name='conversations')
     created_at = models.DateTimeField(auto_now_add=True)
     modified_at = models.DateTimeField(auto_now=True)
-    seen = models.BooleanField(default=False)
     
     def modified_at_formatted(self):
+        return timesince(self.created_at)
+
+class SeenUser(models.Model):
+    id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
+    created_at = models.DateTimeField(auto_now_add=True)
+    created_by = models.ForeignKey(User, related_name='see_user', on_delete=models.CASCADE)
+    
+    def created_at_formatted(self):
         return timesince(self.created_at)
 
 class ConversationMessage(models.Model):
@@ -24,6 +31,7 @@ class ConversationMessage(models.Model):
     created_at = models.DateTimeField(auto_now_add=True)
     created_by = models.ForeignKey(User, related_name='sent_messages', on_delete=models.CASCADE)
     is_latest_message = models.BooleanField(default=False)
+    seen_by = models.ManyToManyField(SeenUser, related_name='seen_message')
     
     def created_at_formatted(self):
         return timesince(self.created_at)

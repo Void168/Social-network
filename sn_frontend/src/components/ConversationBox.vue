@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div @click="$emit('seenMessage')">
     <RouterLink
       class="flex justify-between cursor-pointer"
       :to="{ name: 'conversation', params: { id: conversation.id } }"
@@ -39,7 +39,10 @@
         </div>
 
         <div class="text-sm">
-          <div v-if="conversation.messages.length" class="flex gap-1 justify-between">
+          <div
+            v-if="conversation.messages.length"
+            class="flex gap-1 justify-between"
+          >
             <div class="flex gap-2">
               <span
                 class="font-semibold"
@@ -100,6 +103,7 @@ import axios from "axios";
 import { useUserStore } from "../stores/user";
 
 export default (await import("vue")).defineComponent({
+  name: "ConversationBox",
   data() {
     return {
       conversations: [],
@@ -125,19 +129,11 @@ export default (await import("vue")).defineComponent({
         .get("/api/chat/")
         .then((res) => {
           this.conversations = res.data;
-          // this.setUnseenConversation();
-          // this.setSeenConversation();
         })
         .catch((error) => {
           console.log(error);
         });
     },
-    // setUnseenConversation() {
-    //   axios
-    //     .post(`/api/chat/${this.$route.params.id}/set_unseen/`)
-    //     .then((res) => console.log(res.data))
-    //     .catch((error) => console.log(error));
-    // },
   },
 });
 </script>

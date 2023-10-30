@@ -45,7 +45,6 @@ export default (await import("vue")).defineComponent({
     return {
       conversations: [],
       body: "",
-      lastMessage: {},
     };
   },
   mounted() {

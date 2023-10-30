@@ -65,14 +65,11 @@ def set_seen(request, pk):
     conversation = Conversation.objects.filter(users__in=list([request.user])).get(pk=pk)
     seenUser = SeenUser.objects.create(created_by=request.user)
         
-    if not conversation.messages.filter(created_by=request.user):
-        messages = conversation.messages.all()
+    messages = conversation.messages.exclude(created_by=request.user)
         
-        for message in messages:
-            message.seen_by.add(seenUser)
-            message.save()
+    for message in messages:
+        message.seen_by.add(seenUser)
+        message.save()
             
-        return JsonResponse({'message': 'Seen'})
-    else: 
-        return JsonResponse({'message':'Unseen'})
+    return JsonResponse({'message': 'Seen'})
     

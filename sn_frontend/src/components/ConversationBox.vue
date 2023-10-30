@@ -53,10 +53,14 @@
                 >Bạn:
               </span>
               <span
-                v-if="
+                v-else-if="
                   conversation.messages[conversation.messages.length - 1]
                     .created_by.id !== userStore.user.id &&
-                  conversation.seen === false
+                  conversation.messages[
+                    conversation.messages.length - 1
+                  ].seen_by
+                    .map((obj) => obj.created_by.email)
+                    .includes(userStore.user.email) === false
                 "
                 class="font-bold text-emerald-500"
                 >{{
@@ -73,7 +77,13 @@
               <div class="flex justify-between">
                 <p
                   class="truncate font-bold text-emerald-500"
-                  v-if="conversation.seen === false"
+                  v-if="
+                    conversation.messages[
+                      conversation.messages.length - 1
+                    ].seen_by
+                      .map((obj) => obj.created_by.email)
+                      .includes(userStore.user.email) === false
+                  "
                 >
                   {{
                     conversation.messages[conversation.messages.length - 1].body
@@ -89,7 +99,11 @@
 
             <span
               class="bg-emerald-500 w-3 h-3 rounded-full shadow-md"
-              v-if="conversation.seen === false"
+              v-if="
+                conversation.messages[conversation.messages.length - 1].seen_by
+                  .map((obj) => obj.created_by.email)
+                  .includes(userStore.user.email) === false
+              "
             ></span>
           </div>
         </div>

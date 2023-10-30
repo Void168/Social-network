@@ -46,11 +46,26 @@
                   />
                 </div>
               </div>
-
               <span
                 class="text-xs text-gray-500 leading-none"
-                v-if="message.id === listMessages[listMessages.length - 1].id"
+                v-if="
+                  message.id === listMessages[listMessages.length - 1].id &&
+                  listMessages[listMessages.length - 1].seen_by
+                    .map((obj) => obj.created_by.email)
+                    .includes(userStore.user.email) === true
+                "
                 >Đã gửi
+                {{ listMessages[listMessages.length - 1].created_at_formatted }}
+                trước</span
+              ><span
+                class="text-xs text-gray-500 leading-none"
+                v-if="
+                  message.id === listMessages[listMessages.length - 1].id &&
+                  listMessages[listMessages.length - 1].seen_by
+                    .map((obj) => obj.created_by.email)
+                    .includes(userStore.user.email) === false
+                "
+                >Đã xem
                 {{ listMessages[listMessages.length - 1].created_at_formatted }}
                 trước</span
               >
@@ -81,8 +96,16 @@
                       {{ message.body }}
                     </p>
                   </div>
-                  <span class="text-xs text-gray-500 leading-none"
-                    >{{ message.created_at_formatted }} trước</span
+                  <span
+                    class="text-xs text-gray-500 leading-none"
+                    v-if="
+                      message.id === listMessages[listMessages.length - 1].id
+                    "
+                    >Đã gửi
+                    {{
+                      listMessages[listMessages.length - 1].created_at_formatted
+                    }}
+                    trước</span
                   >
                 </div>
               </div>
@@ -184,48 +207,48 @@ export default (await import("vue")).defineComponent({
   methods: {
     getActiveConversation() {
       axios
-      .get(`/api/chat/${this.$route.params.id}/`)
-      .then((res) => {
-        this.recentConversation = res.data;
-      })
-      .catch((error) => {
-        console.log(error);
-      });
+        .get(`/api/chat/${this.$route.params.id}/`)
+        .then((res) => {
+          this.recentConversation = res.data;
+        })
+        .catch((error) => {
+          console.log(error);
+        });
     },
     getMessages() {
       axios
-      .get(`/api/chat/${this.$route.params.id}/`)
-      .then((res) => {
-        this.recentConversation = res.data;
+        .get(`/api/chat/${this.$route.params.id}/`)
+        .then((res) => {
+          this.recentConversation = res.data;
           this.listMessages = this.recentConversation.messages;
           let users = [];
           for (let i = 0; i < this.recentConversation.users.length; i++) {
             users.push(this.recentConversation.users[i]);
           }
           const filteredUser = users
-          ?.map((user) => user.id)
-          .filter((id) => id !== this.userStore.user.id);
+            ?.map((user) => user.id)
+            .filter((id) => id !== this.userStore.user.id);
           this.receivedUser = users.filter(
             (user) => user.id === filteredUser[0]
-            )[0];
-          })
-          .catch((error) => {
-            console.log(error);
-          });
-        },
-        
-        Pick() {
-          document
-          .querySelector("emoji-picker")
-          .addEventListener("emoji-click", (event) => {
+          )[0];
+        })
+        .catch((error) => {
+          console.log(error);
+        });
+    },
+
+    Pick() {
+      document
+        .querySelector("emoji-picker")
+        .addEventListener("emoji-click", (event) => {
           this.body = this.body + event.detail.unicode;
-          
+
           return this.body;
         });
-      },
-      
-      submitForm() {
-        axios
+    },
+
+    submitForm() {
+      axios
         .post(`/api/chat/${this.recentConversation.id}/send/`, {
           body: this.body,
         })

@@ -35,7 +35,6 @@
             }}
             trước</span
           >
-          <span v-else></span>
         </div>
 
         <div class="text-sm">

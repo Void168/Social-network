@@ -66,10 +66,11 @@ def set_seen(request, pk):
     seenUser = SeenUser.objects.create(created_by=request.user)
         
     messages = conversation.messages.exclude(created_by=request.user)
-        
+    
     for message in messages:
-        message.seen_by.add(seenUser)
-        message.save()
+        if not message.seen_by.all().filter(created_by=request.user):
+            message.seen_by.add(seenUser)
+            message.save()
             
     return JsonResponse({'message': 'Seen'})
     

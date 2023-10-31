@@ -13,7 +13,7 @@ export const useUserStore = defineStore({
       email: null,
       access: null,
       refresh: null,
-      avatar: null
+      avatar: null,
     },
   }),
 
@@ -67,11 +67,13 @@ export const useUserStore = defineStore({
       this.user.name = user.name;
       this.user.email = user.email;
       this.user.avatar = user.avatar
+      this.user.cover_image = user.cover_image
 
       localStorage.setItem("user.id", this.user.id);
       localStorage.setItem("user.name", this.user.name);
       localStorage.setItem("user.email", this.user.email);
       localStorage.setItem('user.avatar', this.user.avatar)
+      localStorage.setItem('user.avatar', this.user.cover_image)
     },
 
     refreshToken() {

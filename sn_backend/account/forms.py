@@ -12,3 +12,8 @@ class ProfileForm(forms.ModelForm):
     class Meta:
         model = User
         fields = ('email', 'name', 'avatar',)
+
+class CoverImageForm(forms.ModelForm):
+    class Meta:
+        model = User
+        fields = ('cover_image',)

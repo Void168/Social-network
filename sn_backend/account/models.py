@@ -32,6 +32,7 @@ class User(AbstractBaseUser, PermissionsMixin):
     email = models.EmailField(blank=True, default='', unique=True)
     name = models.CharField(blank=True, default='', max_length=255)
     avatar = models.ImageField(upload_to='avatars', blank=True, null=True)
+    cover_image = models.ImageField(upload_to='cover_images', blank=True, null=True)
     friends = models.ManyToManyField('self')
     friends_count = models.IntegerField(default=0)
     
@@ -57,6 +58,12 @@ class User(AbstractBaseUser, PermissionsMixin):
             return 'http://127.0.0.1:8000' + self.avatar.url
         else: 
             return 'https://www.pngkey.com/png/full/115-1150152_default-profile-picture-avatar-png-green.png'
+    
+    def get_cover_image(self):
+        if self.cover_image:
+            return 'http://127.0.0.1:8000' + self.cover_image.url
+        else: 
+            return 'https://th.bing.com/th/id/OIP.o1n4kgruF-5cDCCx7jNYKQHaEo?pid=ImgDet&rs=1'
     
 class FriendshipRequest(models.Model):
     SENT = 'sent'

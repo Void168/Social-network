@@ -6,7 +6,7 @@ from rest_framework.decorators import api_view, authentication_classes, permissi
 
 from notification.utils import create_notification
 
-from .forms import SignupForm, ProfileForm
+from .forms import SignupForm, ProfileForm, CoverImageForm
 from .models import User, FriendshipRequest
 from .serializers import UserSerializer, FriendshipRequestSerializer
 
@@ -16,7 +16,8 @@ def me(request):
         'id': request.user.id,
         'name': request.user.name,
         'email': request.user.email,
-        'avatar': request.user.get_avatar()
+        'avatar': request.user.get_avatar(),
+        'cover_image': request.user.get_cover_image()
     })
 
 @api_view(['POST'])
@@ -95,6 +96,19 @@ def edit_profile(request):
         serializer = UserSerializer(user)
         
         return JsonResponse({'message': 'information updated', 'user': serializer.data})
+
+@api_view(['POST'])
+def edit_cover_image(request):
+    user = request.user
+    
+    form = CoverImageForm(request.POST, request.FILES, instance=user)
+    
+    if form.is_valid:
+        form.save()
+    
+    serializer = UserSerializer(user)
+    
+    return JsonResponse({'message': 'cover image updated'})
 
 @api_view(['POST'])
 def edit_password(request):

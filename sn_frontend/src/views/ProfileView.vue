@@ -1,6 +1,6 @@
 <template>
-  <div class="max-w-7xl mx-auto grid grid-cols-4 gap-4">
-    <div class="main-left col-span-1">
+  <div class="max-w-7xl mx-auto grid grid-cols-5 gap-4">
+    <div class="main-left col-span-2">
       <div
         class="p-4 bg-white border border-gray-200 flex flex-col justify-center items-center rounded-lg shadow-md"
       >
@@ -70,7 +70,7 @@
       </div>
     </div>
 
-    <div class="main-center col-span-2 space-y-4 bg-white p-4 shadow-sm">
+    <div class="main-center col-span-3 space-y-4 bg-white p-4 shadow-sm">
       <div
         v-if="userStore.user.id === user.id"
         class="p-4 bg-white rounded-lg"
@@ -90,10 +90,6 @@
       <p v-else class="text-center text-lg">
         {{ user.name }} Chưa có bài viết nào
       </p>
-    </div>
-    <div class="main-right col-span-1 space-y-4">
-      <PeopleYouMayKnow />
-      <Trends />
     </div>
   </div>
 </template>

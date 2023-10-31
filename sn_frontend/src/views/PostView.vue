@@ -1,6 +1,6 @@
 <template>
-  <div class="max-w-7xl mx-auto grid grid-cols-4 gap-4">
-    <div class="main-center col-span-3 space-y-4">
+  <div class="max-w-7xl mx-auto flex justify-center items-center gap-4">
+    <div class="main-center space-y-4">
       <div
         v-if="post.id"
         class="p-4 bg-white border border-gray-200 rounded-lg mt-4"
@@ -36,10 +36,6 @@
           </div>
         </form>
       </div>
-    </div>
-    <div class="main-right col-span-1 space-y-4">
-      <PeopleYouMayKnow />
-      <Trends />
     </div>
   </div>
 </template>

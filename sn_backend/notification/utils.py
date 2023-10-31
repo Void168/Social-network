@@ -27,12 +27,13 @@ def create_notification(request, type_of_notification, post_id=None, friendreque
     #     created_for = friendrequest.created_for
     #     body = f'{request.user.name} đã từ chối lời mời kết bạn'
     
-    notification = Notification.objects.create(
-        body=body,
-        type_of_notification=type_of_notification,
-        created_by=request.user,
-        post_id=post_id,
-        created_for=created_for
-    )
+    if request.user != created_for:
+        notification = Notification.objects.create(
+            body=body,
+            type_of_notification=type_of_notification,
+            created_by=request.user,
+            post_id=post_id,
+            created_for=created_for
+        )
     
-    return notification
+        return notification

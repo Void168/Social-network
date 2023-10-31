@@ -66,6 +66,7 @@ export default (await import("vue")).defineComponent({
         .get("/api/notifications/")
         .then((res) => {
           this.notifications = res.data;
+          console.log(this.notifications)
         })
         .catch((error) => {
           console.log(error);
@@ -73,8 +74,6 @@ export default (await import("vue")).defineComponent({
     },
 
     async readNotification(notification) {
-      console.log("readNotification", notification.id);
-
       await axios
         .post(`/api/notifications/read/${notification.id}/`)
         .then((res) => {

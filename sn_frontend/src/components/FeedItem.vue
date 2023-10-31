@@ -69,7 +69,7 @@
         </div>
       </div>
       <div
-        class="absolute bg-emerald-400 right-0 bottom-0 shadow-lg rounded-lg ease-in duration-300"
+        class="absolute bg-emerald-400 right-0 shadow-lg rounded-lg ease-in duration-300"
       >
         <Menu as="div" class="relative inline-block text-left">
           <div>

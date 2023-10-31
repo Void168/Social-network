@@ -31,8 +31,15 @@
     <div class="my-6 flex justify-between">
       <div class="flex space-x-6">
         <div class="flex items-center space-x-2">
-          <HeartLike class="w-6 h-6 text-rose-500 cursor-pointer" v-if="isLike" />
-          <HeartIcon v-else @click="likePost(post.id)" class="w-6 h-6 cursor-pointer hover:text-rose-500" />
+          <HeartLike
+            class="w-6 h-6 text-rose-500 cursor-pointer"
+            v-if="isLike"
+          />
+          <HeartLike
+            v-else
+            @click="likePost(post.id)"
+            class="w-6 h-6 cursor-pointer text-gray-400 hover:text-rose-500 transition-colors duration-75"
+          />
           <span class="text-gray-500 text-xs"
             >{{ post.likes_count }} lượt thích</span
           >
@@ -145,7 +152,6 @@ import axios from "axios";
 import { RouterLink } from "vue-router";
 import { Menu, MenuButton, MenuItem, MenuItems } from "@headlessui/vue";
 import { ShieldCheckIcon, TrashIcon } from "@heroicons/vue/24/solid";
-import { HeartIcon } from "@heroicons/vue/24/outline";
 import { HeartIcon as HeartLike } from "@heroicons/vue/24/solid";
 import { useUserStore } from "../stores/user";
 import { useToastStore } from "../stores/toast";
@@ -192,6 +198,7 @@ export default (await import("vue")).defineComponent({
         .then((res) => {
           if (res.data.message !== "post already liked") {
             this.post.likes_count += 1;
+            this.isLike = true;
           }
         })
         .catch((error) => {
@@ -257,7 +264,6 @@ export default (await import("vue")).defineComponent({
     MenuItems,
     ShieldCheckIcon,
     TrashIcon,
-    HeartIcon,
     HeartLike,
     DeletePostModal,
   },

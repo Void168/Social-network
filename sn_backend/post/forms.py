@@ -5,7 +5,7 @@ from .models import Post, PostAttachment
 class PostForm(ModelForm):
     class Meta:
         model = Post
-        fields = ('body','is_private',)
+        fields = ('body','is_private','only_me',)
 
 class AttachmentForm(ModelForm):
     class Meta:

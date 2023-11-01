@@ -73,7 +73,7 @@ export const useUserStore = defineStore({
       localStorage.setItem("user.name", this.user.name);
       localStorage.setItem("user.email", this.user.email);
       localStorage.setItem('user.avatar', this.user.avatar)
-      localStorage.setItem('user.avatar', this.user.cover_image)
+      localStorage.setItem('user.cover_image', this.user.cover_image)
     },
 
     refreshToken() {

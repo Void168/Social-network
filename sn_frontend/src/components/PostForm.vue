@@ -8,9 +8,65 @@
         rows="4"
         placeholder="Bạn đang nghĩ gì?"
       ></textarea>
-      <label>
-        <input type="checkbox" v-model="is_private"> Riêng tư
-      </label>
+      <Listbox v-model="selectedPrivacy">
+        <div class="relative mt-1">
+          <ListboxButton
+            class="relative w-full cursor-default rounded-lg bg-white py-2 pl-3 pr-10 text-left shadow-md focus:outline-none focus-visible:border-indigo-500 focus-visible:ring-2 focus-visible:ring-white/75 focus-visible:ring-offset-2 focus-visible:ring-offset-orange-300 sm:text-sm"
+          >
+            <span class="block truncate">{{ selectedPrivacy.name }}</span>
+            <span
+              class="pointer-events-none absolute inset-y-0 right-0 flex items-center pr-2"
+            >
+              <ChevronUpDownIcon
+                class="h-5 w-5 text-gray-400"
+                aria-hidden="true"
+              />
+            </span>
+          </ListboxButton>
+
+          <transition
+            leave-active-class="transition duration-100 ease-in"
+            leave-from-class="opacity-100"
+            leave-to-class="opacity-0"
+          >
+            <ListboxOptions
+              class="absolute mt-1 max-h-60 w-full overflow-auto rounded-md bg-white py-1 text-base shadow-lg ring-1 ring-black/5 focus:outline-none sm:text-sm"
+            >
+              <ListboxOption
+                v-slot="{ active, selected }"
+                v-for="selectOption in privacy"
+                :key="selectOption.name"
+                :value="selectOption"
+                as="template"
+                @click="getOption"
+              >
+                <li
+                  :class="[
+                    active ? 'bg-amber-100 text-amber-900' : 'text-gray-900',
+                    'relative cursor-default select-none py-2 pl-10 pr-4',
+                  ]"
+                >
+                  <span
+                    :value="selection"
+                    :class="[
+                      selected ? 'font-medium' : 'font-normal',
+                      'block truncate',
+                    ]"
+                    >{{ selectOption.name }}</span
+                  >
+                  <span
+                    v-if="selected"
+                    class="absolute inset-y-0 left-0 flex items-center pl-3 text-amber-600"
+                  >
+                    <CheckIcon class="h-5 w-5" aria-hidden="true" />
+                  </span>
+                </li>
+              </ListboxOption>
+            </ListboxOptions>
+          </transition>
+        </div>
+      </Listbox>
+      <!-- <label> <input type="checkbox" v-model="is_private" /> Riêng tư </label> -->
       <div
         id="preview"
         v-if="url"
@@ -59,21 +115,75 @@
 </template>
 <script>
 import axios from "axios";
+import {
+  Listbox,
+  ListboxLabel,
+  ListboxButton,
+  ListboxOptions,
+  ListboxOption,
+} from "@headlessui/vue";
+import { CheckIcon, ChevronUpDownIcon } from "@heroicons/vue/20/solid";
+import { ref } from "vue";
 
 export default {
+  components: {
+    Listbox,
+    ListboxLabel,
+    ListboxButton,
+    ListboxOptions,
+    ListboxOption,
+    CheckIcon,
+    ChevronUpDownIcon,
+  },
+  setup() {
+    const privacy = [
+      { name: "Công khai" },
+      { name: "Bạn bè" },
+      { name: "Chỉ mình tôi" },
+    ];
+    const selectedPrivacy = ref(privacy[0]);
+
+    return { selectedPrivacy };
+  },
   props: {
     user: Object,
     posts: Array,
   },
-
   data() {
     return {
       body: "",
       url: null,
-      is_private: false
+      is_private: false,
+      only_me: false,
+      privacy: [
+        { name: "Công khai" },
+        { name: "Bạn bè" },
+        { name: "Chỉ mình tôi" },
+      ],
+      selection: "",
     };
   },
+  mounted() {
+    this.getOption();
+  },
   methods: {
+    getOption() {
+      this.selection = this.selectedPrivacy;
+      if (this.selection.name === "Công khai") {
+        this.is_private = false;
+        this.only_me = false;
+      }
+      if (this.selection.name === "Bạn bè") {
+        this.is_private = true;
+        this.only_me = false;
+      }
+      if (this.selection.name === "Chỉ mình tôi") {
+        this.is_private = true;
+        this.only_me = true;
+      }
+      console.log(this.is_private)
+      console.log(this.only_me)
+    },
     onFileChange(e) {
       const file = e.target.files[0];
       this.url = URL.createObjectURL(file);
@@ -88,7 +198,8 @@ export default {
       let formData = new FormData();
       formData.append("image", this.$refs.file.files[0]);
       formData.append("body", this.body);
-      formData.append("is_private", this.is_private)
+      formData.append("is_private", this.is_private);
+      formData.append("only_me", this.only_me);
 
       axios
         .post("/api/posts/create/", formData, {
@@ -102,7 +213,8 @@ export default {
           this.posts.unshift(res.data);
           this.body = "";
           this.$refs.file.value = null;
-          this.is_private = false
+          this.is_private = false;
+          this.only_me = false;
           this.url = null;
 
           if (this.user) {

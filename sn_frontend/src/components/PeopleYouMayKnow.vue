@@ -16,7 +16,7 @@
         </div>
 
         <RouterLink :to="{ name: 'profile', params: { id: user.id } }"
-          ><button class="btn-sm">Xem</button></RouterLink
+          ><button class="btn btn-sm">Xem</button></RouterLink
         >
       </div>
     </div>

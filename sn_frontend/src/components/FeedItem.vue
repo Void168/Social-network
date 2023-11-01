@@ -4,14 +4,17 @@
       <div class="flex items-center space-x-6">
         <img :src="post.created_by.get_avatar" class="w-10 h-10 rounded-full" />
 
-        <p>
+        <div class="flex gap-1 items-center">
           <strong>
             <RouterLink
               :to="{ name: 'profile', params: { id: post.created_by.id } }"
               >{{ post.created_by.name }}</RouterLink
             >
           </strong>
-        </p>
+            <GlobeAsiaAustraliaIcon class="w-4 h-4" v-if="post.is_private === false && post.only_me === false"/>
+            <UserGroupIcon class="w-4 h-4" v-else-if="post.is_private === true && post.only_me === false"/>
+            <LockClosedIcon class="w-4 h-4" v-else-if="post.is_private === true && post.only_me === true"/>
+        </div>
       </div>
 
       <p class="text-gray-600">{{ post.created_at_formatted }} trước</p>
@@ -152,6 +155,7 @@ import axios from "axios";
 import { RouterLink } from "vue-router";
 import { Menu, MenuButton, MenuItem, MenuItems } from "@headlessui/vue";
 import { ShieldCheckIcon, TrashIcon } from "@heroicons/vue/24/solid";
+import { GlobeAsiaAustraliaIcon, UserGroupIcon, LockClosedIcon } from "@heroicons/vue/24/outline";
 import { HeartIcon as HeartLike } from "@heroicons/vue/24/solid";
 import { useUserStore } from "../stores/user";
 import { useToastStore } from "../stores/toast";
@@ -258,6 +262,7 @@ export default (await import("vue")).defineComponent({
   },
   components: {
     RouterLink,
+    DeletePostModal,
     Menu,
     MenuButton,
     MenuItem,
@@ -265,7 +270,9 @@ export default (await import("vue")).defineComponent({
     ShieldCheckIcon,
     TrashIcon,
     HeartLike,
-    DeletePostModal,
+    GlobeAsiaAustraliaIcon,
+    UserGroupIcon,
+    LockClosedIcon
   },
 });
 </script>

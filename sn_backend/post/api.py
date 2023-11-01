@@ -38,7 +38,7 @@ def posts_trend_list(request):
     posts_trend = Post.objects.filter(created_by__in=list(user_ids))
     
     if trend:
-        posts_trend = posts_trend.filter(body__icontains='#' + trend).filter(is_private=False)
+        posts_trend = posts_trend.filter(body__icontains='#' + trend).filter(Q(is_private=False) | Q(only_me=False))
         
     
     serializer = PostSerializer(posts_trend, many=True)
@@ -51,7 +51,7 @@ def post_detail(request, pk):
     for user in User.objects.all():
         user_ids.append(user.id)
         
-    post= Post.objects.filter(Q(created_by__in=list(user_ids)) | Q(is_private=False)).get(pk=pk)
+    post= Post.objects.filter(Q(created_by__in=list(user_ids)) | Q(is_private=False) & Q(only_me=False)).get(pk=pk)
     
     return JsonResponse({
         'post': PostDetailSerializer(post).data
@@ -63,8 +63,14 @@ def post_list_profile(request, id):
     posts = Post.objects.filter(created_by_id=id)
 
     if not request.user in user.friends.all():
-        posts = posts.filter(is_private=False)
-
+        posts = posts.filter(Q(is_private=False) & Q(only_me=False))
+    
+    if request.user in user.friends.all():
+        posts = posts.filter(only_me=False)
+        
+    if request.user == user:
+        posts = Post.objects.filter(created_by_id=id)
+        
     posts_serializer = PostSerializer(posts, many=True)
     user_serializer = UserSerializer(user)
 

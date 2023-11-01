@@ -85,7 +85,7 @@
         </div>
       </div>
 
-      <div class="main-center col-span-2 space-y-4 bg-white p-4 shadow-sm">
+      <div class="main-center col-span-2 space-y-4 bg-white p-4">
         <div
           v-if="userStore.user.id === user.id"
           class="p-4 bg-white rounded-lg"

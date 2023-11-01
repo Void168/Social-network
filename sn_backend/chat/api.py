@@ -73,4 +73,11 @@ def set_seen(request, pk):
             message.save()
             
     return JsonResponse({'message': 'Seen'})
+
+@api_view(['DELETE'])
+def conversation_delete(request, pk):
+    conversation = Conversation.objects.get(pk=pk)
+    conversation.delete()
+    
+    return JsonResponse({'message': 'conversation deleted'})
     

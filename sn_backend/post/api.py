@@ -21,7 +21,7 @@ def post_list(request):
     for user in request.user.friends.all():
         user_ids.append(user.id)
             
-    posts = Post.objects.filter(created_by__in=list(user_ids))
+    posts = Post.objects.filter(created_by__in=list(user_ids), only_me=False)
     
     serializer = PostSerializer(posts, many=True)
     

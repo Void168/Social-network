@@ -22,7 +22,7 @@ def search(request):
     users = User.objects.filter(name__icontains=query)
     users_serializer = UserSerializer(users, many=True)
     
-    posts = Post.objects.filter(Q(body__icontains=query, is_private=False) | Q(created_by__in=list(user_ids), body__icontains=query))
+    posts = Post.objects.filter(Q(body__icontains=query, is_private=False, only_me=False) | Q(created_by__in=list(user_ids), body__icontains=query, only_me=False))
     
     posts_serializer = PostSerializer(posts, many=True)
     

@@ -42,7 +42,6 @@ export default (await import("vue")).defineComponent({
         .get(`/api/posts/trends/`)
         .then((res) => {
           this.trends = res.data;
-          console.log(res.data)
         })
         .catch((error) => console.log(error));
     },

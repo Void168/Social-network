@@ -105,7 +105,6 @@ export default {
       if (this.post.comments.length < this.lastComment) {
         this.lastComment = this.post.comments.length;
       }
-      console.log(this.lastComment);
     },
 
     submitForm() {

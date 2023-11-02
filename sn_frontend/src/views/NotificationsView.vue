@@ -4,7 +4,7 @@
       <div class="p-4 bg-white border border-gray-200 rounded-lg">
         <div v-if="notifications?.length">
           <div
-            v-for="notification in notifications"
+            v-for="notification in notifications.slice(0, lastNoti)"
             v-bind:key="notification.id"
             @click="readNotification(notification)"
           >
@@ -28,6 +28,15 @@
               <span class="w-5 h-5 bg-emerald-600 rounded-full"></span>
             </div>
           </div>
+          <div class="flex justify-center items-center mt-4">
+            <button
+              class="btn"
+              @click="loadMore"
+              v-if="lastNoti < notifications.length"
+            >
+              Tải thêm bình luận
+            </button>
+          </div>
         </div>
         <div v-else>
           <p>Bạn không có thông báo nào</p>
@@ -48,6 +57,7 @@ export default (await import("vue")).defineComponent({
   data() {
     return {
       notifications: [],
+      lastNoti: 5,
     };
   },
 
@@ -66,11 +76,18 @@ export default (await import("vue")).defineComponent({
         .get("/api/notifications/")
         .then((res) => {
           this.notifications = res.data;
-          console.log(this.notifications)
+          console.log(this.notifications);
         })
         .catch((error) => {
           console.log(error);
         });
+    },
+
+    loadMore() {
+      this.lastNoti = this.lastNoti + 10;
+      if (this.notifications.length < this.lastNoti) {
+        this.lastNoti = this.post.comments.length;
+      }
     },
 
     async readNotification(notification) {

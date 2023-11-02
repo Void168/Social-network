@@ -103,7 +103,7 @@ export default {
         })
         .then((res) => {
           console.log("response:", res.data);
-
+          this.$router.push(`/search/?query=${this.query}`)
           this.users = res.data.users;
           this.posts = res.data.posts;
         })

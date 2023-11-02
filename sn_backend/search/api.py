@@ -28,5 +28,6 @@ def search(request):
     
     return JsonResponse({
         'users': users_serializer.data,
-        'posts': posts_serializer.data
+        'posts': posts_serializer.data,
+        'query': query,
     }, safe=False)

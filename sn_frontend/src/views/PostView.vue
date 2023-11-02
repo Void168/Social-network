@@ -1,40 +1,56 @@
 <template>
   <div class="max-w-7xl mx-auto flex justify-center items-center gap-4">
-    <div class="main-center space-y-4">
+    <div class="space-y-4 w-6/12">
       <div
         v-if="post.id"
-        class="p-4 bg-white border border-gray-200 rounded-lg mt-4"
+        class="p-4 bg-white border border-gray-200 rounded-lg mt-4 shadow-md"
       >
         <FeedItem v-bind:post="post" />
       </div>
-
-      <div class="p-4 bg-white border border-gray-200 rounded-lg ml-10">
-        <div v-if="!post.comments?.length" class="flex justify-center items-center">Chưa có bình luận nào</div>
-        <div
-          v-else
-          class="bg-white rounded-lg"
-          v-for="comment in post.comments.reverse()"
-          v-bind:key="comment.id"
-        >
-          <CommentItem v-bind:comment="comment" />
-        </div>
-      </div>
-      <div class="p-4 bg-white border border-gray-200 rounded-lg">
+      <div class="p-4 bg-white border border-gray-200 rounded-lg shadow-md">
         <form v-on:submit.prevent="submitForm" method="post">
           <div class="p-4">
             <textarea
               v-model="body"
               class="p-4 w-full bg-gray-100 rounded-lg"
               cols="30"
-              rows="4"
+              rows="1"
               placeholder="Viết bình luận..."
             ></textarea>
           </div>
 
-          <div class="p-4 border-t border-gray-100 flex justify-end">
+          <div class="px-4 py-2 border-t border-gray-100 flex justify-end">
             <button class="btn">Bình luận</button>
           </div>
         </form>
+      </div>
+
+      <div
+        class="p-4 bg-white border border-gray-200 rounded-lg ml-10 shadow-md"
+      >
+        <div
+          v-if="!post.comments?.length"
+          class="flex justify-center items-center"
+        >
+          Chưa có bình luận nào
+        </div>
+        <div
+          v-else
+          class="bg-white rounded-lg"
+          v-for="comment in post.comments.slice(0, lastComment)"
+          v-bind:key="comment.id"
+        >
+          <CommentItem v-bind:comment="comment" />
+        </div>
+        <div class="flex justify-end">
+          <button
+            class="hover:underline transition"
+            @click="loadMore"
+            v-if="lastComment < post.comments.length"
+          >
+            Tải thêm bình luận
+          </button>
+        </div>
       </div>
     </div>
   </div>
@@ -62,6 +78,7 @@ export default {
         id: null,
         comments: [],
       },
+      lastComment: 5,
       body: "",
     };
   },
@@ -83,6 +100,13 @@ export default {
           console.log(error);
         });
     },
+    loadMore() {
+      this.lastComment = this.lastComment + 10;
+      if (this.post.comments.length < this.lastComment) {
+        this.lastComment = this.post.comments.length;
+      }
+      console.log(this.lastComment);
+    },
 
     submitForm() {
       console.log("submitForm", this.body);
@@ -95,7 +119,7 @@ export default {
           console.log("data", res.data);
 
           this.post.comments.unshift(res.data);
-          this.post.comments_count += 1
+          this.post.comments_count += 1;
           this.body = "";
         })
         .catch((error) => {

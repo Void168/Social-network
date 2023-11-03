@@ -14,9 +14,9 @@
       <div class="main-left col-span-1 relative">
         <div class="h-20 frame"></div>
         <div
-          class="px-4 pb-4 bg-white flex flex-col justify-center items-center rounded-lg shadow-md overflow-hidden"
+          class="px-4 pb-4 bg-white dark:bg-slate-600 dark:border-slate-700 dark:text-neutral-200 flex flex-col justify-center items-center rounded-lg shadow-md overflow-hidden"
         >
-          <div class="icon"></div>
+          <div class="icon bg-gray-100 dark:bg-slate-700 before:dark:shadow-[20px_-20px_0_20px_rgba(51, 65, 85, 1)] after:dark:shadow-[-20px_-20px_0_20px_rgba(51, 65, 85, 1)]"></div>
           <img
             :src="user.get_avatar"
             alt=""
@@ -27,7 +27,7 @@
           </p>
           <div class="mt-6 flex space-x-8 justify-around">
             <div>
-              <p class="text-sm text-gray-500">
+              <p class="text-sm text-gray-500 dark:text-neutral-200">
                 {{ user.friends_count }} người bạn
               </p>
               <router-link
@@ -45,7 +45,7 @@
               >
             </div>
 
-            <p class="text-sm text-gray-500">{{ user.posts_count }} bài đăng</p>
+            <p class="text-sm text-gray-500 dark:text-neutral-200">{{ user.posts_count }} bài đăng</p>
           </div>
           <div class="flex flex-col mt-4">
             <div v-if="userStore.user.id !== user.id" class="mt-6">
@@ -85,17 +85,17 @@
         </div>
       </div>
 
-      <div class="main-center col-span-2 space-y-4 bg-white p-4" id="feed-frame">
+      <div class="main-center col-span-2 space-y-4 bg-white dark:bg-slate-600 dark:border-slate-700 dark:text-neutral-200 p-4" id="feed-frame">
         <div
           v-if="userStore.user.id === user.id"
-          class="p-4 bg-white rounded-lg"
+          class="p-4 bg-white rounded-lg dark:bg-slate-600 dark:border-slate-700 dark:text-neutral-200"
         >
           <PostForm v-bind:user="user" v-bind:posts="posts" />
         </div>
         <p class="font-semibold text-2xl">Bài viết của {{ user.name }}</p>
         <div v-if="posts?.length">
           <div
-            class="p-4 bg-white border border-gray-200 rounded-lg mt-4"
+            class="p-4 bg-white border border-gray-200 rounded-lg mt-4 dark:bg-slate-700 dark:border-slate-800 dark:text-neutral-200"
             v-for="post in posts"
             v-bind:key="post.id"
           >
@@ -299,7 +299,6 @@ export default {
   position: relative;
   width: 200px;
   height: 100px;
-  background: #f3f4f6;
   border-bottom-left-radius: 100px;
   border-bottom-right-radius: 100px;
 }

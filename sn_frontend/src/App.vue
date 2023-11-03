@@ -1,7 +1,7 @@
 <template>
   <div>
     <nav
-      class="py-10 px-8 border-b border-gray-200 bg-gray-200 shadow-lg sticky w-full z-[10000] top-0"
+      class="py-10 px-8 border-b border-gray-200 bg-gray-100 dark:bg-slate-700 dark:border-slate-800 dark:text-neutral-200 shadow-lg sticky w-full z-[10000] top-0"
     >
       <div class="max-w-7xl mx-auto">
         <div class="flex items-center justify-between">
@@ -86,6 +86,9 @@
                 ></path>
               </svg>
             </RouterLink>
+            <button @click="toggleDark()" class="px-4 py-2 text-white bg-green-500 rounded dark:bg-purple-500">
+              <span class="ml-2">{{ isDark ? "Dark" : "Light" }}</span>
+            </button>
           </div>
 
           <div class="menu-right">
@@ -108,7 +111,9 @@
 
             <template v-else>
               <div class="flex justify-between items-center gap-3">
-                <RouterLink to="/login"><button class="btn">Đăng nhập</button></RouterLink>
+                <RouterLink to="/login"
+                  ><button class="btn">Đăng nhập</button></RouterLink
+                >
                 <RouterLink to="/signup"
                   ><button class="bg-gray-300 btn">Đăng ký</button></RouterLink
                 >
@@ -119,7 +124,7 @@
       </div>
     </nav>
 
-    <main class="px-8 py-6 bg-gray-100 min-h-screen relative">
+    <main class="px-8 py-6 bg-gray-100 dark:bg-slate-700 min-h-screen relative">
       <RouterView />
     </main>
 
@@ -133,15 +138,20 @@ import { useUserStore } from "./stores/user";
 import { useNotificationStore } from "./stores/notification";
 import axios from "axios";
 import { RouterLink } from "vue-router";
+import { useDark, useToggle } from "@vueuse/core";
 
 export default {
   setup() {
     const userStore = useUserStore();
-    const userNotificationStore = useNotificationStore()
+    const userNotificationStore = useNotificationStore();
+    const isDark = useDark();
+    const toggleDark = useToggle(isDark);
 
     return {
       userStore,
       userNotificationStore,
+      toggleDark,
+      isDark
     };
   },
 
@@ -165,6 +175,10 @@ export default {
 </script>
 
 <style scoped>
+html.dark {
+  color-scheme: dark;
+}
+
 .router-link-active {
   --tw-text-opacity: 1;
   color: rgb(16 185 129 / var(--tw-text-opacity));

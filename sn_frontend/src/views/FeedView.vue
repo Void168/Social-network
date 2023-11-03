@@ -1,11 +1,11 @@
 <template>
   <div class="max-w-7xl mx-auto grid grid-cols-4 gap-4" id="feed-frame">
     <div class="main-center col-span-3 space-y-4">
-      <div class="p-4 bg-white border border-gray-200 rounded-lg">
+      <div class="p-4 bg-white border border-gray-200 dark:bg-slate-600 dark:border-slate-700 dark:text-neutral-200 rounded-lg">
         <PostForm v-bind:user="null" v-bind:posts="posts" />
         <div>
           <div
-            class="p-4 bg-white border border-gray-200 rounded-lg mt-4 shadow-sm"
+            class="p-4 bg-white border border-gray-200 dark:bg-slate-700 dark:border-slate-800 dark:text-neutral-200 rounded-lg mt-4 shadow-sm"
             v-for="post in posts"
             v-bind:key="post.id"
           >

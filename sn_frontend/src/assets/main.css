@@ -3,17 +3,21 @@
 @tailwind utilities;
 
 @layer components {
-    .btn {
-        @apply py-3 px-6 text-black bg-emerald-400 font-semibold rounded-lg transition-colors hover:bg-emerald-600 hover:text-white
-    }
-    .btn-sm {
-        @apply text-sm py-2 px-4
-    }
+  .btn {
+    @apply py-3 px-6 text-black bg-emerald-400 font-semibold rounded-lg transition-colors hover:bg-emerald-600 hover:text-white;
+  }
+  .btn-sm {
+    @apply text-sm py-2 px-4;
+  }
 
-    img,
-    .main-left > div,
-    .main-center,
-    .main-right > div {
-        @apply shadow-md rounded-lg
-    }
+  img,
+  .main-left > div,
+  .main-center,
+  .main-right > div {
+    @apply shadow-md rounded-lg;
+  }
+
+  textarea {
+    @apply dark:bg-slate-800 dark:border-slate-700 dark:text-neutral-200
+  }
 }

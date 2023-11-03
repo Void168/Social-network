@@ -21,7 +21,7 @@
         <Listbox v-model="selectedPrivacy" class="w-[20%]">
           <div class="relative mt-1 flex justify-end w-2/12">
             <ListboxButton
-              class="relative flex justify-center w-full cursor-default rounded-lg font-semibold bg-gray-200 py-2 pl-3 pr-10 text-left shadow-md focus:outline-none focus-visible:border-indigo-500 focus-visible:ring-2 focus-visible:ring-white/75 focus-visible:ring-offset-2 focus-visible:ring-offset-orange-300 sm:text-sm"
+              class="relative flex justify-center w-full cursor-default rounded-lg font-semibold bg-gray-200 dark:bg-slate-800 dark:border-slate-700 dark:text-neutral-200 py-2 pl-3 pr-10 text-left shadow-md focus:outline-none focus-visible:border-indigo-500 focus-visible:ring-2 focus-visible:ring-white/75 focus-visible:ring-offset-2 focus-visible:ring-offset-orange-300 sm:text-sm"
             >
               <span class="block truncate">{{ selectedPrivacy.name }}</span>
               <span
@@ -40,7 +40,7 @@
               leave-to-class="opacity-0"
             >
               <ListboxOptions
-                class="absolute mt-1 max-h-60 overflow-auto rounded-md bg-white py-1 text-base shadow-lg ring-1 ring-black/5 focus:outline-none sm:text-sm"
+                class="absolute mt-1 max-h-60 overflow-auto rounded-md bg-white dark:bg-slate-800 dark:border-slate-700 dark:text-neutral-200  py-1 text-base shadow-lg ring-1 ring-black/5 focus:outline-none sm:text-sm"
               >
                 <ListboxOption
                   v-slot="{ active, selected }"
@@ -54,7 +54,7 @@
                     :class="[
                       active
                         ? 'bg-emerald-100 text-emerald-900'
-                        : 'text-gray-900',
+                        : 'text-gray-900 dark:text-neutral-200',
                       'relative cursor-default select-none py-2 pl-10 pr-4',
                     ]"
                   >
@@ -109,7 +109,7 @@
     <div class="p-4 border-t border-gray-100 flex justify-between">
       <label for="doc">
         <div
-          class="py-3 px-6 text-black bg-gray-400 font-semibold rounded-lg transition-colors hover:bg-gray-600 hover:text-white cursor-pointer"
+          class="py-3 px-6 text-black bg-gray-400 dark:bg-slate-800 dark:border-slate-700 dark:text-neutral-200 dark:hover:bg-white dark:hover:text-slate-800 font-semibold rounded-lg transition-colors hover:bg-gray-600 hover:text-white cursor-pointer"
         >
           <span>Chọn ảnh</span>
         </div>

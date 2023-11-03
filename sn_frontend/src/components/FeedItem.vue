@@ -17,7 +17,7 @@
         </div>
       </div>
 
-      <p class="text-gray-600">{{ post.created_at_formatted }} trước</p>
+      <p class="text-gray-600 dark:text-neutral-200">{{ post.created_at_formatted }} trước</p>
     </div>
 
     <p>{{ post.body }}</p>
@@ -33,7 +33,7 @@
 
     <div class="my-6 flex justify-between">
       <div class="flex space-x-6">
-        <div class="flex items-center space-x-2">
+        <div class="flex items-center space-x-2 ">
           <HeartLike
             class="w-6 h-6 text-rose-500 cursor-pointer"
             v-if="isLike"
@@ -41,9 +41,9 @@
           <HeartLike
             v-else
             @click="likePost(post.id)"
-            class="w-6 h-6 cursor-pointer text-gray-400 hover:text-rose-500 transition-colors duration-75"
+            class="w-6 h-6 cursor-pointer text-gray-400  hover:text-rose-500  transition-colors duration-75"
           />
-          <span class="text-gray-500 text-xs"
+          <span class="text-gray-500 text-xs dark:text-neutral-200"
             >{{ post.likes_count }} lượt thích</span
           >
         </div>
@@ -66,7 +66,7 @@
 
           <RouterLink
             :to="{ name: 'postview', params: { id: post.id } }"
-            class="text-gray-500 text-xs"
+            class="text-gray-500 text-xs dark:text-neutral-200"
             >{{ post?.comments_count }} bình luận</RouterLink
           >
         </div>
@@ -77,7 +77,7 @@
         <Menu as="div" class="relative inline-block text-left">
           <div>
             <MenuButton
-              class="btn inline-flex w-full justify-center rounded-md bg-white px-3 py-2 text-gray-900 ring-1 ring-inset ring-gray-300 hover:bg-gray-50 hover:text-gray-900"
+              class="btn inline-flex w-full justify-center rounded-md bg-white px-3 py-2 text-gray-900 dark:bg-slate-600 dark:border-slate-700 dark:text-neutral-200 ring-1 ring-inset ring-gray-300 hover:bg-gray-50 hover:text-gray-900"
             >
               <svg
                 xmlns="http://www.w3.org/2000/svg"

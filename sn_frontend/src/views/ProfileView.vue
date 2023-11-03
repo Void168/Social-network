@@ -85,7 +85,7 @@
         </div>
       </div>
 
-      <div class="main-center col-span-2 space-y-4 bg-white p-4">
+      <div class="main-center col-span-2 space-y-4 bg-white p-4" id="feed-frame">
         <div
           v-if="userStore.user.id === user.id"
           class="p-4 bg-white rounded-lg"
@@ -101,6 +101,7 @@
           >
             <FeedItem v-bind:post="post" v-on:deletePost="deletePost" />
           </div>
+          <SkeletonLoadingPostVue v-show="!loadMore" v-if="posts.length !== postsList.length"/>
         </div>
         <p v-else class="text-center text-lg">
           {{ user.name }} Chưa có bài viết nào
@@ -116,6 +117,8 @@ import Trends from "../components/Trends.vue";
 import PostForm from "../components/PostForm.vue";
 import FeedItem from "../components/FeedItem.vue";
 import CoverImage from "../components/CoverImage.vue";
+import SkeletonLoadingPostVue from '../components/loadings/SkeletonLoadingPost.vue';
+
 import { RouterLink } from "vue-router";
 
 import { useUserStore } from "../stores/user";
@@ -139,11 +142,13 @@ export default {
     RouterLink,
     PostForm,
     CoverImage,
+    SkeletonLoadingPostVue
   },
 
   data() {
     return {
       posts: [],
+      postsList: [],
       user: {
         id: null,
       },
@@ -151,6 +156,8 @@ export default {
       friendshipRequest: [],
       status: "",
       friends: [],
+      PostToShow: 5,
+      loadMore: false,
     };
   },
 
@@ -165,6 +172,11 @@ export default {
   mounted() {
     this.getFeed();
     this.getFriends();
+    window.addEventListener("scroll", this.infinateScroll);
+  },
+
+  beforeDestroy() {
+    window.removeEventListener("scroll", this.infinateScroll);
   },
 
   watch: {
@@ -196,7 +208,7 @@ export default {
       axios
         .post(`/api/friends/${this.$route.params.id}/request/`)
         .then((res) => {
-          console.log(res.data);
+          // console.log(res.data);
           this.status = res.data.message;
           if (this.status === "request already sent") {
             this.toastStore.showToast(
@@ -224,16 +236,37 @@ export default {
       axios
         .get(`/api/posts/profile/${this.$route.params.id}/`)
         .then((res) => {
-          this.posts = res.data.posts;
+          this.postsList = res.data.posts;
           this.user = res.data.user;
           this.can_send_friendship_request =
-            res.data.can_send_friendship_request;
-
+          res.data.can_send_friendship_request;
+          this.posts = res.data.posts.slice(0, this.PostToShow);
+          
           console.log(res.data);
         })
         .catch((error) => {
           console.log("error", error);
         });
+    },
+
+    infinateScroll() {
+      const frame = document.getElementById("feed-frame");
+      let height = frame.scrollHeight;
+      let scrollY = window.scrollY;
+      if (height < scrollY + 800) {
+        setTimeout(() => {
+          this.loadMore = true;
+        }, 1000)
+        if (this.loadMore === true) {
+          const newPosts = this.postsList.slice(
+            this.posts.length,
+            this.posts.length + this.PostToShow
+          );
+          this.posts.push(...newPosts);
+        } 
+      } else {
+        this.loadMore = false;
+      }
     },
 
     getFriends() {

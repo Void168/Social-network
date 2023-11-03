@@ -1,9 +1,9 @@
 <template>
-  <div class="max-w-7xl mx-auto grid grid-cols-4 gap-4">
+  <div class="max-w-7xl mx-auto grid grid-cols-4 gap-4" id="feed-frame">
     <div class="main-center col-span-3 space-y-4">
       <div class="p-4 bg-white border border-gray-200 rounded-lg">
         <PostForm v-bind:user="null" v-bind:posts="posts" />
-        <div ref="el">
+        <div>
           <div
             class="p-4 bg-white border border-gray-200 rounded-lg mt-4"
             v-for="post in posts"
@@ -11,6 +11,7 @@
           >
             <FeedItem v-bind:post="post" v-on:deletePost="deletePost" />
           </div>
+          <p v-show="!loadMore">Loading...</p>
         </div>
       </div>
     </div>
@@ -27,8 +28,6 @@ import PeopleYouMayKnow from "../components/PeopleYouMayKnow.vue";
 import Trends from "../components/Trends.vue";
 import PostForm from "../components/PostForm.vue";
 import FeedItem from "../components/FeedItem.vue";
-import { ref } from "vue";
-import { useInfiniteScroll } from "@vueuse/core";
 
 export default {
   name: "FeedView",
@@ -42,25 +41,30 @@ export default {
   data() {
     return {
       posts: [],
+      postsList: [],
       body: "",
-      PostToShow: 10, 
+      PostToShow: 5,
+      loadMore: false,
     };
   },
 
   mounted() {
     this.getFeed();
+    window.addEventListener("scroll", this.infinateScroll);
+  },
+
+  beforeDestroy() {
+    window.removeEventListener("scroll", this.infinateScroll);
   },
 
   methods: {
     getFeed() {
-      const el = ref(null);
-      const data = ref(this.posts);
-
       axios
         .get("/api/posts/")
         .then((res) => {
-          console.log(res.data);
-          this.posts = res.data
+          // console.log(res.data);
+          this.postsList = res.data;
+          this.posts = res.data.slice(0, this.PostToShow);
         })
         .catch((error) => {
           console.log(error);
@@ -68,6 +72,26 @@ export default {
     },
     deletePost(id) {
       this.posts = this.posts.filter((post) => post.id !== id);
+    },
+    infinateScroll() {
+      const frame = document.getElementById("feed-frame");
+      let height = frame.scrollHeight;
+      let scrollY = window.scrollY;
+      if (height < scrollY + 800) {
+        setTimeout(() => {
+          this.loadMore = true;
+        }, 1500)
+        if (this.loadMore === true) {
+          const newPosts = this.postsList.slice(
+            this.posts.length,
+            this.posts.length + this.PostToShow
+          );
+          this.posts.push(...newPosts);
+        } 
+      } else {
+        this.loadMore = false;
+      }
+      console.log(this.loadMore)
     },
   },
 };

@@ -75,9 +75,6 @@
               </button>
             </div>
           </div>
-          <RouterLink v-else to="/profile/edit">
-            <button class="btn" @click="edit">Sửa thông tin</button>
-          </RouterLink>
         </div>
 
         <button
@@ -86,13 +83,6 @@
           class="mt-6 bg-violet-400 hover:bg-violet-600 btn"
         >
           Nhắn tin
-        </button>
-        <button
-          v-else
-          @click="logout"
-          class="mt-6 bg-gray-400 hover:bg-gray-600 btn"
-        >
-          Đăng xuất
         </button>
       </div>
     </div>
@@ -302,8 +292,6 @@ export default {
     },
 
     logout() {
-      console.log("log out");
-
       this.userStore.removeToken();
 
       this.$router.push("/login");

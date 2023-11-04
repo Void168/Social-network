@@ -86,39 +86,10 @@
                 ></path>
               </svg>
             </RouterLink>
-            <button @click="toggleDark()" class="px-4 py-2 text-white bg-green-500 rounded dark:bg-purple-500">
-              <span class="ml-2">{{ isDark ? "Dark" : "Light" }}</span>
-            </button>
           </div>
 
           <div class="menu-right">
-            <template
-              v-if="userStore.user.isAuthenticated && userStore.user.id"
-            >
-              <div class="flex flex-row items-center gap-3">
-                <RouterLink
-                  :to="{ name: 'profile', params: { id: userStore.user.id } }"
-                >
-                  <img
-                    :src="userStore.user.avatar"
-                    class="rounded-full w-12 h-12"
-                    alt="avatar"
-                  />
-                </RouterLink>
-                <p class="font-semibold text-lg">{{ userStore.user.name }}</p>
-              </div>
-            </template>
-
-            <template v-else>
-              <div class="flex justify-between items-center gap-3">
-                <RouterLink to="/login"
-                  ><button class="btn">Đăng nhập</button></RouterLink
-                >
-                <RouterLink to="/signup"
-                  ><button class="bg-gray-300 btn">Đăng ký</button></RouterLink
-                >
-              </div>
-            </template>
+            <ProfileDropdown />
           </div>
         </div>
       </div>
@@ -139,6 +110,9 @@ import { useNotificationStore } from "./stores/notification";
 import axios from "axios";
 import { RouterLink } from "vue-router";
 import { useDark, useToggle } from "@vueuse/core";
+import { ref } from "vue";
+import NavBarDropdownVue from './components/dropdown/ProfileDropdown.vue';
+import ProfileDropdown from "./components/dropdown/ProfileDropdown.vue";
 
 export default {
   setup() {
@@ -146,19 +120,23 @@ export default {
     const userNotificationStore = useNotificationStore();
     const isDark = useDark();
     const toggleDark = useToggle(isDark);
+    const enabled = ref(false);
 
     return {
       userStore,
       userNotificationStore,
       toggleDark,
-      isDark
+      isDark,
+      enabled,
     };
   },
 
   components: {
     toast: Toast,
     RouterLink,
-  },
+    NavBarDropdownVue,
+    ProfileDropdown
+},
 
   beforeCreate() {
     this.userStore.initStore();

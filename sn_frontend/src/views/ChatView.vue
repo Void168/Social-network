@@ -1,7 +1,7 @@
 <template>
   <div class="max-w-7xl mx-auto grid grid-cols-4 gap-4">
     <div class="main-left col-span-1">
-      <div class="bg-white border border-gray-200 rounded-lg h-[750px] px-2">
+      <div class="bg-white border border-gray-200 dark:bg-slate-600 dark:border-slate-700 dark:text-neutral-200 rounded-lg h-[750px] px-2">
         <h3 class="text-xl p-3">Đoạn hội thoại ({{ conversations.length }})</h3>
         <div>
           <ConversationBox
@@ -13,7 +13,7 @@
 
     <div class="main-center col-span-3 space-y-4">
       <div
-        class="bg-white h-[750px] border-gray-200 rounded-lg flex justify-center items-center"
+        class="bg-white h-[750px] border-gray-200 dark:bg-slate-600 dark:border-slate-700 dark:text-neutral-200 rounded-lg flex justify-center items-center"
       >
         Chưa chọn đoạn hội thoại nào
       </div>

@@ -6,7 +6,7 @@
           :src="comment.created_by.get_avatar"
           class="w-10 h-10 rounded-full"
         />
-        <div class="flex justify-between border-none bg-gray-200 rounded-2xl w-full p-4">
+        <div class="flex justify-between border-none bg-gray-200 dark:bg-slate-700 dark:border-slate-800 dark:text-neutral-200 rounded-2xl w-full p-4">
           <div>
             <p>
               <strong>
@@ -22,7 +22,7 @@
             <p>{{ comment.body }}</p>
           </div>
 
-          <p class="text-gray-600">{{ comment.created_at_formatted }} trước</p>
+          <p class="text-gray-600 dark:text-neutral-200">{{ comment.created_at_formatted }} trước</p>
         </div>
       </div>
     </div>

@@ -14,6 +14,7 @@ export const useUserStore = defineStore({
       access: null,
       refresh: null,
       avatar: null,
+      cover_image: null,
     },
   }),
 
@@ -52,6 +53,7 @@ export const useUserStore = defineStore({
       this.user.name = false;
       this.user.email = false;
       this.user.avatar = null
+      this.user.conver_image = null
       this.user.isAuthenticated = false;
 
       localStorage.setItem("user.access", "");
@@ -60,6 +62,7 @@ export const useUserStore = defineStore({
       localStorage.setItem("user.name", "");
       localStorage.setItem("user.email", "");
       localStorage.setItem('user.avatar', '')
+      localStorage.setItem('user.conver_image', '')
     },
 
     setUserInfo(user) {

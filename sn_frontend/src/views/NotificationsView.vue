@@ -1,7 +1,7 @@
 <template>
   <div class="max-w-7xl mx-auto grid grid-cols-4 gap-4">
     <div class="main-center col-span-3 space-y-4">
-      <div class="p-4 bg-white border border-gray-200 rounded-lg">
+      <div class="p-4 bg-white border border-gray-200 rounded-lg dark:bg-slate-600 dark:border-slate-700 dark:text-neutral-200">
         <div v-if="notifications?.length">
           <div
             v-for="notification in notifications.slice(0, lastNoti)"
@@ -9,7 +9,7 @@
             @click="readNotification(notification)"
           >
             <div
-              class="p-4 bg-white border border-gray-200 rounded-lg mt-4 cursor-pointer"
+              class="p-4 bg-white border border-gray-200 rounded-lg mt-4 cursor-pointer dark:bg-slate-700 dark:border-slate-800 dark:text-neutral-400"
               v-if="notification.is_read"
             >
               <div class="flex flex-col gap-2">
@@ -18,7 +18,7 @@
               </div>
             </div>
             <div
-              class="flex justify-between items-center font-semibold text-emerald-600 p-4 bg-gray-200 border rounded-lg mt-4 cursor-pointer"
+              class="flex justify-between items-center font-semibold text-emerald-600 p-4 bg-gray-200 dark:bg-slate-700 dark:border-slate-800 dark:text-neutral-200 border rounded-lg mt-4 cursor-pointer"
               v-else
             >
               <div class="flex flex-col gap-2">

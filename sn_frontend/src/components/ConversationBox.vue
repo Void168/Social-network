@@ -7,7 +7,7 @@
       v-bind:key="conversation.id"
     >
       <div
-        class="group relative flex flex-col w-full gap-1 px-3 py-2 rounded-lg hover:bg-gray-200 duration-100"
+        class="group relative flex flex-col w-full gap-1 px-3 py-2 rounded-lg hover:bg-gray-200 dark:hover:bg-slate-500 duration-100"
       >
         <div class="absolute right-3 bottom-2">
           <Menu
@@ -17,7 +17,7 @@
             <div>
               <MenuButton
                 @click="openModal"
-                class="btn inline-flex w-full justify-center rounded-full bg-white px-3 py-2 text-gray-900 ring-1 ring-inset ring-gray-300 hover:bg-gray-50 hover:text-gray-900"
+                class="btn inline-flex w-full justify-center rounded-full bg-white dark:bg-slate-300 dark:border-slate-400 dark:text-neutral-800 px-3 py-2 text-gray-900 ring-1 ring-inset ring-gray-300 hover:bg-gray-50 hover:text-gray-900"
               >
                 <EllipsisHorizontalIcon class="w-3 h-3" />
               </MenuButton>
@@ -89,14 +89,23 @@
               alt="avatar"
               class="w-10 h-10 rounded-full"
             />
-            <p class="text-xs font-bold" v-if="user.id !== userStore.user.id">
+            <p
+              class="text-xs font-bold dark:text-neutral-300"
+              v-if="
+                user.id !== userStore.user.id &&
+                conversation.messages[conversation.messages.length - 1].seen_by
+                  .map((obj) => obj.created_by.email)
+                  .includes(userStore.user.email) === false
+              "
+            >
               {{ user.name }}
             </p>
+            <p v-else-if="user.id !== userStore.user.id" class="text-xs dark:text-neutral-300">{{ user.name }}</p>
           </div>
 
           <span
             v-if="conversation.messages.length"
-            class="text-xs text-gray-600"
+            class="text-xs text-gray-600 dark:text-neutral-300"
             >{{
               conversation.messages[conversation.messages.length - 1]
                 .created_at_formatted
@@ -129,13 +138,13 @@
                     .map((obj) => obj.created_by.email)
                     .includes(userStore.user.email) === false
                 "
-                class="font-bold text-emerald-500"
+                class="font-bold text-emerald-500 dark:text-neutral-200"
                 >{{
                   conversation.messages[conversation.messages.length - 1]
                     .created_by.name
                 }}:
               </span>
-              <span v-else
+              <span class="dark:text-neutral-300" v-else
                 >{{
                   conversation.messages[conversation.messages.length - 1]
                     .created_by.name
@@ -143,7 +152,7 @@
               </span>
               <div class="flex justify-between">
                 <p
-                  class="truncate font-bold text-emerald-500"
+                  class="truncate font-bold text-emerald-500 dark:text-neutral-200"
                   v-if="
                     conversation.messages[
                       conversation.messages.length - 1
@@ -156,7 +165,7 @@
                     conversation.messages[conversation.messages.length - 1].body
                   }}
                 </p>
-                <p class="truncate" v-else>
+                <p class="truncate dark:text-neutral-300" v-else>
                   {{
                     conversation.messages[conversation.messages.length - 1].body
                   }}
@@ -258,8 +267,8 @@ export default (await import("vue")).defineComponent({
             "bg-emerald-500 text-white"
           );
           setTimeout(() => {
-            this.$router.push('/chat')
-          }, 6000)
+            this.$router.push("/chat");
+          }, 6000);
         })
         .catch((error) => {
           console.log(error);

@@ -2,7 +2,7 @@
   <div class="max-w-7xl mx-auto grid grid-cols-4 gap-4">
     <div class="main-left col-span-1">
       <div
-        class="flex flex-col justify-center items-center p-4 bg-white border border-gray-200 text-center rounded-lg"
+        class="flex flex-col justify-center items-center p-4 bg-white border border-gray-200 dark:bg-slate-600 dark:border-slate-700 dark:text-neutral-200 text-center rounded-lg"
       >
         <img
           :src="user.get_avatar"
@@ -13,10 +13,10 @@
           <strong class="text-2xl">{{ user.name }}</strong>
         </p>
         <div class="mt-6 flex space-x-8 justify-around">
-          <p class="text-xs text-gray-500">
+          <p class="text-xs text-gray-500 dark:text-neutral-200">
             {{ friends?.length }} người bạn
           </p>
-          <p class="text-xs text-gray-500">{{ user.posts_count }} bài đăng</p>
+          <p class="text-xs text-gray-500 dark:text-neutral-200">{{ user.posts_count }} bài đăng</p>
         </div>
       </div>
     </div>
@@ -24,13 +24,13 @@
     <div class="main-center col-span-2 space-y-4">
       <div
         v-if="friendshipRequests.length"
-        class="p-4 bg-white border border-gray-200 rounded-lg"
+        class="p-4 bg-white border border-gray-200 dark:bg-slate-600 dark:border-slate-700 dark:text-neutral-200 rounded-lg"
       >
         <h2 class="mb-6 text-xl">Lời mời kết bạn</h2>
         <div
           v-for="friendshipRequest in friendshipRequests"
           v-bind:key="friendshipRequest.id"
-          class="p-4 bg-gray-100 text-center rounded-lg mb-4"
+          class="p-4 bg-gray-100 dark:bg-slate-700 dark:border-slate-800 dark:text-neutral-200 text-center rounded-lg mb-4"
         >
           <RouterLink
             :to="{
@@ -48,10 +48,10 @@
               <strong> {{ friendshipRequest.created_by.name }}</strong>
             </p>
             <div class="mt-6 flex space-x-8 justify-around">
-              <p class="text-xs text-gray-500">
+              <p class="text-xs text-gray-500 dark:text-neutral-200">
                 {{ friendshipRequest.created_by.friends_count }} người bạn
               </p>
-              <p class="text-xs text-gray-500">
+              <p class="text-xs text-gray-500 dark:text-neutral-200">
                 {{ friendshipRequest.created_by.posts_count }} bài đăng
               </p>
             </div>
@@ -78,7 +78,7 @@
 
         <hr />
       </div>
-      <div class="p-4 bg-white border border-gray-200 rounded-lg ">
+      <div class="p-4 bg-white border border-gray-200 rounded-lg dark:bg-slate-600 dark:border-slate-700 dark:text-neutral-200">
         <p class="font-semibold text-lg mb-4">Bạn bè</p>
         <div
           v-if="friends.length"
@@ -87,7 +87,7 @@
           <div
             v-for="friend in friends"
             v-bind:key="friend.id"
-            class="p-4 bg-gray-200 text-center rounded-lg"
+            class="p-4 bg-gray-200 dark:bg-slate-700 dark:border-slate-800 dark:text-neutral-200 text-center rounded-lg"
           >
             <RouterLink :to="{ name: 'profile', params: { id: friend.id } }">
               <img
@@ -99,10 +99,10 @@
                 <strong> {{ friend.name }}</strong>
               </p>
               <div class="mt-6 flex space-x-8 justify-around">
-                <p class="text-xs text-gray-500">
+                <p class="text-xs text-gray-500 dark:text-neutral-200">
                   {{ user.friends_count }} người bạn
                 </p>
-                <p class="text-xs text-gray-500">
+                <p class="text-xs text-gray-500 dark:text-neutral-200">
                   {{ user.posts_count }} bài đăng
                 </p>
               </div>

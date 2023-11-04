@@ -3,11 +3,11 @@
     <div class="space-y-4 w-6/12">
       <div
         v-if="post.id"
-        class="p-4 bg-white border border-gray-200 rounded-lg mt-4 shadow-md"
+        class="p-4 bg-white border border-gray-200 rounded-lg mt-4 shadow-md dark:bg-slate-600 dark:border-slate-700 dark:text-neutral-200"
       >
         <FeedItem v-bind:post="post" />
       </div>
-      <div class="p-4 bg-white border border-gray-200 rounded-lg shadow-md">
+      <div class="p-4 bg-white border border-gray-200 rounded-lg shadow-md dark:bg-slate-600 dark:border-slate-700 dark:text-neutral-200">
         <form v-on:submit.prevent="submitForm" method="post">
           <div class="p-4">
             <textarea
@@ -19,14 +19,14 @@
             ></textarea>
           </div>
 
-          <div class="px-4 py-2 border-t border-gray-100 flex justify-end">
+          <div class="px-4 py-2 border-t border-gray-100 flex justify-end dark:border-slate-400">
             <button class="btn">Bình luận</button>
           </div>
         </form>
       </div>
 
       <div
-        class="p-4 bg-white border border-gray-200 rounded-lg ml-10 shadow-md"
+        class="p-4 bg-white border border-gray-200 rounded-lg ml-10 shadow-md dark:bg-slate-600 dark:border-slate-700 dark:text-neutral-200"
       >
         <div
           v-if="!post.comments?.length"
@@ -36,7 +36,7 @@
         </div>
         <div
           v-else
-          class="bg-white rounded-lg"
+          class="bg-white rounded-lg dark:bg-slate-600 dark:border-slate-700 dark:text-neutral-200"
           v-for="comment in post.comments.slice(0, lastComment)"
           v-bind:key="comment.id"
         >

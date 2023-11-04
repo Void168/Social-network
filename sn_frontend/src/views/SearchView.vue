@@ -1,12 +1,12 @@
 <template>
   <div class="max-w-7xl mx-auto grid grid-cols-4 gap-4">
     <div class="main-left col-span-3">
-      <div class="bg-white border border-gray-200 rounded-lg mb-4">
-        <form v-on:submit.prevent="submitForm" class="p-4 flex space-x-4">
+      <div class="bg-white border border-gray-200 rounded-lg mb-4 dark:bg-slate-600 dark:border-slate-700 dark:text-neutral-200">
+        <form v-on:submit.prevent="submitForm" class="p-4 flex space-x-4 justify-between">
           <input
             v-model="query"
             type="search"
-            class="p-4 w-10/12 bg-gray-100 rounded-lg"
+            class="p-4 w-full bg-gray-100 dark:bg-slate-700 rounded-lg"
             placeholder="Bạn đang tìm gì?"
           />
           <div class="flex justify-center items-center">
@@ -32,12 +32,12 @@
 
       <div
         v-if="users.length"
-        class="p-4 bg-white border border-gray-200 rounded-lg grid grid-cols-4 gap-4"
+        class="p-4 bg-white border border-gray-200 dark:bg-slate-600 dark:border-slate-700 dark:text-neutral-200 rounded-lg grid grid-cols-4 gap-4"
       >
         <div
           v-for="user in users"
           v-bind:key="user.id"
-          class="p-4 bg-gray-200 text-center rounded-lg shadow-md"
+          class="p-4 bg-gray-200 dark:bg-slate-700 dark:border-slate-800 dark:text-neutral-200 text-center rounded-lg shadow-md"
         >
           <RouterLink :to="{ name: 'profile', params: { id: user.id } }">
             <img
@@ -49,8 +49,8 @@
               <strong> {{ user.name }}</strong>
             </p>
             <div class="mt-6 flex space-x-8 justify-around">
-              <p class="text-xs text-gray-500">{{user.friends_count}} người bạn</p>
-              <p class="text-xs text-gray-500">{{user.posts_count}} bài đăng</p>
+              <p class="text-xs text-gray-500 dark:text-neutral-200">{{user.friends_count}} người bạn</p>
+              <p class="text-xs text-gray-500 dark:text-neutral-200">{{user.posts_count}} bài đăng</p>
             </div>
           </RouterLink>
         </div>
@@ -59,7 +59,7 @@
       <div
         v-for="post in posts"
         v-bind:key="post.id"
-        class="p-4 bg-white border border-gray-200 rounded-lg mt-4"
+        class="p-4 bg-white border border-gray-200 dark:bg-slate-600 dark:border-slate-700 dark:text-neutral-200 rounded-lg mt-4"
       >
         <FeedItem v-bind:post="post" />
       </div>

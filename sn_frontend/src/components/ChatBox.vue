@@ -1,6 +1,6 @@
 <template>
   <div>
-    <div class="bg-white border border-gray-200 rounded-lg">
+    <div class="bg-white border border-gray-200 dark:bg-slate-600 dark:border-slate-700 dark:text-neutral-200 rounded-lg">
       <div>
         <div class="p-4 flex justify-between items-center">
           <div class="flex items-center gap-2">
@@ -31,7 +31,7 @@
               <div class="flex gap-2">
                 <div>
                   <div
-                    class="bg-blue-600 text-white p-3 rounded-l-lg rounded-br-lg"
+                    class="bg-blue-600 dark:bg-blue-500 text-white p-3 shadow-md rounded-l-lg rounded-br-lg"
                   >
                     <p class="text-sm">
                       {{ message.body }}
@@ -89,7 +89,7 @@
                   class="mb-4"
                 >
                   <div
-                    class="bg-gray-200 p-3 rounded-r-lg rounded-bl-lg"
+                    class="bg-gray-200 p-3 rounded-r-lg rounded-bl-lg dark:bg-slate-500 dark:border-slate-600 dark:text-neutral-200"
                     v-if="message.created_by !== chats[0]?.users[0].name"
                   >
                     <p class="text-sm">
@@ -97,7 +97,7 @@
                     </p>
                   </div>
                   <span
-                    class="text-xs text-gray-500 leading-none"
+                    class="text-xs text-gray-500 dark:text-neutral-200 leading-none"
                     v-if="
                       message.id === listMessages[listMessages.length - 1].id
                     "
@@ -113,12 +113,12 @@
           </div>
         </div>
 
-        <div v-else class="bg-white h-[500px] flex justify-center items-center">
+        <div v-else class="bg-white dark:bg-slate-600 dark:border-slate-700 dark:text-neutral-200 h-[500px] flex justify-center items-center">
           Hãy bắt đầu nói chuyện với nhau
         </div>
       </div>
     </div>
-    <div class="bg-white border border-gray-200 rounded-lg relative">
+    <div class="bg-white border border-gray-200 dark:bg-slate-600 dark:border-slate-700 dark:text-neutral-200 rounded-lg relative">
       <form v-on:submit.prevent="submitForm" @keyup.enter="submitForm">
         <div class="p-4 relative">
           <textarea
@@ -131,7 +131,7 @@
             placeholder="Bạn muốn nói điều gì?"
           ></textarea>
         </div>
-        <div class="p-4 border-t border-gray-100 flex justify-end">
+        <div class="p-4 border-t border-slate-400 flex justify-end">
           <button class="btn" type="submit">Gửi</button>
         </div>
       </form>

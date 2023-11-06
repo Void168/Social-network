@@ -220,6 +220,8 @@
           })
           .then((res) => {
             console.log("data", res.data);
+
+            this.posts.unshift(res.data);
             this.body = "";
             this.$refs.file.value = null;
             this.is_private = false;

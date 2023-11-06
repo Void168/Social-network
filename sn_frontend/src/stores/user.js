@@ -63,7 +63,6 @@ export const useUserStore = defineStore({
       localStorage.setItem("user.email", "");
       localStorage.setItem("user.avatar", "");
       localStorage.setItem("user.cover_image", "");
-      localStorage.setItem("vueuse-color-scheme", "light");
     },
 
     setUserInfo(user) {

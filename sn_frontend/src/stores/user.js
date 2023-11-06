@@ -26,7 +26,7 @@ export const useUserStore = defineStore({
         this.user.id = localStorage.getItem("user.id");
         this.user.name = localStorage.getItem("user.name");
         this.user.email = localStorage.getItem("user.email");
-        this.user.avatar = localStorage.getItem('user.avatar')
+        this.user.avatar = localStorage.getItem("user.avatar");
         this.user.isAuthenticated = true;
 
         this.refreshToken();
@@ -52,8 +52,8 @@ export const useUserStore = defineStore({
       this.user.id = false;
       this.user.name = false;
       this.user.email = false;
-      this.user.avatar = null
-      this.user.conver_image = null
+      this.user.avatar = null;
+      this.user.cover_image = null;
       this.user.isAuthenticated = false;
 
       localStorage.setItem("user.access", "");
@@ -61,22 +61,23 @@ export const useUserStore = defineStore({
       localStorage.setItem("user.id", "");
       localStorage.setItem("user.name", "");
       localStorage.setItem("user.email", "");
-      localStorage.setItem('user.avatar', '')
-      localStorage.setItem('user.conver_image', '')
+      localStorage.setItem("user.avatar", "");
+      localStorage.setItem("user.cover_image", "");
+      localStorage.setItem("vueuse-color-scheme", "light");
     },
 
     setUserInfo(user) {
       this.user.id = user.id;
       this.user.name = user.name;
       this.user.email = user.email;
-      this.user.avatar = user.avatar
-      this.user.cover_image = user.cover_image
+      this.user.avatar = user.avatar;
+      this.user.cover_image = user.cover_image;
 
       localStorage.setItem("user.id", this.user.id);
       localStorage.setItem("user.name", this.user.name);
       localStorage.setItem("user.email", this.user.email);
-      localStorage.setItem('user.avatar', this.user.avatar)
-      localStorage.setItem('user.cover_image', this.user.cover_image)
+      localStorage.setItem("user.avatar", this.user.avatar);
+      localStorage.setItem("user.cover_image", this.user.cover_image);
     },
 
     refreshToken() {

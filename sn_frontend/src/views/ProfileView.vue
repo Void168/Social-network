@@ -4,7 +4,7 @@
     <div class="col-span-3 grid grid-cols-3">
       <div class="col-span-1"></div>
       <div class="col-span-2 px-4 py-2 flex gap-4 text-lg font-semibold">
-        <RouterLink :to="{ name: 'profile', params: { id: userStore.user.id } }"
+        <RouterLink :to="{ name: 'profile', params: { id: user.id } }"
           >Bài viết</RouterLink
         >
         <RouterLink :to="{ name: 'profile', params: { id: userStore.user.id } }"
@@ -97,6 +97,13 @@
       >
         <PostForm v-bind:user="user" v-bind:posts="posts" />
       </div>
+      <div
+        v-else-if="friends.map((fr) => fr.id).includes(userStore.user.id)"
+        class="p-4 bg-white rounded-lg dark:bg-slate-600 dark:border-slate-700 dark:text-neutral-200"
+      >
+        <PostToForm v-bind:user="user" v-bind:posts="posts" />
+      </div>
+
       <p class="font-semibold text-2xl">Bài viết của {{ user.name }}</p>
       <div v-if="posts?.length">
         <div
@@ -122,8 +129,9 @@
 import axios from "axios";
 import PeopleYouMayKnow from "../components/PeopleYouMayKnow.vue";
 import Trends from "../components/Trends.vue";
-import PostForm from "../components/PostForm.vue";
+import PostForm from "../components/forms/PostForm.vue";
 import FeedItem from "../components/FeedItem.vue";
+import PostToForm from "../components/forms/PostToForm.vue";
 import CoverImage from "../components/CoverImage.vue";
 import SkeletonLoadingPostVue from "../components/loadings/SkeletonLoadingPost.vue";
 
@@ -151,7 +159,8 @@ export default {
     PostForm,
     CoverImage,
     SkeletonLoadingPostVue,
-  },
+    PostToForm
+},
 
   data() {
     return {
@@ -250,7 +259,7 @@ export default {
             res.data.can_send_friendship_request;
           this.posts = res.data.posts.slice(0, this.PostToShow);
 
-          console.log(res.data);
+          // console.log(res.data);
         })
         .catch((error) => {
           console.log("error", error);
@@ -284,7 +293,7 @@ export default {
           this.friendshipRequest = res.data.requests;
           this.user = res.data.user;
           this.friends = res.data.friends;
-          console.log(res.data.friends);
+          // console.log(res.data.friends);
         })
         .catch((error) => {
           console.log(error);

@@ -30,7 +30,7 @@
 import axios from "axios";
 import PeopleYouMayKnow from "../components/PeopleYouMayKnow.vue";
 import Trends from "../components/Trends.vue";
-import PostForm from "../components/PostForm.vue";
+import PostForm from "../components/forms/PostForm.vue";
 import FeedItem from "../components/FeedItem.vue";
 import SkeletonLoadingPostVue from '../components/loadings/SkeletonLoadingPost.vue';
 

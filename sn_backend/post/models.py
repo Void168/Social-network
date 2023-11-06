@@ -43,6 +43,7 @@ class Post(models.Model):
     is_private = models.BooleanField(default=False)
     only_me = models.BooleanField(default=False)
     
+    
     likes = models.ManyToManyField(Like , blank=True)
     likes_count = models.IntegerField(default=0)
     
@@ -54,6 +55,7 @@ class Post(models.Model):
     created_at = models.DateTimeField(auto_now_add=True)
     created_by = models.ForeignKey(User, related_name='posts', on_delete=models.CASCADE)
     
+    post_to = models.ForeignKey(User, related_name="post_to", on_delete=models.CASCADE, null=True)
     class Meta:
         ordering = ('-created_at',)
     

@@ -21,7 +21,7 @@
       </div>
     </div>
 
-    <div class="main-center col-span-2 space-y-4">
+    <div class="main-center col-span-2 space-y-4" id="feed-frame">
       <div
         v-if="friendshipRequests.length"
         class="p-4 bg-white border border-gray-200 dark:bg-slate-600 dark:border-slate-700 dark:text-neutral-200 rounded-lg"

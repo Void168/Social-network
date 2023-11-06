@@ -1,5 +1,6 @@
 from django.db.models import Q
 from django.http import JsonResponse
+from itertools import chain
 
 from rest_framework.decorators import api_view, authentication_classes, permission_classes
 
@@ -61,6 +62,7 @@ def post_detail(request, pk):
 def post_list_profile(request, id):      
     user = User.objects.get(pk=id)
     posts = Post.objects.filter(created_by_id=id)
+    receivedPosts = Post.objects.filter(post_to=id)
 
     if not request.user in user.friends.all():
         posts = posts.filter(Q(is_private=False) & Q(only_me=False))
@@ -70,8 +72,10 @@ def post_list_profile(request, id):
         
     if request.user == user:
         posts = Post.objects.filter(created_by_id=id)
+    
+    allPosts = list(chain(posts, receivedPosts))
         
-    posts_serializer = PostSerializer(posts, many=True)
+    posts_serializer = PostSerializer(allPosts, many=True)
     user_serializer = UserSerializer(user)
 
     can_send_friendship_request = True
@@ -118,6 +122,36 @@ def post_create(request):
 
         user = request.user
         user.posts_count = user.posts_count + 1
+        user.save()
+
+        serializer = PostSerializer(post)
+
+        return JsonResponse(serializer.data, safe=False)
+    else:
+        return JsonResponse({'error': 'add something here later!...'})
+
+@api_view(['POST'])
+def post_created_to(request, id):
+    receivedUser = User.objects.get(pk=id)
+    form = PostForm(request.POST)
+    attachment = None
+    attachment_form = AttachmentForm(request.POST, request.FILES)
+
+    if attachment_form.is_valid():
+        attachment = attachment_form.save(commit=False)
+        attachment.created_by = request.user
+        attachment.save()
+
+    if form.is_valid():
+        post = form.save(commit=False)
+        post.created_by = request.user
+        post.post_to = receivedUser
+        post.save()
+
+        if attachment:
+            post.attachments.add(attachment)
+
+        user = request.user
         user.save()
 
         serializer = PostSerializer(post)

@@ -73,7 +73,8 @@ def post_list_profile(request, id):
     if request.user == user:
         posts = Post.objects.filter(created_by_id=id)
     
-    allPosts = list(chain(posts, receivedPosts))
+    allPosts = posts | receivedPosts
+    allPosts.order_by('-created_at')
         
     posts_serializer = PostSerializer(allPosts, many=True)
     user_serializer = UserSerializer(user)

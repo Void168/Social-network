@@ -11,6 +11,16 @@
               >{{ post.created_by.name }}</RouterLink
             >
           </strong>
+          <div v-if="post.post_to" class="flex gap-1">
+            <p>cùng với</p>
+            <strong>
+            <RouterLink
+              :to="{ name: 'profile', params: { id: post.post_to.id } }"
+              >{{ post.post_to.name }}</RouterLink
+            >
+          </strong>
+          </div>
+
             <GlobeAsiaAustraliaIcon class="w-4 h-4" v-if="post.is_private === false && post.only_me === false"/>
             <UserGroupIcon class="w-4 h-4" v-else-if="post.is_private === true && post.only_me === false"/>
             <LockClosedIcon class="w-4 h-4" v-else-if="post.is_private === true && post.only_me === true"/>

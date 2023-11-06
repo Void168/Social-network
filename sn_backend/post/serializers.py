@@ -19,6 +19,7 @@ class PostSerializer(serializers.ModelSerializer):
     created_by = UserSerializer(read_only=True)
     attachments = PostAttachmentSerializer(read_only=True, many=True)
     likes = LikeSerializer(read_only=True, many=True)
+    post_to = UserSerializer(read_only=True)
     class Meta:
         model = Post
         fields = ('id', 'body','is_private','only_me', 'likes_count', 'comments_count', 'created_by', 'created_at_formatted', 'attachments','likes', 'post_to',)   

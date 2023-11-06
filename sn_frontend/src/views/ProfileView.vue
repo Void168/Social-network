@@ -159,8 +159,8 @@ export default {
     PostForm,
     CoverImage,
     SkeletonLoadingPostVue,
-    PostToForm
-},
+    PostToForm,
+  },
 
   data() {
     return {

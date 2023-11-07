@@ -22,10 +22,6 @@ def create_notification(request, type_of_notification, post_id=None, friendreque
         friendrequest = FriendshipRequest.objects.get(pk=friendrequest_id)
         created_for = friendrequest.created_for
         body = f'{request.user.name} đã đồng ý lời mời kết bạn'
-    # elif type_of_notification == 'rejected_friend_request':
-    #     friendrequest = FriendshipRequest.objects.get(pk=friendrequest_id)
-    #     created_for = friendrequest.created_for
-    #     body = f'{request.user.name} đã từ chối lời mời kết bạn'
     
     if request.user != created_for:
         notification = Notification.objects.create(

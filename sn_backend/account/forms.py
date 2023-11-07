@@ -17,3 +17,8 @@ class CoverImageForm(forms.ModelForm):
     class Meta:
         model = User
         fields = ('cover_image',)
+
+class RelationshipForm(forms.ModelForm):
+    class Meta:
+        model = User
+        fields = ('relationship_status',)

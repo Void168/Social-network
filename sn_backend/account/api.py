@@ -6,7 +6,7 @@ from rest_framework.decorators import api_view, authentication_classes, permissi
 
 from notification.utils import create_notification
 
-from .forms import SignupForm, ProfileForm, CoverImageForm
+from .forms import SignupForm, ProfileForm, CoverImageForm, RelationshipForm
 from .models import User, FriendshipRequest
 from .serializers import UserSerializer, FriendshipRequestSerializer
 
@@ -86,16 +86,35 @@ def edit_profile(request):
     if User.objects.exclude(id=user.id).filter(email=email).exists():
         return JsonResponse({'message': 'Email đã được đăng ký. Vui lòng thử lại'})
     else:
-        print(request.FILES)
-        print(request.POST)
+        # print(request.FILES)
+        # print(request.POST)
         form = ProfileForm(request.POST, request.FILES, instance=user)
         
-        if form.is_valid:
+        if form.is_valid():
             form.save()
         
         serializer = UserSerializer(user)
         
         return JsonResponse({'message': 'information updated', 'user': serializer.data})
+    
+@api_view(['POST'])
+def set_relationship(request):
+    user = request.user
+    
+    print(request.POST)
+    form = RelationshipForm(data=request.POST, instance=user)
+    print(form.is_valid())
+    if form.is_valid():
+        form.save()
+        user.save()
+        
+    serializer = UserSerializer(user)
+        
+    return JsonResponse({'message': 'information updated', 'user': serializer.data})
+
+@api_view(['GET'])
+def relationship_detail(request, id):
+    return JsonResponse({'message': 'hello'})
 
 @api_view(['POST'])
 def edit_cover_image(request):

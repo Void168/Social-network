@@ -40,7 +40,7 @@
               leave-to-class="opacity-0"
             >
               <ListboxOptions
-                class="absolute z-50 mt-1 max-h-60 overflow-auto rounded-md bg-white dark:bg-slate-800 dark:border-slate-700 dark:text-neutral-200  py-1 text-base shadow-lg ring-1 ring-black/5 focus:outline-none sm:text-sm"
+                class="absolute z-50 mt-1 max-h-60 overflow-auto rounded-md bg-white dark:bg-slate-800 dark:border-slate-700 dark:text-neutral-200 py-1 text-base shadow-lg ring-1 ring-black/5 focus:outline-none sm:text-sm"
               >
                 <ListboxOption
                   v-slot="{ active, selected }"
@@ -78,7 +78,6 @@
             </transition>
           </div>
         </Listbox>
-        
       </div>
 
       <div

@@ -112,10 +112,19 @@ def set_relationship(request):
     
     print(request.POST)
     form = RelationshipForm(data=request.POST, instance=current_user)
-    print(form.is_valid())
+    
+    current_user_relationship_status = User.objects.get(email=current_user).relationship_status
+    current_user_id = User.objects.get(email=current_user).id
+    
+    partner_id = User.objects.get(email=current_user).partner
+    partner = User.objects.get(id=partner_id)
+    print(current_user_relationship_status)
     if form.is_valid():
+        partner.partner = current_user_id
+        partner.relationship_status = current_user_relationship_status
         form.save()
         current_user.save()
+        partner.save()
         
     serializer = UserSerializer(current_user)
         

@@ -362,8 +362,11 @@ export default (await import("vue")).defineComponent({
   },
 
   beforeMount() {
-    this.getFriends();
     this.getUserInfo();
+  },
+  
+  mounted(){
+    this.getFriends();
   },
 
   methods: {

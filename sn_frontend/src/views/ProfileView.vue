@@ -55,12 +55,8 @@
             >
             <div>
               {{ userInfo.relationship_status }} với
-              <strong>
-                <RouterLink
-                :to="{ name: 'profile', params: { id: partnerId } }"
-                >
-                {{ partner?.user?.name }}</RouterLink
-                >
+              <strong @click="toPartner" class="cursor-pointer">
+                {{ partner?.user?.name }}
               </strong>
             </div>
           </div>
@@ -212,7 +208,7 @@ export default {
   beforeMount() {
     this.getUserInfo();
   },
-  
+
   mounted() {
     this.getFriends();
     this.getFeed();
@@ -236,9 +232,10 @@ export default {
   methods: {
     getUserInfo() {
       axios
-        .get(`/api/user-info/${this.userStore.user.id}`)
+        .get(`/api/user-info/${this.$route.params.id}`)
         .then((res) => {
           this.partnerId = res.data.user.partner;
+          console.log(this.partnerId);
           this.getPartnerInfo();
         })
         .catch((error) => console.log(error));
@@ -250,6 +247,9 @@ export default {
           this.partner = res.data;
         })
         .catch((error) => console.log(error));
+    },
+    toPartner(){
+      this.$router.push(`/profile/${this.partnerId}`)
     },
     deletePost(id) {
       this.posts = this.posts.filter((post) => post.id !== id);

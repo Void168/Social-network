@@ -5,7 +5,24 @@
         class="p-12 bg-white border border-gray-200 rounded-lg dark:bg-slate-600 dark:border-slate-700 dark:text-neutral-200"
       >
         <h1 class="mb-6 text-2xl">Chỉnh sửa thông tin</h1>
-        <h2>Mối quan hệ</h2>
+        <div class="flex justify-between">
+          <h2>Mối quan hệ:</h2>
+          <h2
+            v-if="
+              userInfo.relationship_status !== 'Độc thân' ||
+              userInfo.relationship_status
+            "
+          >
+            Hiện tại
+            <strong
+              >{{ userInfo.relationship_status }} với
+              <RouterLink
+                :to="{ name: 'profile', params: { id: partnerId } }"
+                >{{ partner?.user?.name }}</RouterLink
+              ></strong
+            >
+          </h2>
+        </div>
         <form
           action=""
           class="space-y-6"
@@ -71,17 +88,97 @@
               </transition>
             </div>
           </Listbox>
-          <div v-if="selectedStatus.name === 'Hẹn hò' || selectedStatus.name === 'Đã đính hôn' || selectedStatus.name === 'Đã kết hôn' || selectedStatus.name === 'Tìm hiểu'">
+          <div
+            v-if="
+              selectedStatus.name === 'Hẹn hò' ||
+              selectedStatus.name === 'Đã đính hôn' ||
+              selectedStatus.name === 'Đã kết hôn' ||
+              selectedStatus.name === 'Tìm hiểu'
+            "
+          >
             <h2>Bạn đời</h2>
             <!-- v-model="relationshipForm.partner" -->
-            <input
-              type="text"
-              class="w-full mt-2 py-2 px-6 border border-gray-200 dark:bg-slate-700 dark:border-slate-800 dark:text-neutral-200 rounded-lg"
-            />
+            <Combobox v-model="partner">
+              <div class="relative mt-1">
+                <div
+                  class="relative w-full cursor-default overflow-hidden rounded-lg bg-white text-left shadow-md focus:outline-none focus-visible:ring-2 focus-visible:ring-white/75 focus-visible:ring-offset-2 focus-visible:ring-offset-teal-300 sm:text-sm"
+                >
+                  <ComboboxInput
+                    class="w-full border-none py-2 pl-3 pr-10 text-sm leading-5 text-gray-900 focus:ring-0"
+                    @change="query = $event.target.value"
+                    :displayValue="(friend) => friend.name"
+                  />
+                  <ComboboxButton
+                    class="absolute inset-y-0 right-0 flex items-center pr-2"
+                  >
+                    <ChevronUpDownIcon
+                      class="h-5 w-5 text-gray-400"
+                      aria-hidden="true"
+                    />
+                  </ComboboxButton>
+                </div>
+                <TransitionRoot
+                  leave="transition ease-in duration-100"
+                  leaveFrom="opacity-100"
+                  leaveTo="opacity-0"
+                  @after-leave="query = ''"
+                >
+                  <ComboboxOptions
+                    class="absolute mt-1 max-h-60 w-full overflow-auto rounded-md bg-white py-1 text-base shadow-lg ring-1 ring-black/5 focus:outline-none sm:text-sm"
+                  >
+                    <div
+                      v-if="filteredFriends.length === 0 && query !== ''"
+                      class="relative cursor-default select-none py-2 px-4 text-gray-700"
+                    >
+                      Nothing found.
+                    </div>
+
+                    <ComboboxOption
+                      v-for="friend in filteredFriends"
+                      as="template"
+                      :key="friend.id"
+                      :value="friend"
+                      v-slot="{ selected, active }"
+                    >
+                      <li
+                        class="relative cursor-default select-none py-2 pl-10 pr-4"
+                        :class="{
+                          'bg-teal-600 text-white': active,
+                          'text-gray-900': !active,
+                        }"
+                      >
+                        <span
+                          class="block truncate"
+                          :class="{
+                            'font-medium': selected,
+                            'font-normal': !selected,
+                          }"
+                        >
+                          {{ friend.name }}
+                        </span>
+                        <span
+                          v-if="selected"
+                          class="absolute inset-y-0 left-0 flex items-center pl-3"
+                          :class="{
+                            'text-white': active,
+                            'text-teal-600': !active,
+                          }"
+                        >
+                          <CheckIcon class="h-5 w-5" aria-hidden="true" />
+                        </span>
+                      </li>
+                    </ComboboxOption>
+                  </ComboboxOptions>
+                </TransitionRoot>
+              </div>
+            </Combobox>
           </div>
-          <div v-if="selectedStatus.name !== 'Trạng thái'" class="flex items-center justify-center mt-6">
-              <button class="btn">Lưu thay đổi</button>
-            </div>
+          <div
+            v-if="selectedStatus.name !== 'Trạng thái'"
+            class="flex items-center justify-center mt-6"
+          >
+            <button class="btn">Lưu thay đổi</button>
+          </div>
         </form>
 
         <RouterLink
@@ -139,12 +236,19 @@
 import axios from "axios";
 import { useToastStore } from "@/stores/toast";
 import { useUserStore } from "../stores/user";
+import { onMounted, ref } from "vue";
 import {
   Listbox,
   ListboxLabel,
   ListboxButton,
   ListboxOptions,
   ListboxOption,
+  Combobox,
+  ComboboxInput,
+  ComboboxButton,
+  ComboboxOptions,
+  ComboboxOption,
+  TransitionRoot,
 } from "@headlessui/vue";
 import {
   GlobeAsiaAustraliaIcon,
@@ -152,7 +256,7 @@ import {
   LockClosedIcon,
 } from "@heroicons/vue/24/outline";
 import { CheckIcon, ChevronUpDownIcon } from "@heroicons/vue/20/solid";
-import { ref } from "vue";
+import getUserInfo from "../api/getUserInfo";
 
 export default (await import("vue")).defineComponent({
   components: {
@@ -161,6 +265,12 @@ export default (await import("vue")).defineComponent({
     ListboxButton,
     ListboxOptions,
     ListboxOption,
+    Combobox,
+    ComboboxInput,
+    ComboboxButton,
+    ComboboxOptions,
+    ComboboxOption,
+    TransitionRoot,
     CheckIcon,
     ChevronUpDownIcon,
     GlobeAsiaAustraliaIcon,
@@ -170,6 +280,15 @@ export default (await import("vue")).defineComponent({
   setup() {
     const toastStore = useToastStore();
     const userStore = useUserStore();
+    const userInfo = ref({});
+    let selected = ref(null);
+    let query = ref("");
+
+    onMounted(async () => {
+      const res = await getUserInfo(userStore.user.id);
+      userInfo.value = res;
+    });
+
     const status = [
       { name: "Trạng thái" },
       { name: "Độc thân" },
@@ -188,7 +307,23 @@ export default (await import("vue")).defineComponent({
       toastStore,
       userStore,
       selectedStatus,
+      userInfo,
+      selected,
+      query,
     };
+  },
+
+  computed: {
+    filteredFriends() {
+      return this.query === ""
+        ? this.friends
+        : this.friends.filter((friend) => {
+            friend.name
+              .toLowerCase()
+              .replace(/\s+/g, "")
+              .includes(this.query.toLowerCase().replace(/\s+/g, ""));
+          });
+    },
   },
 
   data() {
@@ -211,25 +346,71 @@ export default (await import("vue")).defineComponent({
         { name: "Góa" },
       ],
       relationshipForm: {
-        status: null,
-        // partner: {
-        //   id: null
-        // },
+        status: this.userInfo.relationship_status,
+        partner: {
+          id: null,
+        },
       },
       selection: "",
       errors: [],
+      friends: [],
+      partnerId: "",
+      partner: {
+        id: null,
+      },
     };
   },
 
+  beforeMount() {
+    this.getFriends();
+    this.getUserInfo();
+  },
+
   methods: {
+    getUserInfo() {
+      axios
+        .get(`/api/user-info/${this.userStore.user.id}`)
+        .then((res) => {
+          this.partnerId = res.data.user.partner;
+          this.getPartnerInfo();
+        })
+        .catch((error) => console.log(error));
+    },
+    getPartnerInfo() {
+      axios
+        .get(`/api/user-info/${this.partnerId}`)
+        .then((res) => {
+          this.partner = res.data;
+          console.log(res.data);
+        })
+        .catch((error) => console.log(error));
+    },
     getOption() {
       this.selection = this.selectedStatus;
     },
+    getFriends() {
+      axios
+        .get(`/api/friends/${this.userStore.user.id}/`)
+        .then((res) => {
+          console.log(res.data);
+
+          this.friendshipRequests = res.data.requests;
+          this.friends = res.data.friends;
+          this.user = res.data.user;
+        })
+        .catch((error) => {
+          console.log(error);
+        });
+    },
     submitRelationship() {
       let formRelationshipData = new FormData();
-      formRelationshipData.append("relationship_status", this.selection.name);
-      // formRelationshipData.append("partner", this.partner);
-      console.log(this.selection.name)
+      if (this.selection.name === "Trạng thái") {
+        this.userInfo.relationship_status = "";
+      } else {
+        formRelationshipData.append("relationship_status", this.selection.name);
+      }
+      formRelationshipData.append("partner", this.partner.id);
+
       axios
         .post("/api/set-relationship/", formRelationshipData, {
           headers: {
@@ -237,15 +418,15 @@ export default (await import("vue")).defineComponent({
           },
         })
         .then((res) => {
-          console.log(res.data)
           if (!res.data.error) {
             this.toastStore.showToast(
-              5000,
+              2500,
               "Đã lưu thông tin mối quan hệ.",
               "bg-emerald-500 text-white"
             );
-
-            // this.$router.go(0);
+            setTimeout(() => {
+              this.$router.go(0);
+            }, 3000);
           } else {
             this.toastStore.showToast(
               5000,

@@ -53,6 +53,16 @@
                 <span>lời mời kết bạn mới</span>
               </p></router-link
             >
+            <div>
+              {{ userInfo.relationship_status }} với
+              <strong>
+                <RouterLink
+                :to="{ name: 'profile', params: { id: partnerId } }"
+                >
+                {{ partner?.user?.name }}</RouterLink
+                >
+              </strong>
+            </div>
           </div>
 
           <p class="text-sm text-gray-500 dark:text-neutral-200">
@@ -134,6 +144,8 @@ import FeedItem from "../components/FeedItem.vue";
 import PostToForm from "../components/forms/PostToForm.vue";
 import CoverImage from "../components/CoverImage.vue";
 import SkeletonLoadingPostVue from "../components/loadings/SkeletonLoadingPost.vue";
+import getUserInfo from "../api/getUserInfo";
+import { onMounted, ref } from "vue";
 
 import { RouterLink } from "vue-router";
 
@@ -144,10 +156,17 @@ export default {
   setup() {
     const userStore = useUserStore();
     const toastStore = useToastStore();
+    const userInfo = ref({});
+
+    onMounted(async () => {
+      const res = await getUserInfo(userStore.user.id);
+      userInfo.value = res;
+    });
 
     return {
       userStore,
       toastStore,
+      userInfo,
     };
   },
   name: "FeedView",
@@ -175,6 +194,10 @@ export default {
       friends: [],
       PostToShow: 5,
       loadMore: false,
+      partnerId: "",
+      partner: {
+        id: null,
+      },
     };
   },
 
@@ -186,9 +209,13 @@ export default {
     },
   },
 
+  beforeMount() {
+    this.getUserInfo();
+  },
+  
   mounted() {
-    this.getFeed();
     this.getFriends();
+    this.getFeed();
     window.addEventListener("scroll", this.infinateScroll);
   },
 
@@ -207,6 +234,23 @@ export default {
   },
 
   methods: {
+    getUserInfo() {
+      axios
+        .get(`/api/user-info/${this.userStore.user.id}`)
+        .then((res) => {
+          this.partnerId = res.data.user.partner;
+          this.getPartnerInfo();
+        })
+        .catch((error) => console.log(error));
+    },
+    getPartnerInfo() {
+      axios
+        .get(`/api/user-info/${this.partnerId}`)
+        .then((res) => {
+          this.partner = res.data;
+        })
+        .catch((error) => console.log(error));
+    },
     deletePost(id) {
       this.posts = this.posts.filter((post) => post.id !== id);
     },

@@ -12,4 +12,3 @@ class FriendshipRequestSerializer(serializers.ModelSerializer):
     class Meta:
         model = FriendshipRequest
         fields = ('id', 'created_by',)
-

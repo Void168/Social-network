@@ -1,4 +1,5 @@
 from django.contrib.auth.forms import PasswordChangeForm
+from django.db.models import Q
 from django.core.mail import send_mail
 from django.http import JsonResponse
 
@@ -78,6 +79,14 @@ def my_friendship_suggestions(request):
     
     return JsonResponse(serializer.data, safe=False)
 
+@api_view(['GET'])
+def user_info(request, pk):
+    user = User.objects.get(pk=pk)
+    
+    return JsonResponse({
+        'user': UserSerializer(user).data,
+    }, safe=False)
+
 @api_view(['POST'])
 def edit_profile(request):
     user = request.user
@@ -99,22 +108,18 @@ def edit_profile(request):
     
 @api_view(['POST'])
 def set_relationship(request):
-    user = request.user
+    current_user = request.user
     
     print(request.POST)
-    form = RelationshipForm(data=request.POST, instance=user)
+    form = RelationshipForm(data=request.POST, instance=current_user)
     print(form.is_valid())
     if form.is_valid():
         form.save()
-        user.save()
+        current_user.save()
         
-    serializer = UserSerializer(user)
+    serializer = UserSerializer(current_user)
         
     return JsonResponse({'message': 'information updated', 'user': serializer.data})
-
-@api_view(['GET'])
-def relationship_detail(request, id):
-    return JsonResponse({'message': 'hello'})
 
 @api_view(['POST'])
 def edit_cover_image(request):

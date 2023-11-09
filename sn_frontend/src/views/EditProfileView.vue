@@ -379,11 +379,11 @@ export default (await import("vue")).defineComponent({
     this.getUserInfo();
   },
 
-  watch: {
-    partnerId: (newValue, oldValue) => {
-      console.log(oldValue + "to " + newValue);
-    },
-  },
+  // watch: {
+  //   partnerId: (newValue, oldValue) => {
+  //     console.log(oldValue + "to " + newValue);
+  //   },
+  // },
 
   mounted() {
     this.getFriends();
@@ -395,20 +395,23 @@ export default (await import("vue")).defineComponent({
         .get(`/api/user-info/${this.userStore.user.id}`)
         .then((res) => {
           this.partnerId = res.data.user.partner;
-          if (this.partnerId != "") {
-            this.getPartnerInfo();
-          }
+
+          this.getPartnerInfo();
         })
         .catch((error) => console.log(error));
     },
     getPartnerInfo() {
-      axios
-        .get(`/api/user-info/${this.partnerId}`)
-        .then((res) => {
-          this.partner = res.data;
-          console.log(res.data);
-        })
-        .catch((error) => console.log(error));
+      if (this.partnerId != "" && this.partnerId == null) {
+        axios
+          .get(`/api/user-info/${this.partnerId}`)
+          .then((res) => {
+            this.partner = res.data;
+            console.log(res.data);
+          })
+          .catch((error) => console.log(error));
+      } else {
+        console.log("partnerId null");
+      }
     },
     getOption() {
       this.selection = this.selectedStatus;

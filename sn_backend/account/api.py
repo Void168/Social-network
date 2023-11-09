@@ -121,7 +121,7 @@ def set_relationship(request):
     
     
     if form.is_valid():
-        if partner_id != '':
+        if partner_id != '' and partner_id != 'null':
             partner = User.objects.get(id=partner_id)
             partner.partner = current_user_id
             partner.relationship_status = current_user_relationship_status
@@ -146,7 +146,7 @@ def delete_relationship(request):
     current_user.partner = ''
     current_user.save()
     
-    if partner_id != '':
+    if partner_id != '' and partner_id != 'null':
         partner = User.objects.get(id=partner_id)
         partner.partner = ''
         partner.relationship_status = ''

@@ -47,7 +47,7 @@
                 </div>
               </div>
               <span
-                class="text-xs text-gray-500 leading-none"
+                class="text-xs text-gray-500 dark:text-neutral-200 leading-none"
                 v-if="
                   message.id === listMessages[listMessages.length - 1].id &&
                   listMessages[listMessages.length - 1].seen_by
@@ -58,7 +58,7 @@
                 {{ listMessages[listMessages.length - 1].created_at_formatted }}
                 trước</span
               ><span
-                class="text-xs text-gray-500 leading-none"
+                class="text-xs text-gray-500 dark:text-neutral-200 leading-none"
                 v-if="
                   message.id === listMessages[listMessages.length - 1].id &&
                   listMessages[listMessages.length - 1].seen_by

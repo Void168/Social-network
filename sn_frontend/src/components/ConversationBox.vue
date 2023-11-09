@@ -16,7 +16,6 @@
           >
             <div>
               <MenuButton
-                @click="openModal"
                 class="btn inline-flex w-full justify-center rounded-full bg-white dark:bg-slate-300 dark:border-slate-400 dark:text-neutral-800 px-3 py-2 text-gray-900 ring-1 ring-inset ring-gray-300 hover:bg-gray-50 hover:text-gray-900"
               >
                 <EllipsisHorizontalIcon class="w-3 h-3" />
@@ -45,7 +44,11 @@
                       <RouterLink
                         :to="{
                           name: 'profile',
-                          params: { id: getOtherUserId.id },
+                          params: {
+                            id: conversation.users?.filter(
+                              (user) => this.userStore.user.id !== user.id
+                            )[0].id,
+                          },
                         }"
                       >
                         <span class="flex items-center gap-3"
@@ -55,7 +58,7 @@
                     </div>
                   </MenuItem>
                   <hr />
-                  <MenuItem v-slot="{ active }" @click="deleteConversation">
+                  <MenuItem v-slot="{ active }" @click="openModal">
                     <div
                       :class="[
                         active ? 'bg-gray-100 text-rose-700' : 'text-rose-700',
@@ -100,7 +103,12 @@
             >
               {{ user.name }}
             </p>
-            <p v-else-if="user.id !== userStore.user.id" class="text-xs dark:text-neutral-300">{{ user.name }}</p>
+            <p
+              v-else-if="user.id !== userStore.user.id"
+              class="text-xs dark:text-neutral-300"
+            >
+              {{ user.name }}
+            </p>
           </div>
 
           <span
@@ -162,17 +170,18 @@
                   "
                 >
                   {{
-                    conversation.messages[conversation.messages.length - 1].body
+                    conversation?.messages[conversation.messages?.length - 1]
+                      .body
                   }}
                 </p>
                 <p class="truncate dark:text-neutral-300" v-else>
                   {{
-                    conversation.messages[conversation.messages.length - 1].body
+                    conversation?.messages[conversation.messages?.length - 1]
+                      .body
                   }}
                 </p>
               </div>
             </div>
-
             <span
               class="bg-emerald-500 w-3 h-3 rounded-full shadow-md"
               v-if="
@@ -236,10 +245,20 @@ export default (await import("vue")).defineComponent({
         (user) => this.userStore.user.id !== user.id
       )[0];
     },
+    // getLastMessage() {
+    //   return this.conversation?.messages[this.conversation.messages?.length - 1].body
+    // }
   },
   mounted() {
     this.getConversations();
   },
+
+  // watch: {
+  //   getLastMessage(lastMessage, oldMessage) {
+  //     console.log(this.conversation.messages + "from" + oldMessage + "to" + lastMessage)
+  //   },
+  //   immediate: true,
+  // },
 
   methods: {
     getConversations() {

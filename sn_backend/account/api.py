@@ -109,6 +109,7 @@ def edit_profile(request):
 @api_view(['POST'])
 def set_relationship(request):
     current_user = request.user
+    print(current_user)
     
     print(request.POST)
     form = RelationshipForm(data=request.POST, instance=current_user)
@@ -116,19 +117,45 @@ def set_relationship(request):
     current_user_relationship_status = User.objects.get(email=current_user).relationship_status
     current_user_id = User.objects.get(email=current_user).id
     
-    partner_id = User.objects.get(email=current_user).partner
-    partner = User.objects.get(id=partner_id)
-    print(current_user_relationship_status)
+    partner_id = form.data["partner"]
+    
+    
     if form.is_valid():
-        partner.partner = current_user_id
-        partner.relationship_status = current_user_relationship_status
+        if partner_id != '':
+            partner = User.objects.get(id=partner_id)
+            partner.partner = current_user_id
+            partner.relationship_status = current_user_relationship_status
+            
+            partner.save()
+            
         form.save()
         current_user.save()
-        partner.save()
         
     serializer = UserSerializer(current_user)
         
     return JsonResponse({'message': 'information updated', 'user': serializer.data})
+
+@api_view(['DELETE'])
+def delete_relationship(request):
+    current_user = request.user
+    
+    current_user = User.objects.get(email=current_user)
+    partner_id = User.objects.get(email=current_user).partner
+    
+    current_user.relationship_status = ''
+    current_user.partner = ''
+    current_user.save()
+    
+    if partner_id != '':
+        partner = User.objects.get(id=partner_id)
+        partner.partner = ''
+        partner.relationship_status = ''
+        partner.save()
+        
+    serializer = UserSerializer(current_user)
+    
+    return JsonResponse(serializer.data)
+
 
 @api_view(['POST'])
 def edit_cover_image(request):

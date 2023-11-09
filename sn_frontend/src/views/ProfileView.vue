@@ -223,6 +223,7 @@ export default {
     "$route.params.id": {
       handler: function () {
         this.getFeed();
+        this.getUserInfo();
       },
       deep: true,
       immediate: true,

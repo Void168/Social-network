@@ -5,23 +5,35 @@
         class="p-12 bg-white border border-gray-200 rounded-lg dark:bg-slate-600 dark:border-slate-700 dark:text-neutral-200"
       >
         <h1 class="mb-6 text-2xl">Chỉnh sửa thông tin</h1>
-        <div class="flex justify-between">
-          <h2>Mối quan hệ:</h2>
-          <h2
+        <div class="flex justify-between mb-4">
+          <h2>Mối quan hệ hiện tại:</h2>
+          <div
             v-if="
               userInfo.relationship_status !== 'Độc thân' ||
-              userInfo.relationship_status
+              userInfo.relationship_status ||
+              partnerId != ''
             "
+            class="flex gap-2"
           >
-            Hiện tại
-            <strong
-              >{{ userInfo.relationship_status }} với
-              <RouterLink
-                :to="{ name: 'profile', params: { id: partnerId } }"
-                >{{ partner?.user?.name }}</RouterLink
-              ></strong
+            <h2 v-if="partnerId != ''">
+              {{ userInfo.relationship_status }} với
+              <strong @click="toPartner" class="cursor-pointer">
+                {{ partner?.user?.name }}
+              </strong>
+            </h2>
+            <div
+              v-if="userInfo.relationship_status !== '' && partnerId != ''"
+              class="hover:underline cursor-pointer"
+              @click="openModal"
             >
-          </h2>
+              Xóa
+            </div>
+            <DeleteRelationshipModal
+              :show="isOpen"
+              @closeModal="closeModal"
+              @deleteRelationship="deleteRelationship"
+            />
+          </div>
         </div>
         <form
           action=""
@@ -180,12 +192,6 @@
             <button class="btn">Lưu thay đổi</button>
           </div>
         </form>
-
-        <RouterLink
-          to="/profile/edit/password"
-          class="hover:underline flex justify-end"
-          >Đổi mật khẩu</RouterLink
-        >
       </div>
     </div>
 
@@ -219,6 +225,11 @@
               class="w-full mt-2 py-2 px-6 border border-gray-200 dark:bg-slate-700 dark:border-slate-800 dark:text-neutral-200 rounded-lg"
             />
           </div>
+          <RouterLink
+            to="/profile/edit/password"
+            class="hover:underline flex justify-end"
+            >Đổi mật khẩu</RouterLink
+          >
           <div class="flex flex-col">
             <label class="text-center">Ảnh đại diện</label>
             <input type="file" ref="file" />
@@ -257,6 +268,7 @@ import {
 } from "@heroicons/vue/24/outline";
 import { CheckIcon, ChevronUpDownIcon } from "@heroicons/vue/20/solid";
 import getUserInfo from "../api/getUserInfo";
+import DeleteRelationshipModal from "../components/modals/DeleteRelationship.vue";
 
 export default (await import("vue")).defineComponent({
   components: {
@@ -276,6 +288,7 @@ export default (await import("vue")).defineComponent({
     GlobeAsiaAustraliaIcon,
     UserGroupIcon,
     LockClosedIcon,
+    DeleteRelationshipModal,
   },
   setup() {
     const toastStore = useToastStore();
@@ -351,6 +364,7 @@ export default (await import("vue")).defineComponent({
           id: null,
         },
       },
+      isOpen: false,
       selection: "",
       errors: [],
       friends: [],
@@ -364,8 +378,14 @@ export default (await import("vue")).defineComponent({
   beforeMount() {
     this.getUserInfo();
   },
-  
-  mounted(){
+
+  watch: {
+    partnerId: (newValue, oldValue) => {
+      console.log(oldValue + "to " + newValue);
+    },
+  },
+
+  mounted() {
     this.getFriends();
   },
 
@@ -375,7 +395,9 @@ export default (await import("vue")).defineComponent({
         .get(`/api/user-info/${this.userStore.user.id}`)
         .then((res) => {
           this.partnerId = res.data.user.partner;
-          this.getPartnerInfo();
+          if (this.partnerId != "") {
+            this.getPartnerInfo();
+          }
         })
         .catch((error) => console.log(error));
     },
@@ -404,6 +426,9 @@ export default (await import("vue")).defineComponent({
         .catch((error) => {
           console.log(error);
         });
+    },
+    toPartner() {
+      this.$router.push(`/profile/${this.partnerId}`);
     },
     submitRelationship() {
       let formRelationshipData = new FormData();
@@ -440,6 +465,31 @@ export default (await import("vue")).defineComponent({
         })
         .catch((error) => {
           console.log("error", error);
+        });
+    },
+    deleteRelationship() {
+      axios
+        .delete("/api/delete-relationship/")
+        .then((res) => {
+          setTimeout(() => {
+            this.closeModal();
+          }, 500);
+          this.toastStore.showToast(
+            5000,
+            "Đã xóa mối quan hệ",
+            "bg-emerald-500 text-white"
+          );
+          setTimeout(() => {
+            this.$router.go(0);
+          }, 6000);
+        })
+        .catch((error) => {
+          console.log(error);
+          this.toastStore.showToast(
+            5000,
+            "Xóa mối quan hệ thất bại",
+            "bg-rose-500 text-white"
+          );
         });
     },
     submitForm() {
@@ -493,6 +543,12 @@ export default (await import("vue")).defineComponent({
             console.log("error", error);
           });
       }
+    },
+    closeModal() {
+      this.isOpen = false;
+    },
+    openModal() {
+      this.isOpen = true;
     },
   },
 });

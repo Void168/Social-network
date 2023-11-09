@@ -8,8 +8,8 @@ from rest_framework.decorators import api_view, authentication_classes, permissi
 from notification.utils import create_notification
 
 from .forms import SignupForm, ProfileForm, CoverImageForm, RelationshipForm
-from .models import User, FriendshipRequest
-from .serializers import UserSerializer, FriendshipRequestSerializer
+from .models import User, FriendshipRequest, RelationshipRequest
+from .serializers import UserSerializer, FriendshipRequestSerializer, RelationshipRequestSerializer
 
 @api_view(['GET'])
 def me(request):
@@ -105,39 +105,89 @@ def edit_profile(request):
         serializer = UserSerializer(user)
         
         return JsonResponse({'message': 'information updated', 'user': serializer.data})
+
+@api_view(['GET'])
+def relationship(request, pk):
+    user = User.objects.get(pk=pk)
+    relationshipRequest = {}
     
+    if user == request.user:
+        relationshipRequest = RelationshipRequest.objects.filter(created_for=request.user, status=RelationshipRequest.SENT)
+        relationshipRequest = RelationshipRequestSerializer(relationshipRequest, many=True)
+        relationshipRequest = relationshipRequest.data
+            
+    return JsonResponse({
+        'user': UserSerializer(user).data,
+        'request': relationshipRequest
+    }, safe=False)
+
 @api_view(['POST'])
-def set_relationship(request):
-    current_user = request.user
-    print(current_user)
+def send_relationship_request(request, pk):
+    user = User.objects.get(pk=pk)
+    form = RelationshipForm(data=request.POST, instance=user)
+    relationship_type = form.data["relationship_status"]
     
-    print(request.POST)
-    form = RelationshipForm(data=request.POST, instance=current_user)
+    received_user = request.user
     
-    current_user_relationship_status = User.objects.get(email=current_user).relationship_status
-    current_user_id = User.objects.get(email=current_user).id
+    check1 = RelationshipRequest.objects.filter(created_for=received_user).filter(created_by=user)
+    check2 = RelationshipRequest.objects.filter(created_for=user).filter(created_by=received_user)
     
-    partner_id = form.data["partner"]
+    check3 = RelationshipRequest.objects.filter(created_for=request.user).filter(created_by=user).filter(status=RelationshipRequest.REJECTED)
+    check4 = RelationshipRequest.objects.filter(created_for=user).filter(created_by=request.user).filter(status=RelationshipRequest.REJECTED)
     
-    
-    if form.is_valid():
-        if partner_id != '' and partner_id != 'null':
-            partner = User.objects.get(id=partner_id)
-            partner.partner = current_user_id
-            partner.relationship_status = current_user_relationship_status
-            
-            partner.save()
-            
-        form.save()
-        current_user.save()
+    if received_user.partner == '':
+        return JsonResponse({'message': "don't be a third person"})
+    if not check1 and not check2:
+        relationship_request = RelationshipRequest.objects.create(created_for=user, created_by=request.user, relationship_type=relationship_type)
         
-    serializer = UserSerializer(current_user)
+        notification = create_notification(request, 'new_relationship_request', relationship_request_id=relationship_request.id)
+
         
-    return JsonResponse({'message': 'information updated', 'user': serializer.data})
+        return JsonResponse({'message': 'relationship request created'})
+    if check3 and check4:
+        return JsonResponse({'message': 'relationship request created'})
+    
+    else:
+        return JsonResponse({'message': 'request already sent'})
+
+@api_view(['POST'])
+def handle_request_relationship(request, pk, status):
+    user = User.objects.get(pk=pk)
+        
+    relationship_request = RelationshipRequest.objects.filter(created_for=request.user).get(created_by=user)
+    relationship_request.status = status
+    relationship_request.save()
+
+    partner = User.objects.get(Q(email=relationship_request.created_for))
+    
+    if status == 'accepted':
+        user.partner = partner.id
+        user.relationship_status = relationship_request.relationship_type
+        
+        partner.partner = user.id
+        partner.relationship_status = relationship_request.relationship_type
+            
+        partner.save()
+            
+        user.save()
+        
+        serializer = UserSerializer(user)
+        
+        notification = create_notification(request, 'accepted_relationship_request', relationship_request_id=relationship_request.id)
+    
+    if status == 'rejected':
+        RelationshipRequest.objects.filter(status='rejected').delete()
+
+
+    return JsonResponse({'message': 'relationship request updated'})
 
 @api_view(['DELETE'])
 def delete_relationship(request):
     current_user = request.user
+    print(current_user)
+    
+    relationship_request = RelationshipRequest.objects.filter(created_for=request.user)
+    relationship_request.delete()
     
     current_user = User.objects.get(email=current_user)
     partner_id = User.objects.get(email=current_user).partner

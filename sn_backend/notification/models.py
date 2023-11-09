@@ -6,8 +6,11 @@ from post.models import Post
 # Create your models here.
 class Notification(models.Model):
     NEWFRIENDREQUEST = 'new_friend_request'
+    NEWRELATIONSHIPREQUEST = 'new_relationship_request'
     ACCEPTEDFRIENDREQUEST = 'accepted_friend_request'
+    ACCEPTEDFRIENDREQUEST = 'accepted_relationship_request'
     REJECTEDFRIENDREQUEST = 'rejected_friend_request'
+    REJECTEDFRIENDREQUEST = 'rejected_relationship_request'
     POST_LIKE = 'post_like'
     POST_COMMENT = 'post_comment'
     
@@ -17,6 +20,7 @@ class Notification(models.Model):
         (REJECTEDFRIENDREQUEST, 'Rejected friendrequest'),
         (POST_LIKE, 'Post like'),
         (POST_COMMENT, 'Post comment'),
+        (NEWRELATIONSHIPREQUEST, 'Relationship request'),
     )
     
     id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)

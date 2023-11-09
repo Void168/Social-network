@@ -1,9 +1,9 @@
 from .models import Notification
 
 from post.models import Post
-from account.models import FriendshipRequest
+from account.models import FriendshipRequest, RelationshipRequest
 
-def create_notification(request, type_of_notification, post_id=None, friendrequest_id=None):
+def create_notification(request, type_of_notification, post_id=None, friendrequest_id=None, relationship_request_id=None):
     created_for = None
     
     if type_of_notification == 'post_like':
@@ -18,10 +18,18 @@ def create_notification(request, type_of_notification, post_id=None, friendreque
         friendrequest = FriendshipRequest.objects.get(pk=friendrequest_id)
         created_for = friendrequest.created_for
         body = f'{request.user.name} đã gửi một lời mời kết bạn'
+    elif type_of_notification == 'new_relationship_request':
+        relationshiprequest = RelationshipRequest.objects.get(pk=relationship_request_id)
+        created_for = relationshiprequest.created_for
+        body = f'{request.user.name} đã thiết lập mối quan hệ với bạn'
     elif type_of_notification == 'accepted_friend_request':
         friendrequest = FriendshipRequest.objects.get(pk=friendrequest_id)
         created_for = friendrequest.created_for
         body = f'{request.user.name} đã đồng ý lời mời kết bạn'
+    elif type_of_notification == 'accepted_relationship_request':
+        relationshiprequest = RelationshipRequest.objects.get(pk=relationship_request_id)
+        created_for = relationshiprequest.created_for
+        body = f'{request.user.name} đã đồng ý'
     
     if request.user != created_for:
         notification = Notification.objects.create(

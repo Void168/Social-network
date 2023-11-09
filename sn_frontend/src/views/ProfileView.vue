@@ -54,9 +54,13 @@
               </p></router-link
             >
             <div>
-              {{ userInfo.relationship_status }} với
-              <strong @click="toPartner" class="cursor-pointer">
-                {{ partner?.user?.name }}
+              {{ userInfo.relationship_status }}
+              <strong
+                v-if="partnerId != '' && partnerId != 'null'"
+                @click="toPartner"
+                class="cursor-pointer"
+              >
+                với {{ partner?.user?.name }}
               </strong>
             </div>
           </div>
@@ -91,6 +95,7 @@
           Nhắn tin
         </button>
       </div>
+      
     </div>
 
     <div
@@ -109,7 +114,60 @@
       >
         <PostToForm v-bind:user="user" v-bind:posts="posts" />
       </div>
+      <div
+        v-if="relationshipRequest.length && user.id === userStore.user.id"
+        class="p-4 bg-white border border-gray-200 dark:bg-slate-600 dark:border-slate-700 dark:text-neutral-200 rounded-lg"
+      >
+        <h2 class="mb-6 text-xl">Yêu cầu thiết lập mối quan hệ <strong>{{ relationshipRequest[0].relationship_type }}</strong></h2>
+        <div
+          class="p-4 bg-gray-100 dark:bg-slate-700 dark:border-slate-800 dark:text-neutral-200 text-center rounded-lg mb-4"
+        >
+          <RouterLink
+            :to="{
+              name: 'profile',
+              params: { id: relationshipRequest[0].created_by.id },
+            }"
+          >
+            <img
+              :src="relationshipRequest[0].created_by.get_avatar"
+              alt=""
+              class="mb-6 rounded-full mx-auto w-20 h-20"
+            />
 
+            <p>
+              <strong> {{ relationshipRequest[0].created_by.name }}</strong>
+            </p>
+            <div class="mt-6 flex space-x-8 justify-around">
+              <p class="text-xs text-gray-500 dark:text-neutral-200">
+                {{ relationshipRequest[0].created_by.friends_count }} người bạn
+              </p>
+              <p class="text-xs text-gray-500 dark:text-neutral-200">
+                {{ relationshipRequest[0].created_by.posts_count }} bài đăng
+              </p>
+            </div>
+          </RouterLink>
+          <div class="mt-6 space-x-4">
+            <button
+              @click="
+                handleRequest('accepted', relationshipRequest[0].created_by.id)
+              "
+              class="btn"
+            >
+              Đồng ý
+            </button>
+            <button
+              @click="
+                handleRequest('rejected', relationshipRequest[0].created_by.id)
+              "
+              class="bg-rose-400 hover:bg-rose-600 btn"
+            >
+              Từ chối
+            </button>
+          </div>
+        </div>
+
+        <hr />
+      </div>
       <p class="font-semibold text-2xl">Bài viết của {{ user.name }}</p>
       <div v-if="posts?.length">
         <div
@@ -194,6 +252,7 @@ export default {
       partner: {
         id: null,
       },
+      relationshipRequest: {}
     };
   },
 
@@ -213,6 +272,7 @@ export default {
     this.getFriends();
     this.getFeed();
     window.addEventListener("scroll", this.infinateScroll);
+    this.getRelationship()
   },
 
   beforeDestroy() {
@@ -249,8 +309,8 @@ export default {
         })
         .catch((error) => console.log(error));
     },
-    toPartner(){
-      this.$router.push(`/profile/${this.partnerId}`)
+    toPartner() {
+      this.$router.push(`/profile/${this.partnerId}`);
     },
     deletePost(id) {
       this.posts = this.posts.filter((post) => post.id !== id);
@@ -288,6 +348,18 @@ export default {
           setTimeout(() => {
             this.$router.go();
           }, 3500);
+        })
+        .catch((error) => {
+          console.log(error);
+        });
+    },
+
+    getRelationship() {
+      axios
+        .get(`/api/relationship/${this.$route.params.id}/`)
+        .then((res) => {
+          console.log(res.data);
+          this.relationshipRequest = res.data.request;
         })
         .catch((error) => {
           console.log(error);
@@ -342,6 +414,45 @@ export default {
         })
         .catch((error) => {
           console.log(error);
+        });
+    },
+
+    handleRequest(status, pk) {
+      console.log("handleRequest", status);
+
+      axios
+        .post(`/api/relationship/${pk}/${status}/`)
+        .then((res) => {
+          console.log("data", res.data);
+
+          if (status === "accepted") {
+            this.toastStore.showToast(
+              5000,
+              "Đã đồng ý lời mời kết bạn",
+              "bg-emerald-500 text-white"
+            );
+            this.$router.go();
+          }
+          if (status === "rejected") {
+            this.toastStore.showToast(
+              5000,
+              "Đã từ chối lời mời kết bạn",
+              "bg-amber-500 text-white"
+            );
+            setTimeout(() => {
+              this.$router.go()
+            },5500)
+          }
+           else {
+            this.toastStore.showToast(
+              5000,
+              "Chấp nhận lời mời thất bại",
+              "bg-red-500 text-white"
+            );
+          }
+        })
+        .catch((error) => {
+          console.log("error", error);
         });
     },
 

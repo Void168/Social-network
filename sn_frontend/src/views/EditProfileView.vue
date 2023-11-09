@@ -15,12 +15,18 @@
             "
             class="flex gap-2"
           >
-            <h2 v-if="partnerId != ''">
-              {{ userInfo.relationship_status }} với
-              <strong @click="toPartner" class="cursor-pointer">
-                {{ partner?.user?.name }}
-              </strong>
-            </h2>
+            <div class="flex gap-1">
+              <h2>
+                {{ userInfo.relationship_status }}
+              </h2>
+              <h2 v-if="partnerId != '' && partnerId != 'null'">
+                với
+                <strong @click="toPartner" class="cursor-pointer">
+                  {{ partner?.user?.name }}
+                </strong>
+              </h2>
+            </div>
+
             <div
               v-if="userInfo.relationship_status !== '' && partnerId != ''"
               class="hover:underline cursor-pointer"
@@ -38,7 +44,7 @@
         <form
           action=""
           class="space-y-6"
-          v-on:submit.prevent="submitRelationship"
+          v-on:submit.prevent="sendRelationshipRequest"
         >
           <Listbox v-model="selectedStatus" class="w-full">
             <div class="relative mt-1 flex justify-end w-2/12">
@@ -142,7 +148,7 @@
                       v-if="filteredFriends.length === 0 && query !== ''"
                       class="relative cursor-default select-none py-2 px-4 text-gray-700"
                     >
-                      Nothing found.
+                      Không tìm thấy
                     </div>
 
                     <ComboboxOption
@@ -153,6 +159,7 @@
                       v-slot="{ selected, active }"
                     >
                       <li
+                        @click="getFriendInfo(friend)"
                         class="relative cursor-default select-none py-2 pl-10 pr-4"
                         :class="{
                           'bg-teal-600 text-white': active,
@@ -337,6 +344,13 @@ export default (await import("vue")).defineComponent({
               .includes(this.query.toLowerCase().replace(/\s+/g, ""));
           });
     },
+    getFriendId() {
+      return this.query === ""
+        ? this.friends
+        : this.friends.filter((friend) => {
+            friend.id;
+          });
+    },
   },
 
   data() {
@@ -379,12 +393,6 @@ export default (await import("vue")).defineComponent({
     this.getUserInfo();
   },
 
-  // watch: {
-  //   partnerId: (newValue, oldValue) => {
-  //     console.log(oldValue + "to " + newValue);
-  //   },
-  // },
-
   mounted() {
     this.getFriends();
   },
@@ -395,13 +403,12 @@ export default (await import("vue")).defineComponent({
         .get(`/api/user-info/${this.userStore.user.id}`)
         .then((res) => {
           this.partnerId = res.data.user.partner;
-
           this.getPartnerInfo();
         })
         .catch((error) => console.log(error));
     },
     getPartnerInfo() {
-      if (this.partnerId != "" && this.partnerId == null) {
+      if (this.partnerId !== "" && this.partnerId !== "null") {
         axios
           .get(`/api/user-info/${this.partnerId}`)
           .then((res) => {
@@ -421,8 +428,6 @@ export default (await import("vue")).defineComponent({
         .get(`/api/friends/${this.userStore.user.id}/`)
         .then((res) => {
           console.log(res.data);
-
-          this.friendshipRequests = res.data.requests;
           this.friends = res.data.friends;
           this.user = res.data.user;
         })
@@ -430,10 +435,49 @@ export default (await import("vue")).defineComponent({
           console.log(error);
         });
     },
+    getFriendInfo(value) {
+      this.partner = value;
+    },
     toPartner() {
       this.$router.push(`/profile/${this.partnerId}`);
     },
-    submitRelationship() {
+    //   let formRelationshipData = new FormData();
+    //   if (this.selection.name === "Trạng thái") {
+    //     this.userInfo.relationship_status = "";
+    //   } else {
+    //     formRelationshipData.append("relationship_status", this.selection.name);
+    //   }
+    //   formRelationshipData.append("partner", this.partner.id);
+
+    //   axios
+    //     .post("/api/set-relationship/", formRelationshipData, {
+    //       headers: {
+    //         "Content-Type": "multipart/form-data",
+    //       },
+    //     })
+    //     .then((res) => {
+    //       if (!res.data.error) {
+    //         this.toastStore.showToast(
+    //           2500,
+    //           "Đã lưu thông tin mối quan hệ.",
+    //           "bg-emerald-500 text-white"
+    //         );
+    //         setTimeout(() => {
+    //           this.$router.go(0);
+    //         }, 3000);
+    //       } else {
+    //         this.toastStore.showToast(
+    //           5000,
+    //           `${res.data.error}`,
+    //           "bg-rose-400 text-white"
+    //         );
+    //       }
+    //     })
+    //     .catch((error) => {
+    //       console.log("error", error);
+    //     });
+    // },
+    sendRelationshipRequest() {
       let formRelationshipData = new FormData();
       if (this.selection.name === "Trạng thái") {
         this.userInfo.relationship_status = "";
@@ -441,33 +485,38 @@ export default (await import("vue")).defineComponent({
         formRelationshipData.append("relationship_status", this.selection.name);
       }
       formRelationshipData.append("partner", this.partner.id);
-
       axios
-        .post("/api/set-relationship/", formRelationshipData, {
-          headers: {
-            "Content-Type": "multipart/form-data",
-          },
-        })
+        .post(
+          `/api/relationship/${this.partner.id}/request/`,
+          formRelationshipData,
+          {
+            headers: {
+              "Content-Type": "multipart/form-data",
+            },
+          }
+        )
         .then((res) => {
-          if (!res.data.error) {
-            this.toastStore.showToast(
-              2500,
-              "Đã lưu thông tin mối quan hệ.",
-              "bg-emerald-500 text-white"
-            );
-            setTimeout(() => {
-              this.$router.go(0);
-            }, 3000);
-          } else {
+          console.log(res.data);
+          this.status = res.data.message;
+          if (this.status === "request already sent") {
             this.toastStore.showToast(
               5000,
-              `${res.data.error}`,
+              "Không thể gửi lần 2",
               "bg-rose-400 text-white"
             );
+          } else {
+            this.toastStore.showToast(
+              3000,
+              "Đã gửi lời mời",
+              "bg-emerald-400 text-white"
+            );
+            // setTimeout(() => {
+            //   this.$router.go(0);
+            // }, 3500);
           }
         })
         .catch((error) => {
-          console.log("error", error);
+          console.log(error);
         });
     },
     deleteRelationship() {

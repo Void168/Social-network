@@ -1,7 +1,9 @@
 <template>
   <div class="max-w-7xl mx-auto grid grid-cols-4 gap-4">
     <div class="main-center col-span-3 space-y-4">
-      <div class="p-4 bg-white border border-gray-200 rounded-lg dark:bg-slate-600 dark:border-slate-700 dark:text-neutral-200">
+      <div
+        class="p-4 bg-white border border-gray-200 rounded-lg dark:bg-slate-600 dark:border-slate-700 dark:text-neutral-200"
+      >
         <div v-if="notifications?.length">
           <div
             v-for="notification in notifications.slice(0, lastNoti)"
@@ -34,7 +36,7 @@
               @click="loadMore"
               v-if="lastNoti < notifications.length"
             >
-              Tải thêm bình luận
+              Tải thêm thông báo
             </button>
           </div>
         </div>
@@ -104,11 +106,17 @@ export default (await import("vue")).defineComponent({
               name: "postview",
               params: { id: notification.post_id },
             });
+          }
+          if (notification.type_of_notification === "new_relationship_request") {
+            this.$router.push({
+              name: "profile",
+              params: { id: notification.created_for},
+            });
           } else {
             this.$router.push({
               name: "friends",
               params: {
-                id: notification.created_for_id,
+                id: notification.created_for,
               },
             });
           }

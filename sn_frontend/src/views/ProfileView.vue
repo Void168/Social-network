@@ -30,7 +30,7 @@
         <img
           :src="user.get_avatar"
           alt=""
-          class="mb-6 rounded-full w-44 h-44 shadow-xl absolute top-0 z-50"
+          class="mb-6 rounded-full w-44 h-44 shadow-xl absolute top-0 z-5"
         />
         <p>
           <strong class="text-2xl">{{ user.name }}</strong>

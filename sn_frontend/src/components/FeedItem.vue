@@ -14,20 +14,31 @@
           <div v-if="post.post_to" class="flex gap-1">
             <p>cùng với</p>
             <strong>
-            <RouterLink
-              :to="{ name: 'profile', params: { id: post.post_to.id } }"
-              >{{ post.post_to.name }}</RouterLink
-            >
-          </strong>
+              <RouterLink
+                :to="{ name: 'profile', params: { id: post.post_to.id } }"
+                >{{ post.post_to.name }}</RouterLink
+              >
+            </strong>
           </div>
 
-            <GlobeAsiaAustraliaIcon class="w-4 h-4" v-if="post.is_private === false && post.only_me === false"/>
-            <UserGroupIcon class="w-4 h-4" v-else-if="post.is_private === true && post.only_me === false"/>
-            <LockClosedIcon class="w-4 h-4" v-else-if="post.is_private === true && post.only_me === true"/>
+          <GlobeAsiaAustraliaIcon
+            class="w-4 h-4"
+            v-if="post.is_private === false && post.only_me === false"
+          />
+          <UserGroupIcon
+            class="w-4 h-4"
+            v-else-if="post.is_private === true && post.only_me === false"
+          />
+          <LockClosedIcon
+            class="w-4 h-4"
+            v-else-if="post.is_private === true && post.only_me === true"
+          />
         </div>
       </div>
 
-      <p class="text-gray-600 dark:text-neutral-200">{{ post.created_at_formatted }} trước</p>
+      <p class="text-gray-600 dark:text-neutral-200">
+        {{ post.created_at_formatted }} trước
+      </p>
     </div>
 
     <p>{{ post.body }}</p>
@@ -43,7 +54,7 @@
 
     <div class="my-6 flex justify-between">
       <div class="flex space-x-6">
-        <div class="flex items-center space-x-2 ">
+        <div class="flex items-center space-x-2">
           <HeartLike
             class="w-6 h-6 text-rose-500 cursor-pointer"
             v-if="isLike"
@@ -51,7 +62,7 @@
           <HeartLike
             v-else
             @click="likePost(post.id)"
-            class="w-6 h-6 cursor-pointer text-gray-400  hover:text-rose-500  transition-colors duration-75"
+            class="w-6 h-6 cursor-pointer text-gray-400 hover:text-rose-500 transition-colors duration-75"
           />
           <span class="text-gray-500 text-xs dark:text-neutral-200"
             >{{ post.likes_count }} lượt thích</span
@@ -165,7 +176,11 @@ import axios from "axios";
 import { RouterLink } from "vue-router";
 import { Menu, MenuButton, MenuItem, MenuItems } from "@headlessui/vue";
 import { ShieldCheckIcon, TrashIcon } from "@heroicons/vue/24/solid";
-import { GlobeAsiaAustraliaIcon, UserGroupIcon, LockClosedIcon } from "@heroicons/vue/24/outline";
+import {
+  GlobeAsiaAustraliaIcon,
+  UserGroupIcon,
+  LockClosedIcon,
+} from "@heroicons/vue/24/outline";
 import { HeartIcon as HeartLike } from "@heroicons/vue/24/solid";
 import { useUserStore } from "../stores/user";
 import { useToastStore } from "../stores/toast";
@@ -282,7 +297,7 @@ export default (await import("vue")).defineComponent({
     HeartLike,
     GlobeAsiaAustraliaIcon,
     UserGroupIcon,
-    LockClosedIcon
+    LockClosedIcon,
   },
 });
 </script>

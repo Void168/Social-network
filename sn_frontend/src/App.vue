@@ -1,7 +1,7 @@
 <template>
   <div>
     <nav
-      class="py-10 px-8 border-b border-gray-200 bg-gray-100 dark:bg-slate-700 dark:border-slate-800 dark:text-neutral-200 shadow-lg sticky w-full z-[10000] top-0"
+      class="py-10 px-8 border-b border-gray-200 bg-gray-100 dark:bg-slate-700 dark:border-slate-800 dark:text-neutral-200 shadow-lg sticky w-full z-10 top-0"
     >
       <div class="max-w-7xl mx-auto">
         <div class="flex items-center justify-between">

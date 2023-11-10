@@ -122,6 +122,24 @@ def relationship(request, pk):
     }, safe=False)
 
 @api_view(['POST'])
+def set_relationship(request):
+    current_user = request.user
+    
+    form = RelationshipForm(data=request.POST, instance=current_user)
+    
+    if form.is_valid():
+        form.save()
+        
+        current_user.save()
+    
+        serializer = UserSerializer(current_user)
+    
+        return JsonResponse(serializer.data)
+    else: 
+        return JsonResponse({'message':'Failed'})
+
+
+@api_view(['POST'])
 def send_relationship_request(request, pk):
     user = User.objects.get(pk=pk)
     form = RelationshipForm(data=request.POST, instance=user)

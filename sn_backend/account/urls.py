@@ -16,9 +16,10 @@ urlpatterns = [
     path('edit-password/', api.edit_password, name='edit_password'),
     path('friends/<uuid:pk>/', api.friends, name='friends'),
     path('relationship/<uuid:pk>/', api.relationship, name='relationship'),
-    path('friends/suggested/', api.my_friendship_suggestions, name='my_friendship_suggestions'),
+    path('set-relationship/', api.set_relationship, name='set_relationship'),
     path('relationship/<uuid:pk>/request/', api.send_relationship_request, name='send_relationship_request'),
     path('relationship/<uuid:pk>/<str:status>/', api.handle_request_relationship, name='handle_request_relationship'),
+    path('friends/suggested/', api.my_friendship_suggestions, name='my_friendship_suggestions'),
     path('friends/<uuid:pk>/request/', api.send_friendship_request, name='send_friendship_request'),
     path('friends/<uuid:pk>/<str:status>/', api.handle_request, name='handle_request'),
 ]

@@ -28,7 +28,7 @@
             </div>
 
             <div
-              v-if="userInfo.relationship_status !== '' && partnerId != ''"
+              v-if="userInfo.relationship_status !== ''"
               class="hover:underline cursor-pointer"
               @click="openModal"
             >
@@ -479,45 +479,83 @@ export default (await import("vue")).defineComponent({
     // },
     sendRelationshipRequest() {
       let formRelationshipData = new FormData();
-      if (this.selection.name === "Trạng thái") {
-        this.userInfo.relationship_status = "";
-      } else {
+      if (
+        this.selection.name === "Độc thân" ||
+        this.selection.name === "Có mối quan hệ phức tạp" ||
+        this.selection.name === "Đã ly thân" ||
+        this.selection.name === "Đã ly hôn"
+      ) {
         formRelationshipData.append("relationship_status", this.selection.name);
-      }
-      formRelationshipData.append("partner", this.partner.id);
-      axios
-        .post(
-          `/api/relationship/${this.partner.id}/request/`,
-          formRelationshipData,
-          {
+
+        formRelationshipData.append("partner", "");
+
+        axios
+          .post("/api/set-relationship/", formRelationshipData, {
             headers: {
               "Content-Type": "multipart/form-data",
             },
-          }
-        )
-        .then((res) => {
-          console.log(res.data);
-          this.status = res.data.message;
-          if (this.status === "request already sent") {
-            this.toastStore.showToast(
-              5000,
-              "Không thể gửi lần 2",
-              "bg-rose-400 text-white"
-            );
-          } else {
-            this.toastStore.showToast(
-              3000,
-              "Đã gửi lời mời",
-              "bg-emerald-400 text-white"
-            );
-            // setTimeout(() => {
-            //   this.$router.go(0);
-            // }, 3500);
-          }
-        })
-        .catch((error) => {
-          console.log(error);
-        });
+          })
+          .then((res) => {
+            console.log(res.data);
+
+            if (res.data.message === "Failed") {
+              this.toastStore.showToast(
+                5000,
+                "Thiết lập tình trạng quan hệ thất bại",
+                "bg-rose-400 text-white"
+              );
+            } else {
+              this.toastStore.showToast(
+                3000,
+                "Thiết lập tình trạng quan hệ thành công",
+                "bg-emerald-400 text-white"
+              );
+              setTimeout(() => {
+                this.$router.go(0);
+              }, 3500);
+            }
+          })
+          .catch((error) => {
+            console.log(error);
+          });
+      } else {
+        formRelationshipData.append("relationship_status", this.selection.name);
+
+        formRelationshipData.append("partner", this.partner.id);
+        axios
+          .post(
+            `/api/relationship/${this.partner.id}/request/`,
+            formRelationshipData,
+            {
+              headers: {
+                "Content-Type": "multipart/form-data",
+              },
+            }
+          )
+          .then((res) => {
+            console.log(res.data);
+            this.status = res.data.message;
+            if (this.status === "request already sent") {
+              this.toastStore.showToast(
+                5000,
+                "Không thể gửi lần 2",
+                "bg-rose-400 text-white"
+              );
+            } else {
+              this.toastStore.showToast(
+                3000,
+                "Đã gửi lời mời",
+                "bg-emerald-400 text-white"
+              );
+              // setTimeout(() => {
+              //   this.$router.go(0);
+              // }, 3500);
+            }
+          })
+          .catch((error) => {
+            console.log(error);
+          });
+      }
     },
     deleteRelationship() {
       axios

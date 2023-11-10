@@ -102,6 +102,21 @@ def post_list_profile(request, id):
         'user': user_serializer.data,
         'can_send_friendship_request': can_send_friendship_request
     }, safe=False)
+    
+@api_view(['GET'])
+def post_attachment_list_profile(request, id):      
+    user = User.objects.get(pk=id)
+    posts = Post.objects.filter(created_by_id=id)
+    # receivedPosts = Post.objects.filter(post_to=id)
+    post_attachments = []
+    
+    for post in posts:
+        if post.attachments.count() > 0:
+            post_attachments.append(post)
+        
+    serializer = PostSerializer(post_attachments, many=True)
+
+    return JsonResponse(serializer.data, safe=False)
 
 @api_view(['POST'])
 def post_create(request):

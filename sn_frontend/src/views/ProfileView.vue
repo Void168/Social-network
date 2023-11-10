@@ -10,7 +10,7 @@
         <RouterLink :to="{ name: 'profile', params: { id: userStore.user.id } }"
           >Giới thiệu</RouterLink
         >
-        <RouterLink :to="{ name: 'profile', params: { id: userStore.user.id } }"
+        <RouterLink :to="{ name: 'photos', params: { id: userStore.user.id } }"
           >Ảnh</RouterLink
         >
         <RouterLink :to="{ name: 'friends', params: { id: user.id } }"
@@ -95,7 +95,7 @@
           Nhắn tin
         </button>
       </div>
-      
+      <ImageShowcase />
     </div>
 
     <div
@@ -197,6 +197,7 @@ import PostForm from "../components/forms/PostForm.vue";
 import FeedItem from "../components/FeedItem.vue";
 import PostToForm from "../components/forms/PostToForm.vue";
 import CoverImage from "../components/CoverImage.vue";
+import ImageShowcase from "../components/ImageShowcase.vue"
 import SkeletonLoadingPostVue from "../components/loadings/SkeletonLoadingPost.vue";
 import getUserInfo from "../api/getUserInfo";
 import { onMounted, ref } from "vue";
@@ -233,6 +234,7 @@ export default {
     CoverImage,
     SkeletonLoadingPostVue,
     PostToForm,
+    ImageShowcase
   },
 
   data() {
@@ -296,7 +298,6 @@ export default {
         .get(`/api/user-info/${this.$route.params.id}`)
         .then((res) => {
           this.partnerId = res.data.user.partner;
-          console.log(this.partnerId);
           this.getPartnerInfo();
         })
         .catch((error) => console.log(error));
@@ -358,7 +359,6 @@ export default {
       axios
         .get(`/api/relationship/${this.$route.params.id}/`)
         .then((res) => {
-          console.log(res.data);
           this.relationshipRequest = res.data.request;
         })
         .catch((error) => {
@@ -376,7 +376,7 @@ export default {
             res.data.can_send_friendship_request;
           this.posts = res.data.posts.slice(0, this.PostToShow);
 
-          // console.log(res.data);
+          console.log(res.data);
         })
         .catch((error) => {
           console.log("error", error);

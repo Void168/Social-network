@@ -4,6 +4,7 @@ import LoginView from '../views/LoginView.vue'
 import FeedView from '../views/FeedView.vue'
 import SearchView from '../views/SearchView.vue'
 import ProfileView from '../views/ProfileView.vue'
+import ProfileImagesView from '../views/ProfileImagesView.vue'
 import FriendsView from '../views/FriendsView.vue'
 import PostView from '../views/PostView.vue'
 import ChatView from '../views/ChatView.vue'
@@ -75,6 +76,11 @@ const router = createRouter({
       path: '/profile/:id/friends',
       name: 'friends',
       component: FriendsView
+    },
+    {
+      path: '/profile/:id/photos',
+      name: 'photos',
+      component: ProfileImagesView
     },
     {
       path: '/:id',

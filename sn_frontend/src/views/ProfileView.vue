@@ -95,7 +95,21 @@
           Nhắn tin
         </button>
       </div>
-      <ImageShowcase />
+      <div class="bg-white dark:bg-slate-600 dark:text-neutral-200 my-4 p-4">
+        <div class="flex justify-between items-center mb-4">
+          <p class="font-bold text-2xl">Ảnh</p>
+          <RouterLink
+            :to="{ name: 'photos', params: { id: userStore.user.id } }"
+          >
+            <p class="text-lg hover:underline cursor-pointer">Xem tất cả ảnh</p>
+          </RouterLink>
+        </div>
+        <div class="grid grid-cols-3 gap-1">
+          <div v-for="image in images" v-bind:key="image.id" >
+            <ImageShowcase v-bind:post="image"/>
+          </div>
+        </div>
+      </div>
     </div>
 
     <div
@@ -118,7 +132,10 @@
         v-if="relationshipRequest.length && user.id === userStore.user.id"
         class="p-4 bg-white border border-gray-200 dark:bg-slate-600 dark:border-slate-700 dark:text-neutral-200 rounded-lg"
       >
-        <h2 class="mb-6 text-xl">Yêu cầu thiết lập mối quan hệ <strong>{{ relationshipRequest[0].relationship_type }}</strong></h2>
+        <h2 class="mb-6 text-xl">
+          Yêu cầu thiết lập mối quan hệ
+          <strong>{{ relationshipRequest[0].relationship_type }}</strong>
+        </h2>
         <div
           class="p-4 bg-gray-100 dark:bg-slate-700 dark:border-slate-800 dark:text-neutral-200 text-center rounded-lg mb-4"
         >
@@ -197,7 +214,7 @@ import PostForm from "../components/forms/PostForm.vue";
 import FeedItem from "../components/FeedItem.vue";
 import PostToForm from "../components/forms/PostToForm.vue";
 import CoverImage from "../components/CoverImage.vue";
-import ImageShowcase from "../components/ImageShowcase.vue"
+import ImageShowcase from "../components/ImageShowcase.vue";
 import SkeletonLoadingPostVue from "../components/loadings/SkeletonLoadingPost.vue";
 import getUserInfo from "../api/getUserInfo";
 import { onMounted, ref } from "vue";
@@ -234,7 +251,7 @@ export default {
     CoverImage,
     SkeletonLoadingPostVue,
     PostToForm,
-    ImageShowcase
+    ImageShowcase,
   },
 
   data() {
@@ -254,7 +271,8 @@ export default {
       partner: {
         id: null,
       },
-      relationshipRequest: {}
+      relationshipRequest: {},
+      images: [],
     };
   },
 
@@ -273,8 +291,9 @@ export default {
   mounted() {
     this.getFriends();
     this.getFeed();
+    this.getImages();
     window.addEventListener("scroll", this.infinateScroll);
-    this.getRelationship()
+    this.getRelationship();
   },
 
   beforeDestroy() {
@@ -315,6 +334,17 @@ export default {
     },
     deletePost(id) {
       this.posts = this.posts.filter((post) => post.id !== id);
+    },
+
+    getImages() {
+      axios
+        .get(`/api/posts/profile/${this.$route.params.id}/attachments`)
+        .then((res) => {
+          this.images = res.data;
+        })
+        .catch((error) => {
+          console.log("error", error);
+        });
     },
 
     sendDirectMessage() {
@@ -440,10 +470,9 @@ export default {
               "bg-amber-500 text-white"
             );
             setTimeout(() => {
-              this.$router.go()
-            },5500)
-          }
-           else {
+              this.$router.go();
+            }, 5500);
+          } else {
             this.toastStore.showToast(
               5000,
               "Chấp nhận lời mời thất bại",

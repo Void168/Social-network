@@ -1,5 +1,5 @@
 <template>
-  <TransitionRoot @click="$emit('closeModal')" appear as="template" >
+  <TransitionRoot @click="$emit('closeModal')" appear as="template">
     <Dialog as="div" class="relative z-10">
       <TransitionChild
         as="template"
@@ -113,7 +113,7 @@
                     </form>
                   </div>
 
-                  <!-- <div
+                  <div
                     class="p-4 bg-white border border-gray-200 rounded-lg ml-10 shadow-md dark:bg-slate-600 dark:border-slate-700 dark:text-neutral-200"
                   >
                     <div
@@ -134,14 +134,13 @@
                       <button
                         class="hover:underline transition"
                         @click="loadMore"
-                        v-if="lastComment < post.comments.length"
+                        v-if="lastComment < post?.comments?.length"
                       >
                         Tải thêm bình luận
                       </button>
                     </div>
-                  </div> -->
+                  </div>
                 </div>
-                
               </div>
             </DialogPanel>
           </TransitionChild>
@@ -164,6 +163,7 @@ import {
   UserGroupIcon,
   LockClosedIcon,
 } from "@heroicons/vue/24/outline";
+import CommentItem from '../CommentItem.vue'
 
 export default (await import("vue")).defineComponent({
   props: {
@@ -176,6 +176,7 @@ export default (await import("vue")).defineComponent({
     return {
       lastComment: 5,
       body: "",
+      comments: [],
     };
   },
   components: {
@@ -187,6 +188,33 @@ export default (await import("vue")).defineComponent({
     GlobeAsiaAustraliaIcon,
     UserGroupIcon,
     LockClosedIcon,
+    CommentItem,
   },
+  methods: {
+    loadMore() {
+      this.lastComment = this.lastComment + 10;
+      if (this.post.comments.length < this.lastComment) {
+        this.lastComment = this.post.comments.length;
+      }
+    },
+    submitForm() {
+      console.log("submitForm", this.body);
+
+      axios
+        .post(`/api/posts/${this.$route.params.id}/comment/`, {
+          body: this.body,
+        })
+        .then((res) => {
+          console.log("data", res.data);
+
+          this.post.comments.unshift(res.data);
+          this.post.comments_count += 1;
+          this.body = "";
+        })
+        .catch((error) => {
+          console.log("error", error);
+        });
+    },
+  }
 });
 </script>

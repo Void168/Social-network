@@ -305,6 +305,7 @@ export default {
       handler: function () {
         this.getFeed();
         this.getUserInfo();
+        this.getImages()
       },
       deep: true,
       immediate: true,

@@ -407,7 +407,7 @@ export default {
             res.data.can_send_friendship_request;
           this.posts = res.data.posts.slice(0, this.PostToShow);
 
-          console.log(res.data);
+          // console.log(res.data);
         })
         .catch((error) => {
           console.log("error", error);

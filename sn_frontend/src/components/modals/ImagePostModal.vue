@@ -30,8 +30,8 @@
             <DialogPanel
               class="w-[90%] transform bg-slate-200 text-left align-middle shadow-xl transition-all"
             >
-              <div class="grid grid-cols-4 group">
-                <div class="col-span-3 bg-black relative">
+              <div class="grid grid-cols-4">
+                <div class="col-span-3 bg-black relative group">
                   <div
                     class="w-full h-full flex justify-center items-center bg-black"
                   >
@@ -42,13 +42,13 @@
                   </div>
 
                   <span
-                    class="absolute w-full flex items-center justify-between z-[60] inset-y-0 px-6"
+                    class="absolute h-[90%] hidden group translate-y-10 hover:translate-y-0 duration-150 ease-in-out transform w-full group-hover:flex items-center justify-between z-[60] inset-y-0 px-6"
                   >
                     <ArrowLeftCircleIcon
-                      class="h-10 w-10 text-neutral-200 opacity-60 hidden group-hover:block hover:opacity-80 cursor-pointer"
+                      class="h-10 w-10 transition-all text-neutral-200 opacity-60 group-hover:block hover:opacity-80 cursor-pointer"
                     />
                     <ArrowRightCircleIcon
-                      class="h-10 w-10 text-neutral-200 opacity-60 hidden group-hover:block hover:opacity-80 cursor-pointer"
+                      class="h-10 w-10 transition-all text-neutral-200 opacity-60 group-hover:block hover:opacity-80 cursor-pointer"
                     />
                   </span>
                 </div>

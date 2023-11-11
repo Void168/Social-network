@@ -1,14 +1,11 @@
 <template>
-  <div
-    class=" text-slate-900 dark:text-neutral-200 bg-white dark:bg-slate-600"
-  >
-  <div class="relative group" >
-    <!-- @click="getPost(post.id)" -->
-  <button
+  <div class="text-slate-900 dark:text-neutral-200 bg-white dark:bg-slate-600">
+    <div class="relative group">
+      <button
         class="absolute z-10 group-hover:bg-white/20 w-full h-full cursor-pointer rounded-md transition"
         v-on:click="openModal"
       ></button>
-      <img :src="post.attachments[0].get_image" class="h-32 cursor-pointer" />
+      <img :src="post.attachments[0].get_image" :class="path.includes('photos') ? 'h-48 cursor-pointer' : 'h-32 cursor-pointer'" />
     </div>
     <ImagePostModal
       :show="isOpen"
@@ -20,17 +17,22 @@
 </template>
 
 <script>
-import axios from "axios";
 import { RouterLink } from "vue-router";
 import { useUserStore } from "../stores/user";
 import ImagePostModal from "./modals/ImagePostModal.vue";
+import { useRoute } from "vue-router";
 
 export default (await import("vue")).defineComponent({
   setup() {
     const userStore = useUserStore();
+    const route = useRoute();
+    const path = route.fullPath
 
+    console.log(route.fullPath.includes('photos'))
     return {
       userStore,
+      route,
+      path
     };
   },
   props: {
@@ -39,35 +41,11 @@ export default (await import("vue")).defineComponent({
   data() {
     return {
       isOpen: false,
-      image: {}
+      image: {},
     };
   },
-  components: { RouterLink, ImagePostModal },
-  // mounted() {
-  //   this.getImages();
-  // },
 
   methods: {
-    // getImages() {
-    //   axios
-    //     .get(`/api/posts/profile/${this.$route.params.id}/attachments`)
-    //     .then((res) => {
-    //       this.images = res.data;
-    //     })
-    //     .catch((error) => {
-    //       console.log("error", error);
-    //     });
-    // },
-    // async getPost(id) {
-    //   await axios
-    //     .get(`/api/posts/${id}/`)
-    //     .then((res) => {
-    //       this.post = res.data.post;
-    //     })
-    //     .catch((error) => {
-    //       console.log(error);
-    //     });
-    // },
     closeModal() {
       this.isOpen = false;
     },
@@ -75,5 +53,6 @@ export default (await import("vue")).defineComponent({
       this.isOpen = true;
     },
   },
+  components: { RouterLink, ImagePostModal },
 });
 </script>

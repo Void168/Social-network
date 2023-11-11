@@ -10,7 +10,7 @@
         <RouterLink :to="{ name: 'profile', params: { id: userStore.user.id } }"
           >Giới thiệu</RouterLink
         >
-        <RouterLink :to="{ name: 'photos', params: { id: userStore.user.id } }"
+        <RouterLink :to="{ name: 'photos', params: { id: user.id } }"
           >Ảnh</RouterLink
         >
         <RouterLink :to="{ name: 'friends', params: { id: user.id } }"

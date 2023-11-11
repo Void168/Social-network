@@ -79,7 +79,7 @@
         <hr />
       </div>
       <div class="p-4 bg-white border border-gray-200 rounded-lg dark:bg-slate-600 dark:border-slate-700 dark:text-neutral-200">
-        <p class="font-semibold text-lg mb-4">Bạn bè</p>
+        <p class="font-semibold text-lg mb-4">Bạn bè {{ friends.length }}</p>
         <div
           v-if="friends.length"
           class="grid grid-cols-2 gap-4"

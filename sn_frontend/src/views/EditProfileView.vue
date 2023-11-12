@@ -5,6 +5,30 @@
         class="p-12 bg-white border border-gray-200 rounded-lg dark:bg-slate-600 dark:border-slate-700 dark:text-neutral-200"
       >
         <h1 class="mb-6 text-2xl">Chỉnh sửa thông tin</h1>
+        <div class="mb-6">
+          <label for="">Tiểu sử</label>
+          <input
+            type="text"
+            placeholder="Mô tả về bạn"
+            class="w-full mt-2 py-2 px-6 border border-gray-200 dark:bg-slate-700 dark:border-slate-800 dark:text-neutral-200 rounded-lg"
+          />
+        </div>
+        <div class="mb-6">
+          <label for="">Quê quán</label>
+          <input
+            type="text"
+            placeholder="Bạn đến từ đâu"
+            class="w-full mt-2 py-2 px-6 border border-gray-200 dark:bg-slate-700 dark:border-slate-800 dark:text-neutral-200 rounded-lg"
+          />
+        </div>
+        <div class="mb-6">
+          <label for="">Nơi sinh sống</label>
+          <input
+            type="text"
+            placeholder="Nơi bạn sống"
+            class="w-full mt-2 py-2 px-6 border border-gray-200 dark:bg-slate-700 dark:border-slate-800 dark:text-neutral-200 rounded-lg"
+          />
+        </div>
         <div class="flex justify-between mb-4">
           <h2>Mối quan hệ hiện tại:</h2>
           <div

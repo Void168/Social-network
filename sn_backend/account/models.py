@@ -27,17 +27,49 @@ class CustomUserManager(UserManager):
         extra_fields.setdefault('is_superuser', True)
         return self._create_user(name, email, password, **extra_fields)
 
+class Birthday(models.Model):
+    date = models.CharField(blank=True, null=True, default='', max_length=255)
+    year = models.CharField(blank=True, null=True, default='', max_length=255)
+    is_private = models.BooleanField(default=True)
+    only_me = models.BooleanField(default=False)
+    
+class Website(models.Model):
+    url = models.CharField(blank=True, null=True, default='', max_length=255)
+    is_private = models.BooleanField(default=True)
+    only_me = models.BooleanField(default=False)
+    
+class PhoneNumber(models.Model):
+    number = models.CharField(blank=True, null=True, default='', max_length=255)
+    is_private = models.BooleanField(default=True)
+    only_me = models.BooleanField(default=False)
+
+class LivedCity(models.Model):
+    id= models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
+    name = models.CharField(blank=True, default='', max_length=255)
+    year_start = models.CharField(blank=True, default='', max_length=255)
+    year_end = models.CharField(blank=True, default='', max_length=255)
+
 class User(AbstractBaseUser, PermissionsMixin):
     id= models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
     email = models.EmailField(blank=True, default='', unique=True)
     name = models.CharField(blank=True, default='', max_length=255)
     avatar = models.ImageField(upload_to='avatars', blank=True, null=True)
     cover_image = models.ImageField(upload_to='cover_images', blank=True, null=True)
+    biography = models.CharField(blank=True, default='', max_length=255)
+    nickname = models.CharField(blank=True, default='', max_length=255)
+    gender = models.CharField(blank=True, default='', max_length=255)
+    phone_numbers = models.ManyToManyField(PhoneNumber, related_name="phone_numbers")
+    website = models.ManyToManyField(Website, related_name="websites")
+    birthday = models.ManyToManyField(Birthday, related_name="birthday")
+    
     friends = models.ManyToManyField('self')
     friends_count = models.IntegerField(default=0)
     
     relationship_status = models.CharField(blank=True, default='', max_length=255)
     partner = models.CharField(blank=True, default='', max_length=255)
+    
+    lived_cities = models.ManyToManyField(LivedCity, related_name="lived_cities")
+    hometown = models.CharField(blank=True, default='', max_length=255)
             
     people_you_may_know = models.ManyToManyField('self')
     

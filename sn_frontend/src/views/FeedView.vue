@@ -83,7 +83,7 @@ export default {
       const frame = document.getElementById("feed-frame");
       let height = frame.scrollHeight;
       let scrollY = window.scrollY;
-      if (height < scrollY + 800) {
+      if (height < scrollY + 900) {
         setTimeout(() => {
           this.loadMore = true;
         }, 1000)
@@ -97,6 +97,7 @@ export default {
       } else {
         this.loadMore = false;
       }
+      console.log(this.loadMore)
     },
   },
 };

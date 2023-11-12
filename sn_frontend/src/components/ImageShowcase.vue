@@ -28,7 +28,6 @@ export default (await import("vue")).defineComponent({
     const route = useRoute();
     const path = route.fullPath
 
-    console.log(route.fullPath.includes('photos'))
     return {
       userStore,
       route,

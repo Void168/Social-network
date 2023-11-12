@@ -3,7 +3,9 @@
     <CoverImage class="col-span-3" v-bind:user="user" />
     <div class="col-span-3 grid grid-cols-3">
       <div class="col-span-1"></div>
-      <div class="col-span-2 px-4 py-2 flex gap-4 text-lg font-semibold">
+      <div
+        class="col-span-2 px-4 py-2 flex gap-4 text-lg font-semibold dark:text-neutral-200"
+      >
         <RouterLink :to="{ name: 'profile', params: { id: user.id } }"
           >Bài viết</RouterLink
         >
@@ -13,9 +15,17 @@
         <RouterLink :to="{ name: 'photos', params: { id: user.id } }"
           >Ảnh</RouterLink
         >
-        <RouterLink :to="{ name: 'friends', params: { id: user.id } }"
-          >Bạn bè</RouterLink
-        >
+        <div class="flex gap-1">
+          <RouterLink :to="{ name: 'friends', params: { id: user.id } }">
+            <span>Bạn bè</span>
+          </RouterLink>
+          <div class="flex gap-2">
+            <span
+              class="bg-rose-400 h-6 w-6 text-sm text-center rounded-full font-semibold flex justify-center items-center"
+              >{{ friendshipRequest.length }}
+            </span>
+          </div>
+        </div>
       </div>
       <hr class="col-span-3" />
     </div>
@@ -35,26 +45,26 @@
         <p>
           <strong class="text-2xl">{{ user.name }}</strong>
         </p>
-        <div class="mt-6 flex space-x-8 justify-around">
-          <div>
-            <p class="text-sm text-gray-500 dark:text-neutral-200">
-              {{ user.friends_count }} người bạn
-            </p>
-            <router-link
-              :to="{ name: 'friends', params: { id: user.id } }"
-              v-if="userStore.user.id === user.id"
-              ><p
-                class="text-sm mt-4 relative gap-3 flex justify-center items-center"
-              >
-                <span
-                  class="bg-rose-400 h-6 w-6 text-center rounded-full font-semibold flex justify-center items-center"
-                  >{{ friendshipRequest.length }}</span
-                >
-                <span>lời mời kết bạn mới</span>
-              </p></router-link
+        <div class="mt-6 flex space-x-8">
+          <ul class="text-lg">
+            <li
+              class="text-gray-500 dark:text-neutral-200 flex items-center gap-2"
             >
-            <div>
-              {{ userInfo.relationship_status }}
+              <UserGroupIcon class="h-6 w-6" />
+              {{ user.friends_count }} người bạn
+            </li>
+            <li
+              class="text-gray-500 dark:text-neutral-200 flex items-center gap-2"
+            >
+              <ClipboardDocumentListIcon class="h-6 w-6" />
+              {{ user.posts_count }} bài đăng
+            </li>
+            <li
+              class="text-gray-500 dark:text-neutral-200 flex items-center gap-2"
+              v-if="user.relationship_status"
+            >
+              <HeartIcon class="h-6 w-6" />
+              <h2>{{ user.relationship_status  }}</h2>
               <strong
                 v-if="partnerId != '' && partnerId != 'null'"
                 @click="toPartner"
@@ -62,13 +72,21 @@
               >
                 với {{ partner?.user?.name }}
               </strong>
-            </div>
-          </div>
-
-          <p class="text-sm text-gray-500 dark:text-neutral-200">
-            {{ user.posts_count }} bài đăng
-          </p>
+            </li>
+            <li
+              class="text-gray-500 dark:text-neutral-200 flex items-center gap-2"
+            >
+              <ClockIcon class="w-6 h-6 dark:text-neutral-200" />
+              <p>
+                Tham gia vào Tháng {{ user?.date_joined?.slice(5, 7) }} năm
+                {{ user?.date_joined?.slice(0, 4) }}
+              </p>
+            </li>
+          </ul>
         </div>
+        <RouterLink to="/profile/edit">
+          <button class="mt-4 btn">Chỉnh sửa chi tiết</button>
+        </RouterLink>
         <div class="flex flex-col mt-4">
           <div v-if="userStore.user.id !== user.id" class="mt-6">
             <div v-if="can_send_friendship_request === false">
@@ -105,8 +123,8 @@
           </RouterLink>
         </div>
         <div class="grid grid-cols-3 gap-1">
-          <div v-for="image in images" v-bind:key="image.id" >
-            <ImageShowcase v-bind:post="image"/>
+          <div v-for="image in images" v-bind:key="image.id">
+            <ImageShowcase v-bind:post="image" />
           </div>
         </div>
       </div>
@@ -114,7 +132,7 @@
 
     <div
       class="main-center col-span-2 space-y-4 bg-white dark:bg-slate-600 dark:border-slate-700 dark:text-neutral-200 p-4"
-      id="feed-frame"
+      id="profile-frame"
     >
       <div
         v-if="userStore.user.id === user.id"
@@ -217,6 +235,14 @@ import CoverImage from "../components/CoverImage.vue";
 import ImageShowcase from "../components/ImageShowcase.vue";
 import SkeletonLoadingPostVue from "../components/loadings/SkeletonLoadingPost.vue";
 import getUserInfo from "../api/getUserInfo";
+
+import {
+  ClockIcon,
+  HeartIcon,
+  ClipboardDocumentListIcon,
+  UserGroupIcon,
+} from "@heroicons/vue/24/solid";
+
 import { onMounted, ref } from "vue";
 
 import { RouterLink } from "vue-router";
@@ -252,6 +278,10 @@ export default {
     SkeletonLoadingPostVue,
     PostToForm,
     ImageShowcase,
+    ClockIcon,
+    HeartIcon,
+    ClipboardDocumentListIcon,
+    UserGroupIcon,
   },
 
   data() {
@@ -305,7 +335,7 @@ export default {
       handler: function () {
         this.getFeed();
         this.getUserInfo();
-        this.getImages()
+        this.getImages();
       },
       deep: true,
       immediate: true,
@@ -323,12 +353,17 @@ export default {
         .catch((error) => console.log(error));
     },
     getPartnerInfo() {
-      axios
+      if(this.partnerId) {
+        axios
         .get(`/api/user-info/${this.partnerId}`)
         .then((res) => {
           this.partner = res.data;
         })
         .catch((error) => console.log(error));
+      } else {
+        console.log("No partner")
+      }
+      
     },
     toPartner() {
       this.$router.push(`/profile/${this.partnerId}`);
@@ -403,6 +438,7 @@ export default {
         .then((res) => {
           this.postsList = res.data.posts;
           this.user = res.data.user;
+          console.log(this.user);
           this.can_send_friendship_request =
             res.data.can_send_friendship_request;
           this.posts = res.data.posts.slice(0, this.PostToShow);
@@ -415,7 +451,7 @@ export default {
     },
 
     infinateScroll() {
-      const frame = document.getElementById("feed-frame");
+      const frame = document.getElementById("profile-frame");
       let height = frame.scrollHeight;
       let scrollY = window.scrollY;
       if (height < scrollY + 800) {

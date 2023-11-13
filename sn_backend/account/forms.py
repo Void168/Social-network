@@ -18,6 +18,11 @@ class CoverImageForm(forms.ModelForm):
         model = User
         fields = ('cover_image',)
 
+class BiographyForm(forms.ModelForm):
+    class Meta:
+        model = User
+        fields = ('biography',)
+
 class RelationshipForm(forms.ModelForm):
     class Meta:
         model = User

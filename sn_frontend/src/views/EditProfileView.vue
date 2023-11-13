@@ -7,11 +7,33 @@
         <h1 class="mb-6 text-2xl">Chỉnh sửa thông tin</h1>
         <div class="mb-6">
           <label for="">Tiểu sử</label>
-          <input
-            type="text"
-            placeholder="Mô tả về bạn"
-            class="w-full mt-2 py-2 px-6 border border-gray-200 dark:bg-slate-700 dark:border-slate-800 dark:text-neutral-200 rounded-lg"
-          />
+          <div v-if="!updateBio" class="flex flex-col justify-center items-center space-y-4">
+            <p
+              v-if="userInfo.biography"
+              class="text-lg text-center font-semibold"
+            >
+              {{ userInfo.biography }}
+            </p>
+            <button
+              @click="openBioForm"
+              class="w-[50%] px-4 py-2 bg-slate-700 rounded-xl shadow-md font-semibold hover:bg-slate-500 transition"
+            >
+              Chỉnh sửa tiểu sử
+            </button>
+          </div>
+          <form v-else action="" v-on:submit.prevent="submitBiographyForm">
+            <div>
+              <input
+                v-model="userInfo.biography"
+                type="text"
+                placeholder="Mô tả về bạn"
+                class="w-full mt-2 py-2 px-6 border border-gray-200 dark:bg-slate-700 dark:border-slate-800 dark:text-neutral-200 rounded-lg"
+              />
+              <div class="flex justify-end mt-4">
+                <button v-bind:disabled="biographyForm.content?.length === 0 && biographyForm.content === 'undefined'">Lưu</button>
+              </div>
+            </div>
+          </form>
         </div>
         <div class="mb-6">
           <label for="">Quê quán</label>
@@ -20,6 +42,9 @@
             placeholder="Bạn đến từ đâu"
             class="w-full mt-2 py-2 px-6 border border-gray-200 dark:bg-slate-700 dark:border-slate-800 dark:text-neutral-200 rounded-lg"
           />
+          <div class="flex justify-end mt-4">
+            <button>Lưu</button>
+          </div>
         </div>
         <div class="mb-6">
           <label for="">Nơi sinh sống</label>
@@ -28,6 +53,9 @@
             placeholder="Nơi bạn sống"
             class="w-full mt-2 py-2 px-6 border border-gray-200 dark:bg-slate-700 dark:border-slate-800 dark:text-neutral-200 rounded-lg"
           />
+          <div class="flex justify-end mt-4">
+            <button>Lưu</button>
+          </div>
         </div>
         <div class="flex justify-between mb-4">
           <h2>Mối quan hệ hiện tại:</h2>
@@ -384,6 +412,9 @@ export default (await import("vue")).defineComponent({
         name: this.userStore.user.name,
         avatar: null,
       },
+      biographyForm: {
+        content: this.userInfo.biography,
+      },
       status: [
         { name: "Trạng thái" },
         { name: "Độc thân" },
@@ -410,6 +441,7 @@ export default (await import("vue")).defineComponent({
       partner: {
         id: null,
       },
+      updateBio: false,
     };
   },
 
@@ -437,7 +469,6 @@ export default (await import("vue")).defineComponent({
           .get(`/api/user-info/${this.partnerId}`)
           .then((res) => {
             this.partner = res.data;
-            console.log(res.data);
           })
           .catch((error) => console.log(error));
       } else {
@@ -451,7 +482,6 @@ export default (await import("vue")).defineComponent({
       axios
         .get(`/api/friends/${this.userStore.user.id}/`)
         .then((res) => {
-          console.log(res.data);
           this.friends = res.data.friends;
           this.user = res.data.user;
         })
@@ -465,42 +495,44 @@ export default (await import("vue")).defineComponent({
     toPartner() {
       this.$router.push(`/profile/${this.partnerId}`);
     },
-    //   let formRelationshipData = new FormData();
-    //   if (this.selection.name === "Trạng thái") {
-    //     this.userInfo.relationship_status = "";
-    //   } else {
-    //     formRelationshipData.append("relationship_status", this.selection.name);
-    //   }
-    //   formRelationshipData.append("partner", this.partner.id);
+    openBioForm(){
+      this.updateBio = true
+    },
+    submitBiographyForm() {
+      this.errors = [];
 
-    //   axios
-    //     .post("/api/set-relationship/", formRelationshipData, {
-    //       headers: {
-    //         "Content-Type": "multipart/form-data",
-    //       },
-    //     })
-    //     .then((res) => {
-    //       if (!res.data.error) {
-    //         this.toastStore.showToast(
-    //           2500,
-    //           "Đã lưu thông tin mối quan hệ.",
-    //           "bg-emerald-500 text-white"
-    //         );
-    //         setTimeout(() => {
-    //           this.$router.go(0);
-    //         }, 3000);
-    //       } else {
-    //         this.toastStore.showToast(
-    //           5000,
-    //           `${res.data.error}`,
-    //           "bg-rose-400 text-white"
-    //         );
-    //       }
-    //     })
-    //     .catch((error) => {
-    //       console.log("error", error);
-    //     });
-    // },
+      if (this.errors.length === 0) {
+        let formData = new FormData();
+        formData.append("biography", this.userInfo.biography);
+
+        axios
+          .post("/api/set-biography/", formData, {
+            headers: {
+              "Content-Type": "multipart/form-data",
+            },
+          })
+          .then((res) => {
+            if (res.data.message !== "Failed") {
+              this.toastStore.showToast(
+                5000,
+                "Đã lưu thông tin chỉnh sửa.",
+                "bg-emerald-500 text-white"
+              );
+              this.updateBio = false
+              // this.biographyForm.content = userInfo.biography
+            } else {
+              this.toastStore.showToast(
+                5000,
+                `${res.data.message}`,
+                "bg-rose-400 text-white"
+              );
+            }
+          })
+          .catch((error) => {
+            console.log("error", error);
+          });
+      }
+    },
     sendRelationshipRequest() {
       let formRelationshipData = new FormData();
       if (
@@ -571,9 +603,9 @@ export default (await import("vue")).defineComponent({
                 "Đã gửi lời mời",
                 "bg-emerald-400 text-white"
               );
-              // setTimeout(() => {
-              //   this.$router.go(0);
-              // }, 3500);
+              setTimeout(() => {
+                this.$router.go(0);
+              }, 3500);
             }
           })
           .catch((error) => {

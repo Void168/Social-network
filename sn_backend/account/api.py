@@ -7,7 +7,7 @@ from rest_framework.decorators import api_view, authentication_classes, permissi
 
 from notification.utils import create_notification
 
-from .forms import SignupForm, ProfileForm, CoverImageForm, RelationshipForm
+from .forms import SignupForm, ProfileForm, CoverImageForm, RelationshipForm, BiographyForm
 from .models import User, FriendshipRequest, RelationshipRequest
 from .serializers import UserSerializer, FriendshipRequestSerializer, RelationshipRequestSerializer
 
@@ -105,6 +105,23 @@ def edit_profile(request):
         serializer = UserSerializer(user)
         
         return JsonResponse({'message': 'information updated', 'user': serializer.data})
+
+@api_view(['POST'])
+def set_biography(request):
+    current_user = request.user
+    
+    form = BiographyForm(data=request.POST, instance=current_user)
+    
+    if form.is_valid():
+        form.save()
+        
+        current_user.save()
+    
+        serializer = UserSerializer(current_user)
+    
+        return JsonResponse(serializer.data)
+    else: 
+        return JsonResponse({'message':'Failed'})
 
 @api_view(['GET'])
 def relationship(request, pk):

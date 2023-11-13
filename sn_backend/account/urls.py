@@ -11,6 +11,7 @@ urlpatterns = [
     path('refresh/', TokenRefreshView.as_view(), name='token_refresh'),
     path('user-info/<uuid:pk>/', api.user_info, name='user_info'),
     path('edit-profile/', api.edit_profile, name='edit_profile'),
+    path('set-biography/', api.set_biography, name='set_biography'),
     path('delete-relationship/', api.delete_relationship, name='delete_relationship'),
     path('edit-cover-image/', api.edit_cover_image, name='edit_cover_image'),
     path('edit-password/', api.edit_password, name='edit_password'),

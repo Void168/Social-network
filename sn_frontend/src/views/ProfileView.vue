@@ -45,6 +45,7 @@
         <p>
           <strong class="text-2xl">{{ user.name }}</strong>
         </p>
+        <p class="mt-6 font-semibold text-lg">{{ user.biography }}</p>
         <div class="mt-6 flex space-x-8">
           <ul class="text-lg">
             <li

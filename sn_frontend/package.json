@@ -12,6 +12,7 @@
     "@heroicons/vue": "^2.0.18",
     "@vueuse/core": "^10.5.0",
     "axios": "^1.5.1",
+    "country-state-city": "^3.2.1",
     "date-fns": "^2.30.0",
     "emoji-picker-element": "^1.18.4",
     "pinia": "^2.1.6",

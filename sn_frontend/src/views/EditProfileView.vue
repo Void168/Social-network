@@ -7,7 +7,10 @@
         <h1 class="mb-6 text-2xl">Chỉnh sửa thông tin</h1>
         <div class="mb-6">
           <label for="">Tiểu sử</label>
-          <div v-if="!updateBio" class="flex flex-col justify-center items-center space-y-4">
+          <div
+            v-if="!updateBio"
+            class="flex flex-col justify-center items-center space-y-4"
+          >
             <p
               v-if="userInfo.biography"
               class="text-lg text-center font-semibold"
@@ -30,7 +33,14 @@
                 class="w-full mt-2 py-2 px-6 border border-gray-200 dark:bg-slate-700 dark:border-slate-800 dark:text-neutral-200 rounded-lg"
               />
               <div class="flex justify-end mt-4">
-                <button v-bind:disabled="biographyForm.content?.length === 0 && biographyForm.content === 'undefined'">Lưu</button>
+                <button
+                  v-bind:disabled="
+                    biographyForm.content?.length === 0 &&
+                    biographyForm.content === 'undefined'
+                  "
+                >
+                  Lưu
+                </button>
               </div>
             </div>
           </form>
@@ -42,6 +52,23 @@
             placeholder="Bạn đến từ đâu"
             class="w-full mt-2 py-2 px-6 border border-gray-200 dark:bg-slate-700 dark:border-slate-800 dark:text-neutral-200 rounded-lg"
           />
+          <div class="flex gap-2">
+            <SelectCountryForm
+              v-bind:countries="countries"
+              @selectCountry="selectCountry(country?.isoCode)"
+              v-model="country"
+            />
+            <SelectStateForm
+              v-bind:states="statesList"
+              @selectState="selectState(state?.isoCode)"
+              v-model="state"
+            />
+            <SelectCityForm
+            v-bind:cities="citiesList"
+            @selectCity="selectCity"
+            v-model="city"
+            />
+          </div>
           <div class="flex justify-end mt-4">
             <button>Lưu</button>
           </div>
@@ -53,6 +80,23 @@
             placeholder="Nơi bạn sống"
             class="w-full mt-2 py-2 px-6 border border-gray-200 dark:bg-slate-700 dark:border-slate-800 dark:text-neutral-200 rounded-lg"
           />
+          <div class="flex gap-2">
+            <SelectCountryForm
+              v-bind:countries="countries"
+              @selectCountry="selectCountry(country?.isoCode)"
+              v-model="livedCountry"
+            />
+            <SelectStateForm
+              v-bind:states="statesList"
+              @selectState="selectState(state?.isoCode)"
+              v-model="livedState"
+            />
+            <SelectCityForm
+            v-bind:cities="citiesList"
+            @selectCity="selectCity"
+            v-model="livedCity"
+            />
+          </div>
           <div class="flex justify-end mt-4">
             <button>Lưu</button>
           </div>
@@ -103,7 +147,14 @@
               <ListboxButton
                 class="relative flex justify-center w-full cursor-default rounded-lg font-semibold bg-gray-200 dark:bg-slate-800 dark:border-slate-700 dark:text-neutral-200 py-2 pl-3 pr-10 text-left shadow-md focus:outline-none focus-visible:border-indigo-500 focus-visible:ring-2 focus-visible:ring-white/75 focus-visible:ring-offset-2 focus-visible:ring-offset-orange-300 sm:text-sm"
               >
-                <span class="block truncate">{{ selectedStatus.name }}</span>
+                <span
+                  class="block truncate"
+                  v-if="userInfo.relationship_status"
+                  >{{ userInfo.relationship_status }}</span
+                >
+                <span class="block truncate" v-else>{{
+                  selectedStatus.name
+                }}</span>
                 <span
                   class="pointer-events-none absolute inset-y-0 right-0 flex items-center pr-2"
                 >
@@ -307,6 +358,8 @@ import axios from "axios";
 import { useToastStore } from "@/stores/toast";
 import { useUserStore } from "../stores/user";
 import { onMounted, ref } from "vue";
+import { Country, State, City } from "country-state-city";
+
 import {
   Listbox,
   ListboxLabel,
@@ -328,6 +381,9 @@ import {
 import { CheckIcon, ChevronUpDownIcon } from "@heroicons/vue/20/solid";
 import getUserInfo from "../api/getUserInfo";
 import DeleteRelationshipModal from "../components/modals/DeleteRelationship.vue";
+import SelectCountryForm from "../components/forms/SelectCountryForm.vue";
+import SelectCityForm from "../components/forms/SelectCityForm.vue";
+import SelectStateForm from "../components/forms/SelectStateForm.vue";
 
 export default (await import("vue")).defineComponent({
   components: {
@@ -348,11 +404,15 @@ export default (await import("vue")).defineComponent({
     UserGroupIcon,
     LockClosedIcon,
     DeleteRelationshipModal,
+    SelectCountryForm,
+    SelectCityForm,
+    SelectStateForm,
   },
   setup() {
     const toastStore = useToastStore();
     const userStore = useUserStore();
     const userInfo = ref({});
+    const countries = Country.getAllCountries();
     let selected = ref(null);
     let query = ref("");
 
@@ -382,6 +442,7 @@ export default (await import("vue")).defineComponent({
       userInfo,
       selected,
       query,
+      countries,
     };
   },
 
@@ -433,6 +494,14 @@ export default (await import("vue")).defineComponent({
           id: null,
         },
       },
+      country: {},
+      livedCountry: {},
+      statesList: [],
+      state: {},
+      livedState: {},
+      citiesList: [],
+      city: {},
+      livedCity: {},
       isOpen: false,
       selection: "",
       errors: [],
@@ -495,8 +564,31 @@ export default (await import("vue")).defineComponent({
     toPartner() {
       this.$router.push(`/profile/${this.partnerId}`);
     },
-    openBioForm(){
-      this.updateBio = true
+    openBioForm() {
+      this.updateBio = true;
+    },
+    selectCountry(countryIsoCode) {
+      if (countryIsoCode) {
+        const states = State.getStatesOfCountry(countryIsoCode);
+        this.statesList = states;
+      } else {
+        console.log("No country selected");
+      }
+      console.log(this.country)
+    },
+    selectState(stateIsoCode) {
+      if (stateIsoCode) {
+        const cities = City.getCitiesOfState(this.country?.isoCode, stateIsoCode);
+        this.citiesList = cities;
+        console.log(cities)
+      } else {
+        console.log("No state selected");
+      }
+      console.log(this.state)
+    },
+    selectCity() {
+      console.log("Select city");
+      console.log(this.city);
     },
     submitBiographyForm() {
       this.errors = [];
@@ -518,7 +610,7 @@ export default (await import("vue")).defineComponent({
                 "Đã lưu thông tin chỉnh sửa.",
                 "bg-emerald-500 text-white"
               );
-              this.updateBio = false
+              this.updateBio = false;
               // this.biographyForm.content = userInfo.biography
             } else {
               this.toastStore.showToast(

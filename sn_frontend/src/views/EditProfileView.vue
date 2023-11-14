@@ -24,7 +24,7 @@
               Chỉnh sửa tiểu sử
             </button>
           </div>
-          <form v-else action="" v-on:submit.prevent="submitBiographyForm">
+          <form v-else>
             <div>
               <input
                 v-model="userInfo.biography"
@@ -32,12 +32,20 @@
                 placeholder="Mô tả về bạn"
                 class="w-full mt-2 py-2 px-6 border border-gray-200 dark:bg-slate-700 dark:border-slate-800 dark:text-neutral-200 rounded-lg"
               />
-              <div class="flex justify-end mt-4">
+              <div class="flex gap-2 justify-end mt-4">
                 <button
+                  @click="openBioForm"
+                  class="px-4 py-2 bg-slate-200 dark:bg-slate-700 rounded-xl shadow-md font-semibold dark:hover:bg-slate-500 hover:bg-slate-300 transition"
+                >
+                  Huỷ
+                </button>
+                <button
+                  @click="submitBiographyForm"
                   v-bind:disabled="
                     biographyForm.content?.length === 0 &&
                     biographyForm.content === 'undefined'
                   "
+                  class="px-4 py-2 bg-slate-200 dark:bg-slate-700 rounded-xl shadow-md font-semibold dark:hover:bg-slate-500 hover:bg-slate-300 transition"
                 >
                   Lưu
                 </button>
@@ -47,35 +55,65 @@
         </div>
         <div class="mb-6">
           <label class="text-lg font-semibold">Quê quán</label>
-          <div class="flex gap-2">
-            <div>
-              <p>Quốc gia</p>
-              <SelectCountryForm
-                v-bind:countries="countries"
-                @selectCountry="selectCountry(country?.isoCode)"
-                v-model="country"
-              />
-            </div>
-            <div>
-              <p>Tỉnh thành/Bang</p>
-              <SelectStateForm
-                v-bind:states="statesList"
-                @selectState="selectState(state?.isoCode)"
-                v-model="state"
-              />
-            </div>
-            <div>
-              <p>Thành phố/Huyện</p>
-              <SelectCityForm
-                v-bind:cities="citiesList"
-                @selectCity="selectCity"
-                v-model="city"
-              />
-            </div>
+          <div
+            v-if="!updateHometown"
+            class="flex flex-col justify-center items-center space-y-4"
+          >
+            <p
+              v-if="userInfo.hometown"
+              class="text-lg text-center font-semibold"
+            >
+              {{ userInfo.hometown }}
+            </p>
+            <button
+              @click="openHometownForm"
+              class="w-[50%] px-4 py-2 bg-slate-200 dark:bg-slate-700 rounded-xl shadow-md font-semibold hover:bg-slate-500 hover:text-neutral-200 transition"
+            >
+              Chỉnh sửa quê quán
+            </button>
           </div>
-          <div class="flex justify-end mt-4">
-            <button class="px-4 py-2 bg-slate-200 dark:bg-slate-700 rounded-xl shadow-md font-semibold hover:bg-slate-500 hover:text-neutral-200 transition">Lưu</button>
-          </div>
+          <form v-else>
+            <div class="flex gap-2">
+              <div>
+                <p>Quốc gia</p>
+                <SelectCountryForm
+                  v-bind:countries="countries"
+                  @selectCountry="selectCountry(country?.isoCode)"
+                  v-model="country"
+                />
+              </div>
+              <div>
+                <p>Tỉnh thành/Bang</p>
+                <SelectStateForm
+                  v-bind:states="statesList"
+                  @selectState="selectState(state?.isoCode)"
+                  v-model="state"
+                />
+              </div>
+              <div>
+                <p>Thành phố/Huyện</p>
+                <SelectCityForm
+                  v-bind:cities="citiesList"
+                  @selectCity="selectCity"
+                  v-model="city"
+                />
+              </div>
+            </div>
+            <div class="flex gap-2 justify-end mt-4">
+              <button
+                @click="openHometownForm"
+                class="px-4 py-2 bg-slate-200 dark:bg-slate-700 rounded-xl shadow-md font-semibold dark:hover:bg-slate-500 hover:bg-slate-300 transition"
+              >
+                Huỷ
+              </button>
+              <button
+                @click="submitHometownForm"
+                class="px-4 py-2 bg-slate-200 dark:bg-slate-700 rounded-xl shadow-md font-semibold dark:hover:bg-slate-500 hover:bg-slate-300 transition"
+              >
+                Lưu
+              </button>
+            </div>
+          </form>
         </div>
         <div class="mb-6">
           <label class="text-lg font-semibold">Nơi sinh sống</label>
@@ -84,29 +122,33 @@
               <p>Quốc gia</p>
               <SelectCountryForm
                 v-bind:countries="countries"
-                @selectCountry="selectCountry(country?.isoCode)"
-                v-model="country"
+                @selectCountry="selectLivedCountry(country?.isoCode)"
+                v-model="livedCountry"
               />
             </div>
             <div>
               <p>Tỉnh thành/Bang</p>
               <SelectStateForm
                 v-bind:states="statesList"
-                @selectState="selectState(state?.isoCode)"
-                v-model="state"
+                @selectState="selectLivedState(state?.isoCode)"
+                v-model="livedState"
               />
             </div>
             <div>
               <p>Thành phố/Huyện</p>
               <SelectCityForm
                 v-bind:cities="citiesList"
-                @selectCity="selectCity"
-                v-model="city"
+                @selectCity="selectLivedCity"
+                v-model="livedCity"
               />
             </div>
           </div>
           <div class="flex justify-end mt-4">
-            <button class="px-4 py-2 bg-slate-200 dark:bg-slate-700 rounded-xl shadow-md font-semibold hover:bg-slate-500 hover:text-neutral-200 transition">Lưu</button>
+            <button
+              class="px-4 py-2 bg-slate-200 dark:bg-slate-700 rounded-xl shadow-md font-semibold dark:hover:bg-slate-500 hover:bg-slate-300 transition"
+            >
+              Lưu
+            </button>
           </div>
         </div>
         <div class="flex justify-between mb-4">
@@ -519,6 +561,7 @@ export default (await import("vue")).defineComponent({
         id: null,
       },
       updateBio: false,
+      updateHometown: false,
     };
   },
 
@@ -573,7 +616,10 @@ export default (await import("vue")).defineComponent({
       this.$router.push(`/profile/${this.partnerId}`);
     },
     openBioForm() {
-      this.updateBio = true;
+      this.updateBio = !this.updateBio;
+    },
+    openHometownForm() {
+      this.updateHometown = !this.updateHometown;
     },
     selectCountry(countryIsoCode) {
       if (countryIsoCode) {
@@ -598,6 +644,73 @@ export default (await import("vue")).defineComponent({
       console.log(this.state);
     },
     selectCity() {
+      console.log("Select city");
+      console.log(this.city);
+    },
+    submitHometownForm() {
+      let formData = new FormData();
+      if (this.city.name) {
+        formData.append(
+          "hometown",
+          `${this.city.name}, ${this.state.name}, ${this.country.name}`
+        );
+      }
+      if (!this.city.name) {
+        formData.append("hometown", `${this.state.name}, ${this.country.name}`);
+      }
+      if (!this.city.name && !this.state.name) {
+        formData.append("hometown", `${this.country.name}`);
+      }
+
+      axios
+        .post("/api/set-hometown/", formData, {
+          headers: {
+            "Content-Type": "multipart/form-data",
+          },
+        })
+        .then((res) => {
+          if (res.data.message !== "Failed") {
+            this.toastStore.showToast(
+              5000,
+              "Đã lưu thông tin quê quán",
+              "bg-emerald-500 text-white"
+            );
+            this.updateHometown = false;
+          } else {
+            this.toastStore.showToast(
+              5000,
+              `${res.data.message}`,
+              "bg-rose-400 text-white"
+            );
+          }
+        })
+        .catch((error) => {
+          console.log("error", error);
+        });
+    },
+    selectLivedCountry(countryIsoCode) {
+      if (countryIsoCode) {
+        const states = State.getStatesOfCountry(countryIsoCode);
+        this.statesList = states;
+      } else {
+        console.log("No country selected");
+      }
+      console.log(this.country);
+    },
+    selectLivedState(stateIsoCode) {
+      if (stateIsoCode) {
+        const cities = City.getCitiesOfState(
+          this.country?.isoCode,
+          stateIsoCode
+        );
+        this.citiesList = cities;
+        console.log(cities);
+      } else {
+        console.log("No state selected");
+      }
+      console.log(this.state);
+    },
+    selectLivedCity() {
       console.log("Select city");
       console.log(this.city);
     },

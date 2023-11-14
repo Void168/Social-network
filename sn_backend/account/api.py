@@ -7,7 +7,7 @@ from rest_framework.decorators import api_view, authentication_classes, permissi
 
 from notification.utils import create_notification
 
-from .forms import SignupForm, ProfileForm, CoverImageForm, RelationshipForm, BiographyForm
+from .forms import SignupForm, ProfileForm, CoverImageForm, RelationshipForm, BiographyForm, HomeTownForm
 from .models import User, FriendshipRequest, RelationshipRequest
 from .serializers import UserSerializer, FriendshipRequestSerializer, RelationshipRequestSerializer
 
@@ -111,6 +111,23 @@ def set_biography(request):
     current_user = request.user
     
     form = BiographyForm(data=request.POST, instance=current_user)
+    
+    if form.is_valid():
+        form.save()
+        
+        current_user.save()
+    
+        serializer = UserSerializer(current_user)
+    
+        return JsonResponse(serializer.data)
+    else: 
+        return JsonResponse({'message':'Failed'})
+
+@api_view(['POST'])
+def set_hometown(request):
+    current_user = request.user
+    
+    form = HomeTownForm(data=request.POST, instance=current_user)
     
     if form.is_valid():
         form.save()

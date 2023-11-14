@@ -29,7 +29,7 @@
           >
             <div
               v-if="filteredCities.length === 0 && query !== ''"
-              class="relative cursor-default select-none py-2 px-4 bg-slate-200 text-gray-700 dark:text-neutral-200"
+              class="relative cursor-default select-none py-2 px-4 bg-slate-200 dark:bg-slate-700 text-gray-700 dark:text-neutral-200"
             >
               Nothing found.
             </div>

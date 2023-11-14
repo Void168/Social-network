@@ -27,3 +27,9 @@ class RelationshipForm(forms.ModelForm):
     class Meta:
         model = User
         fields = ('relationship_status','partner',)
+
+class HomeTownForm(forms.ModelForm):
+    class Meta:
+        model = User
+        fields = ('hometown',)
+

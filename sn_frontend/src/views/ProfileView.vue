@@ -76,6 +76,15 @@
             </li>
             <li
               class="text-gray-500 dark:text-neutral-200 flex items-center gap-2"
+              v-if="user.hometown"
+            >
+              <MapPinIcon class="w-6 h-6 dark:text-neutral-200" />
+              <p>
+                Đến từ {{ user.hometown }}
+              </p>
+            </li>
+            <li
+              class="text-gray-500 dark:text-neutral-200 flex items-center gap-2"
             >
               <ClockIcon class="w-6 h-6 dark:text-neutral-200" />
               <p>
@@ -242,6 +251,7 @@ import {
   HeartIcon,
   ClipboardDocumentListIcon,
   UserGroupIcon,
+  MapPinIcon
 } from "@heroicons/vue/24/solid";
 
 import { onMounted, ref } from "vue";
@@ -282,6 +292,7 @@ export default {
     ClockIcon,
     HeartIcon,
     ClipboardDocumentListIcon,
+    MapPinIcon,
     UserGroupIcon,
   },
 

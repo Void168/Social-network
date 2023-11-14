@@ -18,6 +18,7 @@ urlpatterns = [
     path('friends/<uuid:pk>/', api.friends, name='friends'),
     path('relationship/<uuid:pk>/', api.relationship, name='relationship'),
     path('set-relationship/', api.set_relationship, name='set_relationship'),
+    path('set-hometown/', api.set_hometown, name='set_hometown'),
     path('relationship/<uuid:pk>/request/', api.send_relationship_request, name='send_relationship_request'),
     path('relationship/<uuid:pk>/<str:status>/', api.handle_request_relationship, name='handle_request_relationship'),
     path('friends/suggested/', api.my_friendship_suggestions, name='my_friendship_suggestions'),

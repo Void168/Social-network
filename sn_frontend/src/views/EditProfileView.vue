@@ -6,7 +6,7 @@
       >
         <h1 class="mb-6 text-2xl">Chỉnh sửa thông tin</h1>
         <div class="mb-6">
-          <label for="">Tiểu sử</label>
+          <label class="text-lg font-semibold">Tiểu sử</label>
           <div
             v-if="!updateBio"
             class="flex flex-col justify-center items-center space-y-4"
@@ -19,7 +19,7 @@
             </p>
             <button
               @click="openBioForm"
-              class="w-[50%] px-4 py-2 bg-slate-700 rounded-xl shadow-md font-semibold hover:bg-slate-500 transition"
+              class="w-[50%] px-4 py-2 bg-slate-200 dark:bg-slate-700 rounded-xl shadow-md font-semibold hover:bg-slate-500 hover:text-neutral-200 transition"
             >
               Chỉnh sửa tiểu sử
             </button>
@@ -46,63 +46,71 @@
           </form>
         </div>
         <div class="mb-6">
-          <label for="">Quê quán</label>
-          <input
-            type="text"
-            placeholder="Bạn đến từ đâu"
-            class="w-full mt-2 py-2 px-6 border border-gray-200 dark:bg-slate-700 dark:border-slate-800 dark:text-neutral-200 rounded-lg"
-          />
+          <label class="text-lg font-semibold">Quê quán</label>
           <div class="flex gap-2">
-            <SelectCountryForm
-              v-bind:countries="countries"
-              @selectCountry="selectCountry(country?.isoCode)"
-              v-model="country"
-            />
-            <SelectStateForm
-              v-bind:states="statesList"
-              @selectState="selectState(state?.isoCode)"
-              v-model="state"
-            />
-            <SelectCityForm
-            v-bind:cities="citiesList"
-            @selectCity="selectCity"
-            v-model="city"
-            />
+            <div>
+              <p>Quốc gia</p>
+              <SelectCountryForm
+                v-bind:countries="countries"
+                @selectCountry="selectCountry(country?.isoCode)"
+                v-model="country"
+              />
+            </div>
+            <div>
+              <p>Tỉnh thành/Bang</p>
+              <SelectStateForm
+                v-bind:states="statesList"
+                @selectState="selectState(state?.isoCode)"
+                v-model="state"
+              />
+            </div>
+            <div>
+              <p>Thành phố/Huyện</p>
+              <SelectCityForm
+                v-bind:cities="citiesList"
+                @selectCity="selectCity"
+                v-model="city"
+              />
+            </div>
           </div>
           <div class="flex justify-end mt-4">
-            <button>Lưu</button>
+            <button class="px-4 py-2 bg-slate-200 dark:bg-slate-700 rounded-xl shadow-md font-semibold hover:bg-slate-500 hover:text-neutral-200 transition">Lưu</button>
           </div>
         </div>
         <div class="mb-6">
-          <label for="">Nơi sinh sống</label>
-          <input
-            type="text"
-            placeholder="Nơi bạn sống"
-            class="w-full mt-2 py-2 px-6 border border-gray-200 dark:bg-slate-700 dark:border-slate-800 dark:text-neutral-200 rounded-lg"
-          />
+          <label class="text-lg font-semibold">Nơi sinh sống</label>
           <div class="flex gap-2">
-            <SelectCountryForm
-              v-bind:countries="countries"
-              @selectCountry="selectCountry(country?.isoCode)"
-              v-model="livedCountry"
-            />
-            <SelectStateForm
-              v-bind:states="statesList"
-              @selectState="selectState(state?.isoCode)"
-              v-model="livedState"
-            />
-            <SelectCityForm
-            v-bind:cities="citiesList"
-            @selectCity="selectCity"
-            v-model="livedCity"
-            />
+            <div>
+              <p>Quốc gia</p>
+              <SelectCountryForm
+                v-bind:countries="countries"
+                @selectCountry="selectCountry(country?.isoCode)"
+                v-model="country"
+              />
+            </div>
+            <div>
+              <p>Tỉnh thành/Bang</p>
+              <SelectStateForm
+                v-bind:states="statesList"
+                @selectState="selectState(state?.isoCode)"
+                v-model="state"
+              />
+            </div>
+            <div>
+              <p>Thành phố/Huyện</p>
+              <SelectCityForm
+                v-bind:cities="citiesList"
+                @selectCity="selectCity"
+                v-model="city"
+              />
+            </div>
           </div>
           <div class="flex justify-end mt-4">
-            <button>Lưu</button>
+            <button class="px-4 py-2 bg-slate-200 dark:bg-slate-700 rounded-xl shadow-md font-semibold hover:bg-slate-500 hover:text-neutral-200 transition">Lưu</button>
           </div>
         </div>
         <div class="flex justify-between mb-4">
-          <h2>Mối quan hệ hiện tại:</h2>
+          <h2 class="font-semibold text-lg">Mối quan hệ hiện tại:</h2>
           <div
             v-if="
               userInfo.relationship_status !== 'Độc thân' ||
@@ -574,17 +582,20 @@ export default (await import("vue")).defineComponent({
       } else {
         console.log("No country selected");
       }
-      console.log(this.country)
+      console.log(this.country);
     },
     selectState(stateIsoCode) {
       if (stateIsoCode) {
-        const cities = City.getCitiesOfState(this.country?.isoCode, stateIsoCode);
+        const cities = City.getCitiesOfState(
+          this.country?.isoCode,
+          stateIsoCode
+        );
         this.citiesList = cities;
-        console.log(cities)
+        console.log(cities);
       } else {
         console.log("No state selected");
       }
-      console.log(this.state)
+      console.log(this.state);
     },
     selectCity() {
       console.log("Select city");

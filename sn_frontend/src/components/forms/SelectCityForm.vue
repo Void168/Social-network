@@ -2,10 +2,10 @@
     <Combobox v-model="citySelected">
       <div class="relative mt-1">
         <div
-          class="relative w-full cursor-default overflow-hidden rounded-lg bg-white text-left shadow-md focus:outline-none focus-visible:ring-2 focus-visible:ring-white/75 focus-visible:ring-offset-2 focus-visible:ring-offset-teal-300 sm:text-sm"
+          class="relative w-full cursor-default overflow-hidden rounded-lg bg-slate-200 dark:bg-slate-700 text-left shadow-md focus:outline-none focus-visible:ring-2 focus-visible:ring-white/75 focus-visible:ring-offset-2 focus-visible:ring-offset-teal-300 sm:text-sm"
         >
           <ComboboxInput
-            class="w-full border-none py-2 pl-3 pr-10 text-sm leading-5 text-gray-900 focus:ring-0"
+            class="w-full border-none py-2 pl-3 pr-10 text-sm leading-5 bg-slate-200 dark:bg-slate-700 text-gray-900 dark:text-neutral-200 focus:ring-0"
             :displayValue="(city) => city.name"
             @change="query = $event.target.value"
           />
@@ -25,11 +25,11 @@
           @after-leave="query = ''"
         >
           <ComboboxOptions
-            class="absolute mt-1 max-h-60 w-full overflow-auto rounded-md bg-white py-1 text-base shadow-lg ring-1 ring-black/5 focus:outline-none sm:text-sm"
+            class="absolute z-10 mt-1 max-h-60 w-full overflow-auto rounded-md bg-slate-200 dark:bg-slate-700 py-1 text-base shadow-lg ring-1 ring-black/5 focus:outline-none sm:text-sm"
           >
             <div
               v-if="filteredCities.length === 0 && query !== ''"
-              class="relative cursor-default select-none py-2 px-4 text-gray-700"
+              class="relative cursor-default select-none py-2 px-4 bg-slate-200 text-gray-700 dark:text-neutral-200"
             >
               Nothing found.
             </div>
@@ -46,7 +46,7 @@
                 class="relative cursor-default select-none py-2 pl-10 pr-4"
                 :class="{
                   'bg-teal-600 text-white': active,
-                  'text-gray-900': !active,
+                  'text-gray-900 dark:text-neutral-200': !active,
                 }"
               >
                 <span

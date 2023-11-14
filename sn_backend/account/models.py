@@ -43,12 +43,6 @@ class PhoneNumber(models.Model):
     is_private = models.BooleanField(default=True)
     only_me = models.BooleanField(default=False)
 
-class LivedCity(models.Model):
-    id= models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
-    name = models.CharField(blank=True, default='', max_length=255)
-    year_start = models.CharField(blank=True, default='', max_length=255)
-    year_end = models.CharField(blank=True, default='', max_length=255)
-
 class User(AbstractBaseUser, PermissionsMixin):
     id= models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
     email = models.EmailField(blank=True, default='', unique=True)
@@ -68,8 +62,8 @@ class User(AbstractBaseUser, PermissionsMixin):
     relationship_status = models.CharField(blank=True, default='', max_length=255)
     partner = models.CharField(blank=True, default='', max_length=255)
     
-    lived_cities = models.ManyToManyField(LivedCity, related_name="lived_cities")
     hometown = models.CharField(blank=True, default='', max_length=255)
+    living_city = models.CharField(blank=True, default='', max_length=255)
             
     people_you_may_know = models.ManyToManyField('self')
     

@@ -121,7 +121,6 @@
           @change="onFileChange"
         />
       </label>
-
       <button class="btn">Đăng bài viết</button>
     </div>
   </form>

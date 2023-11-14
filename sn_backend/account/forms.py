@@ -11,7 +11,7 @@ class SignupForm(UserCreationForm):
 class ProfileForm(forms.ModelForm):
     class Meta:
         model = User
-        fields = ('email', 'name', 'avatar',)
+        fields = ('email', 'name', 'avatar', 'nickname',)
 
 class CoverImageForm(forms.ModelForm):
     class Meta:
@@ -33,3 +33,7 @@ class HomeTownForm(forms.ModelForm):
         model = User
         fields = ('hometown',)
 
+class LivingCityForm(forms.ModelForm):
+    class Meta:
+        model = User
+        fields = ('living_city',)

@@ -19,7 +19,7 @@
           <RouterLink :to="{ name: 'friends', params: { id: user.id } }">
             <span>Bạn bè</span>
           </RouterLink>
-          <div class="flex gap-2">
+          <div class="flex gap-2" v-if="user.id === userStore.user.id">
             <span
               class="bg-rose-400 h-6 w-6 text-sm text-center rounded-full font-semibold flex justify-center items-center"
               >{{ friendshipRequest.length }}
@@ -29,7 +29,7 @@
       </div>
       <hr class="col-span-3" />
     </div>
-    <div class="main-left col-span-1 relative">
+    <div class="main-left lg:col-span-1 col-span-4 relative">
       <div class="h-20 frame"></div>
       <div
         class="px-4 pb-4 bg-white dark:bg-slate-600 dark:border-slate-700 dark:text-neutral-200 flex flex-col justify-center items-center rounded-lg shadow-md overflow-hidden"
@@ -45,6 +45,7 @@
         <p>
           <strong class="text-2xl">{{ user.name }}</strong>
         </p>
+        <p v-if="user.nickname " class="text-xl">({{ user.nickname }})</p>
         <p class="mt-6 font-semibold text-lg">{{ user.biography }}</p>
         <div class="mt-6 flex space-x-8">
           <ul class="text-lg">
@@ -65,13 +66,13 @@
               v-if="user.relationship_status"
             >
               <HeartIcon class="h-6 w-6" />
-              <h2>{{ user.relationship_status  }}</h2>
+              <h2>{{ user.relationship_status }} với</h2>
               <strong
                 v-if="partnerId != '' && partnerId != 'null'"
                 @click="toPartner"
                 class="cursor-pointer"
               >
-                với {{ partner?.user?.name }}
+                {{ partner?.user?.name }}
               </strong>
             </li>
             <li
@@ -79,9 +80,14 @@
               v-if="user.hometown"
             >
               <MapPinIcon class="w-6 h-6 dark:text-neutral-200" />
-              <p>
-                Đến từ {{ user.hometown }}
-              </p>
+              <p>Đến từ {{ user.hometown }}</p>
+            </li>
+            <li
+              class="text-gray-500 dark:text-neutral-200 flex items-center gap-2"
+              v-if="user.hometown"
+            >
+              <HomeIcon class="w-6 h-6 dark:text-neutral-200" />
+              <p>Sống tại {{ user.living_city }}</p>
             </li>
             <li
               class="text-gray-500 dark:text-neutral-200 flex items-center gap-2"
@@ -94,7 +100,7 @@
             </li>
           </ul>
         </div>
-        <RouterLink to="/profile/edit">
+        <RouterLink v-if="user.id === userStore.user.id" to="/profile/edit">
           <button class="mt-4 btn">Chỉnh sửa chi tiết</button>
         </RouterLink>
         <div class="flex flex-col mt-4">
@@ -141,7 +147,7 @@
     </div>
 
     <div
-      class="main-center col-span-2 space-y-4 bg-white dark:bg-slate-600 dark:border-slate-700 dark:text-neutral-200 p-4"
+      class="main-center lg:col-span-2 col-span-4 space-y-4 bg-white dark:bg-slate-600 dark:border-slate-700 dark:text-neutral-200 p-4"
       id="profile-frame"
     >
       <div
@@ -154,6 +160,7 @@
         v-else-if="friends.map((fr) => fr.id).includes(userStore.user.id)"
         class="p-4 bg-white rounded-lg dark:bg-slate-600 dark:border-slate-700 dark:text-neutral-200"
       >
+        <div class="text-lg px-4">Viết gì đó cho {{ user.name }}</div>
         <PostToForm v-bind:user="user" v-bind:posts="posts" />
       </div>
       <div
@@ -251,7 +258,8 @@ import {
   HeartIcon,
   ClipboardDocumentListIcon,
   UserGroupIcon,
-  MapPinIcon
+  MapPinIcon,
+  HomeIcon,
 } from "@heroicons/vue/24/solid";
 
 import { onMounted, ref } from "vue";
@@ -294,6 +302,7 @@ export default {
     ClipboardDocumentListIcon,
     MapPinIcon,
     UserGroupIcon,
+    HomeIcon,
   },
 
   data() {
@@ -365,17 +374,16 @@ export default {
         .catch((error) => console.log(error));
     },
     getPartnerInfo() {
-      if(this.partnerId) {
+      if (this.partnerId) {
         axios
-        .get(`/api/user-info/${this.partnerId}`)
-        .then((res) => {
-          this.partner = res.data;
-        })
-        .catch((error) => console.log(error));
+          .get(`/api/user-info/${this.partnerId}`)
+          .then((res) => {
+            this.partner = res.data;
+          })
+          .catch((error) => console.log(error));
       } else {
-        console.log("No partner")
+        console.log("No partner");
       }
-      
     },
     toPartner() {
       this.$router.push(`/profile/${this.partnerId}`);

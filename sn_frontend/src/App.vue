@@ -5,7 +5,7 @@
     >
       <div class="max-w-7xl mx-auto">
         <div class="flex items-center justify-between">
-          <div class="menu-left">
+          <div class="menu-left lg:block hidden">
             <a href="/" class="text-xl">SN</a>
           </div>
 

@@ -7,7 +7,7 @@ from rest_framework.decorators import api_view, authentication_classes, permissi
 
 from notification.utils import create_notification
 
-from .forms import SignupForm, ProfileForm, CoverImageForm, RelationshipForm, BiographyForm, HomeTownForm
+from .forms import SignupForm, ProfileForm, CoverImageForm, RelationshipForm, BiographyForm, HomeTownForm, LivingCityForm
 from .models import User, FriendshipRequest, RelationshipRequest
 from .serializers import UserSerializer, FriendshipRequestSerializer, RelationshipRequestSerializer
 
@@ -95,8 +95,6 @@ def edit_profile(request):
     if User.objects.exclude(id=user.id).filter(email=email).exists():
         return JsonResponse({'message': 'Email đã được đăng ký. Vui lòng thử lại'})
     else:
-        # print(request.FILES)
-        # print(request.POST)
         form = ProfileForm(request.POST, request.FILES, instance=user)
         
         if form.is_valid():
@@ -128,6 +126,23 @@ def set_hometown(request):
     current_user = request.user
     
     form = HomeTownForm(data=request.POST, instance=current_user)
+    
+    if form.is_valid():
+        form.save()
+        
+        current_user.save()
+    
+        serializer = UserSerializer(current_user)
+    
+        return JsonResponse(serializer.data)
+    else: 
+        return JsonResponse({'message':'Failed'})
+    
+@api_view(['POST'])
+def set_livingcity(request):
+    current_user = request.user
+    
+    form = LivingCityForm(data=request.POST, instance=current_user)
     
     if form.is_valid():
         form.save()

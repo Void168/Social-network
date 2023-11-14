@@ -44,3 +44,38 @@ def website_create(request):
         return JsonResponse(serializer.data, safe=False)
     else:
         return JsonResponse({'error': 'add something here later!...'})
+
+@api_view(['GET'])
+def phone_number_list_profile(request, id):
+    user = User.objects.get(pk=id)
+    phone_numbers = PhoneNumber.objects.filter(created_by_id=id)
+
+    if not request.user in user.friends.all():
+        phone_numbers = phone_numbers.filter(Q(is_private=False) & Q(only_me=False))
+    
+    if request.user in user.friends.all():
+        phone_numbers = phone_numbers.filter(only_me=False)
+        
+    if request.user == user:
+        phone_numbers = PhoneNumber.objects.filter(created_by_id=id)
+        
+    phone_numbers_serializer = PhoneNumberSerializer(phone_numbers, many=True)
+
+    return JsonResponse({
+        'phone_numbers': phone_numbers_serializer.data,
+    }, safe=False)
+
+@api_view(['POST'])
+def phone_number_create(request):
+    form = PhoneNumberForm(request.POST)
+
+    if form.is_valid():
+        phone_number = form.save(commit=False)
+        phone_number.created_by = request.user
+        phone_number.save()
+
+        serializer = PhoneNumberSerializer(phone_number)
+
+        return JsonResponse(serializer.data, safe=False)
+    else:
+        return JsonResponse({'error': 'add something here later!...'})

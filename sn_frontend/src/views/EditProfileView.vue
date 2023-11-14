@@ -462,14 +462,9 @@
               v-for="website in websites"
               v-bind:key="website.id"
             >
-              <a href={website.url} target="_blank">{{ website.url }}</a>
+              <a href="{website.url}" target="_blank">{{ website.url }}</a>
             </div>
-            <form
-              action=""
-              class="space-y-6 mt-4"
-              v-on:submit.prevent="submitForm"
-              v-if="addWebsite"
-            >
+            <form action="" class="space-y-6 mt-4" v-if="addWebsite">
               <div>
                 <label for="">Đường link</label>
                 <input
@@ -507,17 +502,20 @@
           </div>
           <div class="col-span-1">
             <h2 class="text-lg font-semibold">Số điện thoại</h2>
-            <form
-              action=""
-              class="space-y-6 mt-4"
-              v-on:submit.prevent="submitForm"
-              v-if="addPhoneNumber"
+            <div
+              class="flex flex-col gap-2"
+              v-for="number in phoneNumbers"
+              v-bind:key="number.id"
             >
+              <p v-if="number.phone_number">{{ number.phone_number }}</p>
+            </div>
+            <form action="" class="space-y-6 mt-4" v-if="addPhoneNumber">
               <div>
-                <label for="">Đường link</label>
+                <label for="">Các số điện thoại</label>
                 <input
+                  v-model="phoneNumber"
                   type="url"
-                  placeholder="Đường link của bạn"
+                  placeholder="Số điện thoại của bạn"
                   class="w-full mt-2 py-2 px-6 border border-gray-200 dark:bg-slate-700 dark:border-slate-800 dark:text-neutral-200 rounded-lg"
                 />
               </div>
@@ -529,6 +527,7 @@
                   Hủy
                 </button>
                 <button
+                  @click="submitPhoneNumberForm"
                   type="button"
                   class="px-4 py-2 bg-slate-200 dark:bg-slate-700 rounded-xl shadow-md font-semibold hover:bg-slate-500 hover:text-neutral-200 dark:hover:bg-slate-500 transition"
                 >
@@ -610,8 +609,8 @@ export default (await import("vue")).defineComponent({
     SelectCityForm,
     SelectStateForm,
     GenderSelector,
-    RouterLink
-},
+    RouterLink,
+  },
   setup() {
     const toastStore = useToastStore();
     const userStore = useUserStore();
@@ -721,9 +720,11 @@ export default (await import("vue")).defineComponent({
       websites: [],
       phoneNumbers: [],
       websiteUrl: "",
+      phoneNumber: "",
       website_is_private: false,
       website_only_me: false,
       phoneNumber_is_private: false,
+      phoneNumber_only_me: false,
     };
   },
 
@@ -734,6 +735,7 @@ export default (await import("vue")).defineComponent({
   mounted() {
     this.getFriends();
     this.getWebsitesList();
+    this.getPhoneNumbersList();
   },
 
   methods: {
@@ -783,6 +785,14 @@ export default (await import("vue")).defineComponent({
         .get(`/api/informations/${this.userStore.user.id}/websites/`)
         .then((res) => {
           this.websites = res.data.websites;
+        })
+        .catch((error) => console.log(error));
+    },
+    getPhoneNumbersList() {
+      axios
+        .get(`/api/informations/${this.userStore.user.id}/phone-numbers/`)
+        .then((res) => {
+          this.phoneNumbers = res.data.phone_numbers;
         })
         .catch((error) => console.log(error));
     },
@@ -1131,9 +1141,33 @@ export default (await import("vue")).defineComponent({
           });
       }
     },
+    submitPhoneNumberForm() {
+      let formData = new FormData();
+      formData.append("phone_number", this.phoneNumber);
+      formData.append("is_private", this.phoneNumber_is_private);
+      formData.append("only_me", this.phoneNumber_only_me);
+
+      axios
+        .post("/api/informations/create/phone-number/", formData, {
+          headers: {
+            "Content-Type": "multipart/form-data",
+          },
+        })
+        .then((res) => {
+          console.log("data", res.data);
+
+          this.phoneNumbers.unshift(res.data);
+          this.phoneNumber = "";
+          this.phoneNumber_is_private = false;
+          this.phoneNumber_only_me = false;
+        })
+        .catch((error) => {
+          console.log("error", error);
+        });
+    },
     submitWebsiteForm() {
       let formData = new FormData();
-      formData.append("url", this.websiteUrl);
+      formData.append("phone_number", this.websiteUrl);
       formData.append("is_private", this.website_is_private);
       formData.append("only_me", this.website_only_me);
 

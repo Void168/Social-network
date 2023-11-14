@@ -13,6 +13,6 @@ urlpatterns = [
     path('api/posts/', include('post.urls')),
     path('api/chat/', include('chat.urls')),
     path('api/notifications/', include('notification.urls')),
-    path('api/information/', include('information.urls')),
+    path('api/informations/', include('information.urls')),
     path('activate-email/', activate_email, name='activate_email')
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

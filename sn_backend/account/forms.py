@@ -1,7 +1,7 @@
 from django.contrib.auth.forms import UserCreationForm
 from django import forms
 
-from .models import User, Website, PhoneNumber
+from .models import User
 
 class SignupForm(UserCreationForm):
     class Meta:
@@ -37,13 +37,3 @@ class LivingCityForm(forms.ModelForm):
     class Meta:
         model = User
         fields = ('living_city',)
-
-class WebsiteForm(forms.ModelForm):
-    class Meta:
-        model = Website
-        fields = ('url', 'is_private','only_me',)
-
-class PhoneNumberForm(forms.ModelForm):
-    class Meta:
-        model = PhoneNumber
-        fields = ('number', 'is_private','only_me',)

@@ -457,7 +457,13 @@
         <div class="grid grid-cols-2 gap-4 my-4">
           <div class="col-span-1">
             <h2 class="text-lg font-semibold">Trang liên kết</h2>
-
+            <div
+              class="flex flex-col gap-2"
+              v-for="website in websites"
+              v-bind:key="website.id"
+            >
+              <a href={website.url} target="_blank">{{ website.url }}</a>
+            </div>
             <form
               action=""
               class="space-y-6 mt-4"
@@ -467,6 +473,7 @@
               <div>
                 <label for="">Đường link</label>
                 <input
+                  v-model="websiteUrl"
                   type="text"
                   placeholder="Đường link của bạn"
                   class="w-full mt-2 py-2 px-6 border border-gray-200 dark:bg-slate-700 dark:border-slate-800 dark:text-neutral-200 rounded-lg"
@@ -480,6 +487,7 @@
                   Hủy
                 </button>
                 <button
+                  @click="submitWebsiteForm"
                   type="button"
                   class="px-4 py-2 bg-slate-200 dark:bg-slate-700 rounded-xl shadow-md font-semibold hover:bg-slate-500 hover:text-neutral-200 dark:hover:bg-slate-500 transition"
                 >
@@ -491,7 +499,7 @@
               <button
                 v-if="!addWebsite"
                 @click="openAddWebsiteForm"
-                class="w-[50%] px-4 py-2 bg-slate-200 dark:bg-slate-700 dark:hover:bg-slate-800 rounded-xl shadow-md font-semibold hover:bg-slate-500 hover:text-neutral-200 transition"
+                class="w-[50%] px-4 py-2 bg-slate-200 dark:bg-slate-700 dark:hover:bg-slate-800 rounded-xl shadow-md font-semibold hover:bg-slate-500 hover:text-neutral-200 transition mt-4"
               >
                 Thêm trang liên kết xã hội
               </button>
@@ -577,6 +585,7 @@ import SelectCountryForm from "../components/forms/SelectCountryForm.vue";
 import SelectCityForm from "../components/forms/SelectCityForm.vue";
 import SelectStateForm from "../components/forms/SelectStateForm.vue";
 import GenderSelector from "../components/dropdown/GenderSelector.vue";
+import { RouterLink } from "vue-router";
 
 export default (await import("vue")).defineComponent({
   components: {
@@ -601,7 +610,8 @@ export default (await import("vue")).defineComponent({
     SelectCityForm,
     SelectStateForm,
     GenderSelector,
-  },
+    RouterLink
+},
   setup() {
     const toastStore = useToastStore();
     const userStore = useUserStore();
@@ -710,6 +720,10 @@ export default (await import("vue")).defineComponent({
       gender: {},
       websites: [],
       phoneNumbers: [],
+      websiteUrl: "",
+      website_is_private: false,
+      website_only_me: false,
+      phoneNumber_is_private: false,
     };
   },
 
@@ -719,6 +733,7 @@ export default (await import("vue")).defineComponent({
 
   mounted() {
     this.getFriends();
+    this.getWebsitesList();
   },
 
   methods: {
@@ -762,6 +777,14 @@ export default (await import("vue")).defineComponent({
     },
     getFriendInfo(value) {
       this.partner = value;
+    },
+    getWebsitesList() {
+      axios
+        .get(`/api/informations/${this.userStore.user.id}/websites/`)
+        .then((res) => {
+          this.websites = res.data.websites;
+        })
+        .catch((error) => console.log(error));
     },
     toPartner() {
       this.$router.push(`/profile/${this.partnerId}`);
@@ -1107,6 +1130,30 @@ export default (await import("vue")).defineComponent({
             console.log("error", error);
           });
       }
+    },
+    submitWebsiteForm() {
+      let formData = new FormData();
+      formData.append("url", this.websiteUrl);
+      formData.append("is_private", this.website_is_private);
+      formData.append("only_me", this.website_only_me);
+
+      axios
+        .post("/api/informations/create/website/", formData, {
+          headers: {
+            "Content-Type": "multipart/form-data",
+          },
+        })
+        .then((res) => {
+          console.log("data", res.data);
+
+          this.websites.unshift(res.data);
+          this.websiteUrl = "";
+          this.website_is_private = false;
+          this.website_only_me = false;
+        })
+        .catch((error) => {
+          console.log("error", error);
+        });
     },
     closeModal() {
       this.isOpen = false;

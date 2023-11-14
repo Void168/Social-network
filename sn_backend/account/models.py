@@ -52,9 +52,6 @@ class User(AbstractBaseUser, PermissionsMixin):
     biography = models.CharField(blank=True, default='', max_length=255)
     nickname = models.CharField(blank=True, default='', max_length=255)
     gender = models.CharField(blank=True, default='', max_length=255)
-    phone_numbers = models.ManyToManyField(PhoneNumber, related_name="phone_numbers")
-    website = models.ManyToManyField(Website, related_name="websites")
-    birthday = models.ManyToManyField(Birthday, related_name="birthday")
     
     friends = models.ManyToManyField('self')
     friends_count = models.IntegerField(default=0)

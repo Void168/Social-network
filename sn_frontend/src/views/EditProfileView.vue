@@ -1,6 +1,6 @@
 <template>
-  <div class="max-w-7xl mx-auto grid md:grid-cols-2 xs:grid-cols-1 gap-4">
-    <div class="main-left md:block xs:hidden">
+  <div class="max-w-7xl mx-auto grid grid-cols-2 gap-4">
+    <div class="main-left md:block lg:col-span-1 col-span-2">
       <div
         class="p-12 bg-white border border-gray-200 rounded-lg dark:bg-slate-600 dark:border-slate-700 dark:text-neutral-200"
       >
@@ -19,7 +19,7 @@
             </p>
             <button
               @click="openBioForm"
-              class="w-[50%] px-4 py-2 bg-slate-200 dark:bg-slate-700 rounded-xl shadow-md font-semibold hover:bg-slate-500 hover:text-neutral-200 transition"
+              class="w-[50%] px-4 py-2 bg-slate-200 dark:hover:bg-slate-800 dark:bg-slate-700 rounded-xl shadow-md font-semibold hover:bg-slate-500 hover:text-neutral-200 transition"
             >
               Chỉnh sửa tiểu sử
             </button>
@@ -67,7 +67,7 @@
             </p>
             <button
               @click="openHometownForm"
-              class="w-[50%] px-4 py-2 bg-slate-200 dark:bg-slate-700 rounded-xl shadow-md font-semibold hover:bg-slate-500 hover:text-neutral-200 transition"
+              class="w-[50%] px-4 py-2 bg-slate-200 dark:bg-slate-700 dark:hover:bg-slate-800 rounded-xl shadow-md font-semibold hover:bg-slate-500 hover:text-neutral-200 transition"
             >
               Chỉnh sửa quê quán
             </button>
@@ -130,7 +130,7 @@
             </p>
             <button
               @click="openLivingCityForm"
-              class="w-[50%] px-4 py-2 bg-slate-200 dark:bg-slate-700 rounded-xl shadow-md font-semibold hover:bg-slate-500 hover:text-neutral-200 transition"
+              class="w-[50%] px-4 py-2 bg-slate-200 dark:bg-slate-700 dark:hover:bg-slate-800 rounded-xl shadow-md font-semibold hover:bg-slate-500 hover:text-neutral-200 transition"
             >
               Chỉnh sửa nơi sinh sống
             </button>
@@ -383,7 +383,7 @@
       </div>
     </div>
 
-    <div class="main-right flex justify-center">
+    <div class="main-right flex justify-center col-span-2 lg:col-span-1">
       <div
         class="p-12 bg-white dark:bg-slate-600 dark:border-slate-700 dark:text-neutral-200 border boder-gray-200 rounded-lg w-full"
       >
@@ -422,11 +422,23 @@
               class="w-full mt-2 py-2 px-6 border border-gray-200 dark:bg-slate-700 dark:border-slate-800 dark:text-neutral-200 rounded-lg"
             />
           </div>
-          <RouterLink
-            to="/profile/edit/password"
-            class="hover:underline flex justify-end"
-            >Đổi mật khẩu</RouterLink
-          >
+          <div class="flex justify-between items-center">
+            <div class="w-[20%]">
+              <p>Giới tính: {{ userInfo.gender }}</p>
+              <GenderSelector
+                :genders="genders"
+                v-model="gender.name"
+                :gender="gender"
+                @selectGender="selectGender"
+                :user="userInfo"
+              />
+            </div>
+            <RouterLink
+              to="/profile/edit/password"
+              class="hover:underline flex justify-end"
+              >Đổi mật khẩu</RouterLink
+            >
+          </div>
           <div class="flex flex-col">
             <label class="text-center">Ảnh đại diện</label>
             <input type="file" ref="file" />
@@ -435,6 +447,98 @@
             <button class="w-full btn">Lưu thay đổi</button>
           </div>
         </form>
+      </div>
+    </div>
+    <div class="main-under flex justify-center col-span-2">
+      <div
+        class="w-full p-12 bg-white border border-gray-200 rounded-lg dark:bg-slate-600 dark:border-slate-700 dark:text-neutral-200"
+      >
+        <h1 class="text-2xl">Liên kết/Liên lạc</h1>
+        <div class="grid grid-cols-2 gap-4 my-4">
+          <div class="col-span-1">
+            <h2 class="text-lg font-semibold">Trang liên kết</h2>
+
+            <form
+              action=""
+              class="space-y-6 mt-4"
+              v-on:submit.prevent="submitForm"
+              v-if="addWebsite"
+            >
+              <div>
+                <label for="">Đường link</label>
+                <input
+                  type="text"
+                  placeholder="Đường link của bạn"
+                  class="w-full mt-2 py-2 px-6 border border-gray-200 dark:bg-slate-700 dark:border-slate-800 dark:text-neutral-200 rounded-lg"
+                />
+              </div>
+              <div class="flex items-center gap-2 justify-end">
+                <button
+                  @click="openAddWebsiteForm"
+                  class="px-4 py-2 bg-slate-200 dark:bg-slate-700 rounded-xl shadow-md font-semibold hover:bg-slate-500 hover:text-neutral-200 dark:hover:bg-slate-500 transition"
+                >
+                  Hủy
+                </button>
+                <button
+                  type="button"
+                  class="px-4 py-2 bg-slate-200 dark:bg-slate-700 rounded-xl shadow-md font-semibold hover:bg-slate-500 hover:text-neutral-200 dark:hover:bg-slate-500 transition"
+                >
+                  Lưu
+                </button>
+              </div>
+            </form>
+            <div class="flex justify-center">
+              <button
+                v-if="!addWebsite"
+                @click="openAddWebsiteForm"
+                class="w-[50%] px-4 py-2 bg-slate-200 dark:bg-slate-700 dark:hover:bg-slate-800 rounded-xl shadow-md font-semibold hover:bg-slate-500 hover:text-neutral-200 transition"
+              >
+                Thêm trang liên kết xã hội
+              </button>
+            </div>
+          </div>
+          <div class="col-span-1">
+            <h2 class="text-lg font-semibold">Số điện thoại</h2>
+            <form
+              action=""
+              class="space-y-6 mt-4"
+              v-on:submit.prevent="submitForm"
+              v-if="addPhoneNumber"
+            >
+              <div>
+                <label for="">Đường link</label>
+                <input
+                  type="url"
+                  placeholder="Đường link của bạn"
+                  class="w-full mt-2 py-2 px-6 border border-gray-200 dark:bg-slate-700 dark:border-slate-800 dark:text-neutral-200 rounded-lg"
+                />
+              </div>
+              <div class="flex items-center justify-end gap-2">
+                <button
+                  @click="openAddPhoneNumberForm"
+                  class="px-4 py-2 bg-slate-200 dark:bg-slate-700 rounded-xl shadow-md font-semibold hover:bg-slate-500 hover:text-neutral-200 dark:hover:bg-slate-500 transition"
+                >
+                  Hủy
+                </button>
+                <button
+                  type="button"
+                  class="px-4 py-2 bg-slate-200 dark:bg-slate-700 rounded-xl shadow-md font-semibold hover:bg-slate-500 hover:text-neutral-200 dark:hover:bg-slate-500 transition"
+                >
+                  Lưu
+                </button>
+              </div>
+            </form>
+            <div class="flex justify-center mt-4">
+              <button
+                v-if="!addPhoneNumber"
+                @click="openAddPhoneNumberForm"
+                class="w-[50%] px-4 py-2 bg-slate-200 dark:bg-slate-700 rounded-xl shadow-md font-semibold hover:bg-slate-500 hover:text-neutral-200 dark:hover:bg-slate-800 transition"
+              >
+                Thêm số điện thoại
+              </button>
+            </div>
+          </div>
+        </div>
       </div>
     </div>
     <!-- <p class="text-neutral-200">{{ userInfo }}</p> -->
@@ -472,6 +576,7 @@ import DeleteRelationshipModal from "../components/modals/DeleteRelationship.vue
 import SelectCountryForm from "../components/forms/SelectCountryForm.vue";
 import SelectCityForm from "../components/forms/SelectCityForm.vue";
 import SelectStateForm from "../components/forms/SelectStateForm.vue";
+import GenderSelector from "../components/dropdown/GenderSelector.vue";
 
 export default (await import("vue")).defineComponent({
   components: {
@@ -495,6 +600,7 @@ export default (await import("vue")).defineComponent({
     SelectCountryForm,
     SelectCityForm,
     SelectStateForm,
+    GenderSelector,
   },
   setup() {
     const toastStore = useToastStore();
@@ -576,6 +682,7 @@ export default (await import("vue")).defineComponent({
         { name: "Đã ly hôn" },
         { name: "Góa" },
       ],
+      genders: [{ name: "Nam" }, { name: "Nữ" }, { name: "Khác" }],
       relationshipForm: {
         status: this.userInfo.relationship_status,
         partner: {
@@ -598,6 +705,11 @@ export default (await import("vue")).defineComponent({
       updateBio: false,
       updateHometown: false,
       updateLivingCity: false,
+      addWebsite: false,
+      addPhoneNumber: false,
+      gender: {},
+      websites: [],
+      phoneNumbers: [],
     };
   },
 
@@ -610,6 +722,9 @@ export default (await import("vue")).defineComponent({
   },
 
   methods: {
+    selectGender() {
+      console.log(this.gender);
+    },
     getUserInfo() {
       axios
         .get(`/api/user-info/${this.userStore.user.id}`)
@@ -659,6 +774,12 @@ export default (await import("vue")).defineComponent({
     },
     openLivingCityForm() {
       this.updateLivingCity = !this.updateLivingCity;
+    },
+    openAddWebsiteForm() {
+      this.addWebsite = !this.addWebsite;
+    },
+    openAddPhoneNumberForm() {
+      this.addPhoneNumber = !this.addPhoneNumber;
     },
     selectCountry(countryIsoCode) {
       if (countryIsoCode) {
@@ -950,6 +1071,7 @@ export default (await import("vue")).defineComponent({
         formData.append("name", this.form.name);
         formData.append("nickname", this.userInfo.nickname);
         formData.append("email", this.form.email);
+        formData.append("gender", this.gender.name.name);
 
         axios
           .post("/api/edit-profile/", formData, {

@@ -13,7 +13,8 @@
   img,
   .main-left > div,
   .main-center,
-  .main-right > div {
+  .main-right > div,
+  .main-under {
     @apply shadow-md rounded-lg;
   }
 

@@ -1,17 +1,21 @@
 from rest_framework import serializers
 
-from .models import User, FriendshipRequest, RelationshipRequest
+from .models import User, FriendshipRequest, RelationshipRequest, Website
 
-
-class LivedCitySerializer(serializers.ModelSerializer):
+class WebsiteSerializer(serializers.ModelSerializer):
     class Meta:
-        model = RelationshipRequest
-        fields = ('id', 'name', 'year_start','year_end',)
-        
+        model = Website
+        fields = ('url','is_private','only_me',)
+
+class PhoneNumberSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Website
+        fields = ('number','is_private','only_me',)
+
 class UserSerializer(serializers.ModelSerializer):
     class Meta:
         model = User
-        fields = ('id', 'name', 'email', 'nickname', 'friends_count','posts_count','get_avatar','get_cover_image', 'date_joined','relationship_status','partner', 'biography','hometown', 'living_city')
+        fields = ('id', 'name', 'email', 'nickname', 'gender', 'friends_count','posts_count','get_avatar','get_cover_image', 'date_joined','relationship_status','partner', 'biography','hometown', 'living_city')
         
 class FriendshipRequestSerializer(serializers.ModelSerializer):
     created_by = UserSerializer(read_only=True)

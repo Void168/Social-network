@@ -503,11 +503,11 @@
           <div class="col-span-1">
             <h2 class="text-lg font-semibold">Số điện thoại</h2>
             <div
-              class="flex flex-col gap-2"
+              class="flex flex-col gap-2 my-4"
               v-for="number in phoneNumbers"
               v-bind:key="number.id"
             >
-              <p v-if="number.phone_number">{{ number.phone_number }}</p>
+              <PhoneNumberItem v-bind:phoneNumber="number" v-on:deleteWebsite="deletePhoneNumber" />
             </div>
             <form action="" class="space-y-6 mt-4" v-if="addPhoneNumber">
               <div>
@@ -585,6 +585,7 @@ import SelectCityForm from "../components/forms/SelectCityForm.vue";
 import SelectStateForm from "../components/forms/SelectStateForm.vue";
 import GenderSelector from "../components/dropdown/GenderSelector.vue";
 import WebsiteItem from "../components/items/WebsiteItem.vue";
+import PhoneNumberItem from "../components/items/PhoneNumberItem.vue";
 import { RouterLink } from "vue-router";
 
 export default (await import("vue")).defineComponent({
@@ -611,6 +612,7 @@ export default (await import("vue")).defineComponent({
     SelectStateForm,
     GenderSelector,
     WebsiteItem,
+    PhoneNumberItem,
     RouterLink,
   },
   setup() {
@@ -1195,6 +1197,9 @@ export default (await import("vue")).defineComponent({
     },
     deleteWebsite(id) {
       this.websites = this.websites.filter((website) => website.id !== id);
+    },
+    deletePhoneNumber(id) {
+      this.phoneNumbers = this.phoneNumbers.filter((phoneNumber) => phoneNumber.id !== id);
     },
     closeModal() {
       this.isOpen = false;

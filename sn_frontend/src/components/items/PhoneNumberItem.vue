@@ -2,11 +2,11 @@
   <div class="bg-slate-200 dark:bg-slate-700 p-4 rounded-lg shadow-md">
     <div class="flex justify-between items-center">
       <input
-        v-model="url"
+        v-model="number"
         v-if="edit"
         class="w-[60%] mt-2 py-2 px-6 border border-gray-200 dark:bg-slate-800 dark:border-slate-700 dark:text-neutral-200 rounded-lg"
       />
-      <a v-else href="{website.url}" target="_blank">{{ website.url }}</a>
+      <p v-else>{{ phoneNumber.phone_number }}</p>
       <div class="flex gap-2">
         <button
           @click="editWebsite"
@@ -30,17 +30,18 @@
             ><GlobeAsiaAustraliaIcon
               class="w-4 h-4"
               v-if="
-                website.is_private === false && website.only_me === false
+                phoneNumber.is_private === false &&
+                phoneNumber.only_me === false
               " />
             <UserGroupIcon
               class="w-4 h-4"
               v-else-if="
-                website.is_private === true && website.only_me === false
+                phoneNumber.is_private === true && phoneNumber.only_me === false
               " />
             <LockClosedIcon
               class="w-4 h-4"
               v-else-if="
-                website.is_private === true && website.only_me === true
+                phoneNumber.is_private === true && phoneNumber.only_me === true
               "
           /></span>
         </div>
@@ -48,14 +49,14 @@
           @getOption="getOption"
           :privacies="privacies"
           v-model="privacy"
-          :website="website"
+          :phoneNumber="phoneNumber"
         />
       </div>
       <button
         :disabled="
-          url === website.url &&
-          website.is_private === is_private &&
-          website.only_me === only_me
+          number === phoneNumber.phone_number &&
+          phoneNumber.is_private === is_private &&
+          phoneNumber.only_me === only_me
         "
         @click="submitForm"
         class="px-4 py-2 bg-slate-300 dark:bg-slate-600 rounded-xl shadow-md font-semibold dark:hover:bg-slate-500 hover:bg-slate-400 transition"
@@ -63,10 +64,10 @@
         Lưu
       </button>
     </div>
-    <DeleteWebsiteModal
+    <DeletePhoneNumberModal
       :show="isOpen"
       @closeModal="closeModal"
-      @deleteWebsite="deleteWebsite"
+      @deletePhoneNumber="deletePhoneNumber"
     />
   </div>
 </template>
@@ -75,7 +76,7 @@
 import axios from "axios";
 import { useUserStore } from "../../stores/user";
 import { useToastStore } from "../../stores/toast";
-import DeleteWebsiteModal from "../modals/DeleteWebsiteModal.vue";
+import DeletePhoneNumberModal from "../modals/DeletePhoneNumberModal.vue";
 import PrivacySelector from "../dropdown/PrivacySelector.vue";
 import {
   GlobeAsiaAustraliaIcon,
@@ -85,7 +86,7 @@ import {
 
 export default (await import("vue")).defineComponent({
   props: {
-    website: Object,
+    phoneNumber: Object,
   },
 
   setup() {
@@ -108,19 +109,19 @@ export default (await import("vue")).defineComponent({
         { name: "Chỉ mình tôi" },
       ],
       privacy: {},
-      is_private: this.website.is_private || false,
-      only_me: this.website.only_me || false,
-      url: this.website.url,
+      is_private: this.phoneNumber.is_private || false,
+      only_me: this.phoneNumber.only_me || false,
+      number: this.phoneNumber.phone_number,
       edit: false,
     };
   },
 
   methods: {
-    deleteWebsite() {
-      this.$emit("deleteWebsite", this.website.id);
+    deletePhoneNumber() {
+      this.$emit("deletePhoneNumber", this.phoneNumber.id);
 
       axios
-        .delete(`/api/informations/${this.website.id}/delete/website/`)
+        .delete(`/api/informations/${this.phoneNumber.id}/delete/phone-number/`)
         .then((res) => {
           setTimeout(() => {
             this.closeModal();
@@ -162,18 +163,22 @@ export default (await import("vue")).defineComponent({
       console.log("submitForm");
 
       let formData = new FormData();
-      formData.append("url", this.url);
+      formData.append("phone_number", this.number);
       formData.append("is_private", this.is_private);
       formData.append("only_me", this.only_me);
       axios
-        .post(`/api/informations/${this.website.id}/edit-website/`, formData, {
-          headers: {
-            "Content-Type": "multipart/form-data",
-          },
-        })
+        .post(
+          `/api/informations/${this.phoneNumber.id}/edit-phone-number/`,
+          formData,
+          {
+            headers: {
+              "Content-Type": "multipart/form-data",
+            },
+          }
+        )
         .then((res) => {
           console.log(res.data);
-          this.$router.go(0);
+          this.$router.go(0)
         })
         .catch((error) => console.log(error));
     },
@@ -186,7 +191,7 @@ export default (await import("vue")).defineComponent({
   },
 
   components: {
-    DeleteWebsiteModal,
+    DeletePhoneNumberModal,
     PrivacySelector,
     GlobeAsiaAustraliaIcon,
     UserGroupIcon,

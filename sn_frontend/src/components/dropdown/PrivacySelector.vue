@@ -96,8 +96,6 @@ export default {
   data() {
     return {
       selectedPrivacy: this.privacy,
-      is_private: this.website.is_private || false,
-      only_me: this.website.only_me || false,
     }
   }
 };

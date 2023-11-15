@@ -11,4 +11,6 @@ urlpatterns = [
     path('<uuid:pk>/delete/website/', api.website_delete, name='website_delete'),
     path('create/phone-number/', api.phone_number_create, name='website_create'),
     path('<uuid:id>/phone-numbers/', api.phone_number_list_profile, name='website_list_profile'),
+    path('<uuid:id>/edit-phone-number/', api.edit_phone_number, name='edit_phone_number'),
+    path('<uuid:pk>/delete/phone-number/', api.phone_number_delete, name='phone_number_delete'),
 ]

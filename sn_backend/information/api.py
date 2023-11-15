@@ -65,7 +65,7 @@ def website_delete(request, pk):
     website = Website.objects.filter(created_by=request.user).get(pk=pk)
     website.delete()
     
-    return JsonResponse({'message': 'post deleted'})
+    return JsonResponse({'message': 'website deleted'})
 
 @api_view(['GET'])
 def phone_number_list_profile(request, id):
@@ -101,3 +101,25 @@ def phone_number_create(request):
         return JsonResponse(serializer.data, safe=False)
     else:
         return JsonResponse({'error': 'add something here later!...'})
+
+@api_view(['POST'])
+def edit_phone_number(request, id):
+    user = request.user
+    
+    phone_number = PhoneNumber.objects.get(id=id)
+    
+    form = PhoneNumberForm(request.POST, instance=phone_number)
+        
+    if form.is_valid():
+        form.save()
+        
+    serializer = PhoneNumberSerializer(phone_number)
+        
+    return JsonResponse({'message': 'information updated', 'phone_number': serializer.data})
+
+@api_view(['DELETE'])
+def phone_number_delete(request, pk):
+    phone_number = PhoneNumber.objects.filter(created_by=request.user).get(pk=pk)
+    phone_number.delete()
+    
+    return JsonResponse({'message': 'phone number deleted'})

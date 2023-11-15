@@ -1,242 +1,258 @@
 <template>
   <div class="max-w-7xl grid grid-cols-3 mx-auto gap-4">
     <CoverImage class="col-span-3" v-bind:user="user" />
-    <div class="col-span-3 grid grid-cols-3">
+    <div class="col-span-3 grid grid-cols-3 gap-4 relative">
       <div class="col-span-1"></div>
       <div
-        class="col-span-2 px-4 py-2 flex gap-4 text-lg font-semibold dark:text-neutral-200"
+        class="col-span-2 flex justify-between px-4 py-2 gap-4 text-lg font-semibold dark:text-neutral-200"
       >
-        <RouterLink :to="{ name: 'profile', params: { id: user.id } }"
-          >Bài viết</RouterLink
-        >
-        <RouterLink :to="{ name: 'profile', params: { id: userStore.user.id } }"
-          >Giới thiệu</RouterLink
-        >
-        <RouterLink :to="{ name: 'photos', params: { id: user.id } }"
-          >Ảnh</RouterLink
-        >
-        <div class="flex gap-1">
-          <RouterLink :to="{ name: 'friends', params: { id: user.id } }">
-            <span>Bạn bè</span>
-          </RouterLink>
-          <div class="flex gap-2" v-if="user.id === userStore.user.id">
-            <span
-              class="bg-rose-400 h-6 w-6 text-sm text-center rounded-full font-semibold flex justify-center items-center"
-              >{{ friendshipRequest.length }}
-            </span>
+        <div class="flex gap-4">
+          <RouterLink :to="{ name: 'profile', params: { id: user.id } }"
+            >Bài viết</RouterLink
+          >
+          <RouterLink
+            :to="{ name: 'profile', params: { id: userStore.user.id } }"
+            >Giới thiệu</RouterLink
+          >
+          <RouterLink :to="{ name: 'photos', params: { id: user.id } }"
+            >Ảnh</RouterLink
+          >
+          <div class="flex gap-1">
+            <RouterLink :to="{ name: 'friends', params: { id: user.id } }">
+              <span>Bạn bè</span>
+            </RouterLink>
+            <div class="flex gap-2" v-if="user.id === userStore.user.id">
+              <span
+                class="bg-rose-400 h-6 w-6 text-sm text-center rounded-full font-semibold flex justify-center items-center"
+                >{{ friendshipRequest.length }}
+              </span>
+            </div>
           </div>
+        </div>
+        <div>
+          <button @click="openContactModal" class="dark:text-neutral-200 bg-slate-200 dark:bg-slate-800 px-4 py-2 shadow-md rounded-md hover:bg-slate-300 dark:hover:bg-slate-900 transition">Thông tin liên lạc</button>
+          <ContactModal :show="contactIsOpen" @closeContactModal="closeContactModal"/>
         </div>
       </div>
       <hr class="col-span-3" />
-    </div>
-    <div class="main-left lg:col-span-1 col-span-4 relative">
-      <div class="h-20 frame"></div>
-      <div
-        class="px-4 pb-4 bg-white dark:bg-slate-600 dark:border-slate-700 dark:text-neutral-200 flex flex-col justify-center items-center rounded-lg shadow-md overflow-hidden"
-      >
+      <div class="main-left sticky top-0 lg:col-span-1 col-span-4">
+        <div class="h-20 frame"></div>
         <div
-          class="icon relative w-[200px] h-[100px] bg-gray-100 dark:bg-slate-700 rounded-bl-[100px] rounded-br-[100px] before:content-[''] after:content-[''] before:absolute after:absolute before:top-0 after:top-0 before:left-[-50px] before:w-[55px] before:h-[35px] before:bg-transparent before:rounded-tr-[50px] before:shadow-[20px_-20px_0_20px_rgba(243,244,246,1)] after:right-[-50px] after:w-[55px] after:h-[35px] after:bg-transparent after:rounded-tl-[50px] after:shadow-[-20px_-20px_0_20px_rgba(243,244,246,1)] before:dark:shadow-[20px_-20px_0_20px_rgba(51,65,85,1)] after:dark:shadow-[-20px_-20px_0_20px_rgba(51,65,85,1)]"
-        ></div>
-        <img
-          :src="user.get_avatar"
-          alt=""
-          class="mb-6 rounded-full w-44 h-44 shadow-xl absolute top-0 z-5"
-        />
-        <p>
-          <strong class="text-2xl">{{ user.name }}</strong>
-        </p>
-        <p v-if="user.nickname " class="text-xl">({{ user.nickname }})</p>
-        <p class="mt-6 font-semibold text-lg">{{ user.biography }}</p>
-        <div class="mt-6 flex space-x-8">
-          <ul class="text-lg">
-            <li
-              class="text-gray-500 dark:text-neutral-200 flex items-center gap-2"
-            >
-              <UserGroupIcon class="h-6 w-6" />
-              {{ user.friends_count }} người bạn
-            </li>
-            <li
-              class="text-gray-500 dark:text-neutral-200 flex items-center gap-2"
-            >
-              <ClipboardDocumentListIcon class="h-6 w-6" />
-              {{ user.posts_count }} bài đăng
-            </li>
-            <li
-              class="text-gray-500 dark:text-neutral-200 flex items-center gap-2"
-              v-if="user.relationship_status"
-            >
-              <HeartIcon class="h-6 w-6" />
-              <h2>{{ user.relationship_status }} với</h2>
-              <strong
-                v-if="partnerId != '' && partnerId != 'null'"
-                @click="toPartner"
-                class="cursor-pointer"
+          class="px-4 pb-4 bg-white dark:bg-slate-600 dark:border-slate-700 dark:text-neutral-200 flex flex-col justify-center items-center rounded-lg shadow-md overflow-hidden"
+        >
+          <div
+            class="icon relative w-[200px] h-[100px] bg-gray-100 dark:bg-slate-700 rounded-bl-[100px] rounded-br-[100px] before:content-[''] after:content-[''] before:absolute after:absolute before:top-0 after:top-0 before:left-[-50px] before:w-[55px] before:h-[35px] before:bg-transparent before:rounded-tr-[50px] before:shadow-[20px_-20px_0_20px_rgba(243,244,246,1)] after:right-[-50px] after:w-[55px] after:h-[35px] after:bg-transparent after:rounded-tl-[50px] after:shadow-[-20px_-20px_0_20px_rgba(243,244,246,1)] before:dark:shadow-[20px_-20px_0_20px_rgba(51,65,85,1)] after:dark:shadow-[-20px_-20px_0_20px_rgba(51,65,85,1)]"
+          ></div>
+          <img
+            :src="user.get_avatar"
+            alt=""
+            class="mb-6 rounded-full w-44 h-44 shadow-xl absolute top-0 z-5"
+          />
+          <p>
+            <strong class="text-2xl">{{ user.name }}</strong>
+          </p>
+          <p v-if="user.nickname" class="text-xl">({{ user.nickname }})</p>
+          <p class="mt-6 font-semibold text-lg">{{ user.biography }}</p>
+          <div class="mt-6 flex space-x-8">
+            <ul class="flex flex-col space-y-4 text-lg">
+              <li
+                class="text-gray-500 dark:text-neutral-200 flex items-center gap-2"
               >
-                {{ partner?.user?.name }}
-              </strong>
-            </li>
-            <li
-              class="text-gray-500 dark:text-neutral-200 flex items-center gap-2"
-              v-if="user.hometown"
-            >
-              <MapPinIcon class="w-6 h-6 dark:text-neutral-200" />
-              <p>Đến từ {{ user.hometown }}</p>
-            </li>
-            <li
-              class="text-gray-500 dark:text-neutral-200 flex items-center gap-2"
-              v-if="user.hometown"
-            >
-              <HomeIcon class="w-6 h-6 dark:text-neutral-200" />
-              <p>Sống tại {{ user.living_city }}</p>
-            </li>
-            <li
-              class="text-gray-500 dark:text-neutral-200 flex items-center gap-2"
-            >
-              <ClockIcon class="w-6 h-6 dark:text-neutral-200" />
-              <p>
-                Tham gia vào Tháng {{ user?.date_joined?.slice(5, 7) }} năm
-                {{ user?.date_joined?.slice(0, 4) }}
-              </p>
-            </li>
-          </ul>
-        </div>
-        <RouterLink v-if="user.id === userStore.user.id" to="/profile/edit">
-          <button class="mt-4 btn">Chỉnh sửa chi tiết</button>
-        </RouterLink>
-        <div class="flex flex-col mt-4">
-          <div v-if="userStore.user.id !== user.id" class="mt-6">
-            <div v-if="can_send_friendship_request === false">
-              <div v-for="(value, index) in filtered" :key="index">
-                <button class="btn" v-if="value === userStore.user.id">
-                  Bạn bè
+                <UserGroupIcon class="h-6 w-6" />
+                {{ user.friends_count }} người bạn
+              </li>
+              <li
+                class="text-gray-500 dark:text-neutral-200 flex items-center gap-2"
+              >
+                <ClipboardDocumentListIcon class="h-6 w-6" />
+                {{ user.posts_count }} bài đăng
+              </li>
+              <li
+                class="text-gray-500 dark:text-neutral-200 flex items-center gap-2"
+                v-if="user.relationship_status"
+              >
+                <HeartIcon class="h-6 w-6" />
+                <h2>{{ user.relationship_status }} với</h2>
+                <strong
+                  v-if="partnerId != '' && partnerId != 'null'"
+                  @click="toPartner"
+                  class="cursor-pointer"
+                >
+                  {{ partner?.user?.name }}
+                </strong>
+              </li>
+              <li
+                class="text-gray-500 dark:text-neutral-200 flex items-center gap-2"
+                v-if="user.hometown"
+              >
+                <MapPinIcon class="w-6 h-6 dark:text-neutral-200" />
+                <p>Đến từ {{ user.hometown }}</p>
+              </li>
+              <li
+                class="text-gray-500 dark:text-neutral-200 flex items-center gap-2"
+                v-if="user.hometown"
+              >
+                <HomeIcon class="w-6 h-6 dark:text-neutral-200" />
+                <p>Sống tại {{ user.living_city }}</p>
+              </li>
+              <li
+                class="text-gray-500 dark:text-neutral-200 flex items-center gap-2"
+              >
+                <ClockIcon class="w-6 h-6 dark:text-neutral-200" />
+                <p>
+                  Tham gia vào Tháng {{ user?.date_joined?.slice(5, 7) }} năm
+                  {{ user?.date_joined?.slice(0, 4) }}
+                </p>
+              </li>
+            </ul>
+          </div>
+          <RouterLink v-if="user.id === userStore.user.id" to="/profile/edit">
+            <button class="mt-4 btn">Chỉnh sửa chi tiết</button>
+          </RouterLink>
+          <div class="flex flex-col mt-4">
+            <div v-if="userStore.user.id !== user.id" class="mt-6">
+              <div v-if="can_send_friendship_request === false">
+                <div v-for="(value, index) in filtered" :key="index">
+                  <button class="btn" v-if="value === userStore.user.id">
+                    Bạn bè
+                  </button>
+                  <button class="btn" v-else>Đã gửi lời mời kết bạn</button>
+                </div>
+              </div>
+              <div v-else>
+                <button class="btn" @click="sendFriendshipRequest">
+                  Thêm bạn bè
                 </button>
-                <button class="btn" v-else>Đã gửi lời mời kết bạn</button>
               </div>
             </div>
-            <div v-else>
-              <button class="btn" @click="sendFriendshipRequest">
-                Thêm bạn bè
+          </div>
+
+          <button
+            v-if="userStore.user.id !== user.id"
+            @click="sendDirectMessage"
+            class="mt-6 bg-violet-400 hover:bg-violet-600 btn"
+          >
+            Nhắn tin
+          </button>
+        </div>
+        <div class="bg-white dark:bg-slate-600 dark:text-neutral-200 my-4 p-4">
+          <div class="flex justify-between items-center mb-4">
+            <p class="font-bold text-2xl">Ảnh</p>
+            <RouterLink
+              :to="{ name: 'photos', params: { id: userStore.user.id } }"
+            >
+              <p class="text-lg hover:underline cursor-pointer">
+                Xem tất cả ảnh
+              </p>
+            </RouterLink>
+          </div>
+          <div class="grid grid-cols-3 gap-1">
+            <div v-for="image in images" v-bind:key="image.id">
+              <ImageShowcase v-bind:post="image" />
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div
+        class="main-center lg:col-span-2 col-span-4 space-y-4 bg-white dark:bg-slate-600 dark:border-slate-700 dark:text-neutral-200 p-4"
+        id="profile-frame"
+      >
+        <div
+          v-if="userStore.user.id === user.id"
+          class="p-4 bg-white rounded-lg dark:bg-slate-600 dark:border-slate-700 dark:text-neutral-200"
+        >
+          <PostForm v-bind:user="user" v-bind:posts="posts" />
+        </div>
+        <div
+          v-else-if="friends.map((fr) => fr.id).includes(userStore.user.id)"
+          class="p-4 bg-white rounded-lg dark:bg-slate-600 dark:border-slate-700 dark:text-neutral-200"
+        >
+          <div class="text-lg px-4">Viết gì đó cho {{ user.name }}</div>
+          <PostToForm v-bind:user="user" v-bind:posts="posts" />
+        </div>
+        <div
+          v-if="relationshipRequest.length && user.id === userStore.user.id"
+          class="p-4 bg-white border border-gray-200 dark:bg-slate-600 dark:border-slate-700 dark:text-neutral-200 rounded-lg"
+        >
+          <h2 class="mb-6 text-xl">
+            Yêu cầu thiết lập mối quan hệ
+            <strong>{{ relationshipRequest[0].relationship_type }}</strong>
+          </h2>
+          <div
+            class="p-4 bg-gray-100 dark:bg-slate-700 dark:border-slate-800 dark:text-neutral-200 text-center rounded-lg mb-4"
+          >
+            <RouterLink
+              :to="{
+                name: 'profile',
+                params: { id: relationshipRequest[0].created_by.id },
+              }"
+            >
+              <img
+                :src="relationshipRequest[0].created_by.get_avatar"
+                alt=""
+                class="mb-6 rounded-full mx-auto w-20 h-20"
+              />
+
+              <p>
+                <strong> {{ relationshipRequest[0].created_by.name }}</strong>
+              </p>
+              <div class="mt-6 flex space-x-8 justify-around">
+                <p class="text-xs text-gray-500 dark:text-neutral-200">
+                  {{ relationshipRequest[0].created_by.friends_count }} người
+                  bạn
+                </p>
+                <p class="text-xs text-gray-500 dark:text-neutral-200">
+                  {{ relationshipRequest[0].created_by.posts_count }} bài đăng
+                </p>
+              </div>
+            </RouterLink>
+            <div class="mt-6 space-x-4">
+              <button
+                @click="
+                  handleRequest(
+                    'accepted',
+                    relationshipRequest[0].created_by.id
+                  )
+                "
+                class="btn"
+              >
+                Đồng ý
+              </button>
+              <button
+                @click="
+                  handleRequest(
+                    'rejected',
+                    relationshipRequest[0].created_by.id
+                  )
+                "
+                class="bg-rose-400 hover:bg-rose-600 btn"
+              >
+                Từ chối
               </button>
             </div>
           </div>
-        </div>
 
-        <button
-          v-if="userStore.user.id !== user.id"
-          @click="sendDirectMessage"
-          class="mt-6 bg-violet-400 hover:bg-violet-600 btn"
-        >
-          Nhắn tin
-        </button>
-      </div>
-      <div class="bg-white dark:bg-slate-600 dark:text-neutral-200 my-4 p-4">
-        <div class="flex justify-between items-center mb-4">
-          <p class="font-bold text-2xl">Ảnh</p>
-          <RouterLink
-            :to="{ name: 'photos', params: { id: userStore.user.id } }"
+          <hr />
+        </div>
+        <p class="font-semibold text-2xl">Bài viết của {{ user.name }}</p>
+        <div v-if="posts?.length">
+          <div
+            class="p-4 bg-white border border-gray-200 rounded-lg mt-4 dark:bg-slate-700 dark:border-slate-800 dark:text-neutral-200"
+            v-for="post in posts"
+            v-bind:key="post.id"
           >
-            <p class="text-lg hover:underline cursor-pointer">Xem tất cả ảnh</p>
-          </RouterLink>
-        </div>
-        <div class="grid grid-cols-3 gap-1">
-          <div v-for="image in images" v-bind:key="image.id">
-            <ImageShowcase v-bind:post="image" />
+            <FeedItem v-bind:post="post" v-on:deletePost="deletePost" />
           </div>
+          <SkeletonLoadingPostVue
+            v-show="!loadMore"
+            v-if="posts.length !== postsList.length"
+          />
         </div>
+        <p v-else class="text-center text-lg">
+          {{ user.name }} Chưa có bài viết nào
+        </p>
       </div>
-    </div>
-
-    <div
-      class="main-center lg:col-span-2 col-span-4 space-y-4 bg-white dark:bg-slate-600 dark:border-slate-700 dark:text-neutral-200 p-4"
-      id="profile-frame"
-    >
-      <div
-        v-if="userStore.user.id === user.id"
-        class="p-4 bg-white rounded-lg dark:bg-slate-600 dark:border-slate-700 dark:text-neutral-200"
-      >
-        <PostForm v-bind:user="user" v-bind:posts="posts" />
-      </div>
-      <div
-        v-else-if="friends.map((fr) => fr.id).includes(userStore.user.id)"
-        class="p-4 bg-white rounded-lg dark:bg-slate-600 dark:border-slate-700 dark:text-neutral-200"
-      >
-        <div class="text-lg px-4">Viết gì đó cho {{ user.name }}</div>
-        <PostToForm v-bind:user="user" v-bind:posts="posts" />
-      </div>
-      <div
-        v-if="relationshipRequest.length && user.id === userStore.user.id"
-        class="p-4 bg-white border border-gray-200 dark:bg-slate-600 dark:border-slate-700 dark:text-neutral-200 rounded-lg"
-      >
-        <h2 class="mb-6 text-xl">
-          Yêu cầu thiết lập mối quan hệ
-          <strong>{{ relationshipRequest[0].relationship_type }}</strong>
-        </h2>
-        <div
-          class="p-4 bg-gray-100 dark:bg-slate-700 dark:border-slate-800 dark:text-neutral-200 text-center rounded-lg mb-4"
-        >
-          <RouterLink
-            :to="{
-              name: 'profile',
-              params: { id: relationshipRequest[0].created_by.id },
-            }"
-          >
-            <img
-              :src="relationshipRequest[0].created_by.get_avatar"
-              alt=""
-              class="mb-6 rounded-full mx-auto w-20 h-20"
-            />
-
-            <p>
-              <strong> {{ relationshipRequest[0].created_by.name }}</strong>
-            </p>
-            <div class="mt-6 flex space-x-8 justify-around">
-              <p class="text-xs text-gray-500 dark:text-neutral-200">
-                {{ relationshipRequest[0].created_by.friends_count }} người bạn
-              </p>
-              <p class="text-xs text-gray-500 dark:text-neutral-200">
-                {{ relationshipRequest[0].created_by.posts_count }} bài đăng
-              </p>
-            </div>
-          </RouterLink>
-          <div class="mt-6 space-x-4">
-            <button
-              @click="
-                handleRequest('accepted', relationshipRequest[0].created_by.id)
-              "
-              class="btn"
-            >
-              Đồng ý
-            </button>
-            <button
-              @click="
-                handleRequest('rejected', relationshipRequest[0].created_by.id)
-              "
-              class="bg-rose-400 hover:bg-rose-600 btn"
-            >
-              Từ chối
-            </button>
-          </div>
-        </div>
-
-        <hr />
-      </div>
-      <p class="font-semibold text-2xl">Bài viết của {{ user.name }}</p>
-      <div v-if="posts?.length">
-        <div
-          class="p-4 bg-white border border-gray-200 rounded-lg mt-4 dark:bg-slate-700 dark:border-slate-800 dark:text-neutral-200"
-          v-for="post in posts"
-          v-bind:key="post.id"
-        >
-          <FeedItem v-bind:post="post" v-on:deletePost="deletePost" />
-        </div>
-        <SkeletonLoadingPostVue
-          v-show="!loadMore"
-          v-if="posts.length !== postsList.length"
-        />
-      </div>
-      <p v-else class="text-center text-lg">
-        {{ user.name }} Chưa có bài viết nào
-      </p>
     </div>
   </div>
 </template>
@@ -250,6 +266,7 @@ import FeedItem from "../components/items/FeedItem.vue";
 import PostToForm from "../components/forms/PostToForm.vue";
 import CoverImage from "../components/CoverImage.vue";
 import ImageShowcase from "../components/items/ImageShowcase.vue";
+import ContactModal from "../components/modals/ContactModal.vue";
 import SkeletonLoadingPostVue from "../components/loadings/SkeletonLoadingPost.vue";
 import getUserInfo from "../api/getUserInfo";
 
@@ -303,6 +320,7 @@ export default {
     MapPinIcon,
     UserGroupIcon,
     HomeIcon,
+    ContactModal
   },
 
   data() {
@@ -324,6 +342,7 @@ export default {
       },
       relationshipRequest: {},
       images: [],
+      contactIsOpen: false,
     };
   },
 
@@ -502,6 +521,13 @@ export default {
         .catch((error) => {
           console.log(error);
         });
+    },
+
+    openContactModal(){
+      this.contactIsOpen = true
+    },
+    closeContactModal(){
+      this.contactIsOpen = false
     },
 
     handleRequest(status, pk) {

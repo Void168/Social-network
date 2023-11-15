@@ -72,7 +72,7 @@
                         @click="toggleDark()"
                         v-model="enabled"
                         :class="isDark ? 'bg-neutral-900' : 'bg-neutral-200'"
-                        class="relative inline-flex justify-between items-center h-[25px] w-[50px] shrink-0 cursor-pointer rounded-full border-2 border-transparent transition-colors duration-200 ease-in-out focus:outline-none focus-visible:ring-2 focus-visible:ring-white/75"
+                        class="relative inline-flex justify-between items-center h-[23px] w-[48px] shrink-0 cursor-pointer rounded-full border-2 border-transparent transition-colors duration-200 ease-in-out focus:outline-none focus-visible:ring-2 focus-visible:ring-white/75"
                       >
                         <SunIcon class="w-5 h-5" />
                         <MoonIcon class="w-5 h-5" />

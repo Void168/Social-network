@@ -1,5 +1,5 @@
 <template>
-  <TransitionRoot appear as="template">
+  <TransitionRoot @click="$emit('closeModal')" appear as="template">
     <Dialog as="div" class="relative z-10">
       <TransitionChild
         as="template"

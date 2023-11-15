@@ -458,11 +458,11 @@
           <div class="col-span-1">
             <h2 class="text-lg font-semibold">Trang liên kết</h2>
             <div
-              class="flex flex-col gap-2"
+              class="flex flex-col gap-2 my-4"
               v-for="website in websites"
               v-bind:key="website.id"
             >
-              <a href="{website.url}" target="_blank">{{ website.url }}</a>
+              <WebsiteItem v-bind:website="website" v-on:deleteWebsite="deleteWebsite" />
             </div>
             <form action="" class="space-y-6 mt-4" v-if="addWebsite">
               <div>
@@ -584,6 +584,7 @@ import SelectCountryForm from "../components/forms/SelectCountryForm.vue";
 import SelectCityForm from "../components/forms/SelectCityForm.vue";
 import SelectStateForm from "../components/forms/SelectStateForm.vue";
 import GenderSelector from "../components/dropdown/GenderSelector.vue";
+import WebsiteItem from "../components/items/WebsiteItem.vue";
 import { RouterLink } from "vue-router";
 
 export default (await import("vue")).defineComponent({
@@ -609,6 +610,7 @@ export default (await import("vue")).defineComponent({
     SelectCityForm,
     SelectStateForm,
     GenderSelector,
+    WebsiteItem,
     RouterLink,
   },
   setup() {
@@ -736,6 +738,7 @@ export default (await import("vue")).defineComponent({
     this.getFriends();
     this.getWebsitesList();
     this.getPhoneNumbersList();
+    console.log(this.websiteUrl)
   },
 
   methods: {
@@ -785,6 +788,7 @@ export default (await import("vue")).defineComponent({
         .get(`/api/informations/${this.userStore.user.id}/websites/`)
         .then((res) => {
           this.websites = res.data.websites;
+          console.log(this.websites)
         })
         .catch((error) => console.log(error));
     },
@@ -1167,7 +1171,7 @@ export default (await import("vue")).defineComponent({
     },
     submitWebsiteForm() {
       let formData = new FormData();
-      formData.append("phone_number", this.websiteUrl);
+      formData.append("url", this.websiteUrl);
       formData.append("is_private", this.website_is_private);
       formData.append("only_me", this.website_only_me);
 
@@ -1188,6 +1192,9 @@ export default (await import("vue")).defineComponent({
         .catch((error) => {
           console.log("error", error);
         });
+    },
+    deleteWebsite(id) {
+      this.websites = this.websites.filter((website) => website.id !== id);
     },
     closeModal() {
       this.isOpen = false;

@@ -33,11 +33,11 @@
                   as="h3"
                   class="text-2xl font-medium leading-6 text-gray-900 text-center"
                 >
-                  Xóa mối quan hệ?
+                  Xóa trang liên kết?
                 </DialogTitle>
                 <div class="mt-2">
                   <p class="text-sm text-gray-500">
-                    Bạn chắc chắn chấm dứt mối quan hệ này?
+                    Bạn muốn xóa liên kết này?
                   </p>
                 </div>
   
@@ -52,7 +52,7 @@
                   <button
                     type="button"
                     class="btn inline-flex justify-center rounded-md border border-transparent bg-emerald-400 text-white px-4 py-2 text-sm font-medium  hover:bg-emerald-600 focus:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 focus-visible:ring-offset-2"
-                    @click="$emit('deleteRelationship')"
+                    @click="$emit('deleteWebsite')"
                   >
                     Đồng ý
                   </button>

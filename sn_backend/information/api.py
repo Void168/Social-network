@@ -45,6 +45,21 @@ def website_create(request):
     else:
         return JsonResponse({'error': 'add something here later!...'})
 
+@api_view(['POST'])
+def edit_website(request, id):
+    user = request.user
+    
+    website = Website.objects.get(id=id)
+    
+    form = WebsiteForm(request.POST, instance=website)
+        
+    if form.is_valid():
+        form.save()
+        
+    serializer = WebsiteSerializer(website)
+        
+    return JsonResponse({'message': 'information updated', 'website': serializer.data})
+
 @api_view(['DELETE'])
 def website_delete(request, pk):
     website = Website.objects.filter(created_by=request.user).get(pk=pk)

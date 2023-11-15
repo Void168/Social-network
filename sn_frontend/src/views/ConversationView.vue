@@ -20,8 +20,8 @@
 
 <script>
 import axios from "axios";
-import ConversationBox from "../components/ConversationBox.vue";
-import ChatBox from "../components/ChatBox.vue";
+import ConversationBox from "../components/items/ConversationBox.vue";
+import ChatBox from "../components/items/ChatBox.vue";
 import { useUserStore } from "../stores/user";
 import { RouterLink } from "vue-router";
 

@@ -163,8 +163,8 @@
 
 <script>
 import axios from "axios";
-import ConversationBox from "../components/ConversationBox.vue";
-import { useUserStore } from "../stores/user";
+import ConversationBox from "./ConversationBox.vue";
+import { useUserStore } from "../../stores/user";
 import { RouterLink } from "vue-router";
 
 import { Popover, PopoverButton, PopoverPanel } from "@headlessui/vue";

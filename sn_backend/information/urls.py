@@ -6,7 +6,8 @@ from . import api
 
 urlpatterns = [
     path('create/website/', api.website_create, name='website_create'),
-    path('create/phone-number/', api.phone_number_create, name='website_create'),
     path('<uuid:id>/websites/', api.website_list_profile, name='website_list_profile'),
+    path('<uuid:pk>/website/delete', api.website_delete, name='website_delete'),
+    path('create/phone-number/', api.phone_number_create, name='website_create'),
     path('<uuid:id>/phone-numbers/', api.phone_number_list_profile, name='website_list_profile'),
 ]

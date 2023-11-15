@@ -246,10 +246,10 @@ import axios from "axios";
 import PeopleYouMayKnow from "../components/PeopleYouMayKnow.vue";
 import Trends from "../components/Trends.vue";
 import PostForm from "../components/forms/PostForm.vue";
-import FeedItem from "../components/FeedItem.vue";
+import FeedItem from "../components/items/FeedItem.vue";
 import PostToForm from "../components/forms/PostToForm.vue";
 import CoverImage from "../components/CoverImage.vue";
-import ImageShowcase from "../components/ImageShowcase.vue";
+import ImageShowcase from "../components/items/ImageShowcase.vue";
 import SkeletonLoadingPostVue from "../components/loadings/SkeletonLoadingPost.vue";
 import getUserInfo from "../api/getUserInfo";
 

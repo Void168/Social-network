@@ -31,7 +31,7 @@ import axios from "axios";
 import PeopleYouMayKnow from "../components/PeopleYouMayKnow.vue";
 import Trends from "../components/Trends.vue";
 import PostForm from "../components/forms/PostForm.vue";
-import FeedItem from "../components/FeedItem.vue";
+import FeedItem from "../components/items/FeedItem.vue";
 import SkeletonLoadingPostVue from '../components/loadings/SkeletonLoadingPost.vue';
 
 export default {
@@ -83,7 +83,7 @@ export default {
       const frame = document.getElementById("feed-frame");
       let height = frame.scrollHeight;
       let scrollY = window.scrollY;
-      if (height < scrollY + 900) {
+      if (height < scrollY + 1000) {
         setTimeout(() => {
           this.loadMore = true;
         }, 1000)

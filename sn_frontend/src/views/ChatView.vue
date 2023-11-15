@@ -25,7 +25,7 @@
 import axios from "axios";
 import { useUserStore } from "../stores/user";
 import { RouterLink } from "vue-router";
-import ConversationBox from "../components/ConversationBox.vue";
+import ConversationBox from "../components/items/ConversationBox.vue";
 
 export default (await import("vue")).defineComponent({
   name: "chat",

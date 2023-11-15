@@ -236,7 +236,7 @@ import {
 
 import { useUserStore } from "../../stores/user";
 import { useToastStore } from "../../stores/toast";
-import CommentItem from "../CommentItem.vue";
+import CommentItem from "../items/CommentItem.vue";
 
 export default (await import("vue")).defineComponent({
   setup() {

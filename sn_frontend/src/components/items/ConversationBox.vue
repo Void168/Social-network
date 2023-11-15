@@ -199,15 +199,15 @@
 
 <script>
 import axios from "axios";
-import { useUserStore } from "../stores/user";
+import { useUserStore } from "../../stores/user";
 import { Menu, MenuButton, MenuItem, MenuItems } from "@headlessui/vue";
 import {
   EllipsisHorizontalIcon,
   UserIcon,
   TrashIcon,
 } from "@heroicons/vue/24/solid";
-import { useToastStore } from "../stores/toast";
-import DeleteConversationModal from "../components/modals/DeleteConversationModal.vue";
+import { useToastStore } from "../../stores/toast";
+import DeleteConversationModal from "../modals/DeleteConversationModal.vue";
 
 export default (await import("vue")).defineComponent({
   name: "ConversationBox",

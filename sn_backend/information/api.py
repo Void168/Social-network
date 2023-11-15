@@ -45,6 +45,13 @@ def website_create(request):
     else:
         return JsonResponse({'error': 'add something here later!...'})
 
+@api_view(['DELETE'])
+def website_delete(request, pk):
+    website = Website.objects.filter(created_by=request.user).get(pk=pk)
+    website.delete()
+    
+    return JsonResponse({'message': 'post deleted'})
+
 @api_view(['GET'])
 def phone_number_list_profile(request, id):
     user = User.objects.get(pk=id)

@@ -182,9 +182,9 @@ import {
   LockClosedIcon,
 } from "@heroicons/vue/24/outline";
 import { HeartIcon as HeartLike } from "@heroicons/vue/24/solid";
-import { useUserStore } from "../stores/user";
-import { useToastStore } from "../stores/toast";
-import DeletePostModal from "../components/modals/DeletePostModal.vue";
+import { useUserStore } from "../../stores/user";
+import { useToastStore } from "../../stores/toast";
+import DeletePostModal from "../modals/DeletePostModal.vue";
 
 export default (await import("vue")).defineComponent({
   props: {

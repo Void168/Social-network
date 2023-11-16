@@ -19,7 +19,7 @@
                 >
               </strong>
             </p>
-            <p>{{ comment.body }}</p>
+            <p :class="word.toString().indexOf('@') === 0 ? 'text-emerald-300' : ''">{{ comment.body }}</p>
           </div>
 
           <p class="text-gray-600 dark:text-neutral-200">{{ comment.created_at_formatted }} trước</p>
@@ -35,6 +35,11 @@ import { RouterLink } from "vue-router";
 export default (await import("vue")).defineComponent({
   props: {
     comment: Object,
+  },
+  computed: {
+    word() {
+      return this.comment.body.split(" ")
+    },
   },
   components: { RouterLink },
 });

@@ -199,7 +199,7 @@ def post_like(request,pk):
 @api_view(['POST'])
 def post_create_comment(request, pk):
     comment = Comment.objects.create(body=request.data.get('body'), created_by=request.user)
-    
+    print(comment.body)
     post = Post.objects.get(pk=pk)
     post.comments.add(comment)
     post.comments_count = post.comments_count + 1

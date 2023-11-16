@@ -7,22 +7,39 @@
       >
         <FeedItem v-bind:post="post" />
       </div>
-      <div class="p-4 bg-white border border-gray-200 rounded-lg shadow-md dark:bg-slate-600 dark:border-slate-700 dark:text-neutral-200">
+      <div
+        class="p-4 bg-white border border-gray-200 rounded-lg shadow-md dark:bg-slate-600 dark:border-slate-700 dark:text-neutral-200"
+      >
         <form v-on:submit.prevent="submitForm" method="post">
           <div class="p-4">
             <textarea
               v-model="body"
-              class="p-4 w-full bg-gray-100 rounded-lg"
+              class="p-4 w-full bg-gray-100 rounded-lg resize-none overflow-y-scroll scrollbar-none scrollbar scrollbar-corner-slate-200 hover:scrollbar-thin scrollbar-thumb-slate-400 scrollbar-track-slate-800"
               cols="30"
               rows="1"
               placeholder="Viết bình luận..."
             ></textarea>
-          </div>
+            <p
+              contenteditable="true"
+              style="outline: 0px"
+              ref="content"
 
-          <div class="px-4 py-2 border-t border-gray-100 flex justify-end dark:border-slate-400">
+              :onkeypress="getWords"
+              :class="word.indexOf('@') === 0 && word.length > 1 ? 'text-red-400' : ''"
+            ></p>
+            <!-- :class="word ? 'p-4 w-full bg-gray-100 rounded-lg text-emerald-500 resize-none overflow-y-scroll scrollbar-none scrollbar scrollbar-corner-slate-200 hover:scrollbar-thin scrollbar-thumb-slate-400 scrollbar-track-slate-800' : 'p-4 w-full bg-gray-100 rounded-lg resize-none overflow-y-scroll scrollbar-none scrollbar scrollbar-corner-slate-200 hover:scrollbar-thin scrollbar-thumb-slate-400 scrollbar-track-slate-800'" -->
+          </div>
+          <div
+          class="px-4 py-2 border-t border-gray-100 flex justify-end dark:border-slate-400"
+          >
             <button class="btn">Bình luận</button>
           </div>
         </form>
+        <div class="flex gap-1">
+          <div v-for="word in words" :key="word">
+            <span :class="word.indexOf('@') === 0 && word.length > 1 ? 'text-red-400' : ''">{{ word }}</span>
+          </div>
+        </div>
       </div>
 
       <div
@@ -58,6 +75,7 @@
 
 <script>
 import axios from "axios";
+
 import PeopleYouMayKnow from "../components/PeopleYouMayKnow.vue";
 import Trends from "../components/Trends.vue";
 import FeedItem from "../components/items/FeedItem.vue";
@@ -80,8 +98,15 @@ export default {
       },
       lastComment: 5,
       body: "",
+      words: [],
     };
   },
+
+  // computed: {
+  //   word() {
+  //     return this.words
+  //   },
+  // },
 
   mounted() {
     this.getPost();
@@ -106,7 +131,11 @@ export default {
         this.lastComment = this.post.comments.length;
       }
     },
-
+    getWords() {
+      const commentContent = this.$refs.content
+      this.words = commentContent.innerHTML.split(' ')
+      console.log(this.words)
+    },
     submitForm() {
       console.log("submitForm", this.body);
 

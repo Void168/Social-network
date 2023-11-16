@@ -12,32 +12,39 @@
       >
         <form v-on:submit.prevent="submitForm" method="post">
           <div class="p-4">
-            <textarea
+            <!-- <textarea
               v-model="body"
               class="p-4 w-full bg-gray-100 rounded-lg resize-none overflow-y-scroll scrollbar-none scrollbar scrollbar-corner-slate-200 hover:scrollbar-thin scrollbar-thumb-slate-400 scrollbar-track-slate-800"
               cols="30"
               rows="1"
               placeholder="Viết bình luận..."
-            ></textarea>
-            <p
-              contenteditable="true"
-              style="outline: 0px"
-              ref="content"
-
-              :onkeypress="getWords"
-              :class="word.indexOf('@') === 0 && word.length > 1 ? 'text-red-400' : ''"
-            ></p>
+            ></textarea> -->
+            <div
+              :class="words[0] === '' || !words.length ?  'relative p-4 w-full bg-gray-100 dark:bg-slate-800 opacity-50 rounded-lg resize-none overflow-y-scroll scrollbar-none scrollbar scrollbar-corner-slate-200 hover:scrollbar-thin scrollbar-thumb-slate-400 scrollbar-track-slate-800': 'relative p-4 w-full bg-gray-100 dark:bg-slate-800 rounded-lg resize-none overflow-y-scroll scrollbar-none scrollbar scrollbar-corner-slate-200 hover:scrollbar-thin scrollbar-thumb-slate-400 scrollbar-track-slate-800'"
+            >
+              <div class="absolute z-[-1] dark:text-neutral-200">Viết bình luận...</div>
+              <p
+                contenteditable="true"
+                ref="content"
+                :onkeyup="getWords"
+              ></p>
+            </div>
             <!-- :class="word ? 'p-4 w-full bg-gray-100 rounded-lg text-emerald-500 resize-none overflow-y-scroll scrollbar-none scrollbar scrollbar-corner-slate-200 hover:scrollbar-thin scrollbar-thumb-slate-400 scrollbar-track-slate-800' : 'p-4 w-full bg-gray-100 rounded-lg resize-none overflow-y-scroll scrollbar-none scrollbar scrollbar-corner-slate-200 hover:scrollbar-thin scrollbar-thumb-slate-400 scrollbar-track-slate-800'" -->
           </div>
           <div
-          class="px-4 py-2 border-t border-gray-100 flex justify-end dark:border-slate-400"
+            class="px-4 py-2 border-t border-gray-100 flex justify-end dark:border-slate-400"
           >
             <button class="btn">Bình luận</button>
           </div>
         </form>
         <div class="flex gap-1">
           <div v-for="word in words" :key="word">
-            <span :class="word.indexOf('@') === 0 && word.length > 1 ? 'text-red-400' : ''">{{ word }}</span>
+            <span
+              :class="
+                word.indexOf('@') === 0 && word.length > 1 ? 'text-red-400' : ''
+              "
+              >{{ word }}</span
+            >
           </div>
         </div>
       </div>
@@ -102,11 +109,17 @@ export default {
     };
   },
 
-  // computed: {
-  //   word() {
-  //     return this.words
-  //   },
-  // },
+  computed: {
+    word() {
+      return this.words;
+    },
+  },
+
+  watch: {
+      handler: function () {
+        this.getWords();
+      },
+  },
 
   mounted() {
     this.getPost();
@@ -132,9 +145,10 @@ export default {
       }
     },
     getWords() {
-      const commentContent = this.$refs.content
-      this.words = commentContent.innerHTML.split(' ')
-      console.log(this.words)
+      const commentContent = this.$refs.content;
+      this.body = commentContent.innerHTML
+      this.words = commentContent.innerHTML.split(" ");
+      console.log(this.body);
     },
     submitForm() {
       console.log("submitForm", this.body);
@@ -146,9 +160,11 @@ export default {
         .then((res) => {
           console.log("data", res.data);
 
+          this.words = []
+          this.body = ""
+          this.$refs.content.innerHTML = ""
           this.post.comments.unshift(res.data);
           this.post.comments_count += 1;
-          this.body = "";
         })
         .catch((error) => {
           console.log("error", error);

@@ -8,7 +8,14 @@ class PostAttachmentSerializer(serializers.ModelSerializer):
     class Meta:
         model = PostAttachment
         fields = ('id', 'get_image',)
-        
+
+class TagSerializer(serializers.ModelSerializer):
+    created_by = UserSerializer(read_only=True)
+    created_for = UserSerializer(read_only=True)
+    class Meta:
+        model = Like
+        fields = ('id', 'created_by','created_for')
+
 class LikeSerializer(serializers.ModelSerializer):
     created_by = UserSerializer(read_only=True)
     class Meta:
@@ -16,9 +23,10 @@ class LikeSerializer(serializers.ModelSerializer):
         fields = ('id', 'created_by',)
 class CommentSerializer(serializers.ModelSerializer):
     created_by = UserSerializer(read_only=True)
+    tags = TagSerializer(read_only=True, many=True)
     class Meta:
         model = Comment
-        fields = ('id','body','created_by', 'created_at_formatted',)
+        fields = ('id','body','created_by', 'created_at_formatted','tags',)
         
 class PostSerializer(serializers.ModelSerializer):
     created_by = UserSerializer(read_only=True)

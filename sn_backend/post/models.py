@@ -7,10 +7,10 @@ from account.models import User
 
 # Create your models here.
 
-class Tag(models.Model):
-    id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
-    created_by = models.ForeignKey(User, related_name='own_tag', on_delete=models.CASCADE)
-    created_for = models.ForeignKey(User, related_name='tag_for', on_delete=models.CASCADE)
+# class Tag(models.Model):
+#     id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
+#     created_by = models.ForeignKey(User, related_name='own_tag', on_delete=models.CASCADE)
+#     created_for = models.ForeignKey(User, related_name='tag_for', on_delete=models.CASCADE)
     
 class Like(models.Model):
     id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
@@ -20,7 +20,7 @@ class Like(models.Model):
 class Comment(models.Model):
     id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
     body = models.TextField(blank=True, null=True)
-    tags = models.ForeignKey(Tag, related_name='tags', null=True, on_delete=models.CASCADE)
+    tags = models.JSONField('tags', null=True, blank=True, editable=False)
     created_by = models.ForeignKey(User, related_name='comments', on_delete=models.CASCADE)
     created_at = models.DateTimeField(auto_now_add=True)
     

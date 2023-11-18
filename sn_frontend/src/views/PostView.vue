@@ -34,7 +34,16 @@
           <div
             class="relative px-4 py-2 border-t border-gray-100 flex justify-end dark:border-slate-400"
           >
-            <button class="btn">Bình luận</button>
+            <button
+              :class="
+                body.length
+                  ? 'btn'
+                  : ' bg-slate-300 font-semibold dark:bg-slate-500 dark:text-neutral-200 px-4 py-2 rounded-md shadow-md cursor-auto'
+              "
+              :disabled="body.length < 0"
+            >
+              Bình luận
+            </button>
             <div
               class="w-full bg-slate-200 dark:bg-slate-800 dark:text-neutral-200 min-h-min overflow-y-scroll scrollbar-none scrollbar scrollbar-corner-slate-200 hover:scrollbar-thin scrollbar-thumb-slate-400 scrollbar-track-slate-800 absolute inset-0 z-10 open"
               v-if="autoComplete === true && filteredFriends.length > 0"
@@ -45,7 +54,7 @@
                 class="w-full h-20"
               >
                 <li
-                  @click="getTagName(friend.name)"
+                  @click="getTag(friend)"
                   class="hover:bg-slate-300 dark:hover:bg-slate-700 p-4 flex items-center gap-2 cursor-pointer"
                 >
                   <img
@@ -129,7 +138,8 @@ export default {
       autoComplete: false,
       friends: [],
       queries: [],
-      tagName: "",
+      tagInfo: {},
+      tags: [],
     };
   },
 
@@ -165,6 +175,7 @@ export default {
         .get(`/api/posts/${this.$route.params.id}`)
         .then((res) => {
           // console.log("data", res.data);
+
           this.post = res.data.post;
         })
         .catch((error) => {
@@ -190,9 +201,8 @@ export default {
     getWords() {
       const commentContent = this.$refs.content;
       this.body = commentContent.innerHTML.replace(/&nbsp;/g, " ");
-      this.words = this.body.split(" ");
+      this.words = this.body.split(" ").map(name => name.toLowerCase());
       this.queries = this.words.filter((word) => word.indexOf("@") === 0);
-
       if (
         this.words[this.words.length - 1].indexOf("@") === 0 &&
         this.words[this.words.length - 1].length > 1
@@ -201,17 +211,22 @@ export default {
       } else {
         this.autoComplete = false;
       }
-    },
-    getTagName(name) {
-      const commentContent = this.$refs.content;
-      this.queries[this.queries.length - 1] = name
-      commentContent.innerHTML = commentContent.innerHTML + name
-      
-      this.body = commentContent.innerHTML.replace(/&nbsp;/g, " ")
-      const words = this.body.split(" ").filter((tag) => tag.indexOf('@') === 0);
 
-      this.autoComplete = false
-      console.log(words)
+      if (this.body.includes(this.tagInfo.name) === false) {
+        this.tags.pop(this.tagInfo);
+      }
+    },
+    getTag(friend) {
+      const commentContent = this.$refs.content;
+      this.queries[this.queries.length - 1] = friend.name;
+      commentContent.innerHTML = commentContent.innerHTML + friend.name;
+      this.tagInfo = friend;
+      this.tags.push(this.tagInfo);
+
+      this.body = commentContent.innerHTML.replace(/&nbsp;/g, " ");
+
+      this.autoComplete = false;
+      console.log(this.tags);
     },
     clickOuside() {
       const modalContainer = document.querySelector(".open");
@@ -223,22 +238,26 @@ export default {
     submitForm() {
       console.log("submitForm", this.body);
 
-      axios
-        .post(`/api/posts/${this.$route.params.id}/comment/`, {
-          body: this.body,
-        })
-        .then((res) => {
-          console.log("data", res.data);
+      if (this.body.length > 0) {
+        axios
+          .post(`/api/posts/${this.$route.params.id}/comment/`, {
+            body: this.body,
+            tags: this.tags
+          })
+          .then((res) => {
+            console.log("data", res.data);
 
-          this.words = [];
-          this.body = "";
-          this.$refs.content.innerHTML = "";
-          this.post.comments.unshift(res.data);
-          this.post.comments_count += 1;
-        })
-        .catch((error) => {
-          console.log("error", error);
-        });
+            this.words = [];
+            this.body = "";
+            this.tags = []
+            this.$refs.content.innerHTML = "";
+            this.post.comments.unshift(res.data);
+            this.post.comments_count += 1;
+          })
+          .catch((error) => {
+            console.log("error", error);
+          });
+      }
     },
   },
 };

@@ -93,26 +93,35 @@ export default (await import("vue")).defineComponent({
     },
 
     async readNotification(notification) {
+      console.log(notification.type_of_notification === "tag_comment");
       await axios
         .post(`/api/notifications/read/${notification.id}/`)
         .then((res) => {
           console.log(res.data);
-
           if (
             notification.type_of_notification === "post_like" ||
-            notification.type_of_notification === "post_comment"
+            notification.type_of_notification === "post_comment" ||
+            notification.type_of_notification === "tag_comment"
           ) {
             this.$router.push({
               name: "postview",
               params: { id: notification.post_id },
             });
           }
-          if (notification.type_of_notification === "new_relationship_request") {
+          if (
+            notification.type_of_notification === "new_relationship_request"
+          ) {
             this.$router.push({
               name: "profile",
-              params: { id: notification.created_for},
+              params: {
+                id: notification.created_for,
+              },
             });
-          } else {
+          }
+          if (
+            notification.type_of_notification === "accepted_friend_request" ||
+            notification.type_of_notification === "new_friend_request"
+          ) {
             this.$router.push({
               name: "friends",
               params: {

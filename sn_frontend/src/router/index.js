@@ -83,7 +83,7 @@ const router = createRouter({
       component: ProfileImagesView
     },
     {
-      path: '/:id',
+      path: '/post/:id',
       name: 'postview',
       component: PostView
     },

@@ -206,6 +206,7 @@ def post_create_comment(request, pk):
     post.save()
     
     notification = create_notification(request, 'post_comment', post_id=post.id)
+    notification_tag = create_notification(request, 'tag_comment', comment_id=comment.id, post_id=post.id)
     
     serializer = CommentSerializer(comment)
     

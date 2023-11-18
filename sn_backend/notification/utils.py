@@ -1,9 +1,9 @@
 from .models import Notification
 
 from post.models import Post, Comment
-from account.models import FriendshipRequest, RelationshipRequest
+from account.models import FriendshipRequest, RelationshipRequest, User
 
-def create_notification(request, type_of_notification, post_id=None, friendrequest_id=None, relationship_request_id=None):
+def create_notification(request, type_of_notification, post_id=None, friendrequest_id=None, relationship_request_id=None, comment_id=None, created_for = None):
     created_for = None
     
     if type_of_notification == 'post_like':
@@ -30,10 +30,13 @@ def create_notification(request, type_of_notification, post_id=None, friendreque
         relationshiprequest = RelationshipRequest.objects.get(pk=relationship_request_id)
         created_for = relationshiprequest.created_for
         body = f'{request.user.name} đã đồng ý'
-    # elif type_of_notification == 'tag_comment':
-    #     body = f'{request.user.name} đã nhắc đến bạn trong một bình luận'
-    #     comment = Comment.objects.get(pk=comment_id)
-    #     created_for = comment.tags
+    elif type_of_notification == 'tag_comment':
+        body = f'{request.user.name} đã nhắc đến bạn trong một bình luận'
+        comment = Comment.objects.get(pk=comment_id)
+        for tag in comment.tags:
+            tag_user = User.objects.get(id=tag['id'])
+            print(tag_user)
+            created_for = tag_user
     
     if request.user != created_for:
         notification = Notification.objects.create(
@@ -43,5 +46,17 @@ def create_notification(request, type_of_notification, post_id=None, friendreque
             post_id=post_id,
             created_for=created_for
         )
-    
-        return notification
+        
+        if type_of_notification == 'tag_comment':
+            comment = Comment.objects.get(pk=comment_id)
+            for tag in comment.tags:
+                tag_user = User.objects.get(id=tag['id'])
+                notification = Notification.objects.create(
+                    body=body,
+                    type_of_notification=type_of_notification,
+                    created_by=request.user,
+                    post_id=post_id,
+                    created_for=tag_user
+                )
+                
+                return notification

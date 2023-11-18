@@ -13,6 +13,7 @@ class Notification(models.Model):
     REJECTEDFRIENDREQUEST = 'rejected_relationship_request'
     POST_LIKE = 'post_like'
     POST_COMMENT = 'post_comment'
+    TAG_COMMENT = 'tag_comment'
     
     CHOICES_TYPE_OF_NOTIFICATION = (
         (NEWFRIENDREQUEST, 'New friendrequest'),
@@ -20,6 +21,7 @@ class Notification(models.Model):
         (REJECTEDFRIENDREQUEST, 'Rejected friendrequest'),
         (POST_LIKE, 'Post like'),
         (POST_COMMENT, 'Post comment'),
+        (TAG_COMMENT, 'Tag comment'),
         (NEWRELATIONSHIPREQUEST, 'Relationship request'),
     )
     

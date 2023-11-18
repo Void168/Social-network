@@ -1,6 +1,6 @@
 from .models import Notification
 
-from post.models import Post
+from post.models import Post, Comment
 from account.models import FriendshipRequest, RelationshipRequest
 
 def create_notification(request, type_of_notification, post_id=None, friendrequest_id=None, relationship_request_id=None):
@@ -30,6 +30,10 @@ def create_notification(request, type_of_notification, post_id=None, friendreque
         relationshiprequest = RelationshipRequest.objects.get(pk=relationship_request_id)
         created_for = relationshiprequest.created_for
         body = f'{request.user.name} đã đồng ý'
+    # elif type_of_notification == 'tag_comment':
+    #     body = f'{request.user.name} đã nhắc đến bạn trong một bình luận'
+    #     comment = Comment.objects.get(pk=comment_id)
+    #     created_for = comment.tags
     
     if request.user != created_for:
         notification = Notification.objects.create(

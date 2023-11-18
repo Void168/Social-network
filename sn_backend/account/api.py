@@ -202,7 +202,7 @@ def send_relationship_request(request, pk):
     check3 = RelationshipRequest.objects.filter(created_for=request.user).filter(created_by=user).filter(status=RelationshipRequest.REJECTED)
     check4 = RelationshipRequest.objects.filter(created_for=user).filter(created_by=request.user).filter(status=RelationshipRequest.REJECTED)
     
-    if received_user.partner == '':
+    if received_user.partner != '':
         return JsonResponse({'message': "don't be a third person"})
     if not check1 and not check2:
         relationship_request = RelationshipRequest.objects.create(created_for=user, created_by=request.user, relationship_type=relationship_type)

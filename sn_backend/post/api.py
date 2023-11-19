@@ -217,6 +217,10 @@ def post_delete(request, pk):
     post = Post.objects.filter(created_by=request.user).get(pk=pk)
     post.delete()
     
+    user = request.user
+    user.posts_count = user.posts_count - 1
+    user.save()
+    
     return JsonResponse({'message': 'post deleted'})
 
 @api_view(['POST'])

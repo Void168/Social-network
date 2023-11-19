@@ -23,5 +23,13 @@ export default defineConfig({
   },
   optimizeDeps: {
     exclude: ['js-big-decimal']
+  },
+  esbuild: {
+    supported: {
+      'top-level-await': true 
+    },
+  },
+  build: {
+    target: 'esnext'
   }
 })

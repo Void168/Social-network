@@ -1104,13 +1104,18 @@ export default (await import("vue")).defineComponent({
         this.errors.push("Tên đăng nhập trống");
       }
 
+      if(this.form.name.includes("^[\w.@+-]+\Z") || /\s/.test(this.form.name))
+      {
+        this.errors.push("Tên chi cho phép chứa các ký tự . hoặc _");
+      }
+
       if (this.errors.length === 0) {
         let formData = new FormData();
         formData.append("avatar", this.$refs.file.files[0]);
         formData.append("name", this.form.name);
         formData.append("nickname", this.userInfo.nickname);
         formData.append("email", this.form.email);
-        formData.append("gender", this.gender.name.name);
+        formData.append("gender", this.gender.name);
 
         axios
           .post("/api/edit-profile/", formData, {

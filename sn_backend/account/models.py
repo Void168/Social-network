@@ -4,6 +4,9 @@ from django.contrib.auth.models import AbstractBaseUser, PermissionsMixin, UserM
 from django.db import models
 from django.utils import timezone
 
+from django.core.validators import RegexValidator
+from django.contrib.auth.validators import UnicodeUsernameValidator
+
 # Create your models here.
 class CustomUserManager(UserManager):
     def _create_user(self, name, email, password, **extra_fields):
@@ -44,9 +47,14 @@ class PhoneNumber(models.Model):
     only_me = models.BooleanField(default=False)
 
 class User(AbstractBaseUser, PermissionsMixin):
+    username_validator = UnicodeUsernameValidator()
+    
+    
     id= models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
+    
     email = models.EmailField(blank=True, default='', unique=True)
-    name = models.CharField(blank=True, default='', max_length=255)
+    name = models.CharField(validators=[username_validator], blank=True, default='', max_length=255, unique=True)
+    display_name = models.CharField(blank=True, default=uuid.uuid1, max_length=255)
     avatar = models.ImageField(upload_to='avatars', blank=True, null=True)
     cover_image = models.ImageField(upload_to='cover_images', blank=True, null=True)
     biography = models.CharField(blank=True, default='', max_length=255)
@@ -90,6 +98,8 @@ class User(AbstractBaseUser, PermissionsMixin):
             return 'http://127.0.0.1:8000' + self.cover_image.url
         else: 
             return 'https://th.bing.com/th/id/OIP.o1n4kgruF-5cDCCx7jNYKQHaEo?pid=ImgDet&rs=1'
+    def get_displayed_name(self):
+        return f"user{self.display_name[:8]}"
     
 class FriendshipRequest(models.Model):
     SENT = 'sent'

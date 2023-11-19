@@ -118,6 +118,10 @@ export default {
         this.errors.push("Tên đăng nhập trống");
       }
 
+      if(this.form.name.includes("^[\w.@+-]+\Z") || /\s/.test(this.form.name))
+      {
+        this.errors.push("Tên chi cho phép chứa các ký tự . hoặc _");
+      }
       if (this.form.password1 === "") {
         this.errors.push("Mật khẩu trống");
       }

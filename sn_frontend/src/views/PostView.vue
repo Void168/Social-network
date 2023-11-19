@@ -219,7 +219,7 @@ export default {
     getTag(friend) {
       const commentContent = this.$refs.content;
       this.queries[this.queries.length - 1] = friend.name;
-      commentContent.innerHTML = commentContent.innerHTML + friend.name;
+      commentContent.innerHTML = commentContent.innerHTML.slice(0, commentContent.innerHTML.lastIndexOf('@') + 1) + friend.name;
       this.tagInfo = friend;
       this.tags.push(this.tagInfo);
 

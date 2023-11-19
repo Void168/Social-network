@@ -35,7 +35,6 @@ def create_notification(request, type_of_notification, post_id=None, friendreque
         comment = Comment.objects.get(pk=comment_id)
         for tag in comment.tags:
             tag_user = User.objects.get(id=tag['id'])
-            print(tag_user)
             created_for = tag_user
     
     if request.user != created_for:

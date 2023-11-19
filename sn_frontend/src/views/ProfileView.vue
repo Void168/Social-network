@@ -475,9 +475,9 @@ export default {
       axios
         .get(`/api/posts/profile/${this.$route.params.id}/`)
         .then((res) => {
+          console.log(res.data);
           this.postsList = res.data.posts;
           this.user = res.data.user;
-          console.log(this.user);
           this.can_send_friendship_request =
             res.data.can_send_friendship_request;
           this.posts = res.data.posts.slice(0, this.PostToShow);

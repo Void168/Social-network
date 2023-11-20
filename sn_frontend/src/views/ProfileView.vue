@@ -30,8 +30,16 @@
           </div>
         </div>
         <div>
-          <button @click="openContactModal" class="dark:text-neutral-200 bg-slate-200 dark:bg-slate-800 px-4 py-2 shadow-md rounded-md hover:bg-slate-300 dark:hover:bg-slate-900 transition">Thông tin liên lạc</button>
-          <ContactModal :show="contactIsOpen" @closeContactModal="closeContactModal"/>
+          <button
+            @click="openContactModal"
+            class="dark:text-neutral-200 bg-slate-200 dark:bg-slate-800 px-4 py-2 shadow-md rounded-md hover:bg-slate-300 dark:hover:bg-slate-900 transition"
+          >
+            Thông tin liên lạc
+          </button>
+          <ContactModal
+            :show="contactIsOpen"
+            @closeContactModal="closeContactModal"
+          />
         </div>
       </div>
       <hr class="col-span-3" />
@@ -42,12 +50,24 @@
         >
           <div
             class="icon relative w-[200px] h-[100px] bg-gray-100 dark:bg-slate-700 rounded-bl-[100px] rounded-br-[100px] before:content-[''] after:content-[''] before:absolute after:absolute before:top-0 after:top-0 before:left-[-50px] before:w-[55px] before:h-[35px] before:bg-transparent before:rounded-tr-[50px] before:shadow-[20px_-20px_0_20px_rgba(243,244,246,1)] after:right-[-50px] after:w-[55px] after:h-[35px] after:bg-transparent after:rounded-tl-[50px] after:shadow-[-20px_-20px_0_20px_rgba(243,244,246,1)] before:dark:shadow-[20px_-20px_0_20px_rgba(51,65,85,1)] after:dark:shadow-[-20px_-20px_0_20px_rgba(51,65,85,1)]"
-          ></div>
+          >
+            <span
+              @click="openAvatarModal"
+              class="mb-6 rounded-full w-8 h-8 shadow-xl absolute flex justify-center items-center top-16 right-6 z-10 bg-neutral-200 dark:bg-slate-700 hover:ring-2 hover:ring-slate-300 dark:hover:ring-slate-500 transition cursor-pointer"
+            >
+              <CameraIcon class="dark:text-neutral-200 w-5 h-5 dark:hover:text-neutral-300 hover:text-slate-700 transition" />
+            </span>
+          </div>
           <img
             :src="user.get_avatar"
             alt=""
             class="mb-6 rounded-full w-44 h-44 shadow-xl absolute top-0 z-5"
           />
+          <AvatarModal
+            :show="avatarIsOpen"
+            @closeAvatarModal="closeAvatarModal"
+          />
+
           <p>
             <strong class="text-2xl">{{ user.name }}</strong>
           </p>
@@ -266,9 +286,11 @@ import FeedItem from "../components/items/FeedItem.vue";
 import PostToForm from "../components/forms/PostToForm.vue";
 import CoverImage from "../components/CoverImage.vue";
 import ImageShowcase from "../components/items/ImageShowcase.vue";
-import ContactModal from "../components/modals/ContactModal.vue";
 import SkeletonLoadingPostVue from "../components/loadings/SkeletonLoadingPost.vue";
 import getUserInfo from "../api/getUserInfo";
+
+import ContactModal from "../components/modals/ContactModal.vue";
+import AvatarModal from "../components/modals/AvatarModal.vue";
 
 import {
   ClockIcon,
@@ -277,6 +299,7 @@ import {
   UserGroupIcon,
   MapPinIcon,
   HomeIcon,
+  CameraIcon,
 } from "@heroicons/vue/24/solid";
 
 import { onMounted, ref } from "vue";
@@ -320,7 +343,9 @@ export default {
     MapPinIcon,
     UserGroupIcon,
     HomeIcon,
-    ContactModal
+    CameraIcon,
+    ContactModal,
+    AvatarModal,
   },
 
   data() {
@@ -343,6 +368,7 @@ export default {
       relationshipRequest: {},
       images: [],
       contactIsOpen: false,
+      avatarIsOpen: false,
     };
   },
 
@@ -475,7 +501,7 @@ export default {
       axios
         .get(`/api/posts/profile/${this.$route.params.id}/`)
         .then((res) => {
-          console.log(res.data);
+          // console.log(res.data);
           this.postsList = res.data.posts;
           this.user = res.data.user;
           this.can_send_friendship_request =
@@ -523,11 +549,18 @@ export default {
         });
     },
 
-    openContactModal(){
-      this.contactIsOpen = true
+    openContactModal() {
+      this.contactIsOpen = true;
     },
-    closeContactModal(){
-      this.contactIsOpen = false
+    closeContactModal() {
+      this.contactIsOpen = false;
+    },
+
+    openAvatarModal() {
+      this.avatarIsOpen = true;
+    },
+    closeAvatarModal() {
+      this.avatarIsOpen = false;
     },
 
     handleRequest(status, pk) {

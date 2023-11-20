@@ -394,7 +394,7 @@
             <p v-for="error in errors" v-bind:key="error">{{ error }}</p>
           </div>
         </template>
-        <form action="" class="space-y-6" v-on:submit.prevent="submitForm">
+        <form action="" class="space-y-6 flex flex-col" v-on:submit.prevent="submitForm">
           <div>
             <label for="">Tên người dùng</label>
             <input
@@ -438,10 +438,6 @@
               class="hover:underline flex justify-end"
               >Đổi mật khẩu</RouterLink
             >
-          </div>
-          <div class="flex flex-col">
-            <label class="text-center">Ảnh đại diện</label>
-            <input type="file" ref="file" />
           </div>
           <div class="flex items-center justify-center">
             <button class="w-full btn">Lưu thay đổi</button>
@@ -548,7 +544,6 @@
         </div>
       </div>
     </div>
-    <!-- <p class="text-neutral-200">{{ userInfo }}</p> -->
   </div>
 </template>
 
@@ -678,7 +673,6 @@ export default (await import("vue")).defineComponent({
       form: {
         email: this.userStore.user.email,
         name: this.userStore.user.name,
-        avatar: null,
       },
       biographyForm: {
         content: this.userInfo.biography,
@@ -745,7 +739,8 @@ export default (await import("vue")).defineComponent({
 
   methods: {
     selectGender() {
-      console.log(this.gender);
+      // console.log(this.gender);
+      this.userInfo.gender = this.gender.name.name
     },
     getUserInfo() {
       axios
@@ -1111,11 +1106,10 @@ export default (await import("vue")).defineComponent({
 
       if (this.errors.length === 0) {
         let formData = new FormData();
-        formData.append("avatar", this.$refs.file.files[0]);
         formData.append("name", this.form.name);
         formData.append("nickname", this.userInfo.nickname);
         formData.append("email", this.form.email);
-        formData.append("gender", this.gender.name);
+        formData.append("gender", this.userInfo.gender);
 
         axios
           .post("/api/edit-profile/", formData, {
@@ -1135,7 +1129,7 @@ export default (await import("vue")).defineComponent({
                 id: this.userStore.user.id,
                 name: this.form.name,
                 email: this.form.email,
-                avatar: res.data.user.get_avatar,
+                avatar: this.userInfo.get_avatar
               });
 
               this.$router.go(0);

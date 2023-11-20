@@ -50,6 +50,7 @@
           :privacies="privacies"
           v-model="privacy"
           :phoneNumber="phoneNumber"
+          class="w-full"
         />
       </div>
       <button

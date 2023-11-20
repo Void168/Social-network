@@ -49,6 +49,7 @@
           :privacies="privacies"
           v-model="privacy"
           :website="website"
+          class="w-full"
         />
       </div>
       <button
@@ -153,7 +154,7 @@ export default (await import("vue")).defineComponent({
         this.is_private = true;
         this.only_me = true;
       }
-      console.log(this.privacy.name);
+      // console.log(this.privacy.name);
     },
     editWebsite() {
       this.edit = !this.edit;

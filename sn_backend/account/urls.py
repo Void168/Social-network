@@ -14,6 +14,7 @@ urlpatterns = [
     path('set-biography/', api.set_biography, name='set_biography'),
     path('delete-relationship/', api.delete_relationship, name='delete_relationship'),
     path('edit-cover-image/', api.edit_cover_image, name='edit_cover_image'),
+    path('edit-avatar/', api.edit_avatar, name='edit_avatar'),
     path('edit-password/', api.edit_password, name='edit_password'),
     path('friends/<uuid:pk>/', api.friends, name='friends'),
     path('relationship/<uuid:pk>/', api.relationship, name='relationship'),

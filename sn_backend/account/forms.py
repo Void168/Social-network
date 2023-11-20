@@ -11,7 +11,12 @@ class SignupForm(UserCreationForm):
 class ProfileForm(forms.ModelForm):
     class Meta:
         model = User
-        fields = ('email', 'name', 'avatar', 'nickname','gender',)
+        fields = ('email', 'name', 'nickname','gender',)
+
+class AvatarForm(forms.ModelForm):
+    class Meta:
+        model = User
+        fields = ('avatar',)
 
 class CoverImageForm(forms.ModelForm):
     class Meta:

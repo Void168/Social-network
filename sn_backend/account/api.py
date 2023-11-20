@@ -7,7 +7,7 @@ from rest_framework.decorators import api_view, authentication_classes, permissi
 
 from notification.utils import create_notification
 
-from .forms import SignupForm, ProfileForm, CoverImageForm, RelationshipForm, BiographyForm, HomeTownForm, LivingCityForm
+from .forms import SignupForm, ProfileForm, CoverImageForm, AvatarForm, RelationshipForm, BiographyForm, HomeTownForm, LivingCityForm
 from .models import User, FriendshipRequest, RelationshipRequest
 from .serializers import UserSerializer, FriendshipRequestSerializer, RelationshipRequestSerializer
 
@@ -91,11 +91,14 @@ def user_info(request, pk):
 def edit_profile(request):
     user = request.user
     email = request.data.get('email')
+    name = request.data.get('name')
     
     if User.objects.exclude(id=user.id).filter(email=email).exists():
         return JsonResponse({'message': 'Email đã được đăng ký. Vui lòng thử lại'})
+    if User.objects.exclude(id=user.id).filter(name=name).exists():
+        return JsonResponse({'message': 'Tên đã được sử dụng. Vui lòng thử lại'})
     else:
-        form = ProfileForm(request.POST, request.FILES, instance=user)
+        form = ProfileForm(request.POST, instance=user)
         
         if form.is_valid():
             form.save()
@@ -286,6 +289,19 @@ def edit_cover_image(request):
     serializer = UserSerializer(user)
     
     return JsonResponse({'message': 'cover image updated'})
+
+@api_view(['POST'])
+def edit_avatar(request):
+    user = request.user
+    
+    form = AvatarForm(request.POST, request.FILES, instance=user)
+    
+    if form.is_valid:
+        form.save()
+    
+    serializer = UserSerializer(user)
+    
+    return JsonResponse({'message': 'avatar updated'})
 
 @api_view(['POST'])
 def edit_password(request):

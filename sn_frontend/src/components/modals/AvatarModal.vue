@@ -14,7 +14,7 @@
       </TransitionChild>
 
       <div class="fixed inset-0 top-36 overflow-y-auto">
-        <div class="flex min-h-[90%] justify-center p-4">
+        <div class="flex min-h-[80%] justify-center p-4">
           <TransitionChild
             as="template"
             enter="duration-300 ease-out"
@@ -86,9 +86,9 @@
                 <form
                   v-on:submit.prevent="submitForm"
                   method="post"
-                  class="right-0 bottom-2"
+                  class="right-0 bottom-2 w-full flex flex-col items-center"
                 >
-                  <div class="p-4 flex justify-end">
+                  <div class="p-4 flex justify-center">
                     <label for="avatar-image">
                       <div
                         class="py-3 px-6 text-white bg-gray-400 font-semibold rounded-lg transition-colors hover:bg-gray-600 dark:hover:bg-gray-500 cursor-pointer"
@@ -105,6 +105,13 @@
                       />
                     </label>
                   </div>
+                  <textarea
+                    v-model="body"
+                    class="p-4 w-[50%] bg-gray-100 rounded-lg resize-none"
+                    cols="30"
+                    rows="3"
+                    placeholder="Mô tả về ảnh đại diện..."
+                  ></textarea>
                 </form>
               </div>
 
@@ -138,25 +145,6 @@
                   ></span>
                 </span>
                 <span class="text-lg">Chia sẻ lên trang cá nhân</span>
-              </div>
-              <hr />
-              <div class="my-4">
-                <p class="text-2xl">Ảnh đã tải lên</p>
-                <div class="grid grid-cols-6 gap-3 mt-4">
-                  <div
-                    v-for="image in images"
-                    :key="image.id"
-                    class="col-span-1"
-                  >
-                    <img
-                      :src="image.attachments[0].get_image"
-                      class="h-36 cursor-pointer hover:ring-2 hover:ring-slate-500 dark:hover:ring-neutral-200 transition"
-                      @click="
-                        chooseExistedImage(image.attachments[0].get_image)
-                      "
-                    />
-                  </div>
-                </div>
               </div>
             </DialogPanel>
           </TransitionChild>
@@ -221,7 +209,10 @@ export default (await import("vue")).defineComponent({
         { name: "Chỉ mình tôi" },
       ],
       privacy: {},
-      share: false,
+      share: true,
+      is_private: false,
+      only_me: false,
+      body: "",
     };
   },
 
@@ -255,6 +246,7 @@ export default (await import("vue")).defineComponent({
     },
 
     chooseExistedImage(url) {
+      this.chooseImage = true;
       this.url = url;
     },
 
@@ -288,17 +280,16 @@ export default (await import("vue")).defineComponent({
             },
           })
           .then((res) => {
+            
             if (res.data.message === "avatar updated") {
-                console.log(res.data)
+              // console.log(res.data);
+              console.log(this.share)
               this.toastStore.showToast(
                 5000,
                 "Thay đổi ảnh đại diện thành công.",
                 "bg-emerald-500 text-white"
               );
               localStorage.setItem("user.avatar", this.url);
-              setTimeout(() => {
-                this.$router.go(0);
-              }, 1500);
             } else {
               this.toastStore.showToast(
                 5000,
@@ -306,6 +297,45 @@ export default (await import("vue")).defineComponent({
                 "bg-rose-400 text-white"
               );
             }
+
+            if (this.share === true) {
+              let form = new FormData();
+
+              form.append("image", this.$refs.avatar.files[0]);
+              form.append("body", this.body);
+              form.append("is_private", this.is_private);
+              form.append("only_me", this.only_me);
+              form.append("is_avatar_post", this.share)
+
+              axios
+                .post("/api/posts/create/", form, {
+                  headers: {
+                    "Content-Type": "multipart/form-data",
+                  },
+                })
+                .then((res) => {
+                  console.log("data", res.data);
+
+                  this.body = "";
+                  this.$refs.file.value = null;
+                  this.is_private = false;
+                  this.only_me = false;
+                  this.share = false;
+                  this.url = null;
+
+                  if (this.user) {
+                    this.user.posts_count += 1;
+                  }
+                })
+                .catch((error) => {
+                  console.log("error", error);
+                });
+            }
+
+            setTimeout(() => {
+                this.$router.go(0);
+              }, 1500);
+
           })
           .catch((error) => {
             console.log("error", error);

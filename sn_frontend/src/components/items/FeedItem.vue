@@ -1,8 +1,8 @@
 <template>
   <div class="relative">
     <div class="mb-6 flex items-center justify-between">
-      <div class="flex items-center space-x-6">
-        <img :src="post.created_by.get_avatar" class="w-10 h-10 rounded-full" />
+      <div class="flex items-center space-x-6 p-4">
+        <img :src="post.created_by.get_avatar" class="w-12 h-12 rounded-full" />
 
         <div class="flex gap-1 items-center">
           <strong>
@@ -21,29 +21,47 @@
             </strong>
           </div>
 
-          <GlobeAsiaAustraliaIcon
-            class="w-4 h-4"
-            v-if="post.is_private === false && post.only_me === false"
-          />
-          <UserGroupIcon
-            class="w-4 h-4"
-            v-else-if="post.is_private === true && post.only_me === false"
-          />
-          <LockClosedIcon
-            class="w-4 h-4"
-            v-else-if="post.is_private === true && post.only_me === true"
-          />
+          <span v-if="post.is_avatar_post === true"
+            >đã thay đổi ảnh đại diện</span
+          >
         </div>
       </div>
-
-      <p class="text-gray-600 dark:text-neutral-200">
-        {{ post.created_at_formatted }} trước
-      </p>
+      <div class="p-4 flex items-center gap-2">
+        <GlobeAsiaAustraliaIcon
+          class="w-5 h-5"
+          v-if="post.is_private === false && post.only_me === false"
+        />
+        <UserGroupIcon
+          class="w-5 h-5"
+          v-else-if="post.is_private === true && post.only_me === false"
+        />
+        <LockClosedIcon
+          class="w-5 h-5"
+          v-else-if="post.is_private === true && post.only_me === true"
+        />
+        <p class="text-gray-600 dark:text-neutral-200">
+          {{ post.created_at_formatted }} trước
+        </p>
+      </div>
     </div>
 
-    <p>{{ post.body }}</p>
+    <p class="px-4 text-lg">{{ post.body }}</p>
 
-    <div v-if="post.attachments?.length" class="mt-4">
+    <div v-if="post.attachments?.length && post.is_avatar_post" class="mt-4 flex justify-center relative h-[400px]">
+      <div class="w-full">
+        <img :src="post.created_by.get_cover_image" alt="cover_image" class="max-h-[300px] w-full rounded-none">
+      </div>
+
+      <img
+        v-for="image in post.attachments"
+        v-bind:key="image.id"
+        :src="image.get_image"
+        class="absolute top-5 mb-4 rounded-full w-96 h-96 shadow-md ring-8 ring-white dark:ring-slate-700"
+        alt="avatar"
+      />
+    </div>
+
+    <div v-else class="mt-4 px-4">
       <img
         v-for="image in post.attachments"
         v-bind:key="image.id"
@@ -52,7 +70,7 @@
       />
     </div>
 
-    <div class="my-6 flex justify-between">
+    <div class="p-4 my-6 flex justify-between">
       <div class="flex space-x-6">
         <div class="flex items-center space-x-2">
           <HeartLike
@@ -93,7 +111,7 @@
         </div>
       </div>
       <div
-        class="absolute bg-emerald-400 right-0 shadow-lg rounded-lg ease-in duration-300"
+        class="absolute bg-emerald-400 right-4 shadow-lg rounded-lg ease-in duration-300"
       >
         <Menu as="div" class="relative inline-block text-left">
           <div>

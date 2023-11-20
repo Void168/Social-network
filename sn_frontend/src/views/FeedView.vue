@@ -5,7 +5,7 @@
         <PostForm v-bind:user="null" v-bind:posts="posts" />
         <div>
           <div
-            class="p-4 bg-white border border-gray-200 dark:bg-slate-700 dark:border-slate-800 dark:text-neutral-200 rounded-lg mt-4 shadow-sm"
+            class="bg-white border border-gray-200 dark:bg-slate-700 dark:border-slate-800 dark:text-neutral-200 rounded-lg mt-4 shadow-sm"
             v-for="post in posts"
             v-bind:key="post.id"
           >

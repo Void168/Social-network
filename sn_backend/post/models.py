@@ -49,6 +49,7 @@ class Post(models.Model):
     is_private = models.BooleanField(default=False)
     only_me = models.BooleanField(default=False)
     
+    is_avatar_post = models.BooleanField(default=False)
     
     likes = models.ManyToManyField(Like , blank=True)
     likes_count = models.IntegerField(default=0)

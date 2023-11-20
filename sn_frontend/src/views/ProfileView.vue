@@ -258,7 +258,7 @@
         <p class="font-semibold text-2xl">Bài viết của {{ user.name }}</p>
         <div v-if="posts?.length">
           <div
-            class="p-4 bg-white border border-gray-200 rounded-lg mt-4 dark:bg-slate-700 dark:border-slate-800 dark:text-neutral-200"
+            class=" bg-white border border-gray-200 rounded-lg mt-4 dark:bg-slate-700 dark:border-slate-800 dark:text-neutral-200"
             v-for="post in posts"
             v-bind:key="post.id"
           >
@@ -287,7 +287,6 @@ import PostToForm from "../components/forms/PostToForm.vue";
 import CoverImage from "../components/CoverImage.vue";
 import ImageShowcase from "../components/items/ImageShowcase.vue";
 import SkeletonLoadingPostVue from "../components/loadings/SkeletonLoadingPost.vue";
-import getUserInfo from "../api/getUserInfo";
 
 import ContactModal from "../components/modals/ContactModal.vue";
 import AvatarModal from "../components/modals/AvatarModal.vue";
@@ -302,7 +301,6 @@ import {
   CameraIcon,
 } from "@heroicons/vue/24/solid";
 
-import { onMounted, ref } from "vue";
 
 import { RouterLink } from "vue-router";
 
@@ -313,17 +311,10 @@ export default {
   setup() {
     const userStore = useUserStore();
     const toastStore = useToastStore();
-    const userInfo = ref({});
-
-    onMounted(async () => {
-      const res = await getUserInfo(userStore.user.id);
-      userInfo.value = res;
-    });
 
     return {
       userStore,
       toastStore,
-      userInfo,
     };
   },
   name: "FeedView",
@@ -501,7 +492,7 @@ export default {
       axios
         .get(`/api/posts/profile/${this.$route.params.id}/`)
         .then((res) => {
-          // console.log(res.data);
+          console.log(res.data);
           this.postsList = res.data.posts;
           this.user = res.data.user;
           this.can_send_friendship_request =

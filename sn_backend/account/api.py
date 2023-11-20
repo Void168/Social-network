@@ -293,9 +293,8 @@ def edit_cover_image(request):
 @api_view(['POST'])
 def edit_avatar(request):
     user = request.user
-    
+
     form = AvatarForm(request.POST, request.FILES, instance=user)
-    
     if form.is_valid:
         form.save()
     

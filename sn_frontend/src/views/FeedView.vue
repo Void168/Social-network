@@ -1,6 +1,7 @@
 <template>
-  <div class="max-w-7xl mx-auto grid grid-cols-4 gap-4" id="feed-frame">
-    <div class="main-center col-span-3 space-y-4">
+  <div class="grid grid-cols-6 gap-4" id="feed-frame">
+    <div class="col-span-1"></div>
+    <div class="mx-auto w-[70%] main-center col-span-4 space-y-4">
       <div class="p-4 bg-white border border-gray-200 dark:bg-slate-600 dark:border-slate-700 dark:text-neutral-200 rounded-lg">
         <PostForm v-bind:user="null" v-bind:posts="posts" />
         <div>
@@ -19,9 +20,10 @@
         </div>
       </div>
     </div>
-    <div class="main-right col-span-1 space-y-4">
+    <div class="main-right col-span-1 space-y-4 sticky top-[155px] h-[900px] z-9">
       <PeopleYouMayKnow />
       <Trends />
+      <ChatContainer />
     </div>
   </div>
 </template>
@@ -30,6 +32,8 @@
 import axios from "axios";
 import PeopleYouMayKnow from "../components/PeopleYouMayKnow.vue";
 import Trends from "../components/Trends.vue";
+import ChatContainer from "../components/ChatContainer.vue";
+
 import PostForm from "../components/forms/PostForm.vue";
 import FeedItem from "../components/items/FeedItem.vue";
 import SkeletonLoadingPostVue from '../components/loadings/SkeletonLoadingPost.vue';
@@ -41,7 +45,8 @@ export default {
     Trends,
     FeedItem,
     PostForm,
-    SkeletonLoadingPostVue
+    SkeletonLoadingPostVue,
+    ChatContainer
   },
 
   data() {

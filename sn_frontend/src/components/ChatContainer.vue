@@ -26,7 +26,7 @@
     </div>
     <div class="absolute bottom-0 right-0">
       <div class="flex flex-col" v-for="friend in chats" :key="friend.id">
-        <ChatBubble :friend="friend" />
+        <ChatBubble :friend="friend" @openChatWindow="openChatWindow(friend)" />
       </div>
     </div>
   </div>
@@ -94,7 +94,6 @@ export default (await import("vue")).defineComponent({
       body: "",
       friends: [],
       isMini: false,
-      userAvatar: "",
       conversation: {},
     };
   },
@@ -114,8 +113,6 @@ export default (await import("vue")).defineComponent({
       axios
         .get(`/api/friends/${this.userStore.user.id}/`)
         .then((res) => {
-          console.log(res.data);
-
           this.friendshipRequests = res.data.requests;
           this.friends = res.data.friends;
         })
@@ -124,14 +121,10 @@ export default (await import("vue")).defineComponent({
         });
     },
     miniatureChat(friend) {
-        this.friendsChat = this.friendsChat?.filter((bbc) => bbc !== friend);
+      this.friendsChat = this.friendsChat?.filter((fc) => fc !== friend);
       if (!this.bubbleChats?.includes(friend)) {
-        this.bubbleChats?.push(friend);
+        this.bubbleChats?.reverse().push(friend);
       }
-
-      this.userAvatar = friend.get_avatar;
-      console.log(this.bubbleChats);
-      console.log(this.friendsChat);
     },
     getFriendId(friend) {
       axios
@@ -144,13 +137,37 @@ export default (await import("vue")).defineComponent({
         this.friendsChat?.push(friend);
       }
       if (this.bubbleChats?.includes(friend)) {
-        this.bubbleChats = this.bubbleChats?.filter((bbc) => bbc !== friend);
+        this.bubbleChats = this.bubbleChats
+          ?.filter((bbc) => bbc !== friend)
+          .reverse();
       }
-      console.log(this.bubbleChats); //all
-      console.log(this.friendsChat); //null
+      if (
+        this.friendsChat.length > 3 &&
+        !this.bubbleChats?.includes(this.friendsChat[0])
+      ) {
+        this.bubbleChats?.reverse().push(this.friendsChat[0]);
+        this.friendsChat?.reverse().pop()
+      }
+    },
+    openChatWindow(friend) {
+      if (!this.friendsChat?.includes(friend)) {
+        this.friendsChat?.push(friend);
+      }
+      if (this.bubbleChats?.includes(friend)) {
+        this.bubbleChats = this.bubbleChats
+          ?.filter((bbc) => bbc !== friend)
+          .reverse();
+      }
+      if (
+        this.friendsChat.length > 3 &&
+        !this.bubbleChats?.includes(this.friendsChat[0])
+      ) {
+        this.bubbleChats?.reverse().push(this.friendsChat[0]);
+        this.friendsChat?.reverse().pop()
+      }
     },
     removeFriendChat(friend) {
-      this.friendsChat = this.friendsChat?.filter((bbc) => bbc !== friend);
+      this.friendsChat = this.friendsChat?.filter((fc) => fc !== friend);
       this.bubbleChats = this.bubbleChats?.filter((bbc) => bbc !== friend);
     },
     removeBubbleChat(friend) {

@@ -38,6 +38,32 @@ def conversation_get_or_create(request, user_pk):
     
     return JsonResponse(serializer.data, safe=False)
 
+@api_view(['GET'])
+def conversation_create(request, user_pk):
+    user = User.objects.get(pk=user_pk)
+
+    conversations = Conversation.objects.filter(users__in=list([request.user])).filter(users__in=list([user]))
+
+    conversation = Conversation.objects.create()
+    conversation.users.add(user, request.user)
+    conversation.save()
+
+    serializer = ConversationDetailSerializer(conversation)
+    
+    return JsonResponse(serializer.data, safe=False)
+
+@api_view(['GET'])
+def conversation_get(request, user_pk):
+    user = User.objects.get(pk=user_pk)
+
+    conversations = Conversation.objects.filter(users__in=list([request.user])).filter(users__in=list([user]))
+
+    conversation = conversations.first()
+
+    serializer = ConversationDetailSerializer(conversation)
+    
+    return JsonResponse(serializer.data, safe=False)
+
 @api_view(['POST'])
 def conversation_send_message(request, pk):
     conversation = Conversation.objects.filter(users__in=list([request.user])).get(pk=pk)

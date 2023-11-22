@@ -3,6 +3,8 @@ from django.http import JsonResponse
 from rest_framework.decorators import api_view, authentication_classes, permission_classes
 from django.db.models import Q
 
+from .forms import MessageForm, AttachmentForm
+
 from account.models import User
 from .models import Conversation, ConversationMessage, SeenUser
 from .serializers import ConversationSerializer, ConversationDetailSerializer, ConversationMessageSerializer, SeenUserSerializer
@@ -67,25 +69,42 @@ def conversation_get(request, user_pk):
 
 @api_view(['POST'])
 def conversation_send_message(request, pk):
+    form = MessageForm(request.POST)
+    attachment = None
+    attachment_form = AttachmentForm(request.POST, request.FILES)
+    
     conversation = Conversation.objects.filter(users__in=list([request.user])).get(pk=pk)
     seenUser = SeenUser.objects.create(created_by=request.user)
     
-    for user in conversation.users.all():
-        if user != request.user:
-            sent_to = user
+    if attachment_form.is_valid():
+        attachment = attachment_form.save(commit=False)
+        attachment.created_by = request.user
+        attachment.save()
 
-    conversation_message = ConversationMessage.objects.create(
-        conversation=conversation,
-        body=request.data.get('body'),
-        created_by=request.user,
-        sent_to=sent_to,
-    )
+    if form.is_valid():
+        message = form.save(commit=False)
+        message.created_by = request.user
+        message.conversation = conversation
+        for user in conversation.users.all():
+            if user != request.user:
+                sent_to = user
+                message.sent_to = sent_to
+                
+        message.save()
+        
+        if attachment:
+            message.attachments.add(attachment)
+            message.save()
+        
+        message.seen_by.add(seenUser)
+        message.save()
+
+        serializer = ConversationMessageSerializer(message)
+
+        return JsonResponse(serializer.data, safe=False)
+    else:
+        return JsonResponse({'error': 'add something here later!...'})
     
-    conversation_message.seen_by.add(seenUser)
-
-    serializer = ConversationMessageSerializer(conversation_message)
-
-    return JsonResponse(serializer.data, safe=False)
 
 @api_view(['POST'])
 def set_seen(request, pk):

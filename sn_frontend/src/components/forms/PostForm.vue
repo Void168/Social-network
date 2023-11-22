@@ -82,10 +82,10 @@
 
       <div
         id="preview"
-        v-if="url"
+        v-if="urlPost"
         class="flex relative justify-center items-center w-full p-4 border-[1px] rounded-lg"
       >
-        <img :src="url" class="w-full rounded-lg" />
+        <img :src="urlPost" class="w-full rounded-lg" />
         <span class="absolute top-5 right-5 cursor-pointer" @click="removeImage"
           ><svg
             xmlns="http://www.w3.org/2000/svg"
@@ -172,7 +172,7 @@ export default {
   data() {
     return {
       body: "",
-      url: null,
+      urlPost: null,
       is_private: false,
       only_me: false,
       privacy: [
@@ -204,11 +204,11 @@ export default {
     },
     onFileChange(e) {
       const file = e.target.files[0];
-      this.url = URL.createObjectURL(file);
+      this.urlPost = URL.createObjectURL(file);
     },
 
     removeImage() {
-      this.url = null;
+      this.urlPost = null;
     },
     submitForm() {
       console.log("submitForm", this.body);
@@ -233,7 +233,7 @@ export default {
           this.$refs.file.value = null;
           this.is_private = false;
           this.only_me = false;
-          this.url = null;
+          this.urlPost = null;
 
           if (this.user) {
             this.user.posts_count += 1;

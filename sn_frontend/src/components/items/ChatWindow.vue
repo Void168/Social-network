@@ -1,7 +1,7 @@
 <template>
   <div
     v-if="isOpen"
-    class="flex flex-col h-[480px] w-[400px] bg-slate-200 dark:bg-slate-500 rounded-t-lg"
+    class="relative flex flex-col h-[480px] w-[400px] bg-slate-200 dark:bg-slate-500 rounded-t-lg"
   >
     <div
       class="h-16 border-b-2 border-slate-400 dark:border-slate-300 flex justify-between"
@@ -33,7 +33,7 @@
       </div>
     </div>
     <div
-      class="h-[346px] p-4 overflow-y-scroll scrollbar-none scrollbar scrollbar-corner-slate-200 hover:scrollbar-thin scrollbar-thumb-slate-400 scrollbar-track-slate-800 border border-gray-200 shadow-md dark:bg-slate-600 dark:border-slate-700 dark:text-neutral-200"
+      class="h-[346px] p-4 overflow-y-scroll scrollbar-corner-slate-200 scrollbar-thin scrollbar-thumb-slate-400 scrollbar-track-slate-800 border border-gray-200 shadow-md dark:bg-slate-600 dark:border-slate-700 dark:text-neutral-200"
     >
       <div class="flex flex-col flex-grow p-4 overflow-y-auto">
         <div v-if="activeConversation.messages?.length > 0">
@@ -49,11 +49,29 @@
               <div class="flex gap-2">
                 <div>
                   <div
+                    v-if="message.body && !message.attachments.length"
                     class="bg-blue-600 dark:bg-blue-500 text-white p-3 shadow-md rounded-full px-4"
                   >
                     <p class="text-sm">
                       {{ message.body }}
                     </p>
+                  </div>
+                  <div v-if="message.attachments.length > 0">
+                    <div
+                      v-if="message.body"
+                      class="bg-blue-600 dark:bg-blue-500 text-white p-3 shadow-md rounded-t-lg"
+                    >
+                      <p class="text-sm">
+                        {{ message.body }}
+                      </p>
+                    </div>
+                    <img
+                      v-if="message.attachments.length > 0"
+                      :src="message?.attachments[0]?.get_image"
+                      :class="
+                        message.body ? 'w-48 h-40 rounded-t-none' : 'w-48 h-40'
+                      "
+                    />
                   </div>
                 </div>
               </div>
@@ -162,6 +180,29 @@
       </div>
     </div>
     <div
+        id="preview"
+        v-if="url"
+        class="flex relative items-center p-4 shadow-md rounded-b-md bg-slate-100 dark:bg-slate-700"
+      >
+        <img :src="url" class="w-20 h-20 rounded-lg border-[1px] border-slate-200 bg-slate-300 dark:border-slate-500 p-1" />
+        <span class="absolute top-5 right-5 cursor-pointer" @click="removeImage"
+          ><svg
+            xmlns="http://www.w3.org/2000/svg"
+            fill="none"
+            viewBox="0 0 24 24"
+            stroke-width="1.5"
+            stroke="currentColor"
+            class="w-8 h-8"
+          >
+            <path
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              d="M9.75 9.75l4.5 4.5m0-4.5l-4.5 4.5M21 12a9 9 0 11-18 0 9 9 0 0118 0z"
+            />
+          </svg>
+        </span>
+      </div>
+    <div
       class="relative h-16 p-4 border-t-2 border-slate-400 dark:border-slate-300"
     >
       <span class="absolute right-12 p-4 top-2 z-10">
@@ -195,9 +236,22 @@
           <PlusCircleIcon
             class="w-8 h-8 cursor-pointer rounded-full text-emerald-300 hover:bg-slate-600 transition p-1"
           />
-          <PhotoIcon
-            class="w-8 h-8 cursor-pointer rounded-full text-emerald-300 hover:bg-slate-600 transition p-1"
-          />
+          <div class="relative cursor-pointer">
+            <label for="image">
+              <PhotoIcon
+                class="w-8 h-8 cursor-pointer rounded-full text-emerald-300 hover:bg-slate-600 transition p-1"
+              />
+
+              <input
+                type="file"
+                ref="fileMessage"
+                id="image"
+                name="image"
+                hidden
+                @change="onFileChange"
+              />
+            </label>
+          </div>
           <GifIcon
             class="w-8 h-8 cursor-pointer rounded-full text-emerald-300 hover:bg-slate-600 transition p-1"
           />
@@ -212,7 +266,7 @@
             rows="1"
             placeholder="Bạn muốn nói điều gì?"
           ></textarea>
-          <button class="" type="submit">
+          <button type="submit">
             <PaperAirplaneIcon
               class="w-8 h-8 cursor-pointer rounded-full text-emerald-300 hover:bg-slate-600 transition p-1"
             />
@@ -284,6 +338,7 @@ export default (await import("vue")).defineComponent({
       body: "",
       isOpen: true,
       activeConversation: {},
+      url: null,
     };
   },
 
@@ -312,8 +367,16 @@ export default (await import("vue")).defineComponent({
           console.log("error", error);
         });
     },
+    onFileChange(e) {
+      const file = e.target.files[0];
+      this.url = URL.createObjectURL(file);
+    },
+
+    removeImage() {
+      this.url = null;
+    },
     submitForm() {
-        console.log(this.activeConversation)
+      console.log(this.activeConversation);
       if (!this.activeConversation.messages?.length) {
         axios
           .post(`/api/chat/${this.friend.id}/create/`)
@@ -335,12 +398,24 @@ export default (await import("vue")).defineComponent({
             console.log("error", error);
           });
       } else {
+        console.log("submitForm", this.body);
+        let formData = new FormData();
+        if (this.$refs.fileMessage.files[0]) {
+          formData.append("image", this.$refs.fileMessage.files[0]);
+        }
+        formData.append("body", this.body);
+
         axios
-          .post(`/api/chat/${this.activeConversation.id}/send/`, {
-            body: this.body,
+          .post(`/api/chat/${this.activeConversation.id}/send/`, formData, {
+            headers: {
+              "Content-Type": "multipart/form-data",
+            },
           })
           .then((res) => {
+            console.log(res.data);
             this.activeConversation?.messages?.push(res.data);
+            this.$refs.fileMessage.value = null;
+            this.url = null;
             this.body = "";
           })
           .catch((error) => {

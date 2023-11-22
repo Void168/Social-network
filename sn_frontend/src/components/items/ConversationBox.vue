@@ -3,8 +3,6 @@
     <RouterLink
       class="flex justify-between cursor-pointer"
       :to="{ name: 'conversation', params: { id: conversation.id } }"
-      v-for="conversation in conversations"
-      v-bind:key="conversation.id"
     >
       <div
         class="group relative flex flex-col w-full gap-1 px-3 py-2 rounded-lg hover:bg-gray-200 dark:hover:bg-slate-500 duration-100"
@@ -245,20 +243,10 @@ export default (await import("vue")).defineComponent({
         (user) => this.userStore.user.id !== user.id
       )[0];
     },
-    // getLastMessage() {
-    //   return this.conversation?.messages[this.conversation.messages?.length - 1].body
-    // }
   },
   mounted() {
     this.getConversations();
   },
-
-  // watch: {
-  //   getLastMessage(lastMessage, oldMessage) {
-  //     console.log(this.conversation.messages + "from" + oldMessage + "to" + lastMessage)
-  //   },
-  //   immediate: true,
-  // },
 
   methods: {
     getConversations() {

@@ -255,7 +255,6 @@ export default (await import("vue")).defineComponent({
         .then((res) => {
           this.recentConversation.messages.push(res.data);
           this.body = "";
-          this.emoji = "";
         })
         .catch((error) => {
           console.log(error);
@@ -273,7 +272,7 @@ export default (await import("vue")).defineComponent({
 });
 </script>
 
-<style scoped>
+<style>
 @media screen and (max-width: 320px) {
   emoji-picker {
     --num-columns: 6;

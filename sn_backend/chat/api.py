@@ -10,6 +10,7 @@ from .serializers import ConversationSerializer, ConversationDetailSerializer, C
 @api_view(['GET'])
 def conversation_list(request):
     conversations = Conversation.objects.filter(users__in=list([request.user]))
+    
     serializer = ConversationSerializer(conversations, many=True)
         
     return JsonResponse(serializer.data, safe=False)
@@ -38,7 +39,7 @@ def conversation_get_or_create(request, user_pk):
     
     return JsonResponse(serializer.data, safe=False)
 
-@api_view(['GET'])
+@api_view(['POST'])
 def conversation_create(request, user_pk):
     user = User.objects.get(pk=user_pk)
 

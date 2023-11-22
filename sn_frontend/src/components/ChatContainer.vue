@@ -127,12 +127,6 @@ export default (await import("vue")).defineComponent({
       }
     },
     getFriendId(friend) {
-      axios
-        .get(`/api/user-info/${friend.id}`)
-        .then((res) => {
-          this.getConversation();
-        })
-        .catch((error) => console.log(error));
       if (!this.friendsChat?.includes(friend)) {
         this.friendsChat?.push(friend);
       }

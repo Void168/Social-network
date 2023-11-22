@@ -96,7 +96,7 @@
               class="text-xs font-bold dark:text-neutral-300"
               v-if="
                 user.id !== userStore.user.id &&
-                conversation.messages[conversation.messages.length - 1].seen_by
+                conversation.messages[conversation.messages.length - 1]?.seen_by
                   .map((obj) => obj.created_by.email)
                   .includes(userStore.user.email) === false
               "
@@ -142,7 +142,7 @@
                     .created_by.id !== userStore.user.id &&
                   conversation.messages[
                     conversation.messages.length - 1
-                  ].seen_by
+                  ]?.seen_by
                     .map((obj) => obj.created_by.email)
                     .includes(userStore.user.email) === false
                 "
@@ -164,7 +164,7 @@
                   v-if="
                     conversation.messages[
                       conversation.messages.length - 1
-                    ].seen_by
+                    ]?.seen_by
                       .map((obj) => obj.created_by.email)
                       .includes(userStore.user.email) === false
                   "
@@ -185,7 +185,7 @@
             <span
               class="bg-emerald-500 w-3 h-3 rounded-full shadow-md"
               v-if="
-                conversation.messages[conversation.messages.length - 1].seen_by
+                conversation.messages[conversation.messages.length - 1]?.seen_by
                   .map((obj) => obj.created_by.email)
                   .includes(userStore.user.email) === false
               "

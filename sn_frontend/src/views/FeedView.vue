@@ -102,7 +102,6 @@ export default {
       } else {
         this.loadMore = false;
       }
-      console.log(this.loadMore)
     },
   },
 };

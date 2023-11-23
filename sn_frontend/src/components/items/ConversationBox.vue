@@ -110,7 +110,7 @@
           </div>
 
           <span
-            v-if="conversation.messages.length"
+            v-if="conversation?.messages?.length"
             class="text-xs text-gray-600 dark:text-neutral-300"
             >{{
               conversation.messages[conversation.messages.length - 1]
@@ -122,7 +122,7 @@
 
         <div class="text-sm">
           <div
-            v-if="conversation.messages.length"
+            v-if="conversation?.messages?.length"
             class="flex gap-1 justify-between"
           >
             <div class="flex gap-2">

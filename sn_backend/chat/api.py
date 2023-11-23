@@ -3,7 +3,7 @@ from django.http import JsonResponse
 from rest_framework.decorators import api_view, authentication_classes, permission_classes
 from django.db.models import Q
 
-from .forms import MessageForm, AttachmentForm
+from .forms import MessageForm, AttachmentForm, ChooseThemeForm
 
 from account.models import User
 from .models import Conversation, ConversationMessage, SeenUser
@@ -56,12 +56,9 @@ def conversation_create(request, user_pk):
     return JsonResponse(serializer.data, safe=False)
 
 @api_view(['GET'])
-def conversation_get(request, user_pk):
-    user = User.objects.get(pk=user_pk)
+def conversation_get(request, pk):
 
-    conversations = Conversation.objects.filter(users__in=list([request.user])).filter(users__in=list([user]))
-
-    conversation = conversations.first()
+    conversation = Conversation.objects.get(pk=pk)
 
     serializer = ConversationDetailSerializer(conversation)
     
@@ -104,6 +101,23 @@ def conversation_send_message(request, pk):
         return JsonResponse(serializer.data, safe=False)
     else:
         return JsonResponse({'error': 'add something here later!...'})
+
+@api_view(['POST'])
+def choose_theme(request, pk):
+    current_user = request.user
+    conversation = Conversation.objects.filter(users__in=list([request.user])).get(pk=pk)
+    form = ChooseThemeForm(data=request.POST, instance=current_user)
+    
+    if form.is_valid():
+        form.save()
+        conversation.theme = request.POST['theme']
+        conversation.save()
+    
+        serializer = ConversationDetailSerializer(conversation)
+    
+        return JsonResponse(serializer.data)
+    else: 
+        return JsonResponse({'message':'Failed'})
     
 
 @api_view(['POST'])

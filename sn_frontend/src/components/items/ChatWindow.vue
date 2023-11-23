@@ -11,11 +11,11 @@
         <li
           class="px-4 py-2 text-lg font-semibold hover:bg-slate-100 dark:hover:bg-slate-900 hover:rounded-t-lg cursor-pointer"
         >
-          <p v-if="activeConversation?.id">
+          <p v-if="conversation?.id">
             <RouterLink
               :to="{
                 name: 'conversation',
-                params: { id: activeConversation?.id },
+                params: { id: conversation?.id },
               }"
             >
               Mở trong tin nhắn
@@ -38,10 +38,9 @@
           Chủ đề
         </li>
         <ConversationThemeModal
-          :currentTheme="activeConversation.theme"
+          :currentTheme="conversation"
           :show="isConversationThemeModalOpen"
           @closeConversationThemeModal="closeConversationThemeModal"
-          @chooseConversationTheme="chooseConversationTheme"
         />
         <li
           class="px-4 py-2 text-lg font-semibold hover:bg-slate-100 dark:hover:bg-slate-900 cursor-pointer transition"
@@ -89,9 +88,9 @@
       class="h-[346px] p-4 overflow-y-scroll scrollbar-corner-slate-200 scrollbar-thin scrollbar-thumb-slate-400 scrollbar-track-slate-800 border border-gray-200 shadow-md dark:bg-slate-600 dark:border-slate-700 dark:text-neutral-200"
     >
       <div class="flex flex-col flex-grow p-4 overflow-y-auto">
-        <div v-if="activeConversation.messages?.length > 0">
+        <div v-if="conversation?.messages?.length > 0">
           <div
-            v-for="message in activeConversation.messages"
+            v-for="message in conversation?.messages"
             v-bind:key="message.id"
             :id="message.id"
           >
@@ -102,8 +101,9 @@
               <div class="flex gap-2">
                 <div>
                   <div
-                    v-if="message.body && !message.attachments.length"
-                    class="bg-blue-600 dark:bg-blue-500 text-white p-3 shadow-md rounded-full px-4"
+                    v-if="message.body && !message.attachments.length && selectedTheme"
+                    class="text-white p-3 shadow-md rounded-full px-4 font-semibold"
+                    :class="[selectedTheme.background, selectedTheme.textColor]"
                   >
                     <p class="text-sm">
                       {{ message.body }}
@@ -112,7 +112,8 @@
                   <div v-if="message.attachments.length > 0">
                     <div
                       v-if="message.body"
-                      class="bg-blue-600 dark:bg-blue-500 text-white p-3 shadow-md rounded-t-lg"
+                      class="text-white p-3 shadow-md rounded-t-lg font-semibold"
+                      :class="[selectedTheme.background, selectedTheme.textColor]"
                     >
                       <p class="text-sm">
                         {{ message.body }}
@@ -132,40 +133,36 @@
                 class="text-xs text-gray-500 dark:text-neutral-200 leading-none"
                 v-if="
                   message.id ===
-                    activeConversation.messages[
-                      activeConversation.messages.length - 1
-                    ].id &&
-                  activeConversation.messages[
-                    activeConversation.messages.length - 1
+                    conversation.messages[conversation.messages.length - 1]
+                      .id &&
+                  conversation.messages[
+                    conversation.messages.length - 1
                   ].seen_by
                     .map((obj) => obj.created_by.email)
                     .includes(userStore.user.email) === true
                 "
                 >Đã gửi
                 {{
-                  activeConversation.messages[
-                    activeConversation.messages.length - 1
-                  ].created_at_formatted
+                  conversation.messages[conversation.messages.length - 1]
+                    .created_at_formatted
                 }}
                 trước</span
               ><span
                 class="text-xs text-gray-500 dark:text-neutral-200 leading-none"
                 v-if="
                   message.id ===
-                    activeConversation.messages[
-                      activeConversation.messages.length - 1
-                    ].id &&
-                  activeConversation.messages[
-                    activeConversation.messages.length - 1
+                    conversation.messages[conversation.messages.length - 1]
+                      .id &&
+                  conversation.messages[
+                    conversation.messages.length - 1
                   ].seen_by
                     .map((obj) => obj.created_by.email)
                     .includes(userStore.user.email) === false
                 "
                 >Đã xem
                 {{
-                  activeConversation.messages[
-                    activeConversation.messages.length - 1
-                  ].created_at_formatted
+                  conversation.messages[conversation.messages.length - 1]
+                    .created_at_formatted
                 }}
                 trước</span
               >
@@ -181,7 +178,7 @@
               <div>
                 <div
                   v-if="
-                    activeConversation?.messages?.filter(
+                    conversation?.messages?.filter(
                       (user) => user.sent_to.id === userStore.user.id
                     )
                   "
@@ -200,15 +197,12 @@
                     class="text-xs text-gray-500 dark:text-neutral-200 leading-none"
                     v-if="
                       message.id ===
-                      activeConversation.messages[
-                        activeConversation.messages.length - 1
-                      ].id
+                      conversation.messages[conversation.messages.length - 1].id
                     "
                     >Đã gửi
                     {{
-                      activeConversation.messages[
-                        activeConversation.messages.length - 1
-                      ].created_at_formatted
+                      conversation.messages[conversation.messages.length - 1]
+                        .created_at_formatted
                     }}
                     trước</span
                   >
@@ -396,14 +390,91 @@ export default (await import("vue")).defineComponent({
       friendsChat: [],
       body: "",
       isOpen: true,
-      activeConversation: {},
       url: null,
       isOpenSettings: false,
       isConversationThemeModalOpen: false,
+      themes: [
+        {
+          name: "Ngân hà",
+          background:
+            "bg-gradient-to-r from-blue-800 via-indigo-800 to-violet-800",
+          textColor: "text-neutral-200",
+        },
+        {
+          name: "Hoàng hôn",
+          background:
+            "bg-gradient-to-r from-blue-500 via-pink-500 to-orange-500",
+          textColor: "text-neutral-200",
+        },
+        {
+          name: "Bãi biển",
+          background: "bg-gradient-to-r from-blue-500 via-sky-500 to-amber-500",
+          textColor: "text-slate-600",
+        },
+        {
+          name: "Giáng sinh",
+          background:
+            "bg-gradient-to-r from-neutral-100 via-emerald-400 to-rose-400",
+            textColor: "text-slate-800",
+        },
+        {
+          name: "Mùa xuân",
+          background:
+            "bg-gradient-to-r from-neutral-200 via-rose-400 to-amber-300",
+            textColor: "text-slate-600",
+        },
+        {
+          name: "Mùa hè",
+          background:
+            "bg-gradient-to-r from-amber-300 via-cyan-300 to-emerald-400",
+            textColor: "text-slate-600",
+        },
+        {
+          name: "Mùa thu",
+          background:
+            "bg-gradient-to-r from-rose-200 via-rose-400 to-amber-400",
+            textColor: "text-slate-600",
+        },
+        {
+          name: "Mùa đông",
+          background: "bg-gradient-to-r from-cyan-200 via-neutral-200 to-white",
+          textColor: "text-slate-600",
+        },
+        {
+          name: "Tình nhân",
+          background: "bg-gradient-to-r from-white via-rose-400 to-red-500",
+          textColor: "text-slate-800",
+        },
+        {
+          name: "Cà phê",
+          background:
+            "bg-gradient-to-r from-yellow-700 via-amber-700 to-orange-900",
+            textColor: "text-neutral-200",
+        },
+        {
+          name: "Bóng đá",
+          background:
+            "bg-gradient-to-r from-white via-emerald-500 to-slate-700",
+            textColor: "text-slate-900",
+        },
+        {
+          name: "Cổ điển",
+          background: "bg-blue-500",
+          textColor: "text-neutral-200",
+        },
+      ],
     };
   },
+
+  computed: {
+    selectedTheme() {
+      return this.themes.filter(
+        (theme) => theme.name === this.conversation.theme
+      )[0];
+    },
+  },
+
   mounted() {
-    this.getConversation();
     document.addEventListener("click", this.clickOutside);
   },
 
@@ -421,17 +492,6 @@ export default (await import("vue")).defineComponent({
           return this.body;
         });
     },
-    getConversation() {
-      axios
-        .get(`/api/chat/${this.friend.id}/get/`)
-        .then((res) => {
-          this.activeConversation = res.data;
-          console.log(res.data);
-        })
-        .catch((error) => {
-          console.log("error", error);
-        });
-    },
     onFileChange(e) {
       const file = e.target.files[0];
       this.url = URL.createObjectURL(file);
@@ -441,9 +501,6 @@ export default (await import("vue")).defineComponent({
     },
     openConversationThemeModal() {
       this.isConversationThemeModalOpen = true;
-    },
-    chooseConversationTheme() {
-      this.isConversationThemeModalOpen = false;
     },
     removeImage() {
       this.url = null;
@@ -459,8 +516,8 @@ export default (await import("vue")).defineComponent({
       }
     },
     submitForm() {
-      console.log(this.activeConversation);
-      if (this.activeConversation.id === undefined) {
+      console.log(this.conversation);
+      if (this.conversation?.id === undefined) {
         axios
           .post(`/api/chat/${this.friend.id}/create/`)
           .then((res) => {
@@ -498,14 +555,14 @@ export default (await import("vue")).defineComponent({
         formData.append("body", this.body);
 
         axios
-          .post(`/api/chat/${this.activeConversation.id}/send/`, formData, {
+          .post(`/api/chat/${this.conversation.id}/send/`, formData, {
             headers: {
               "Content-Type": "multipart/form-data",
             },
           })
           .then((res) => {
             // console.log(res.data);
-            this.activeConversation?.messages?.push(res.data);
+            this.conversation?.messages?.push(res.data);
             this.$refs.fileMessage.value = null;
             this.url = null;
             this.body = "";

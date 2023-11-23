@@ -41,11 +41,18 @@
               </DialogTitle>
               <div class="text-xl dark:text-neutral-200 my-2">
                 <p>Chủ đề hiện tại:</p>
-                <div class="rounded-full h-24 w-24 shadow-md"></div>
+                <div class="flex flex-col items-center">
+                  <div class="rounded-full h-24 w-24 shadow-md my-2" :class="selectedTheme?.background"></div>
+                  
+                  <p>{{ chosenTheme }}</p>
+                </div>
               </div>
               <div class="grid grid-cols-4 gap-4">
                 <div class="mt-2" v-for="theme in themes" :key="theme.name">
-                  <ConversationTheme :color="theme" />
+                  <ConversationTheme
+                    :color="theme"
+                    @chooseTheme="chooseTheme(theme)"
+                  />
                 </div>
               </div>
 
@@ -57,13 +64,15 @@
                 >
                   Hủy
                 </button>
-                <button
-                  type="button"
-                  class="btn inline-flex justify-center rounded-md border border-transparent bg-emerald-400 text-white px-4 py-2 text-sm font-medium hover:bg-emerald-600 focus:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 focus-visible:ring-offset-2"
-                  @click="$emit('chooseConversationTheme')"
-                >
-                  Đồng ý
-                </button>
+                <div @click="$emit('closeConversationThemeModal')">
+                  <button
+                    type="button"
+                    class="btn inline-flex justify-center rounded-md border border-transparent bg-emerald-400 text-white px-4 py-2 text-sm font-medium hover:bg-emerald-600 focus:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 focus-visible:ring-offset-2"
+                    @click="confirmConversationTheme"
+                  >
+                    Đồng ý
+                  </button>
+                </div>
               </div>
             </DialogPanel>
           </TransitionChild>
@@ -74,6 +83,7 @@
 </template>
 
 <script>
+import axios from "axios";
 import {
   TransitionRoot,
   TransitionChild,
@@ -157,12 +167,50 @@ export default (await import("vue")).defineComponent({
           background: "bg-blue-500",
         },
       ],
+      chosenTheme: "",
     };
   },
-//   computed: {
-//     selectedTheme() {
-//         return this.theme.filter((this.theme))
-//     }
-//   }
+  computed: {
+    selectedTheme() {
+      return this.themes.filter((theme) => theme.name === this.chosenTheme)[0];
+    },
+  },
+
+  mounted() {
+    this.getTheme();
+  },
+
+  methods: {
+    getTheme() {
+      axios
+        .get(`/api/chat/${this.currentTheme?.id}/get/`)
+        .then((res) => {
+          this.chosenTheme = res.data.theme;
+        })
+        .catch((error) => {
+          console.log("error", error);
+        });
+    },
+    chooseTheme(theme) {
+      this.chosenTheme = theme.name;
+    },
+    confirmConversationTheme() {
+      let formData = new FormData();
+
+      formData.append("theme", this.chosenTheme);
+
+      axios
+        .post(`/api/chat/${this.currentTheme?.id}/choose_theme/`, formData, {
+          headers: {
+            "Content-Type": "multipart/form-data",
+          },
+        })
+        .then((res) => {
+          // this.selectedTheme.background = res.data.theme;
+          console.log(res.data)
+        })
+        .catch((error) => console.log(error));
+    },
+  },
 });
 </script>

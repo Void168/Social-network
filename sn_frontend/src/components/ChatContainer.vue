@@ -7,10 +7,12 @@
       <div v-for="friend in friends" :key="friend.id">
         <div
           @click="getFriendId(friend)"
-          class="flex gap-2 px-4 py-2 items-center cursor-pointer hover:bg-slate-300 dark:hover:bg-slate-700"
+          class="px-4 py-2  cursor-pointer hover:bg-slate-300 dark:hover:bg-slate-700"
         >
-          <img :src="friend.get_avatar" class="w-10 h-10 rounded-full" />
+        <div class="flex gap-2 items-center" @click="getConversation(friend)">
+          <img  :src="friend.get_avatar" class="w-10 h-10 rounded-full" />
           <span class="font-semibold">{{ friend.name }}</span>
+        </div>
         </div>
       </div>
     </div>
@@ -106,6 +108,7 @@ export default (await import("vue")).defineComponent({
 
   mounted() {
     this.getFriends();
+    this.getConversations();
   },
 
   methods: {
@@ -115,6 +118,16 @@ export default (await import("vue")).defineComponent({
         .then((res) => {
           this.friendshipRequests = res.data.requests;
           this.friends = res.data.friends;
+        })
+        .catch((error) => {
+          console.log(error);
+        });
+    },
+    getConversations() {
+      axios
+        .get("/api/chat/")
+        .then((res) => {
+          this.conversations = res.data;
         })
         .catch((error) => {
           console.log(error);
@@ -140,7 +153,7 @@ export default (await import("vue")).defineComponent({
         !this.bubbleChats?.includes(this.friendsChat[0])
       ) {
         this.bubbleChats?.reverse().push(this.friendsChat[0]);
-        this.friendsChat?.reverse().pop()
+        this.friendsChat?.reverse().pop();
       }
     },
     openChatWindow(friend) {
@@ -157,7 +170,7 @@ export default (await import("vue")).defineComponent({
         !this.bubbleChats?.includes(this.friendsChat[0])
       ) {
         this.bubbleChats?.reverse().push(this.friendsChat[0]);
-        this.friendsChat?.reverse().pop()
+        this.friendsChat?.reverse().pop();
       }
     },
     removeFriendChat(friend) {
@@ -176,8 +189,11 @@ export default (await import("vue")).defineComponent({
           return this.body;
         });
     },
-    getConversation() {
-      console.log("hello");
+    getConversation(friend) {
+      this.conversation = this.conversations.filter((conversation) =>
+        conversation.users
+          .map((user) => user.name).includes(friend.name)
+      )[0];
     },
   },
 });

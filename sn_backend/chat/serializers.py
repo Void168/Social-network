@@ -30,7 +30,7 @@ class ConversationSerializer(serializers.ModelSerializer):
     messages = ConversationMessageSerializer(read_only=True, many=True)
     class Meta:
         model = Conversation
-        fields = ('id', 'users', 'modified_at_formatted','messages',)
+        fields = ('id', 'users', 'modified_at_formatted','messages', 'theme',)
 
 class ConversationDetailSerializer(serializers.ModelSerializer):
     messages = ConversationMessageSerializer(read_only=True, many=True)
@@ -38,5 +38,5 @@ class ConversationDetailSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Conversation
-        fields = ('id', 'users', 'modified_at_formatted', 'messages',)
+        fields = ('id', 'users', 'modified_at_formatted', 'messages','theme',)
     

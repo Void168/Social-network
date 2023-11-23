@@ -4,10 +4,63 @@
     class="relative flex flex-col h-[480px] w-[400px] bg-slate-200 dark:bg-slate-500 rounded-t-lg"
   >
     <div
+      v-if="isOpenSettings"
+      class="absolute top-8 left-10 w-64 bg-white dark:bg-slate-800 shadow-lg rounded-lg open-settings"
+    >
+      <ul>
+        <li
+          class="px-4 py-2 text-lg font-semibold hover:bg-slate-100 dark:hover:bg-slate-900 hover:rounded-t-lg cursor-pointer"
+        >
+          <p v-if="activeConversation?.id">
+            <RouterLink
+              :to="{
+                name: 'conversation',
+                params: { id: activeConversation?.id },
+              }"
+            >
+              Mở trong tin nhắn
+            </RouterLink>
+          </p>
+          <p v-else>Mở trong tin nhắn</p>
+        </li>
+        <hr />
+        <li
+          class="px-4 py-2 text-lg font-semibold hover:bg-slate-100 dark:hover:bg-slate-900 cursor-pointer transition"
+        >
+          <RouterLink :to="{ name: 'profile', params: { id: friend.id } }">
+            Xem trang cá nhân
+          </RouterLink>
+        </li>
+        <li
+          @click="openConversationThemeModal"
+          class="px-4 py-2 text-lg font-semibold hover:bg-slate-100 dark:hover:bg-slate-900 cursor-pointer transition"
+        >
+          Chủ đề
+        </li>
+        <ConversationThemeModal
+          :currentTheme="activeConversation.theme"
+          :show="isConversationThemeModalOpen"
+          @closeConversationThemeModal="closeConversationThemeModal"
+          @chooseConversationTheme="chooseConversationTheme"
+        />
+        <li
+          class="px-4 py-2 text-lg font-semibold hover:bg-slate-100 dark:hover:bg-slate-900 cursor-pointer transition"
+        >
+          Tìm kiếm tin nhắn
+        </li>
+        <li
+          class="px-4 py-2 text-lg font-semibold hover:bg-slate-100 dark:hover:bg-slate-900 hover:rounded-b-lg cursor-pointer"
+        >
+          Xóa cuộc hội thoại
+        </li>
+      </ul>
+    </div>
+    <div
       class="h-16 border-b-2 border-slate-400 dark:border-slate-300 flex justify-between"
     >
       <div
-        class="flex p-4 gap-2 items-center hover:bg-slate-600 hover:rounded-lg transition duration-75 cursor-pointer"
+        @click="openSettings"
+        class="flex p-4 gap-2 items-center dark:hover:bg-slate-600 hover:bg-slate-400 hover:rounded-tl-lg cursor-pointer"
       >
         <img :src="friend.get_avatar" class="rounded-full h-10 w-10" />
         <span class="font-bold">{{ friend.name }}</span>
@@ -167,7 +220,7 @@
 
         <div
           v-else
-          class="bg-white dark:bg-slate-600 dark:border-slate-700 dark:text-neutral-200 flex flex-col justify-center items-center"
+          class="bg-slate-200 dark:bg-slate-600 dark:border-slate-700 dark:text-neutral-200 flex flex-col justify-center items-center"
         >
           <img
             :src="friend.get_avatar"
@@ -180,28 +233,31 @@
       </div>
     </div>
     <div
-        id="preview"
-        v-if="url"
-        class="flex relative items-center p-4 shadow-md rounded-b-md bg-slate-100 dark:bg-slate-700"
-      >
-        <img :src="url" class="w-20 h-20 rounded-lg border-[1px] border-slate-200 bg-slate-300 dark:border-slate-500 p-1" />
-        <span class="absolute top-5 right-5 cursor-pointer" @click="removeImage"
-          ><svg
-            xmlns="http://www.w3.org/2000/svg"
-            fill="none"
-            viewBox="0 0 24 24"
-            stroke-width="1.5"
-            stroke="currentColor"
-            class="w-8 h-8"
-          >
-            <path
-              stroke-linecap="round"
-              stroke-linejoin="round"
-              d="M9.75 9.75l4.5 4.5m0-4.5l-4.5 4.5M21 12a9 9 0 11-18 0 9 9 0 0118 0z"
-            />
-          </svg>
-        </span>
-      </div>
+      id="preview"
+      v-if="url"
+      class="flex relative items-center p-4 shadow-md rounded-b-md bg-slate-100 dark:bg-slate-700"
+    >
+      <img
+        :src="url"
+        class="w-20 h-20 rounded-lg border-[1px] border-slate-200 bg-slate-300 dark:border-slate-500 p-1"
+      />
+      <span class="absolute top-5 right-5 cursor-pointer" @click="removeImage"
+        ><svg
+          xmlns="http://www.w3.org/2000/svg"
+          fill="none"
+          viewBox="0 0 24 24"
+          stroke-width="1.5"
+          stroke="currentColor"
+          class="w-8 h-8"
+        >
+          <path
+            stroke-linecap="round"
+            stroke-linejoin="round"
+            d="M9.75 9.75l4.5 4.5m0-4.5l-4.5 4.5M21 12a9 9 0 11-18 0 9 9 0 0118 0z"
+          />
+        </svg>
+      </span>
+    </div>
     <div
       class="relative h-16 p-4 border-t-2 border-slate-400 dark:border-slate-300"
     >
@@ -259,6 +315,7 @@
         <div class="relative flex items-center gap-2">
           <textarea
             v-model="body"
+            @keyup="getContent"
             class="w-full py-2 px-4 bg-gray-100 rounded-3xl resize-none"
             name=""
             id=""
@@ -296,9 +353,10 @@ import {
 
 import "emoji-picker-element";
 
+import ConversationThemeModal from "../modals/ConversationThemeModal.vue";
+
 import { Popover, PopoverButton, PopoverPanel } from "@headlessui/vue";
 import { useUserStore } from "../../stores/user";
-import { fr } from "date-fns/locale";
 
 export default (await import("vue")).defineComponent({
   name: "chat",
@@ -317,6 +375,7 @@ export default (await import("vue")).defineComponent({
     PhotoIcon,
     GifIcon,
     FaceSmileIcon,
+    ConversationThemeModal,
   },
 
   setup() {
@@ -339,11 +398,17 @@ export default (await import("vue")).defineComponent({
       isOpen: true,
       activeConversation: {},
       url: null,
+      isOpenSettings: false,
+      isConversationThemeModalOpen: false,
     };
   },
-
   mounted() {
     this.getConversation();
+    document.addEventListener("click", this.clickOutside);
+  },
+
+  beforeUnmount() {
+    document.removeEventListener("click", this.clickOutside);
   },
 
   methods: {
@@ -371,23 +436,50 @@ export default (await import("vue")).defineComponent({
       const file = e.target.files[0];
       this.url = URL.createObjectURL(file);
     },
-
+    closeConversationThemeModal() {
+      this.isConversationThemeModalOpen = false;
+    },
+    openConversationThemeModal() {
+      this.isConversationThemeModalOpen = true;
+    },
+    chooseConversationTheme() {
+      this.isConversationThemeModalOpen = false;
+    },
     removeImage() {
       this.url = null;
     },
+    openSettings() {
+      this.isOpenSettings = !this.isOpenSettings;
+    },
+    clickOutside() {
+      const modalContainer = document.querySelector(".open-settings");
+
+      if (modalContainer && !modalContainer.contains(event.target.parentNode)) {
+        this.autoComplete = false;
+      }
+    },
     submitForm() {
       console.log(this.activeConversation);
-      if (!this.activeConversation.messages?.length) {
+      if (this.activeConversation.id === undefined) {
         axios
           .post(`/api/chat/${this.friend.id}/create/`)
           .then((res) => {
-            // console.log(res.data);
+            let formData = new FormData();
+            if (this.$refs.fileMessage.files[0]) {
+              formData.append("image", this.$refs.fileMessage.files[0]);
+            }
+            formData.append("body", this.body);
             axios
-              .post(`/api/chat/${res.data.id}/send/`, {
-                body: this.body,
+              .post(`/api/chat/${res.data.id}/send/`, formData, {
+                headers: {
+                  "Content-Type": "multipart/form-data",
+                },
               })
               .then((res) => {
-                this.activeConversation.messages?.push(res.data);
+                console.log(res.data);
+                res.data.messages?.push(res.data);
+                this.$refs.fileMessage.value = null;
+                this.url = null;
                 this.body = "";
               })
               .catch((error) => {
@@ -412,7 +504,7 @@ export default (await import("vue")).defineComponent({
             },
           })
           .then((res) => {
-            console.log(res.data);
+            // console.log(res.data);
             this.activeConversation?.messages?.push(res.data);
             this.$refs.fileMessage.value = null;
             this.url = null;

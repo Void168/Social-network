@@ -162,11 +162,11 @@ export default {
   mounted() {
     this.getPost();
     this.getFriends();
-    document.addEventListener("click", this.clickOuside);
+    document.addEventListener("click", this.clickOutside);
   },
 
   beforeUnmount() {
-    document.removeEventListener("click", this.clickOuside);
+    document.removeEventListener("click", this.clickOutside);
   },
 
   methods: {
@@ -227,7 +227,7 @@ export default {
 
       this.autoComplete = false;
     },
-    clickOuside() {
+    clickOutside() {
       const modalContainer = document.querySelector(".open");
 
       if (modalContainer && !modalContainer.contains(event.target.parentNode)) {

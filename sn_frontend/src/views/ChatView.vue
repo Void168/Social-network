@@ -71,10 +71,9 @@ export default (await import("vue")).defineComponent({
       return this.query === ""
         ? this.conversations
         : this.conversations.filter((conversation) =>
-            conversation.users.filter((user) =>
-              user.name
-            ).includes(this.query.toLowerCase().replace(/\s+/g, ''))
-          );
+          conversation.users
+            .map((user) => user.name.toLowerCase()).filter((name) => name !== this.userStore.user.name.toLowerCase()).includes(this.query)
+        )
     },
   },
 
@@ -96,7 +95,12 @@ export default (await import("vue")).defineComponent({
     },
     getQuery() {
       this.query = this.$refs.input.value;
-      console.log(this.conversations.filter((conversation) => conversation.users))
+      // console.log(
+      //   this.conversations.map((conversation) =>
+      //     conversation.users
+      //       .map((user) => user.name.toLowerCase().replace(/\s+/g, "")).filter((name) => name !== this.userStore.user.name.toLowerCase() && name.includes(this.query))
+      //   )
+      // );
     },
   },
 });

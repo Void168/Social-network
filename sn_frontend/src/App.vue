@@ -135,7 +135,7 @@ export default {
     toast: Toast,
     RouterLink,
     NavBarDropdownVue,
-    ProfileDropdown
+    ProfileDropdown,
 },
 
   beforeCreate() {

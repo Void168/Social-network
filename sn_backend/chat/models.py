@@ -11,6 +11,7 @@ class Conversation(models.Model):
     users = models.ManyToManyField(User, related_name='conversations')
     created_at = models.DateTimeField(auto_now_add=True)
     modified_at = models.DateTimeField(auto_now=True)
+    theme = models.CharField(blank=True, default='Cổ điển', max_length=50)
     
     def modified_at_formatted(self):
         return timesince(self.created_at)

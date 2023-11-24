@@ -58,7 +58,7 @@ export default {
       axios
         .get(`/api/posts/posts-trend-list/?trend=${this.$route.params.id}`)
         .then((res) => {
-          console.log("data", res.data);
+          // console.log("data", res.data);
 
           this.posts = res.data;
         })

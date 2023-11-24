@@ -211,7 +211,7 @@ export default {
       this.urlPost = null;
     },
     submitForm() {
-      console.log("submitForm", this.body);
+      // console.log("submitForm", this.body);
 
       let formData = new FormData();
       formData.append("image", this.$refs.file.files[0]);
@@ -226,7 +226,7 @@ export default {
           },
         })
         .then((res) => {
-          console.log("data", res.data);
+          // console.log("data", res.data);
 
           this.posts.unshift(res.data);
           this.body = "";

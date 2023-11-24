@@ -160,7 +160,7 @@ export default (await import("vue")).defineComponent({
       this.edit = !this.edit;
     },
     submitForm() {
-      console.log("submitForm");
+      // console.log("submitForm");
 
       let formData = new FormData();
       formData.append("url", this.url);
@@ -173,7 +173,7 @@ export default (await import("vue")).defineComponent({
           },
         })
         .then((res) => {
-          console.log(res.data);
+          // console.log(res.data);
           this.$router.go(0);
         })
         .catch((error) => console.log(error));

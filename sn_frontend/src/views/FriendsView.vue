@@ -159,7 +159,7 @@ export default {
       axios
         .get(`/api/friends/${this.$route.params.id}/`)
         .then((res) => {
-          console.log(res.data);
+          // console.log(res.data);
 
           this.friendshipRequests = res.data.requests;
           this.friends = res.data.friends;
@@ -171,12 +171,12 @@ export default {
     },
 
     handleRequest(status, pk) {
-      console.log("handleRequest", status);
+      // console.log("handleRequest", status);
 
       axios
         .post(`/api/friends/${pk}/${status}/`)
         .then((res) => {
-          console.log("data", res.data);
+          // console.log("data", res.data);
 
           if (status === "accepted") {
             this.toastStore.showToast(

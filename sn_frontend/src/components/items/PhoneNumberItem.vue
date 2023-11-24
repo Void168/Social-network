@@ -155,13 +155,13 @@ export default (await import("vue")).defineComponent({
         this.is_private = true;
         this.only_me = true;
       }
-      console.log(this.privacy.name);
+      // console.log(this.privacy.name);
     },
     editWebsite() {
       this.edit = !this.edit;
     },
     submitForm() {
-      console.log("submitForm");
+      // console.log("submitForm");
 
       let formData = new FormData();
       formData.append("phone_number", this.number);
@@ -178,7 +178,7 @@ export default (await import("vue")).defineComponent({
           }
         )
         .then((res) => {
-          console.log(res.data);
+          // console.log(res.data);
           this.$router.go(0)
         })
         .catch((error) => console.log(error));

@@ -1,7 +1,9 @@
 <template>
   <div class="max-w-7xl mx-auto grid grid-cols-4 gap-4 h-[750px]">
     <div class="main-left col-span-1">
-      <div class="bg-white border border-gray-200 dark:bg-slate-600 dark:border-slate-700 dark:text-neutral-200 rounded-lg h-[750px] px-2">
+      <div
+        class="bg-white border border-gray-200 dark:bg-slate-600 dark:border-slate-700 dark:text-neutral-200 rounded-lg h-[750px] px-2"
+      >
         <h3 class="text-xl p-3">Đoạn hội thoại ({{ conversations.length }})</h3>
         <div v-for="conversation in conversations" :key="conversation.id">
           <ConversationBox
@@ -58,23 +60,23 @@ export default (await import("vue")).defineComponent({
   methods: {
     getConversations() {
       axios
-      .get("/api/chat/")
-      .then((res) => {
-        this.conversations = res.data;
-      })
-      .catch((error) => {
-        console.log(error);
-      });
+        .get("/api/chat/")
+        .then((res) => {
+          this.conversations = res.data;
+        })
+        .catch((error) => {
+          console.log(error);
+        });
     },
     getMessages() {
       axios
-      .get(`/api/chat/${this.$route.params.id}/`)
-      .then((res) => {
-        this.activeConversation = res.data;
-        this.seenMessage()
-        console.log(this.activeConversation)
-        this.listMessages = this.activeConversation.messages;
-      })
+        .get(`/api/chat/${this.$route.params.id}/`)
+        .then((res) => {
+          this.activeConversation = res.data;
+          this.seenMessage();
+          // console.log(this.activeConversation)
+          this.listMessages = this.activeConversation.messages;
+        })
         .catch((error) => {
           console.log(error);
         });
@@ -84,7 +86,9 @@ export default (await import("vue")).defineComponent({
 
       axios
         .post(`/api/chat/${this.activeConversation.id}/set_seen/`)
-        .then((res) => console.log(res.data))
+        .then((res) => {
+          // console.log(res.data);
+        })
         .catch((error) => console.log(error));
     },
 

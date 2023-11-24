@@ -764,7 +764,7 @@ export default (await import("vue")).defineComponent({
         .get(`/api/informations/${this.userStore.user.id}/websites/`)
         .then((res) => {
           this.websites = res.data.websites;
-          console.log(this.websites)
+          //console.log(this.websites)
         })
         .catch((error) => console.log(error));
     },
@@ -801,7 +801,7 @@ export default (await import("vue")).defineComponent({
       } else {
         console.log("No country selected");
       }
-      console.log(this.country);
+      //console.log(this.country);
     },
     selectState(stateIsoCode) {
       if (stateIsoCode) {
@@ -814,11 +814,11 @@ export default (await import("vue")).defineComponent({
       } else {
         console.log("No state selected");
       }
-      console.log(this.state);
+      //console.log(this.state);
     },
     selectCity() {
-      console.log("Select city");
-      console.log(this.city);
+      //console.log("Select city");
+      //console.log(this.city);
     },
     submitHometownForm() {
       let formData = new FormData();
@@ -925,7 +925,7 @@ export default (await import("vue")).defineComponent({
       }
     },
     selectLivedCity() {
-      console.log(this.city);
+      //console.log(this.city);
     },
     submitBiographyForm() {
       this.errors = [];
@@ -981,7 +981,7 @@ export default (await import("vue")).defineComponent({
             },
           })
           .then((res) => {
-            console.log(res.data);
+            //console.log(res.data);
 
             if (res.data.message === "Failed") {
               this.toastStore.showToast(
@@ -1018,7 +1018,7 @@ export default (await import("vue")).defineComponent({
             }
           )
           .then((res) => {
-            console.log(res.data);
+            //console.log(res.data);
             this.status = res.data.message;
             if (this.status === "request already sent") {
               this.toastStore.showToast(
@@ -1138,7 +1138,7 @@ export default (await import("vue")).defineComponent({
           },
         })
         .then((res) => {
-          console.log("data", res.data);
+          //console.log("data", res.data);
 
           this.phoneNumbers.unshift(res.data);
           this.phoneNumber = "";
@@ -1162,7 +1162,7 @@ export default (await import("vue")).defineComponent({
           },
         })
         .then((res) => {
-          console.log("data", res.data);
+          //console.log("data", res.data);
 
           this.websites.unshift(res.data);
           this.websiteUrl = "";

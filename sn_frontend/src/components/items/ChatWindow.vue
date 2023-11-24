@@ -497,7 +497,7 @@ export default (await import("vue")).defineComponent({
       }
     },
     submitForm() {
-      console.log(this.conversation);
+      // console.log(this.conversation);
       if (this.conversation?.id === undefined) {
         axios
           .post(`/api/chat/${this.friend.id}/create/`)
@@ -529,7 +529,7 @@ export default (await import("vue")).defineComponent({
             console.log("error", error);
           });
       } else {
-        console.log("submitForm", this.body);
+        // console.log("submitForm", this.body);
         let formData = new FormData();
         if (this.$refs.fileMessage.files[0]) {
           formData.append("image", this.$refs.fileMessage.files[0]);

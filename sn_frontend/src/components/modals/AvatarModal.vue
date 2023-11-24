@@ -224,7 +224,7 @@ export default (await import("vue")).defineComponent({
     onAvatarChange(e) {
       const file = e.target.files[0];
       this.url = URL.createObjectURL(file);
-      console.log(this.url);
+      // console.log(this.url);
     },
     removeAvatar() {
       this.url = null;
@@ -283,7 +283,7 @@ export default (await import("vue")).defineComponent({
             
             if (res.data.message === "avatar updated") {
               // console.log(res.data);
-              console.log(this.share)
+              // console.log(this.share)
               this.toastStore.showToast(
                 5000,
                 "Thay đổi ảnh đại diện thành công.",
@@ -314,7 +314,7 @@ export default (await import("vue")).defineComponent({
                   },
                 })
                 .then((res) => {
-                  console.log("data", res.data);
+                  // console.log("data", res.data);
 
                   this.body = "";
                   this.$refs.file.value = null;

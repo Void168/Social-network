@@ -392,7 +392,7 @@ export default (await import("vue")).defineComponent({
     },
 
     submitForm() {
-      console.log("submitForm", this.body);
+      // console.log("submitForm", this.body);
 
       let formData = new FormData();
       if (this.$refs.file.files[0]) {

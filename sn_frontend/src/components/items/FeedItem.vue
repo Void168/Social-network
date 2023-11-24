@@ -280,7 +280,7 @@ export default (await import("vue")).defineComponent({
       axios
         .post(`/api/posts/${this.post.id}/report/`)
         .then((res) => {
-          console.log(res.data);
+          // console.log(res.data);
           this.toastStore.showToast(
             5000,
             "Đã báo cáo bài viết",

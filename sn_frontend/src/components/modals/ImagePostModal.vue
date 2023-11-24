@@ -310,14 +310,14 @@ export default (await import("vue")).defineComponent({
         });
     },
     submitForm() {
-      console.log("submitForm", this.body);
+      // console.log("submitForm", this.body);
 
       axios
         .post(`/api/posts/${this.post.id}/comment/`, {
           body: this.body,
         })
         .then((res) => {
-          console.log("data", res.data);
+          // console.log("data", res.data);
 
           this.post.comments.unshift(res.data);
           this.post.comments_count += 1;

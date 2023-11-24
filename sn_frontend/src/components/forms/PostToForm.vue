@@ -219,7 +219,7 @@
             },
           })
           .then((res) => {
-            console.log("data", res.data);
+            // console.log("data", res.data);
 
             this.posts.unshift(res.data);
             this.body = "";

@@ -78,7 +78,7 @@ export default (await import("vue")).defineComponent({
         .get("/api/notifications/")
         .then((res) => {
           this.notifications = res.data;
-          console.log(this.notifications);
+          // console.log(this.notifications);
         })
         .catch((error) => {
           console.log(error);
@@ -93,11 +93,11 @@ export default (await import("vue")).defineComponent({
     },
 
     async readNotification(notification) {
-      console.log(notification.type_of_notification === "tag_comment");
+      // console.log(notification.type_of_notification === "tag_comment");
       await axios
         .post(`/api/notifications/read/${notification.id}/`)
         .then((res) => {
-          console.log(res.data);
+          // console.log(res.data);
           if (
             notification.type_of_notification === "post_like" ||
             notification.type_of_notification === "post_comment" ||

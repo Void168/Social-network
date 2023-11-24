@@ -102,7 +102,7 @@
                 <div>
                   <div
                     v-if="message.body && !message.attachments.length && selectedTheme"
-                    class="text-white p-3 shadow-md rounded-full px-4 font-semibold"
+                    class="p-3 shadow-md rounded-full px-4 font-semibold"
                     :class="[selectedTheme.background, selectedTheme.textColor]"
                   >
                     <p class="text-sm">
@@ -112,7 +112,7 @@
                   <div v-if="message.attachments.length > 0">
                     <div
                       v-if="message.body"
-                      class="text-white p-3 shadow-md rounded-t-lg font-semibold"
+                      class="p-3 shadow-md rounded-t-lg font-semibold"
                       :class="[selectedTheme.background, selectedTheme.textColor]"
                     >
                       <p class="text-sm">
@@ -317,7 +317,7 @@
             rows="1"
             placeholder="Bạn muốn nói điều gì?"
           ></textarea>
-          <button type="submit">
+          <button type="submit" :disabled="(body.length < 1 && url === '') || body.length < 1">
             <PaperAirplaneIcon
               class="w-8 h-8 cursor-pointer rounded-full text-emerald-300 hover:bg-slate-600 transition p-1"
             />
@@ -438,7 +438,7 @@ export default (await import("vue")).defineComponent({
         {
           name: "Mùa đông",
           background: "bg-gradient-to-r from-cyan-200 via-neutral-200 to-white",
-          textColor: "text-slate-600",
+          textColor: "text-slate-700",
         },
         {
           name: "Tình nhân",

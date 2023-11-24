@@ -33,8 +33,9 @@
               <div class="flex gap-2">
                 <div>
                   <div
-                    v-if="message.body && !message.attachments.length"
-                    class="bg-blue-600 dark:bg-blue-500 text-white p-3 shadow-md rounded-l-lg rounded-br-lg"
+                    v-if="message.body && !message.attachments.length && selectedTheme"
+                    class="p-3 shadow-md rounded-l-lg rounded-br-lg"
+                    :class="[selectedTheme.background, selectedTheme.textColor]"
                   >
                     <p class="text-sm">
                       {{ message.body }}
@@ -44,7 +45,8 @@
                   <div v-if="message.attachments.length > 0">
                     <div
                       v-if="message.body"
-                      class="bg-blue-600 dark:bg-blue-500 text-white p-3 shadow-md rounded-t-lg"
+                      class="p-3 shadow-md rounded-t-lg"
+                      :class="[selectedTheme.background, selectedTheme.textColor]"
                     >
                       <p class="text-sm">
                         {{ message.body }}
@@ -282,7 +284,84 @@ export default (await import("vue")).defineComponent({
       body: "",
       isOpen: false,
       url: null,
+      themes: [
+        {
+          name: "Ngân hà",
+          background:
+            "bg-gradient-to-r from-blue-800 via-indigo-800 to-violet-800",
+          textColor: "text-neutral-200",
+        },
+        {
+          name: "Hoàng hôn",
+          background:
+            "bg-gradient-to-r from-blue-500 via-pink-500 to-orange-500",
+          textColor: "text-neutral-200",
+        },
+        {
+          name: "Bãi biển",
+          background: "bg-gradient-to-r from-blue-500 via-sky-500 to-amber-500",
+          textColor: "text-slate-600",
+        },
+        {
+          name: "Giáng sinh",
+          background:
+            "bg-gradient-to-r from-neutral-100 via-emerald-400 to-rose-400",
+            textColor: "text-slate-800",
+        },
+        {
+          name: "Mùa xuân",
+          background:
+            "bg-gradient-to-r from-neutral-200 via-rose-400 to-amber-300",
+            textColor: "text-slate-600",
+        },
+        {
+          name: "Mùa hè",
+          background:
+            "bg-gradient-to-r from-amber-300 via-cyan-300 to-emerald-400",
+            textColor: "text-slate-600",
+        },
+        {
+          name: "Mùa thu",
+          background:
+            "bg-gradient-to-r from-rose-200 via-rose-400 to-amber-400",
+            textColor: "text-slate-600",
+        },
+        {
+          name: "Mùa đông",
+          background: "bg-gradient-to-r from-cyan-200 via-neutral-200 to-white",
+          textColor: "text-slate-700",
+        },
+        {
+          name: "Tình nhân",
+          background: "bg-gradient-to-r from-white via-rose-400 to-red-500",
+          textColor: "text-slate-800",
+        },
+        {
+          name: "Cà phê",
+          background:
+            "bg-gradient-to-r from-yellow-700 via-amber-700 to-orange-900",
+            textColor: "text-neutral-200",
+        },
+        {
+          name: "Bóng đá",
+          background:
+            "bg-gradient-to-r from-white via-emerald-500 to-slate-700",
+            textColor: "text-slate-900",
+        },
+        {
+          name: "Cổ điển",
+          background: "bg-blue-500",
+          textColor: "text-neutral-200",
+        },
+      ],
     };
+  },
+  computed: {
+    selectedTheme() {
+      return this.themes.filter(
+        (theme) => theme.name === this.recentConversation.theme
+      )[0];
+    },
   },
   watch: {
     "$route.params.id": {

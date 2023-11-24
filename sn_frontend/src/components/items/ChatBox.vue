@@ -19,46 +19,99 @@
       </div>
 
       <hr />
-      <div class="flex flex-col flex-grow p-4 overflow-y-auto h-[579px]">
-        <div v-if="recentConversation?.messages?.length > 0">
-          <div
-            v-for="message in listMessages"
-            v-bind:key="message.id"
-            :id="message.id"
-          >
+      <div
+        id="chatview-container"  class="overflow-y-scroll scrollbar-corner-slate-200 scrollbar-thin scrollbar-thumb-slate-400 scrollbar-track-slate-800 border border-gray-200 shadow-md dark:bg-slate-600 dark:border-slate-700 dark:text-neutral-200 h-[579px]"
+      >
+        <div class="flex flex-col flex-grow p-4 overflow-y-auto">
+          <div v-if="recentConversation?.messages?.length > 0">
             <div
-              class="flex flex-col w-full mt-2 space-x-3 items-end max-w-md ml-auto justify-end gap-2"
-              v-if="message.created_by?.id == userStore.user.id"
+              v-for="message in listMessages"
+              v-bind:key="message.id"
+              :id="message.id"
             >
-              <div class="flex gap-2">
-                <div>
-                  <div
-                    v-if="message.body && !message.attachments.length && selectedTheme"
-                    class="p-3 shadow-md rounded-l-lg rounded-br-lg"
-                    :class="[selectedTheme.background, selectedTheme.textColor]"
-                  >
-                    <p class="text-sm">
-                      {{ message.body }}
-                    </p>
-
-                  </div>
-                  <div v-if="message.attachments.length > 0">
+              <div
+                class="flex flex-col w-full mt-2 space-x-3 items-end max-w-md ml-auto justify-end gap-2"
+                v-if="message.created_by?.id == userStore.user.id"
+              >
+                <div class="flex gap-2">
+                  <div>
                     <div
-                      v-if="message.body"
-                      class="p-3 shadow-md rounded-t-lg"
-                      :class="[selectedTheme.background, selectedTheme.textColor]"
+                      v-if="
+                        message.body &&
+                        !message.attachments.length &&
+                        selectedTheme
+                      "
+                      class="p-3 shadow-md rounded-l-lg rounded-br-lg"
+                      :class="[
+                        selectedTheme.background,
+                        selectedTheme.textColor,
+                      ]"
                     >
                       <p class="text-sm">
                         {{ message.body }}
                       </p>
                     </div>
+                    <div v-if="message.attachments.length > 0">
+                      <div
+                        v-if="message.body"
+                        class="p-3 shadow-md rounded-t-lg"
+                        :class="[
+                          selectedTheme.background,
+                          selectedTheme.textColor,
+                        ]"
+                      >
+                        <p class="text-sm">
+                          {{ message.body }}
+                        </p>
+                      </div>
+                      <img
+                        v-if="message.attachments.length > 0"
+                        :src="message?.attachments[0]?.get_image"
+                        :class="
+                          message.body
+                            ? 'w-48 h-40 rounded-t-none'
+                            : 'w-48 h-40'
+                        "
+                      />
+                    </div>
+                  </div>
+                  <div class="flex-shrink-0 h-10 w-10 rounded-full bg-gray-300">
                     <img
-                      v-if="message.attachments.length > 0"
-                      :src="message?.attachments[0]?.get_image"
-                      :class="message.body ? 'w-48 h-40 rounded-t-none': 'w-48 h-40'"
+                      :src="message?.created_by?.get_avatar"
+                      alt=""
+                      class="w-10 h-10 rounded-full"
                     />
                   </div>
                 </div>
+                <span
+                  class="text-xs text-gray-500 dark:text-neutral-200 leading-none"
+                  v-if="
+                    message.id === listMessages[listMessages.length - 1].id &&
+                    listMessages[listMessages.length - 1].seen_by
+                      .map((obj) => obj.created_by?.email)
+                      .includes(userStore.user.email) === true
+                  "
+                  >Đã gửi
+                  {{
+                    listMessages[listMessages.length - 1].created_at_formatted
+                  }}
+                  trước</span
+                ><span
+                  class="text-xs text-gray-500 dark:text-neutral-200 leading-none"
+                  v-if="
+                    message.id === listMessages[listMessages.length - 1].id &&
+                    listMessages[listMessages.length - 1].seen_by
+                      .map((obj) => obj.created_by?.email)
+                      .includes(userStore.user.email) === false
+                  "
+                  >Đã xem
+                  {{
+                    listMessages[listMessages.length - 1].created_at_formatted
+                  }}
+                  trước</span
+                >
+              </div>
+              <div class="flex w-full mt-2 space-x-3 max-w-md" v-else>
                 <div class="flex-shrink-0 h-10 w-10 rounded-full bg-gray-300">
                   <img
                     :src="message?.created_by?.get_avatar"
@@ -66,79 +119,48 @@
                     class="w-10 h-10 rounded-full"
                   />
                 </div>
-              </div>
-              <span
-                class="text-xs text-gray-500 dark:text-neutral-200 leading-none"
-                v-if="
-                  message.id === listMessages[listMessages.length - 1].id &&
-                  listMessages[listMessages.length - 1].seen_by
-                    .map((obj) => obj.created_by?.email)
-                    .includes(userStore.user.email) === true
-                "
-                >Đã gửi
-                {{ listMessages[listMessages.length - 1].created_at_formatted }}
-                trước</span
-              ><span
-                class="text-xs text-gray-500 dark:text-neutral-200 leading-none"
-                v-if="
-                  message.id === listMessages[listMessages.length - 1].id &&
-                  listMessages[listMessages.length - 1].seen_by
-                    .map((obj) => obj.created_by?.email)
-                    .includes(userStore.user.email) === false
-                "
-                >Đã xem
-                {{ listMessages[listMessages.length - 1].created_at_formatted }}
-                trước</span
-              >
-            </div>
-            <div class="flex w-full mt-2 space-x-3 max-w-md" v-else>
-              <div class="flex-shrink-0 h-10 w-10 rounded-full bg-gray-300">
-                <img
-                  :src="message?.created_by?.get_avatar"
-                  alt=""
-                  class="w-10 h-10 rounded-full"
-                />
-              </div>
-              <div>
-                <div
-                  v-if="
-                    recentConversation?.messages?.filter(
-                      (user) => user.sent_to?.id === userStore.user.id
-                    )
-                  "
-                  v-bind:key="message.id"
-                  class="mb-4"
-                >
+                <div>
                   <div
-                    class="bg-gray-200 p-3 rounded-r-lg rounded-bl-lg dark:bg-slate-500 dark:border-slate-600 dark:text-neutral-200"
-                    v-if="message?.created_by !== chats[0]?.users[0].name"
-                  >
-                    <p class="text-sm">
-                      {{ message.body }}
-                    </p>
-                  </div>
-                  <span
-                    class="text-xs text-gray-500 dark:text-neutral-200 leading-none"
                     v-if="
-                      message.id === listMessages[listMessages.length - 1].id
+                      recentConversation?.messages?.filter(
+                        (user) => user.sent_to?.id === userStore.user.id
+                      )
                     "
-                    >Đã gửi
-                    {{
-                      listMessages[listMessages.length - 1].created_at_formatted
-                    }}
-                    trước</span
+                    v-bind:key="message.id"
+                    class="mb-4"
                   >
+                    <div
+                      class="bg-gray-200 p-3 rounded-r-lg rounded-bl-lg dark:bg-slate-500 dark:border-slate-600 dark:text-neutral-200"
+                      v-if="message?.created_by !== chats[0]?.users[0].name"
+                    >
+                      <p class="text-sm">
+                        {{ message.body }}
+                      </p>
+                    </div>
+                    <span
+                      class="text-xs text-gray-500 dark:text-neutral-200 leading-none"
+                      v-if="
+                        message.id === listMessages[listMessages.length - 1].id
+                      "
+                      >Đã gửi
+                      {{
+                        listMessages[listMessages.length - 1]
+                          .created_at_formatted
+                      }}
+                      trước</span
+                    >
+                  </div>
                 </div>
               </div>
             </div>
           </div>
-        </div>
 
-        <div
-          v-else
-          class="bg-white dark:bg-slate-600 dark:border-slate-700 dark:text-neutral-200 h-[500px] flex justify-center items-center"
-        >
-          Hãy bắt đầu nói chuyện với nhau
+          <div
+            v-else
+            class="bg-white dark:bg-slate-600 dark:border-slate-700 dark:text-neutral-200 h-[500px] flex justify-center items-center"
+          >
+            Hãy bắt đầu nói chuyện với nhau
+          </div>
         </div>
       </div>
     </div>
@@ -306,25 +328,25 @@ export default (await import("vue")).defineComponent({
           name: "Giáng sinh",
           background:
             "bg-gradient-to-r from-neutral-100 via-emerald-400 to-rose-400",
-            textColor: "text-slate-800",
+          textColor: "text-slate-800",
         },
         {
           name: "Mùa xuân",
           background:
             "bg-gradient-to-r from-neutral-200 via-rose-400 to-amber-300",
-            textColor: "text-slate-600",
+          textColor: "text-slate-600",
         },
         {
           name: "Mùa hè",
           background:
             "bg-gradient-to-r from-amber-300 via-cyan-300 to-emerald-400",
-            textColor: "text-slate-600",
+          textColor: "text-slate-600",
         },
         {
           name: "Mùa thu",
           background:
             "bg-gradient-to-r from-rose-200 via-rose-400 to-amber-400",
-            textColor: "text-slate-600",
+          textColor: "text-slate-600",
         },
         {
           name: "Mùa đông",
@@ -340,13 +362,13 @@ export default (await import("vue")).defineComponent({
           name: "Cà phê",
           background:
             "bg-gradient-to-r from-yellow-700 via-amber-700 to-orange-900",
-            textColor: "text-neutral-200",
+          textColor: "text-neutral-200",
         },
         {
           name: "Bóng đá",
           background:
             "bg-gradient-to-r from-white via-emerald-500 to-slate-700",
-            textColor: "text-slate-900",
+          textColor: "text-slate-900",
         },
         {
           name: "Cổ điển",
@@ -375,8 +397,13 @@ export default (await import("vue")).defineComponent({
   mounted() {
     this.getActiveConversation();
     this.getMessages();
+    this.scrollToBottom();
   },
   methods: {
+    scrollToBottom() {
+      const objDiv = document.getElementById("chatview-container");
+      objDiv.scrollTop = objDiv.scrollHeight;
+    },
     getActiveConversation() {
       axios
         .get(`/api/chat/${this.$route.params.id}/`)
@@ -444,7 +471,8 @@ export default (await import("vue")).defineComponent({
           },
         })
         .then((res) => {
-          console.log(res.data);
+          // console.log(res.data);
+          this.scrollToBottom();
           this.recentConversation.messages?.push(res.data);
           this.$refs.file.value = null;
           this.url = null;

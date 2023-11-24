@@ -54,44 +54,51 @@
           Xóa cuộc hội thoại
         </li>
         <DeleteConversationModal
-            :show="isDeleteOpen"
-            @closeModal="closeModal"
-            @deleteConversation="deleteConversation"
-          />
+          :show="isDeleteOpen"
+          @closeModal="closeModal"
+          @deleteConversation="deleteConversation"
+        />
       </ul>
     </div>
     <div
-      class="h-16 border-b-2 border-slate-400 dark:border-slate-300 flex justify-between"
+      class="h-16 flex justify-between shadow-xl rounded-t-lg"
+      :class="[selectedTheme?.background, selectedTheme?.textColor]"
     >
       <div
         @click="openSettings"
-        class="flex p-4 gap-2 items-center dark:hover:bg-slate-600 hover:bg-slate-400 hover:rounded-tl-lg cursor-pointer"
+        class="flex p-4 gap-2 items-center hover:rounded-tl-lg cursor-pointer transition duration-[25ms]"
+        :class="[selectedTheme?.hover]"
       >
         <img :src="friend.get_avatar" class="rounded-full h-10 w-10" />
         <span class="font-bold">{{ friend.name }}</span>
-        <ChevronDownIcon class="w-6 h-6 rounded-full hover:bg-slate-600 p-1" />
+        <ChevronDownIcon class="w-6 h-6 rounded-full p-1" />
       </div>
       <div class="flex gap-1 p-4">
         <VideoCameraIcon
-          class="w-8 h-8 rounded-full hover:bg-slate-600 p-1 transition cursor-pointer"
+          class="w-8 h-8 rounded-full p-1 transition cursor-pointer"
+          :class="[selectedTheme?.hover]"
         />
         <PhoneIcon
-          class="w-8 h-8 rounded-full hover:bg-slate-600 p-1 transition cursor-pointer"
+          class="w-8 h-8 rounded-full p-1 transition cursor-pointer"
+          :class="[selectedTheme?.hover]"
         />
         <MinusIcon
           @click="$emit('miniatureChat')"
-          class="w-8 h-8 rounded-full hover:bg-slate-600 p-1 transition cursor-pointer"
+          class="w-8 h-8 rounded-full p-1 transition cursor-pointer"
+          :class="[selectedTheme?.hover]"
         />
         <div @click="$emit('removeFriendChat')">
           <!-- v-on:click="closeConversationBubble" -->
           <XMarkIcon
-            class="w-8 h-8 rounded-full hover:bg-slate-600 p-1 transition cursor-pointer"
+            class="w-8 h-8 rounded-full p-1 transition cursor-pointer"
+            :class="[selectedTheme?.hover]"
           />
         </div>
       </div>
     </div>
     <div
-      class="h-[346px] p-4 overflow-y-scroll scrollbar-corner-slate-200 scrollbar-thin scrollbar-thumb-slate-400 scrollbar-track-slate-800 border border-gray-200 shadow-md dark:bg-slate-600 dark:border-slate-700 dark:text-neutral-200"
+      id="chat-container"
+      class="h-[346px] px-4 overflow-y-scroll scrollbar-corner-slate-200 scrollbar-thin scrollbar-thumb-slate-400 scrollbar-track-slate-800 border-b border-gray-200 dark:bg-slate-600 dark:border-slate-700 dark:text-neutral-200"
     >
       <div class="flex flex-col flex-grow p-4 overflow-y-auto">
         <div v-if="conversation?.messages?.length > 0">
@@ -107,9 +114,16 @@
               <div class="flex gap-2">
                 <div>
                   <div
-                    v-if="message.body && !message.attachments.length && selectedTheme"
+                    v-if="
+                      message.body &&
+                      !message.attachments.length &&
+                      selectedTheme
+                    "
                     class="p-3 shadow-md rounded-full px-4 font-semibold"
-                    :class="[selectedTheme.background, selectedTheme.textColor]"
+                    :class="[
+                      selectedTheme?.background,
+                      selectedTheme?.textColor,
+                    ]"
                   >
                     <p class="text-sm">
                       {{ message.body }}
@@ -119,7 +133,10 @@
                     <div
                       v-if="message.body"
                       class="p-3 shadow-md rounded-t-lg font-semibold"
-                      :class="[selectedTheme.background, selectedTheme.textColor]"
+                      :class="[
+                        selectedTheme?.background,
+                        selectedTheme?.textColor,
+                      ]"
                     >
                       <p class="text-sm">
                         {{ message.body }}
@@ -278,7 +295,10 @@
           </transition>
 
           <PopoverButton>
-            <FaceSmileIcon class="w-6 h-6" />
+            <FaceSmileIcon
+              class="w-6 h-6"
+              :class="[selectedTheme?.iconColor]"
+            />
           </PopoverButton>
         </Popover>
       </span>
@@ -289,12 +309,14 @@
       >
         <div class="flex gap-1">
           <PlusCircleIcon
-            class="w-8 h-8 cursor-pointer rounded-full text-emerald-300 hover:bg-slate-600 transition p-1"
+            class="w-8 h-8 cursor-pointer rounded-full hover:bg-slate-300 dark:hover:bg-slate-600 transition p-1"
+            :class="[selectedTheme?.iconColor]"
           />
           <div class="relative cursor-pointer">
             <label for="image">
               <PhotoIcon
-                class="w-8 h-8 cursor-pointer rounded-full text-emerald-300 hover:bg-slate-600 transition p-1"
+                class="w-8 h-8 cursor-pointer rounded-full hover:bg-slate-300 dark:hover:bg-slate-600 transition p-1"
+                :class="[selectedTheme?.iconColor]"
               />
 
               <input
@@ -308,7 +330,8 @@
             </label>
           </div>
           <GifIcon
-            class="w-8 h-8 cursor-pointer rounded-full text-emerald-300 hover:bg-slate-600 transition p-1"
+            class="w-8 h-8 cursor-pointer rounded-full hover:bg-slate-300 dark:hover:bg-slate-600 transition p-1"
+            :class="[selectedTheme?.iconColor]"
           />
         </div>
         <div class="relative flex items-center gap-2">
@@ -322,9 +345,13 @@
             rows="1"
             placeholder="Bạn muốn nói điều gì?"
           ></textarea>
-          <button type="submit" :disabled="(body.length < 1 && url === '') || body.length < 1">
+          <button
+            type="submit"
+            :disabled="(body.length < 1 && url === '') || body.length < 1"
+          >
             <PaperAirplaneIcon
-              class="w-8 h-8 cursor-pointer rounded-full text-emerald-300 hover:bg-slate-600 transition p-1"
+              class="w-8 h-8 cursor-pointer rounded-full hover:bg-slate-300 dark:hover:bg-slate-600 transition p-1"
+              :class="[selectedTheme?.iconColor]"
             />
           </button>
         </div>
@@ -377,7 +404,7 @@ export default (await import("vue")).defineComponent({
     GifIcon,
     FaceSmileIcon,
     ConversationThemeModal,
-    DeleteConversationModal
+    DeleteConversationModal,
   },
 
   setup() {
@@ -386,7 +413,7 @@ export default (await import("vue")).defineComponent({
 
     return {
       userStore,
-      toastStore
+      toastStore,
     };
   },
 
@@ -410,68 +437,92 @@ export default (await import("vue")).defineComponent({
           background:
             "bg-gradient-to-r from-blue-800 via-indigo-800 to-violet-800",
           textColor: "text-neutral-200",
+          hover: "hover:bg-violet-500",
+          iconColor: "text-violet-500 dark:text-violet-400",
         },
         {
           name: "Hoàng hôn",
           background:
-            "bg-gradient-to-r from-blue-500 via-pink-500 to-orange-500",
-          textColor: "text-neutral-200",
+            "bg-gradient-to-r from-orange-700 via-pink-700 to-blue-700",
+          textColor: "text-neutral-100",
+          hover: "hover:bg-pink-600",
+          iconColor: "text-pink-500 dark:text-pink-400",
         },
         {
           name: "Bãi biển",
           background: "bg-gradient-to-r from-blue-500 via-sky-500 to-amber-500",
-          textColor: "text-slate-600",
+          textColor: "text-neutral-100",
+          hover: "hover:bg-sky-400",
+          iconColor: "text-amber-500 dark:text-amber-400",
         },
         {
           name: "Giáng sinh",
           background:
             "bg-gradient-to-r from-neutral-100 via-emerald-400 to-rose-400",
-            textColor: "text-slate-800",
+          textColor: "text-slate-800",
+          hover: "hover:bg-emerald-400",
+          iconColor: "text-emerald-500 dark:text-emerald-400",
         },
         {
           name: "Mùa xuân",
           background:
             "bg-gradient-to-r from-neutral-200 via-rose-400 to-amber-300",
-            textColor: "text-slate-600",
+          textColor: "text-slate-700",
+          hover: "hover:bg-rose-400",
+          iconColor: "text-amber-500 dark:text-amber-400",
         },
         {
           name: "Mùa hè",
           background:
             "bg-gradient-to-r from-amber-300 via-cyan-300 to-emerald-400",
-            textColor: "text-slate-600",
+          textColor: "text-slate-700",
+          hover: "hover:bg-emerald-500 hover:text-neutral-200",
+          iconColor: "text-emerald-500 dark:text-emerald-400",
         },
         {
           name: "Mùa thu",
           background:
-            "bg-gradient-to-r from-rose-200 via-rose-400 to-amber-400",
-            textColor: "text-slate-600",
+            "bg-gradient-to-r from-rose-600 via-amber-700 to-orange-700",
+          textColor: "text-neutral-200",
+          hover: "hover:bg-amber-600",
+          iconColor: "text-orange-700 dark:text-orange-600",
         },
         {
           name: "Mùa đông",
-          background: "bg-gradient-to-r from-cyan-200 via-neutral-200 to-white",
+          background: "bg-gradient-to-r from-white via-neutral-200 to-cyan-200",
           textColor: "text-slate-700",
+          hover: "hover:bg-slate-300",
+          iconColor: "text-cyan-500 dark:text-cyan-400",
         },
         {
           name: "Tình nhân",
           background: "bg-gradient-to-r from-white via-rose-400 to-red-500",
           textColor: "text-slate-800",
+          hover: "hover:bg-rose-300",
+          iconColor: "text-red-500 dark:text-red-400",
         },
         {
           name: "Cà phê",
           background:
             "bg-gradient-to-r from-yellow-700 via-amber-700 to-orange-900",
-            textColor: "text-neutral-200",
+          textColor: "text-neutral-200",
+          hover: "hover:bg-amber-600",
+          iconColor: "text-amber-800 dark:text-amber-700",
         },
         {
           name: "Bóng đá",
           background:
-            "bg-gradient-to-r from-white via-emerald-500 to-slate-700",
-            textColor: "text-slate-900",
+            "bg-gradient-to-r from-neutral-300 via-emerald-500 to-slate-600",
+          textColor: "text-neutral-100",
+          hover: "hover:bg-emerald-400",
+          iconColor: "text-slate-700 dark:text-slate-200",
         },
         {
           name: "Cổ điển",
-          background: "bg-blue-500",
+          background: "bg-emerald-500",
           textColor: "text-neutral-200",
+          hover: "hover:bg-emerald-400",
+          iconColor: "text-emerald-500 dark:text-emerald-400",
         },
       ],
     };
@@ -480,13 +531,14 @@ export default (await import("vue")).defineComponent({
   computed: {
     selectedTheme() {
       return this.themes.filter(
-        (theme) => theme.name === this.conversation.theme
+        (theme) => theme.name === this.conversation?.theme
       )[0];
     },
   },
 
   mounted() {
     document.addEventListener("click", this.clickOutside);
+    this.scrollToBottom();
   },
 
   beforeUnmount() {
@@ -494,6 +546,10 @@ export default (await import("vue")).defineComponent({
   },
 
   methods: {
+    scrollToBottom() {
+      const objDiv = document.getElementById("chat-container");
+      objDiv.scrollTop = objDiv.scrollHeight;
+    },
     Pick() {
       document
         .querySelector("emoji-picker")
@@ -550,7 +606,8 @@ export default (await import("vue")).defineComponent({
                 },
               })
               .then((res) => {
-                console.log(res.data);
+                // console.log(res.data);
+                this.scrollToBottom();
                 res.data.messages?.push(res.data);
                 this.$refs.fileMessage.value = null;
                 this.url = null;
@@ -579,6 +636,7 @@ export default (await import("vue")).defineComponent({
           })
           .then((res) => {
             // console.log(res.data);
+            this.scrollToBottom();
             this.conversation?.messages?.push(res.data);
             this.$refs.fileMessage.value = null;
             this.url = null;

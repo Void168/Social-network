@@ -142,7 +142,7 @@ export default (await import("vue")).defineComponent({
         {
           name: "Mùa thu",
           background:
-            "bg-gradient-to-r from-rose-200 via-rose-400 to-amber-400",
+            "bg-gradient-to-r from-rose-600 via-amber-700 to-orange-700",
         },
         {
           name: "Mùa đông",
@@ -160,11 +160,11 @@ export default (await import("vue")).defineComponent({
         {
           name: "Bóng đá",
           background:
-            "bg-gradient-to-r from-white via-emerald-500 to-slate-700",
+            "bg-gradient-to-r from-neutral-300 via-emerald-500 to-slate-600",
         },
         {
           name: "Cổ điển",
-          background: "bg-blue-500",
+          background: "bg-emerald-500",
         },
       ],
       chosenTheme: "",

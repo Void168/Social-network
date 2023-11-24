@@ -7,11 +7,13 @@
       <div v-for="friend in friends" :key="friend.id">
         <div
           @click="getFriendId(friend)"
-          class="px-4 py-2  cursor-pointer hover:bg-slate-300 dark:hover:bg-slate-700"
+          class="px-4 py-2 cursor-pointer hover:bg-slate-300 dark:hover:bg-slate-700"
         >
-        <div class="flex gap-2 items-center" @click="getConversation(friend)">
-          <img  :src="friend.get_avatar" class="w-10 h-10 rounded-full" />
-          <span class="font-semibold">{{ friend.name }}</span>
+        <div @click="seenMessage">
+          <div class="flex gap-2 items-center" @click="getConversation(friend)">
+            <img  :src="friend.get_avatar" class="w-10 h-10 rounded-full" />
+            <span class="font-semibold">{{ friend.name }}</span>
+          </div>
         </div>
         </div>
       </div>
@@ -194,6 +196,15 @@ export default (await import("vue")).defineComponent({
         conversation.users
           .map((user) => user.name).includes(friend.name)
       )[0];
+    },
+    seenMessage() {
+      this.$emit("seenMessage", this.conversation?.id);
+      if(this.conversation?.id){
+        axios
+          .post(`/api/chat/${this.conversation?.id}/set_seen/`)
+          .then((res) => console.log(res.data))
+          .catch((error) => console.log(error));
+      }
     },
   },
 });

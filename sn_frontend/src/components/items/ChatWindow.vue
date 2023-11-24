@@ -48,10 +48,16 @@
           Tìm kiếm tin nhắn
         </li>
         <li
+          @click="openModal"
           class="px-4 py-2 text-lg font-semibold hover:bg-slate-100 dark:hover:bg-slate-900 hover:rounded-b-lg cursor-pointer"
         >
           Xóa cuộc hội thoại
         </li>
+        <DeleteConversationModal
+            :show="isDeleteOpen"
+            @closeModal="closeModal"
+            @deleteConversation="deleteConversation"
+          />
       </ul>
     </div>
     <div
@@ -95,7 +101,7 @@
             :id="message.id"
           >
             <div
-              class="flex flex-col w-full mt-2 space-x-3 items-end max-w-md ml-auto justify-end gap-2"
+              class="flex flex-col mt-2 space-x-3 items-end max-w-md ml-auto justify-end gap-2"
               v-if="message.created_by.id == userStore.user.id"
             >
               <div class="flex gap-2">
@@ -186,9 +192,8 @@
                   class="mb-4"
                 >
                   <div
-                    class="bg-gray-200 p-3 rounded-3xl dark:bg-slate-500 dark:border-slate-600 dark:text-neutral-200"
+                    class="bg-gray-200 max-w-min p-3 rounded-3xl dark:bg-slate-500 dark:border-slate-600 dark:text-neutral-200"
                   >
-                    <!-- v-if="message.created_by !== chats[0]?.users[0].name" -->
                     <p class="text-sm">
                       {{ message.body }}
                     </p>
@@ -348,9 +353,11 @@ import {
 import "emoji-picker-element";
 
 import ConversationThemeModal from "../modals/ConversationThemeModal.vue";
+import DeleteConversationModal from "../modals/DeleteConversationModal.vue";
 
 import { Popover, PopoverButton, PopoverPanel } from "@headlessui/vue";
 import { useUserStore } from "../../stores/user";
+import { useToastStore } from "../../stores/toast";
 
 export default (await import("vue")).defineComponent({
   name: "chat",
@@ -370,13 +377,16 @@ export default (await import("vue")).defineComponent({
     GifIcon,
     FaceSmileIcon,
     ConversationThemeModal,
+    DeleteConversationModal
   },
 
   setup() {
     const userStore = useUserStore();
+    const toastStore = useToastStore();
 
     return {
       userStore,
+      toastStore
     };
   },
 
@@ -390,6 +400,7 @@ export default (await import("vue")).defineComponent({
       friendsChat: [],
       body: "",
       isOpen: true,
+      isDeleteOpen: false,
       url: null,
       isOpenSettings: false,
       isConversationThemeModalOpen: false,
@@ -499,6 +510,12 @@ export default (await import("vue")).defineComponent({
     closeConversationThemeModal() {
       this.isConversationThemeModalOpen = false;
     },
+    closeModal() {
+      this.isDeleteOpen = false;
+    },
+    openModal() {
+      this.isDeleteOpen = true;
+    },
     openConversationThemeModal() {
       this.isConversationThemeModalOpen = true;
     },
@@ -571,6 +588,33 @@ export default (await import("vue")).defineComponent({
             console.log(error);
           });
       }
+    },
+    deleteConversation() {
+      this.$emit("deleteConversation", this.conversation.id);
+
+      axios
+        .delete(`/api/chat/${this.conversation.id}/delete/`)
+        .then((res) => {
+          setTimeout(() => {
+            this.closeModal();
+          }, 500);
+          this.toastStore.showToast(
+            5000,
+            "Đã xóa đoạn hội thoại",
+            "bg-emerald-500 text-white"
+          );
+          setTimeout(() => {
+            this.$router.go(0);
+          }, 6000);
+        })
+        .catch((error) => {
+          console.log(error);
+          this.toastStore.showToast(
+            5000,
+            "Xóa đoạn hội thoại thất bại",
+            "bg-rose-500 text-white"
+          );
+        });
     },
   },
 });

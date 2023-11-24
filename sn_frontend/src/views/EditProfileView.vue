@@ -553,6 +553,7 @@ import { useToastStore } from "@/stores/toast";
 import { useUserStore } from "../stores/user";
 import { onMounted, ref } from "vue";
 import { Country, State, City } from "country-state-city";
+import relationshipStatus from "../data/relationshipStatus";
 
 import {
   Listbox,
@@ -623,18 +624,7 @@ export default (await import("vue")).defineComponent({
       userInfo.value = res;
     });
 
-    const status = [
-      { name: "Trạng thái" },
-      { name: "Độc thân" },
-      { name: "Hẹn hò" },
-      { name: "Đã đính hôn" },
-      { name: "Đã kết hôn" },
-      { name: "Tìm hiểu" },
-      { name: "Có mối quan hệ phức tạp" },
-      { name: "Đã ly thân" },
-      { name: "Đã ly hôn" },
-      { name: "Góa" },
-    ];
+    const status = relationshipStatus
     const selectedStatus = ref(status[0]);
 
     return {
@@ -677,18 +667,7 @@ export default (await import("vue")).defineComponent({
       biographyForm: {
         content: this.userInfo.biography,
       },
-      status: [
-        { name: "Trạng thái" },
-        { name: "Độc thân" },
-        { name: "Hẹn hò" },
-        { name: "Đã đính hôn" },
-        { name: "Đã kết hôn" },
-        { name: "Tìm hiểu" },
-        { name: "Có mối quan hệ phức tạp" },
-        { name: "Đã ly thân" },
-        { name: "Đã ly hôn" },
-        { name: "Góa" },
-      ],
+      status: relationshipStatus,
       genders: [{ name: "Nam" }, { name: "Nữ" }, { name: "Khác" }],
       relationshipForm: {
         status: this.userInfo.relationship_status,

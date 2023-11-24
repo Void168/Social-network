@@ -1,10 +1,11 @@
 <template>
   <div>
-    <div
-      class="bg-white border border-gray-200 dark:bg-slate-600 dark:border-slate-700 dark:text-neutral-200 rounded-lg"
-    >
+    <div class="rounded-lg relative">
       <div>
-        <div class="p-4 flex justify-between items-center">
+        <div
+          class="p-4 flex justify-between items-center rounded-t-lg"
+          :class="[selectedTheme?.background, selectedTheme?.textColor]"
+        >
           <div class="flex items-center gap-2">
             <img
               :src="receivedUser.get_avatar"
@@ -14,13 +15,12 @@
             <span class="font-bold">{{ receivedUser.name }}</span>
           </div>
 
-          <span>Đang hoạt động</span>
+          <span class="font-semibold">Đang hoạt động</span>
         </div>
       </div>
-
-      <hr />
       <div
-        id="chatview-container"  class="overflow-y-scroll scrollbar-corner-slate-200 scrollbar-thin scrollbar-thumb-slate-400 scrollbar-track-slate-800 border border-gray-200 shadow-md dark:bg-slate-600 dark:border-slate-700 dark:text-neutral-200 h-[579px]"
+        id="chatview-container"
+        class="overflow-y-scroll scrollbar-corner-slate-200 scrollbar-thin scrollbar-thumb-slate-400 scrollbar-track-slate-800 border border-gray-200 shadow-md dark:bg-slate-600 dark:border-slate-700 dark:text-neutral-200 h-[589px]"
       >
         <div class="flex flex-col flex-grow p-4 overflow-y-auto">
           <div v-if="recentConversation?.messages?.length > 0">
@@ -162,30 +162,30 @@
             Hãy bắt đầu nói chuyện với nhau
           </div>
         </div>
-      </div>
-    </div>
-    <div
-      id="preview"
-      v-if="url"
-      class="flex relative justify-center items-center w-full p-4 border-[1px] rounded-lg"
-    >
-      <img :src="url" class="w-full rounded-lg" />
-      <span class="absolute top-5 right-5 cursor-pointer" @click="removeImage"
-        ><svg
-          xmlns="http://www.w3.org/2000/svg"
-          fill="none"
-          viewBox="0 0 24 24"
-          stroke-width="1.5"
-          stroke="currentColor"
-          class="w-8 h-8"
+        <div
+          id="preview"
+          v-if="url"
+          class="flex absolute bottom-0 w-full items-center p-4 shadow-md rounded-b-md bg-slate-100 dark:bg-slate-700"
         >
-          <path
-            stroke-linecap="round"
-            stroke-linejoin="round"
-            d="M9.75 9.75l4.5 4.5m0-4.5l-4.5 4.5M21 12a9 9 0 11-18 0 9 9 0 0118 0z"
-          />
-        </svg>
-      </span>
+          <img :src="url" class="w-20 h-20 rounded-lg border-[1px] border-slate-200 bg-slate-300 dark:border-slate-500 p-1" />
+          <span class="absolute top-5 right-5 cursor-pointer" @click="removeImage"
+            ><svg
+              xmlns="http://www.w3.org/2000/svg"
+              fill="none"
+              viewBox="0 0 24 24"
+              stroke-width="1.5"
+              stroke="currentColor"
+              class="w-8 h-8"
+            >
+              <path
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                d="M9.75 9.75l4.5 4.5m0-4.5l-4.5 4.5M21 12a9 9 0 11-18 0 9 9 0 0118 0z"
+              />
+            </svg>
+          </span>
+        </div>
+      </div>
     </div>
     <div
       class="bg-white border border-gray-200 dark:bg-slate-600 dark:border-slate-700 dark:text-neutral-200 rounded-lg relative"
@@ -197,12 +197,14 @@
       >
         <div class="flex gap-1">
           <PlusCircleIcon
-            class="w-8 h-8 cursor-pointer rounded-full text-emerald-300 hover:bg-slate-600 transition p-1"
+            class="w-8 h-8 cursor-pointer rounded-full hover:bg-slate-300 dark:hover:bg-slate-700 transition p-1"
+            :class="[selectedTheme?.iconColor]"
           />
           <div class="relative cursor-pointer">
             <label for="doc">
               <PhotoIcon
-                class="w-8 h-8 cursor-pointer rounded-full text-emerald-300 hover:bg-slate-600 transition p-1"
+                class="w-8 h-8 cursor-pointer rounded-full hover:bg-slate-300 dark:hover:bg-slate-700 transition p-1"
+                :class="[selectedTheme?.iconColor]"
               />
 
               <input
@@ -216,10 +218,11 @@
             </label>
           </div>
           <GifIcon
-            class="w-8 h-8 cursor-pointer rounded-full text-emerald-300 hover:bg-slate-600 transition p-1"
+            class="w-8 h-8 cursor-pointer rounded-full hover:bg-slate-300 dark:hover:bg-slate-700 transition p-1"
+            :class="[selectedTheme?.iconColor]"
           />
         </div>
-        <div class="p-4 relative w-full">
+        <div class="p-4 relative w-full flex items-center">
           <textarea
             v-model="body"
             class="p-4 w-full bg-gray-100 rounded-lg resize-none"
@@ -247,7 +250,10 @@
               </transition>
 
               <PopoverButton>
-                <FaceSmileIcon class="w-6 h-6" />
+                <FaceSmileIcon
+                  class="w-8 h-8 cursor-pointer rounded-full hover:bg-slate-300 dark:hover:bg-slate-700 transition p-1"
+                  :class="[selectedTheme?.iconColor]"
+                />
               </PopoverButton>
             </Popover>
           </div>
@@ -258,11 +264,8 @@
             :disabled="(body.length < 1 && url === '') || body.length < 1"
           >
             <PaperAirplaneIcon
-              :class="
-                body.length < 1 && url === ''
-                  ? 'w-8 h-8 rounded-full p-1'
-                  : 'w-8 h-8 cursor-pointer rounded-full text-emerald-300 hover:bg-slate-600 transition p-1'
-              "
+              class="w-8 h-8 cursor-pointer rounded-full hover:bg-slate-300 dark:hover:bg-slate-700 transition p-1"
+              :class="[selectedTheme?.iconColor]"
             />
           </button>
         </div>
@@ -287,6 +290,8 @@ import {
   GifIcon,
 } from "@heroicons/vue/24/outline";
 
+import themes from '../../data/themes'
+
 export default (await import("vue")).defineComponent({
   props: {
     chats: Array,
@@ -306,76 +311,7 @@ export default (await import("vue")).defineComponent({
       body: "",
       isOpen: false,
       url: null,
-      themes: [
-        {
-          name: "Ngân hà",
-          background:
-            "bg-gradient-to-r from-blue-800 via-indigo-800 to-violet-800",
-          textColor: "text-neutral-200",
-        },
-        {
-          name: "Hoàng hôn",
-          background:
-            "bg-gradient-to-r from-blue-500 via-pink-500 to-orange-500",
-          textColor: "text-neutral-200",
-        },
-        {
-          name: "Bãi biển",
-          background: "bg-gradient-to-r from-blue-500 via-sky-500 to-amber-500",
-          textColor: "text-slate-600",
-        },
-        {
-          name: "Giáng sinh",
-          background:
-            "bg-gradient-to-r from-neutral-100 via-emerald-400 to-rose-400",
-          textColor: "text-slate-800",
-        },
-        {
-          name: "Mùa xuân",
-          background:
-            "bg-gradient-to-r from-neutral-200 via-rose-400 to-amber-300",
-          textColor: "text-slate-600",
-        },
-        {
-          name: "Mùa hè",
-          background:
-            "bg-gradient-to-r from-amber-300 via-cyan-300 to-emerald-400",
-          textColor: "text-slate-600",
-        },
-        {
-          name: "Mùa thu",
-          background:
-            "bg-gradient-to-r from-rose-200 via-rose-400 to-amber-400",
-          textColor: "text-slate-600",
-        },
-        {
-          name: "Mùa đông",
-          background: "bg-gradient-to-r from-cyan-200 via-neutral-200 to-white",
-          textColor: "text-slate-700",
-        },
-        {
-          name: "Tình nhân",
-          background: "bg-gradient-to-r from-white via-rose-400 to-red-500",
-          textColor: "text-slate-800",
-        },
-        {
-          name: "Cà phê",
-          background:
-            "bg-gradient-to-r from-yellow-700 via-amber-700 to-orange-900",
-          textColor: "text-neutral-200",
-        },
-        {
-          name: "Bóng đá",
-          background:
-            "bg-gradient-to-r from-white via-emerald-500 to-slate-700",
-          textColor: "text-slate-900",
-        },
-        {
-          name: "Cổ điển",
-          background: "bg-blue-500",
-          textColor: "text-neutral-200",
-        },
-      ],
+      themes: themes
     };
   },
   computed: {

@@ -93,6 +93,7 @@ import {
 } from "@headlessui/vue";
 
 import ConversationTheme from "../items/ConversationTheme.vue";
+import themes from '../../data/themes'
 
 export default (await import("vue")).defineComponent({
   components: {
@@ -109,64 +110,7 @@ export default (await import("vue")).defineComponent({
   },
   data() {
     return {
-      themes: [
-        {
-          name: "Ngân hà",
-          background:
-            "bg-gradient-to-r from-blue-800 via-indigo-800 to-violet-800",
-        },
-        {
-          name: "Hoàng hôn",
-          background:
-            "bg-gradient-to-r from-blue-500 via-pink-500 to-orange-500",
-        },
-        {
-          name: "Bãi biển",
-          background: "bg-gradient-to-r from-blue-500 via-sky-500 to-amber-500",
-        },
-        {
-          name: "Giáng sinh",
-          background:
-            "bg-gradient-to-r from-neutral-100 via-emerald-500 to-rose-500",
-        },
-        {
-          name: "Mùa xuân",
-          background:
-            "bg-gradient-to-r from-neutral-200 via-rose-400 to-amber-300",
-        },
-        {
-          name: "Mùa hè",
-          background:
-            "bg-gradient-to-r from-amber-300 via-cyan-300 to-emerald-400",
-        },
-        {
-          name: "Mùa thu",
-          background:
-            "bg-gradient-to-r from-rose-600 via-amber-700 to-orange-700",
-        },
-        {
-          name: "Mùa đông",
-          background: "bg-gradient-to-r from-cyan-200 via-neutral-200 to-white",
-        },
-        {
-          name: "Tình nhân",
-          background: "bg-gradient-to-r from-white via-rose-400 to-red-500",
-        },
-        {
-          name: "Cà phê",
-          background:
-            "bg-gradient-to-r from-yellow-700 via-amber-700 to-orange-900",
-        },
-        {
-          name: "Bóng đá",
-          background:
-            "bg-gradient-to-r from-neutral-300 via-emerald-500 to-slate-600",
-        },
-        {
-          name: "Cổ điển",
-          background: "bg-emerald-500",
-        },
-      ],
+      themes: themes,
       chosenTheme: "",
     };
   },

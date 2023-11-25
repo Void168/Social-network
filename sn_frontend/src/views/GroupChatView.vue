@@ -27,14 +27,17 @@
             v-for="conversation in groupConversations"
             v-bind:key="conversation.id"
           >
-            <GroupConversationBox v-bind:conversation="conversation" @seenGroupMessage="seenGroupMessage"/>
+            <GroupConversationBox
+              v-bind:conversation="conversation"
+              @seenGroupMessage="seenGroupMessage"
+            />
           </div>
         </div>
       </div>
     </div>
 
     <div class="main-center col-span-3 space-y-4">
-      <ChatBox v-bind:chats="conversations" />
+      <GroupChatBox v-bind:chats="conversations" />
     </div>
   </div>
 </template>
@@ -43,12 +46,12 @@
 import axios from "axios";
 import ConversationBox from "../components/items/ConversationBox.vue";
 import GroupConversationBox from "../components/items/GroupConversationBox.vue";
-import ChatBox from "../components/items/ChatBox.vue";
 
 import { useUserStore } from "../stores/user";
 import { PlusCircleIcon } from "@heroicons/vue/24/outline";
 
 import { RouterLink } from "vue-router";
+import GroupChatBox from "../components/items/GroupChatBox.vue";
 
 export default (await import("vue")).defineComponent({
   name: "chat",
@@ -95,7 +98,7 @@ export default (await import("vue")).defineComponent({
       axios
         .get("/api/chat/group/")
         .then((res) => {
-          this.groupConversations = res.data
+          this.groupConversations = res.data;
           console.log(this.groupConversations);
         })
         .catch((error) => {
@@ -137,7 +140,7 @@ export default (await import("vue")).defineComponent({
     },
     submitForm() {
       axios
-        .post(`/api/chat/${this.activeConversation.id}/send/`, {
+        .post(`/api/chat/${this.activeConversation.id}/send_group/`, {
           body: this.body,
         })
         .then((res) => {
@@ -149,6 +152,12 @@ export default (await import("vue")).defineComponent({
         });
     },
   },
-  components: { RouterLink, ConversationBox, ChatBox, PlusCircleIcon, GroupConversationBox },
+  components: {
+    RouterLink,
+    ConversationBox,
+    PlusCircleIcon,
+    GroupConversationBox,
+    GroupChatBox,
+  },
 });
 </script>

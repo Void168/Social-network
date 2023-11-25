@@ -1,5 +1,5 @@
 <template>
-  <div @click="$emit('seenMessage')">
+  <div @click="$emit('seenGroupMessage')">
     <RouterLink
       class="flex justify-between cursor-pointer"
       :to="{ name: 'conversation', params: { id: conversation.id } }"
@@ -32,6 +32,7 @@
                 class="absolute right-0 z-10 mt-2 w-56 origin-top-right divide-y divide-gray-100 rounded-md bg-white shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none"
               >
                 <div class="py-1">
+                  <hr />
                   <MenuItem v-slot="{ active }">
                     <div
                       :class="[
@@ -39,24 +40,16 @@
                         'block px-4 py-2 text-sm cursor-pointer',
                       ]"
                     >
-                      <RouterLink
-                        :to="{
-                          name: 'profile',
-                          params: {
-                            id: conversation.users?.filter(
-                              (user) => this.userStore.user.id !== user.id
-                            )[0].id,
-                          },
-                        }"
+                      <span class="flex items-center gap-3"
+                        ><UserIcon class="w-5 h-5" />Rời nhóm</span
                       >
-                        <span class="flex items-center gap-3"
-                          ><UserIcon class="w-5 h-5" />Đến trang cá nhân</span
-                        >
-                      </RouterLink>
                     </div>
                   </MenuItem>
-                  <hr />
-                  <MenuItem v-slot="{ active }" @click="openModal">
+                  <MenuItem
+                    v-slot="{ active }"
+                    @click="openModal"
+                    v-if="conversation.admin === userStore.user.name"
+                  >
                     <div
                       :class="[
                         active ? 'bg-gray-100 text-rose-700' : 'text-rose-700',
@@ -94,7 +87,9 @@
               class="text-xs font-bold dark:text-neutral-300"
               v-if="
                 user.id !== userStore.user.id &&
-                conversation.messages[conversation.messages.length - 1]?.seen_by
+                conversation.messages[
+                  conversation.messages?.length - 1
+                ]?.seen_by
                   .map((obj) => obj.created_by.email)
                   .includes(userStore.user.email) === false
               "
@@ -113,8 +108,8 @@
             v-if="conversation?.messages?.length"
             class="text-xs text-gray-600 dark:text-neutral-300"
             >{{
-              conversation.messages[conversation.messages.length - 1]
-                .created_at_formatted
+              conversation.messages[conversation.messages?.length - 1]
+                ?.created_at_formatted
             }}
             trước</span
           >
@@ -129,31 +124,31 @@
               <span
                 class="font-semibold"
                 v-if="
-                  conversation.messages[conversation.messages.length - 1]
-                    .created_by.id === userStore.user.id
+                  conversation.messages[conversation.messages?.length - 1]
+                    ?.created_by.id === userStore.user.id
                 "
                 >Bạn:
               </span>
               <span
                 v-else-if="
-                  conversation.messages[conversation.messages.length - 1]
-                    .created_by.id !== userStore.user.id &&
+                  conversation.messages[conversation.messages?.length - 1]
+                    ?.created_by.id !== userStore.user.id &&
                   conversation.messages[
-                    conversation.messages.length - 1
+                    conversation.messages?.length - 1
                   ]?.seen_by
                     .map((obj) => obj.created_by.email)
                     .includes(userStore.user.email) === false
                 "
                 class="font-bold text-emerald-500 dark:text-neutral-200"
                 >{{
-                  conversation.messages[conversation.messages.length - 1]
-                    .created_by.name
+                  conversation.messages[conversation.messages?.length - 1]
+                    ?.created_by.name
                 }}:
               </span>
               <span class="dark:text-neutral-300" v-else
                 >{{
-                  conversation.messages[conversation.messages.length - 1]
-                    .created_by.name
+                  conversation.messages[conversation.messages?.length - 1]
+                    ?.created_by.name
                 }}:
               </span>
               <div class="flex justify-between">
@@ -161,7 +156,7 @@
                   class="truncate font-bold text-emerald-500 dark:text-neutral-200"
                   v-if="
                     conversation.messages[
-                      conversation.messages.length - 1
+                      conversation.messages?.length - 1
                     ]?.seen_by
                       .map((obj) => obj.created_by.email)
                       .includes(userStore.user.email) === false
@@ -169,13 +164,13 @@
                 >
                   {{
                     conversation?.messages[conversation.messages?.length - 1]
-                      .body
+                      ?.body
                   }}
                 </p>
                 <p class="truncate dark:text-neutral-300" v-else>
                   {{
                     conversation?.messages[conversation.messages?.length - 1]
-                      .body
+                      ?.body
                   }}
                 </p>
               </div>
@@ -243,7 +238,6 @@ export default (await import("vue")).defineComponent({
       )[0];
     },
   },
-
   methods: {
     deleteConversation() {
       this.$emit("deleteConversation", this.conversation.id);

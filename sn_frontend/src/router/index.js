@@ -13,6 +13,7 @@ import EditProfileView from '../views/EditProfileView.vue'
 import EditPasswordView from '../views/EditPasswordView.vue'
 import NotificationsView from '../views/NotificationsView.vue'
 import ConversationView from '../views/ConversationView.vue'
+import GroupChatView from '../views/GroupChatView.vue'
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
@@ -61,6 +62,11 @@ const router = createRouter({
       path: '/chat/:id',
       name: 'conversation',
       component: ConversationView
+    },
+    {
+      path: '/group-chat/:id',
+      name: 'groupConversation',
+      component: GroupChatView
     },
     {
       path: '/profile/edit',

@@ -32,6 +32,15 @@ class ConversationSerializer(serializers.ModelSerializer):
         model = Conversation
         fields = ('id', 'users', 'modified_at_formatted','messages','theme',)
 
+class GroupConversationSerializer(serializers.ModelSerializer):
+    admin = UserSerializer(read_only=True)
+    moderators = UserSerializer(read_only=True, many=True)
+    users = UserSerializer(read_only=True, many=True)
+    messages = ConversationMessageSerializer(read_only=True, many=True)
+    class Meta:
+        model = Conversation
+        fields = ('id','admin', 'moderators', 'users', 'modified_at_formatted','messages','theme',)
+
 class ConversationDetailSerializer(serializers.ModelSerializer):
     messages = ConversationMessageSerializer(read_only=True, many=True)
     users = UserSerializer(read_only=True, many=True)

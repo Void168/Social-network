@@ -16,6 +16,18 @@ class Conversation(models.Model):
     def modified_at_formatted(self):
         return timesince(self.created_at)
 
+class GroupConversation(models.Model):
+    id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
+    users = models.ManyToManyField(User, related_name='group_conversations')
+    admin = models.ForeignKey(User, related_name='admin_groupchat', on_delete=models.CASCADE)
+    moderators = models.ManyToManyField(User, related_name='moderators_groupchat')
+    created_at = models.DateTimeField(auto_now_add=True)
+    modified_at = models.DateTimeField(auto_now=True)
+    theme = models.CharField(blank=True, default='Cổ điển', max_length=50)
+    
+    def modified_at_formatted(self):
+        return timesince(self.created_at)
+
 class SeenUser(models.Model):
     id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
     created_at = models.DateTimeField(auto_now_add=True)

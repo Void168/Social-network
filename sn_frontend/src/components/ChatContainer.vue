@@ -21,6 +21,27 @@
         </div>
       </div>
     </div>
+    <h3 class="text-xl p-4">Đoạn chat nhóm</h3>
+    <div
+      v-for="groupConversation in groupConversations"
+      v-bind:key="groupConversation.id"
+      class="hover:bg-slate-300 dark:hover:bg-slate-700"
+    >
+      <RouterLink
+        :to="{
+          name: 'groupConversation',
+          params: { id: groupConversation.id },
+        }"
+        class="flex items-center gap-2 px-4 py-2 cursor-pointer"
+      >
+        <img
+          :src="groupConversation.admin.get_avatar"
+          alt=""
+          class="h-10 w-10 rounded-full"
+        />
+        <p class="font-semibold truncate">{{ groupConversation.name }}</p>
+      </RouterLink>
+    </div>
     <div class="fixed flex gap-1 justify-end bottom-0 right-32 max-w-[1220px]">
       <div v-for="friend in friendsChat" :key="friend.id">
         <ChatWindow
@@ -43,7 +64,8 @@
 import axios from "axios";
 import { useUserStore } from "../stores/user";
 import { RouterLink } from "vue-router";
-import ConversationBox from "../components/items/ConversationBox.vue";
+import GroupConversationBox from "../components/items/GroupConversationBox.vue";
+
 import ChatWindow from "../components/items/ChatWindow.vue";
 import ChatBubble from "../components/items/ChatBubble.vue";
 
@@ -67,13 +89,13 @@ import { Popover, PopoverButton, PopoverPanel } from "@headlessui/vue";
 export default (await import("vue")).defineComponent({
   name: "chat",
   components: {
-    ConversationBox,
     RouterLink,
     Popover,
     PopoverButton,
     PopoverPanel,
     ChatWindow,
     ChatBubble,
+    GroupConversationBox,
     XMarkIcon,
     MinusIcon,
     PhoneIcon,
@@ -96,6 +118,7 @@ export default (await import("vue")).defineComponent({
   data() {
     return {
       conversations: [],
+      groupConversations: [],
       friendsChat: [],
       bubbleChats: [],
       body: "",
@@ -114,6 +137,7 @@ export default (await import("vue")).defineComponent({
   mounted() {
     this.getFriends();
     this.getConversations();
+    this.getGroupConversations();
   },
 
   methods: {
@@ -133,6 +157,17 @@ export default (await import("vue")).defineComponent({
         .get("/api/chat/")
         .then((res) => {
           this.conversations = res.data;
+        })
+        .catch((error) => {
+          console.log(error);
+        });
+    },
+    getGroupConversations() {
+      axios
+        .get("/api/chat/group/")
+        .then((res) => {
+          this.groupConversations = res.data;
+          console.log(this.groupConversations);
         })
         .catch((error) => {
           console.log(error);

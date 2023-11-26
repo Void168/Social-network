@@ -103,7 +103,7 @@
       </div>
     </nav>
 
-    <main class="px-8 py-6 bg-gray-100 dark:bg-slate-700 relative overflow-y-auto">
+    <main class="px-8 py-6 bg-gray-100 dark:bg-slate-700 min-h-screen">
       <RouterView />
     </main>
 

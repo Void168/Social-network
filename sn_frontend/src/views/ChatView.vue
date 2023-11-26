@@ -63,9 +63,9 @@ import { RouterLink } from "vue-router";
 
 import ConversationBox from "../components/items/ConversationBox.vue";
 import CreateGroupChatModal from "../components/modals/CreateGroupChatModal.vue";
+import GroupConversationBox from "../components/items/GroupConversationBox.vue";
 
 import { MagnifyingGlassIcon, PlusCircleIcon } from "@heroicons/vue/24/outline";
-import GroupConversationBox from "../components/items/GroupConversationBox.vue";
 
 export default (await import("vue")).defineComponent({
   name: "chat",
@@ -73,9 +73,9 @@ export default (await import("vue")).defineComponent({
     ConversationBox,
     RouterLink,
     CreateGroupChatModal,
+    GroupConversationBox,
     MagnifyingGlassIcon,
     PlusCircleIcon,
-    GroupConversationBox
 },
   setup() {
     const userStore = useUserStore();
@@ -147,7 +147,7 @@ export default (await import("vue")).defineComponent({
         .get("/api/chat/group/")
         .then((res) => {
           this.groupConversations = res.data
-          console.log(this.groupConversations);
+          // console.log(this.groupConversations);
         })
         .catch((error) => {
           console.log(error);

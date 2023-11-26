@@ -96,78 +96,80 @@
             v-if="groupConversation?.group_messages?.length"
             class="flex gap-1 justify-between items-center w-full"
           >
-            <div class="flex gap-2 px-2 py-1 w-full">
-              <span
-                class="font-semibold"
-                v-if="
-                  groupConversation.group_messages[
-                    groupConversation.group_messages?.length - 1
-                  ]?.created_by.id === userStore.user.id
-                "
-                >Bạn:
-              </span>
-              <span
-                v-else-if="
-                  groupConversation.group_messages[
-                    groupConversation.group_messages?.length - 1
-                  ]?.created_by.id !== userStore.user.id &&
-                  groupConversation.group_messages[
-                    groupConversation.group_messages?.length - 1
-                  ]?.seen_by
-                    .map((obj) => obj.created_by.email)
-                    .includes(userStore.user.email) === false
-                "
-                class="w-[50%] font-bold text-emerald-500 dark:text-neutral-200 truncate"
-                >{{
-                  groupConversation.group_messages[
-                    groupConversation.group_messages?.length - 1
-                  ]?.created_by.name
-                }}:
-              </span>
-              <span class="dark:text-neutral-300 truncate" v-else
-                >{{
-                  groupConversation.group_messages[
-                    groupConversation.group_messages?.length - 1
-                  ]?.created_by.name
-                }}:
-              </span>
-              <div class="flex justify-between w-[40%]">
-                <p
-                  class="truncate font-bold text-emerald-500 dark:text-neutral-200"
+            <div class="flex justify-between px-2 py-1 w-full">
+              <div class="flex gap-2 w-[90%]">
+                <span
+                  class="font-semibold"
                   v-if="
+                    groupConversation.group_messages[
+                      groupConversation.group_messages?.length - 1
+                    ]?.created_by.id === userStore.user.id
+                  "
+                  >Bạn:
+                </span>
+                <span
+                  v-else-if="
+                    groupConversation.group_messages[
+                      groupConversation.group_messages?.length - 1
+                    ]?.created_by.id !== userStore.user.id &&
                     groupConversation.group_messages[
                       groupConversation.group_messages?.length - 1
                     ]?.seen_by
                       .map((obj) => obj.created_by.email)
                       .includes(userStore.user.email) === false
                   "
+                  class="font-bold text-emerald-500 dark:text-neutral-200 truncate"
+                  >{{
+                    groupConversation.group_messages[
+                      groupConversation.group_messages?.length - 1
+                    ]?.created_by.name
+                  }}:
+                </span>
+                <span class="dark:text-neutral-300 truncate" v-else
+                  >{{
+                    groupConversation.group_messages[
+                      groupConversation.group_messages?.length - 1
+                    ]?.created_by.name
+                  }}:
+                </span>
+                <div class="flex justify-between w-[40%]">
+                  <p
+                    class="truncate font-bold text-emerald-500 dark:text-neutral-200"
+                    v-if="
+                      groupConversation.group_messages[
+                        groupConversation.group_messages?.length - 1
+                      ]?.seen_by
+                        .map((obj) => obj.created_by.email)
+                        .includes(userStore.user.email) === false
+                    "
+                  >
+                    {{
+                      groupConversation?.group_messages[
+                        groupConversation.group_messages?.length - 1
+                      ]?.body
+                    }}
+                  </p>
+                  <p class="truncate dark:text-neutral-300" v-else>
+                    {{
+                      groupConversation?.group_messages[
+                        groupConversation.group_messages?.length - 1
+                      ]?.body
+                    }}
+                  </p>
+                </div>
+                <span
+                  v-if="groupConversation?.group_messages?.length"
+                  class="text-xs text-gray-600 dark:text-neutral-300"
+                  >{{
+                    groupConversation.group_messages[
+                      groupConversation.group_messages?.length - 1
+                    ]?.created_at_formatted
+                  }}
+                  trước</span
                 >
-                  {{
-                    groupConversation?.group_messages[
-                      groupConversation.group_messages?.length - 1
-                    ]?.body
-                  }}
-                </p>
-                <p class="truncate dark:text-neutral-300" v-else>
-                  {{
-                    groupConversation?.group_messages[
-                      groupConversation.group_messages?.length - 1
-                    ]?.body
-                  }}
-                </p>
               </div>
               <span
-                v-if="groupConversation?.group_messages?.length"
-                class="text-xs text-gray-600 dark:text-neutral-300"
-                >{{
-                  groupConversation.group_messages[
-                    groupConversation.group_messages?.length - 1
-                  ]?.created_at_formatted
-                }}
-                trước</span
-              >
-              <span
-                class="bg-emerald-500 w-3 h-3 rounded-full shadow-md"
+                class="bg-emerald-500 w-3 h-3 rounded-full shadow-md flex-end"
                 v-if="
                   groupConversation.group_messages[
                     groupConversation.group_messages.length - 1
@@ -197,7 +199,6 @@ import { useToastStore } from "../../stores/toast";
 import DeleteConversationModal from "../modals/DeleteConversationModal.vue";
 
 export default (await import("vue")).defineComponent({
-  name: "GroupConversationBox",
   components: {
     Menu,
     MenuButton,

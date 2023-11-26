@@ -11,12 +11,12 @@
               <img
                 :src="avatar2"
                 alt="avatar-1"
-                class="w-9 h-9 rounded-full absolute top-0 z-10 right-0"
+                class="w-9 h-9 rounded-full absolute top-0 z-9 right-1"
               />
               <img
                 :src="avatar1"
                 alt="avatar-0"
-                class="w-9 h-9 rounded-full ring-4 absolute bottom-0 z-20"
+                class="w-9 h-9 rounded-full ring-4 absolute bottom-0 z-9"
                 :class="[selectedTheme?.ringAvatar]"
               />
             </div>
@@ -28,7 +28,7 @@
       </div>
       <div
         id="chatview-container"
-        class="overflow-y-scroll scrollbar-corner-slate-200 scrollbar-thin scrollbar-thumb-slate-400 scrollbar-track-slate-800 border border-gray-200 shadow-md dark:bg-slate-600 dark:border-slate-700 dark:text-neutral-200 h-[589px]"
+        class="overflow-y-scroll scrollbar-corner-slate-200 scrollbar-thin scrollbar-thumb-slate-400 scrollbar-track-slate-800 border border-gray-200 shadow-md dark:bg-slate-600 dark:border-slate-700 dark:text-neutral-200 h-[750px]"
       >
         <div class="flex flex-col flex-grow p-4 overflow-y-auto">
           <div v-if="activeConversation?.group_messages?.length > 0">

@@ -1,8 +1,8 @@
 <template>
-  <div class="grid grid-cols-4 gap-4 h-[750px]">
+  <div class="grid grid-cols-5 gap-4 h-[750px]">
     <div class="main-left col-span-1">
       <div
-        class="bg-white border border-gray-200 dark:bg-slate-600 dark:border-slate-700 dark:text-neutral-200 rounded-lg h-screen px-2"
+        class="bg-white border border-gray-200 dark:bg-slate-600 dark:border-slate-700 dark:text-neutral-200 rounded-lg h-[950px] px-2"
       >
         <h3 class="text-xl p-3">Đoạn hội thoại ({{ conversations.length }})</h3>
         <div v-for="conversation in conversations" :key="conversation.id">
@@ -15,7 +15,7 @@
         <div
           class="flex flex-col bg-white dark:bg-slate-600 dark:text-neutral-200 rounded-lg px-2"
         >
-          <h3 class="text-xl p-3">Đoạn hội thoại nhóm</h3>
+          <h3 class="text-xl p-3">Đoạn hội thoại nhóm ({{ groupConversations.length }})</h3>
           <div
             @click="openModal"
             class="flex gap-2 items-center justify-center px-4 py-2 bg-neutral-200 hover:bg-neutral-300 dark:bg-slate-700 dark:hover:bg-slate-800 transition duration-100 rounded-md shadow-md cursor-pointer"
@@ -39,6 +39,12 @@
     <div class="main-center col-span-3 space-y-4">
       <GroupChatBox v-bind:chats="conversations" />
     </div>
+
+    <div
+      class="col-span-1 overflow-y-auto scrollbar-thin scrollbar-corner-slate-200 scrollbar-thumb-slate-400 scrollbar-track-slate-800 space-y-4 bg-white border border-gray-200 dark:bg-slate-600 dark:border-slate-700 dark:text-neutral-200 rounded-lg"
+    >
+      <GroupChatInfo v-bind:activeConversation="activeConversation" />
+    </div>
   </div>
 </template>
 
@@ -46,15 +52,16 @@
 import axios from "axios";
 import ConversationBox from "../components/items/ConversationBox.vue";
 import GroupConversationBox from "../components/items/GroupConversationBox.vue";
+import GroupChatBox from "../components/items/GroupChatBox.vue";
+import GroupChatInfo from "../components/items/GroupChatInfo.vue";
 
 import { useUserStore } from "../stores/user";
 import { PlusCircleIcon } from "@heroicons/vue/24/outline";
 
 import { RouterLink } from "vue-router";
-import GroupChatBox from "../components/items/GroupChatBox.vue";
 
 export default (await import("vue")).defineComponent({
-  name: "chat",
+  name: "groupchat",
   setup() {
     const userStore = useUserStore();
     return {
@@ -82,7 +89,7 @@ export default (await import("vue")).defineComponent({
   },
   mounted() {
     this.getConversations();
-    this.getGroupConversations()
+    this.getGroupConversations();
   },
   methods: {
     getConversations() {
@@ -113,27 +120,27 @@ export default (await import("vue")).defineComponent({
           this.activeConversation = res.data;
           this.seenMessage();
           // console.log(this.activeConversation)
-          this.listMessages = this.activeConversation.group_messages;
+          this.listMessages = this.activeConversation?.group_messages;
         })
         .catch((error) => {
           console.log(error);
         });
     },
     seenMessage() {
-      this.$emit("seenMessage", this.activeConversation.id);
+      this.$emit("seenMessage", this.activeConversation?.id);
 
       axios
-        .post(`/api/chat/${this.activeConversation.id}/group_set_seen/`)
+        .post(`/api/chat/${this.activeConversation?.id}/group_set_seen/`)
         .then((res) => {
           // console.log(res.data);
         })
         .catch((error) => console.log(error));
     },
     seenGroupMessage() {
-      this.$emit("seenMessage", this.activeConversation.id);
+      this.$emit("seenMessage", this.activeConversation?.id);
 
       axios
-        .post(`/api/chat/${this.activeConversation.id}/group_set_seen/`)
+        .post(`/api/chat/${this.activeConversation?.id}/group_set_seen/`)
         .then((res) => {
           // console.log(res.data);
         })
@@ -158,6 +165,7 @@ export default (await import("vue")).defineComponent({
     ConversationBox,
     PlusCircleIcon,
     GroupConversationBox,
+    GroupChatInfo,
     GroupChatBox,
   },
 });

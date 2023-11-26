@@ -88,7 +88,7 @@
               v-if="user.id !== userStore.user.id"
               :src="user.get_avatar"
               alt="avatar"
-              class="w-10 h-10 rounded-full"
+              class="w-14 h-14 rounded-full shadow-lg"
             />
             <p
               class="text-xs font-bold dark:text-neutral-300"
@@ -103,7 +103,7 @@
             </p>
             <p
               v-else-if="user.id !== userStore.user.id"
-              class="text-xs dark:text-neutral-300"
+              class="text-sm dark:text-neutral-300 font-semibold"
             >
               {{ user.name }}
             </p>
@@ -125,7 +125,7 @@
             v-if="conversation?.messages?.length"
             class="flex gap-1 justify-between"
           >
-            <div class="flex gap-2">
+            <div class="flex gap-2 px-2 py-1">
               <span
                 class="font-semibold"
                 v-if="

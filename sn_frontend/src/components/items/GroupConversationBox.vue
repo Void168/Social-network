@@ -1,7 +1,7 @@
 <template>
   <div @click="$emit('seenGroupMessage')">
     <RouterLink
-      class="flex justify-between cursor-pointer"
+      class="flex justify-between cursor-pointer my-2"
       :to="{ name: 'groupConversation', params: { id: groupConversation.id } }"
     >
       <div
@@ -48,7 +48,7 @@
                   <MenuItem
                     v-slot="{ active }"
                     @click="openModal"
-                    v-if="groupConversation.admin === userStore.user.name"
+                    v-if="groupConversation.admin.name === userStore.user.name"
                   >
                     <div
                       :class="[
@@ -72,86 +72,66 @@
           />
         </div>
         <div class="flex justify-between items-center">
-          <div
-            v-for="user in groupConversation.users"
-            v-bind:key="user.id"
-            class="flex justify-center items-center gap-3"
-          >
-            <img
-              v-if="user.id !== userStore.user.id"
-              :src="user.get_avatar"
-              alt="avatar"
-              class="w-10 h-10 rounded-full"
-            />
-            <p
-              class="text-xs font-bold dark:text-neutral-300"
-              v-if="
-                user.id !== userStore.user.id &&
-                groupConversation.group_messages[
-                groupConversation.group_messages?.length - 1
-                ]?.seen_by
-                  .map((obj) => obj.created_by.email)
-                  .includes(userStore.user.email) === false
-              "
-            >
-              {{ user.name }}
-            </p>
-            <p
-              v-else-if="user.id !== userStore.user.id"
-              class="text-xs dark:text-neutral-300"
-            >
-              {{ user.name }}
+          <div class="flex justify-center items-center gap-4 w-full">
+            <div class="h-14 w-16 relative">
+              <img
+                :src="getAvatars[1]"
+                alt="avatar-1"
+                class="w-9 h-9 rounded-full absolute top-0 z-10 right-0"
+              />
+              <img
+                :src="getAvatars[0]"
+                alt="avatar-0"
+                class="w-9 h-9 rounded-full ring-4 ring-white dark:ring-slate-600 absolute bottom-0 z-20"
+              />
+            </div>
+            <p class="text-sm font-bold dark:text-neutral-300 w-full truncate">
+              {{ groupConversation.name }}
             </p>
           </div>
-
-          <span
-            v-if="groupConversation?.group_messages?.length"
-            class="text-xs text-gray-600 dark:text-neutral-300"
-            >{{
-              groupConversation.group_messages[groupConversation.group_messages?.length - 1]
-                ?.created_at_formatted
-            }}
-            trước</span
-          >
         </div>
 
-        <div class="text-sm">
+        <div class="text-sm flex gap-2 items-center">
           <div
             v-if="groupConversation?.group_messages?.length"
-            class="flex gap-1 justify-between"
+            class="flex gap-1 justify-between items-center w-full"
           >
-            <div class="flex gap-2">
+            <div class="flex gap-2 px-2 py-1 w-full">
               <span
                 class="font-semibold"
                 v-if="
-                  groupConversation.group_messages[groupConversation.group_messages?.length - 1]
-                    ?.created_by.id === userStore.user.id
+                  groupConversation.group_messages[
+                    groupConversation.group_messages?.length - 1
+                  ]?.created_by.id === userStore.user.id
                 "
                 >Bạn:
               </span>
               <span
                 v-else-if="
-                  groupConversation.group_messages[groupConversation.group_messages?.length - 1]
-                    ?.created_by.id !== userStore.user.id &&
+                  groupConversation.group_messages[
+                    groupConversation.group_messages?.length - 1
+                  ]?.created_by.id !== userStore.user.id &&
                   groupConversation.group_messages[
                     groupConversation.group_messages?.length - 1
                   ]?.seen_by
                     .map((obj) => obj.created_by.email)
                     .includes(userStore.user.email) === false
                 "
-                class="font-bold text-emerald-500 dark:text-neutral-200"
+                class="w-[50%] font-bold text-emerald-500 dark:text-neutral-200 truncate"
                 >{{
-                  groupConversation.group_messages[groupConversation.group_messages?.length - 1]
-                    ?.created_by.name
+                  groupConversation.group_messages[
+                    groupConversation.group_messages?.length - 1
+                  ]?.created_by.name
                 }}:
               </span>
-              <span class="dark:text-neutral-300" v-else
+              <span class="dark:text-neutral-300 truncate" v-else
                 >{{
-                  groupConversation.group_messages[groupConversation.group_messages?.length - 1]
-                    ?.created_by.name
+                  groupConversation.group_messages[
+                    groupConversation.group_messages?.length - 1
+                  ]?.created_by.name
                 }}:
               </span>
-              <div class="flex justify-between">
+              <div class="flex justify-between w-[40%]">
                 <p
                   class="truncate font-bold text-emerald-500 dark:text-neutral-200"
                   v-if="
@@ -163,26 +143,40 @@
                   "
                 >
                   {{
-                    groupConversation?.group_messages[groupConversation.group_messages?.length - 1]
-                      ?.body
+                    groupConversation?.group_messages[
+                      groupConversation.group_messages?.length - 1
+                    ]?.body
                   }}
                 </p>
                 <p class="truncate dark:text-neutral-300" v-else>
                   {{
-                    groupConversation?.group_messages[groupConversation.group_messages?.length - 1]
-                      ?.body
+                    groupConversation?.group_messages[
+                      groupConversation.group_messages?.length - 1
+                    ]?.body
                   }}
                 </p>
               </div>
+              <span
+                v-if="groupConversation?.group_messages?.length"
+                class="text-xs text-gray-600 dark:text-neutral-300"
+                >{{
+                  groupConversation.group_messages[
+                    groupConversation.group_messages?.length - 1
+                  ]?.created_at_formatted
+                }}
+                trước</span
+              >
+              <span
+                class="bg-emerald-500 w-3 h-3 rounded-full shadow-md"
+                v-if="
+                  groupConversation.group_messages[
+                    groupConversation.group_messages.length - 1
+                  ]?.seen_by
+                    .map((obj) => obj.created_by.email)
+                    .includes(userStore.user.email) === false
+                "
+              ></span>
             </div>
-            <span
-              class="bg-emerald-500 w-3 h-3 rounded-full shadow-md"
-              v-if="
-                groupConversation.group_messages[groupConversation.group_messages.length - 1]?.seen_by
-                  .map((obj) => obj.created_by.email)
-                  .includes(userStore.user.email) === false
-              "
-            ></span>
           </div>
         </div>
       </div>
@@ -237,13 +231,19 @@ export default (await import("vue")).defineComponent({
         (user) => this.userStore.user.id !== user.id
       )[0];
     },
+    getAvatars() {
+      return this.groupConversation?.users
+        ?.filter((user) => this.userStore.user.id !== user.id)
+        .map((user) => user?.get_avatar)
+        .slice(0, 2);
+    },
   },
   methods: {
     deleteConversation() {
       this.$emit("deleteConversation", this.groupConversation.id);
 
       axios
-        .delete(`/api/chat/${this.groupConversation.id}/delete/`)
+        .delete(`/api/chat/group/${this.groupConversation.id}/delete/`)
         .then((res) => {
           setTimeout(() => {
             this.closeModal();

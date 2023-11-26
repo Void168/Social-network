@@ -80,7 +80,9 @@ def conversation_get(request, pk):
 @api_view(['POST'])
 def group_conversation_create(request):
     users = request.data.get('users')
+    user1 = User.objects.get(id=users[0])
     group_chat = GroupConversation.objects.create(admin=request.user)
+    group_chat.name = f'Đoạn chat nhóm giữa {request.user.name}, {user1.name} và {(len(users) - 1)} người khác nữa'
     group_chat.users.add(request.user)
     
     for user in users:
@@ -229,4 +231,11 @@ def conversation_delete(request, pk):
     conversation.delete()
     
     return JsonResponse({'message': 'conversation deleted'})
+
+@api_view(['DELETE'])
+def group_conversation_delete(request, pk):
+    group_conversation = GroupConversation.objects.get(pk=pk)
+    group_conversation.delete()
+    
+    return JsonResponse({'message': 'group conversation deleted'})
     

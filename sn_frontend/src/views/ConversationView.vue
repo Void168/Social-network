@@ -1,8 +1,8 @@
 <template>
-  <div class="max-w-7xl mx-auto grid grid-cols-4 gap-4 h-[750px]">
+  <div class="grid grid-cols-4 gap-4 h-screen">
     <div class="main-left col-span-1">
       <div
-        class="bg-white border border-gray-200 dark:bg-slate-600 dark:border-slate-700 dark:text-neutral-200 rounded-lg h-[750px] px-2"
+        class="bg-white border border-gray-200 dark:bg-slate-600 dark:border-slate-700 dark:text-neutral-200 rounded-lg h-screen px-2"
       >
         <h3 class="text-xl p-3">Đoạn hội thoại ({{ conversations.length }})</h3>
         <div v-for="conversation in conversations" :key="conversation.id">
@@ -15,7 +15,7 @@
         <div
           class="flex flex-col bg-white dark:bg-slate-600 dark:text-neutral-200 rounded-lg px-2"
         >
-          <h3 class="text-xl p-3">Đoạn hội thoại nhóm</h3>
+          <h3 class="text-xl p-3">Đoạn hội thoại nhóm ({{ groupConversations.length }})</h3>
           <div
             @click="openModal"
             class="flex gap-2 items-center justify-center px-4 py-2 bg-neutral-200 hover:bg-neutral-300 dark:bg-slate-700 dark:hover:bg-slate-800 transition duration-100 rounded-md shadow-md cursor-pointer"
@@ -24,10 +24,10 @@
             <span>Tạo đoạn chat nhóm</span>
           </div>
           <div
-            v-for="conversation in groupConversations"
-            v-bind:key="conversation.id"
+            v-for="groupConversation in groupConversations"
+            v-bind:key="groupConversation.id"
           >
-            <GroupConversationBox v-bind:conversation="conversation" @seenGroupMessage="seenGroupMessage"/>
+            <GroupConversationBox v-bind:groupConversation="groupConversation" @seenGroupMessage="seenGroupMessage"/>
           </div>
         </div>
       </div>
@@ -79,6 +79,7 @@ export default (await import("vue")).defineComponent({
   },
   mounted() {
     this.getConversations();
+    this.getGroupConversations();
   },
   methods: {
     getConversations() {
@@ -96,7 +97,7 @@ export default (await import("vue")).defineComponent({
         .get("/api/chat/group/")
         .then((res) => {
           this.groupConversations = res.data
-          console.log(this.groupConversations);
+          // console.log(this.groupConversations);
         })
         .catch((error) => {
           console.log(error);

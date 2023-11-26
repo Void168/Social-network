@@ -1,8 +1,8 @@
 <template>
-  <div class="max-w-7xl mx-auto grid grid-cols-4 gap-4">
-    <div class="main-left col-span-1">
+  <div class=" grid grid-cols-4 gap-4">
+    <div class="main-left col-span-1 sticky bottom-0">
       <div
-        class="bg-white border overflow-y-scroll scrollbar-corner-slate-200 scrollbar-thin scrollbar-thumb-slate-400 scrollbar-track-slate-800 border-b border-gray-200 dark:bg-slate-600 dark:border-slate-700 dark:text-neutral-200 rounded-lg h-[750px] px-2"
+        class="bg-white border overflow-y-scroll scrollbar-corner-slate-200 scrollbar-thin scrollbar-thumb-slate-400 scrollbar-track-slate-800 border-b border-gray-200 dark:bg-slate-600 dark:border-slate-700 dark:text-neutral-200 rounded-lg container px-2"
       >
         <h3 class="text-xl p-3">Đoạn hội thoại ({{ conversations.length }})</h3>
 
@@ -27,7 +27,7 @@
         <div
           class="flex flex-col bg-white dark:bg-slate-600 dark:text-neutral-200 rounded-lg px-2"
         >
-          <h3 class="text-xl p-3">Đoạn hội thoại nhóm</h3>
+          <h3 class="text-xl p-3">Đoạn hội thoại nhóm ({{ groupConversations.length }})</h3>
           <div
             @click="openModal"
             class="flex gap-2 items-center justify-center px-4 py-2 bg-neutral-200 hover:bg-neutral-300 dark:bg-slate-700 dark:hover:bg-slate-800 transition duration-100 rounded-md shadow-md cursor-pointer"
@@ -46,7 +46,7 @@
     </div>
     <div class="main-center col-span-3 space-y-4">
       <div
-        class="bg-white h-[750px] border-gray-200 dark:bg-slate-600 dark:border-slate-700 dark:text-neutral-200 rounded-lg flex justify-center items-center"
+        class="container bg-white border-gray-200 dark:bg-slate-600 dark:border-slate-700 dark:text-neutral-200 rounded-lg flex justify-center items-center"
       >
         Chưa chọn đoạn hội thoại nào
       </div>
@@ -165,3 +165,9 @@ export default (await import("vue")).defineComponent({
   },
 });
 </script>
+
+<style scoped>
+.container {
+  min-height: calc(100vh - 100vh*0.1);
+}
+</style>

@@ -1,8 +1,8 @@
 <template>
-  <div class="max-w-7xl mx-auto grid grid-cols-4 gap-4 h-[750px]">
+  <div class="grid grid-cols-4 gap-4 h-[750px]">
     <div class="main-left col-span-1">
       <div
-        class="bg-white border border-gray-200 dark:bg-slate-600 dark:border-slate-700 dark:text-neutral-200 rounded-lg h-[750px] px-2"
+        class="bg-white border border-gray-200 dark:bg-slate-600 dark:border-slate-700 dark:text-neutral-200 rounded-lg h-screen px-2"
       >
         <h3 class="text-xl p-3">Đoạn hội thoại ({{ conversations.length }})</h3>
         <div v-for="conversation in conversations" :key="conversation.id">

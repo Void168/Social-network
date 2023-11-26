@@ -103,7 +103,7 @@
       </div>
     </nav>
 
-    <main class="px-8 py-6 bg-gray-100 dark:bg-slate-700 min-h-screen relative">
+    <main class="px-8 py-6 bg-gray-100 dark:bg-slate-700 relative overflow-y-auto">
       <RouterView />
     </main>
 
@@ -149,6 +149,13 @@ export default {
     ProfileDropdown,
   },
 
+  data() {
+    return {
+      navbarHeight: null,
+      screenHeight: null
+    }
+  },
+
   beforeCreate() {
     this.userStore.initStore();
 
@@ -171,5 +178,9 @@ html.dark {
 .router-link-active {
   --tw-text-opacity: 1;
   color: rgb(16 185 129 / var(--tw-text-opacity));
+}
+
+main {
+  min-height: calc(100vh - 129px);
 }
 </style>

@@ -331,7 +331,6 @@ export default (await import("vue")).defineComponent({
     },
   },
   mounted() {
-    this.getActiveConversation();
     this.getMessages();
     this.scrollToBottom();
   },
@@ -339,16 +338,6 @@ export default (await import("vue")).defineComponent({
     scrollToBottom() {
       const objDiv = document.getElementById("chatview-container");
       objDiv.scrollTop = objDiv.scrollHeight;
-    },
-    getActiveConversation() {
-      axios
-        .get(`/api/chat/${this.$route.params.id}/`)
-        .then((res) => {
-          this.recentConversation = res.data;
-        })
-        .catch((error) => {
-          console.log(error);
-        });
     },
     getMessages() {
       axios

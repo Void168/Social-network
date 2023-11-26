@@ -18,6 +18,7 @@ class Conversation(models.Model):
 
 class GroupConversation(models.Model):
     id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
+    name = models.CharField(default = '', max_length=255)
     users = models.ManyToManyField(User, related_name='group_conversations')
     admin = models.ForeignKey(User, related_name='admin_groupchat', on_delete=models.CASCADE)
     moderators = models.ManyToManyField(User, related_name='moderators_groupchat')

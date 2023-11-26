@@ -6,6 +6,7 @@ const themes = [
     textColor: "text-neutral-200",
     hover: "hover:bg-violet-500",
     iconColor: "text-violet-500 dark:text-violet-400",
+    ringAvatar: "ring-blue-800"
   },
   {
     name: "Hoàng hôn",
@@ -14,6 +15,7 @@ const themes = [
     textColor: "text-neutral-100",
     hover: "hover:bg-pink-600",
     iconColor: "text-pink-500 dark:text-pink-400",
+    ringAvatar: "ring-orange-700"
   },
   {
     name: "Bãi biển",
@@ -21,6 +23,7 @@ const themes = [
     textColor: "text-neutral-100",
     hover: "hover:bg-sky-400",
     iconColor: "text-amber-500 dark:text-amber-400",
+    ringAvatar: "ring-blue-500"
   },
   {
     name: "Giáng sinh",
@@ -29,6 +32,7 @@ const themes = [
     textColor: "text-slate-800",
     hover: "hover:bg-emerald-400",
     iconColor: "text-emerald-500 dark:text-emerald-400",
+    ringAvatar: "ring-neutral-100"
   },
   {
     name: "Mùa xuân",
@@ -37,6 +41,7 @@ const themes = [
     textColor: "text-slate-700",
     hover: "hover:bg-rose-400",
     iconColor: "text-amber-500 dark:text-amber-400",
+    ringAvatar: "ring-neutral-200"
   },
   {
     name: "Mùa hè",
@@ -45,6 +50,7 @@ const themes = [
     textColor: "text-slate-700",
     hover: "hover:bg-emerald-500 hover:text-neutral-200",
     iconColor: "text-emerald-500 dark:text-emerald-400",
+    ringAvatar: "ring-amber-300"
   },
   {
     name: "Mùa thu",
@@ -53,6 +59,7 @@ const themes = [
     textColor: "text-neutral-200",
     hover: "hover:bg-amber-600",
     iconColor: "text-orange-700 dark:text-orange-600",
+    ringAvatar: "ring-rose-600"
   },
   {
     name: "Mùa đông",
@@ -60,6 +67,7 @@ const themes = [
     textColor: "text-slate-700",
     hover: "hover:bg-slate-300",
     iconColor: "text-cyan-500 dark:text-cyan-400",
+    ringAvatar: "ring-white"
   },
   {
     name: "Tình nhân",
@@ -67,6 +75,7 @@ const themes = [
     textColor: "text-slate-800",
     hover: "hover:bg-rose-300",
     iconColor: "text-red-500 dark:text-red-400",
+    ringAvatar: "ring-white"
   },
   {
     name: "Cà phê",
@@ -75,6 +84,7 @@ const themes = [
     textColor: "text-neutral-200",
     hover: "hover:bg-amber-600",
     iconColor: "text-amber-800 dark:text-amber-700",
+    ringAvatar: "ring-yellow-700"
   },
   {
     name: "Bóng đá",
@@ -83,6 +93,7 @@ const themes = [
     textColor: "text-neutral-100",
     hover: "hover:bg-emerald-400",
     iconColor: "text-slate-700 dark:text-slate-200",
+    ringAvatar: "ring-neutral-300"
   },
   {
     name: "Cổ điển",
@@ -90,6 +101,7 @@ const themes = [
     textColor: "text-neutral-200",
     hover: "hover:bg-emerald-400",
     iconColor: "text-emerald-500 dark:text-emerald-400",
+    ringAvatar: "ring-emerald-500"
   },
 ]
 

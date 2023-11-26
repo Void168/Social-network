@@ -3,11 +3,11 @@ from django.http import JsonResponse
 from rest_framework.decorators import api_view, authentication_classes, permission_classes
 from django.db.models import Q
 
-from .forms import MessageForm, AttachmentForm, ChooseThemeForm
+from .forms import MessageForm, GroupMessageForm, AttachmentForm, ChooseThemeForm
 
 from account.models import User
 from .models import Conversation, GroupConversation, ConversationMessage, SeenUser
-from .serializers import ConversationSerializer, ConversationDetailSerializer, GroupConversationSerializer, ConversationMessageSerializer, SeenUserSerializer
+from .serializers import ConversationSerializer, ConversationDetailSerializer, GroupConversationSerializer, ConversationMessageSerializer, GroupConversationMessageSerializer, SeenUserSerializer
 
 @api_view(['GET'])
 def conversation_list(request):
@@ -27,14 +27,14 @@ def group_conversation_list(request):
 
 @api_view(['GET'])
 def conversation_detail(request, pk):
-    conversation = GroupConversation.objects.filter(users__in=list([request.user])).get(pk=pk)
+    conversation = Conversation.objects.filter(users__in=list([request.user])).get(pk=pk)
     serializer = ConversationDetailSerializer(conversation)
     
     return JsonResponse(serializer.data, safe=False)
 
 @api_view(['GET'])
 def group_conversation_detail(request, pk):
-    group_conversation = Conversation.objects.filter(users__in=list([request.user])).get(pk=pk)
+    group_conversation = GroupConversation.objects.filter(users__in=list([request.user])).get(pk=pk)
     serializer = GroupConversationSerializer(group_conversation)
     
     return JsonResponse(serializer.data, safe=False)
@@ -92,6 +92,15 @@ def group_conversation_create(request):
     
     return JsonResponse(serializer.data, safe=False)
 
+@api_view(['GET'])
+def group_conversation_get(request, pk):
+
+    group_conversation = GroupConversation.objects.get(pk=pk)
+
+    serializer = GroupConversationSerializer(group_conversation)
+    
+    return JsonResponse(serializer.data, safe=False)
+
 @api_view(['POST'])
 def conversation_send_message(request, pk):
     form = MessageForm(request.POST)
@@ -132,7 +141,7 @@ def conversation_send_message(request, pk):
 
 @api_view(['POST'])
 def group_conversation_send_message(request, pk):
-    form = MessageForm(request.POST)
+    form = GroupMessageForm(request.POST)
     attachment = None
     attachment_form = AttachmentForm(request.POST, request.FILES)
     
@@ -145,24 +154,24 @@ def group_conversation_send_message(request, pk):
         attachment.save()
 
     if form.is_valid():
-        message = form.save(commit=False)
-        message.created_by = request.user
-        message.group_conversation = group_conversation
+        group_message = form.save(commit=False)
+        group_message.created_by = request.user
+        group_message.group_conversation = group_conversation
         for user in group_conversation.users.all():
             if user != request.user:
                 sent_to = user
-                message.sent_to = sent_to
+                group_message.sent_to = sent_to
                 
-        message.save()
+        group_message.save()
         
         if attachment:
-            message.attachments.add(attachment)
-            message.save()
+            group_message.attachments.add(attachment)
+            group_message.save()
         
-        message.seen_by.add(seenUser)
-        message.save()
+        group_message.seen_by.add(seenUser)
+        group_message.save()
 
-        serializer = ConversationMessageSerializer(message)
+        serializer = GroupConversationMessageSerializer(group_message)
 
         return JsonResponse(serializer.data, safe=False)
     else:
@@ -205,14 +214,14 @@ def group_set_seen(request, pk):
     group_conversation = GroupConversation.objects.filter(users__in=list([request.user])).get(pk=pk)
     seenUser = SeenUser.objects.create(created_by=request.user)
         
-    messages = group_conversation.messages.exclude(created_by=request.user)
+    group_messages = group_conversation.group_messages.exclude(created_by=request.user)
     
-    for message in messages:
-        if not message.seen_by.all().filter(created_by=request.user):
-            message.seen_by.add(seenUser)
-            message.save()
+    for group_message in group_messages:
+        if not group_message.seen_by.all().filter(created_by=request.user):
+            group_message.seen_by.add(seenUser)
+            group_message.save()
             
-    return JsonResponse({'message': 'Seen'})
+    return JsonResponse({'group_message': 'Seen'})
 
 @api_view(['DELETE'])
 def conversation_delete(request, pk):

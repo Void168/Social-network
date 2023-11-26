@@ -23,7 +23,7 @@
           class="overflow-y-scroll scrollbar-corner-slate-200 scrollbar-thin scrollbar-thumb-slate-400 scrollbar-track-slate-800 border border-gray-200 shadow-md dark:bg-slate-600 dark:border-slate-700 dark:text-neutral-200 h-[589px]"
         >
           <div class="flex flex-col flex-grow p-4 overflow-y-auto">
-            <div v-if="recentConversation?.messages?.length > 0">
+            <div v-if="recentConversation?.group_messages?.length > 0">
               <div
                 v-for="message in listMessages"
                 v-bind:key="message.id"
@@ -122,7 +122,7 @@
                   <div>
                     <div
                       v-if="
-                        recentConversation?.messages?.filter(
+                        recentConversation?.group_messages?.filter(
                           (user) => user.sent_to?.id === userStore.user.id
                         )
                       "
@@ -342,7 +342,7 @@
       },
       getActiveConversation() {
         axios
-          .get(`/api/chat/${this.$route.params.id}/`)
+          .get(`/api/chat/group/${this.$route.params.id}/`)
           .then((res) => {
             this.recentConversation = res.data;
           })
@@ -352,10 +352,10 @@
       },
       getMessages() {
         axios
-          .get(`/api/chat/${this.$route.params.id}/`)
+          .get(`/api/chat/group/${this.$route.params.id}/`)
           .then((res) => {
             this.recentConversation = res.data;
-            this.listMessages = this.recentConversation.messages;
+            this.listMessages = this.recentConversation.group_messages;
             let users = [];
             for (let i = 0; i < this.recentConversation.users.length; i++) {
               users.push(this.recentConversation.users[i]);
@@ -409,7 +409,7 @@
           .then((res) => {
             // console.log(res.data);
             this.scrollToBottom();
-            this.recentConversation.messages?.push(res.data);
+            this.recentConversation.group_messages?.push(res.data);
             this.$refs.file.value = null;
             this.url = null;
             this.body = "";

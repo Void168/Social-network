@@ -2,7 +2,7 @@
   <div @click="$emit('seenGroupMessage')">
     <RouterLink
       class="flex justify-between cursor-pointer"
-      :to="{ name: 'conversation', params: { id: conversation.id } }"
+      :to="{ name: 'groupConversation', params: { id: groupConversation.id } }"
     >
       <div
         class="group relative flex flex-col w-full gap-1 px-3 py-2 rounded-lg hover:bg-gray-200 dark:hover:bg-slate-500 duration-100"
@@ -48,7 +48,7 @@
                   <MenuItem
                     v-slot="{ active }"
                     @click="openModal"
-                    v-if="conversation.admin === userStore.user.name"
+                    v-if="groupConversation.admin === userStore.user.name"
                   >
                     <div
                       :class="[
@@ -73,7 +73,7 @@
         </div>
         <div class="flex justify-between items-center">
           <div
-            v-for="user in conversation.users"
+            v-for="user in groupConversation.users"
             v-bind:key="user.id"
             class="flex justify-center items-center gap-3"
           >
@@ -87,8 +87,8 @@
               class="text-xs font-bold dark:text-neutral-300"
               v-if="
                 user.id !== userStore.user.id &&
-                conversation.messages[
-                  conversation.messages?.length - 1
+                groupConversation.group_messages[
+                groupConversation.group_messages?.length - 1
                 ]?.seen_by
                   .map((obj) => obj.created_by.email)
                   .includes(userStore.user.email) === false
@@ -105,10 +105,10 @@
           </div>
 
           <span
-            v-if="conversation?.messages?.length"
+            v-if="groupConversation?.group_messages?.length"
             class="text-xs text-gray-600 dark:text-neutral-300"
             >{{
-              conversation.messages[conversation.messages?.length - 1]
+              groupConversation.group_messages[groupConversation.group_messages?.length - 1]
                 ?.created_at_formatted
             }}
             trước</span
@@ -117,37 +117,37 @@
 
         <div class="text-sm">
           <div
-            v-if="conversation?.messages?.length"
+            v-if="groupConversation?.group_messages?.length"
             class="flex gap-1 justify-between"
           >
             <div class="flex gap-2">
               <span
                 class="font-semibold"
                 v-if="
-                  conversation.messages[conversation.messages?.length - 1]
+                  groupConversation.group_messages[groupConversation.group_messages?.length - 1]
                     ?.created_by.id === userStore.user.id
                 "
                 >Bạn:
               </span>
               <span
                 v-else-if="
-                  conversation.messages[conversation.messages?.length - 1]
+                  groupConversation.group_messages[groupConversation.group_messages?.length - 1]
                     ?.created_by.id !== userStore.user.id &&
-                  conversation.messages[
-                    conversation.messages?.length - 1
+                  groupConversation.group_messages[
+                    groupConversation.group_messages?.length - 1
                   ]?.seen_by
                     .map((obj) => obj.created_by.email)
                     .includes(userStore.user.email) === false
                 "
                 class="font-bold text-emerald-500 dark:text-neutral-200"
                 >{{
-                  conversation.messages[conversation.messages?.length - 1]
+                  groupConversation.group_messages[groupConversation.group_messages?.length - 1]
                     ?.created_by.name
                 }}:
               </span>
               <span class="dark:text-neutral-300" v-else
                 >{{
-                  conversation.messages[conversation.messages?.length - 1]
+                  groupConversation.group_messages[groupConversation.group_messages?.length - 1]
                     ?.created_by.name
                 }}:
               </span>
@@ -155,21 +155,21 @@
                 <p
                   class="truncate font-bold text-emerald-500 dark:text-neutral-200"
                   v-if="
-                    conversation.messages[
-                      conversation.messages?.length - 1
+                    groupConversation.group_messages[
+                      groupConversation.group_messages?.length - 1
                     ]?.seen_by
                       .map((obj) => obj.created_by.email)
                       .includes(userStore.user.email) === false
                   "
                 >
                   {{
-                    conversation?.messages[conversation.messages?.length - 1]
+                    groupConversation?.group_messages[groupConversation.group_messages?.length - 1]
                       ?.body
                   }}
                 </p>
                 <p class="truncate dark:text-neutral-300" v-else>
                   {{
-                    conversation?.messages[conversation.messages?.length - 1]
+                    groupConversation?.group_messages[groupConversation.group_messages?.length - 1]
                       ?.body
                   }}
                 </p>
@@ -178,7 +178,7 @@
             <span
               class="bg-emerald-500 w-3 h-3 rounded-full shadow-md"
               v-if="
-                conversation.messages[conversation.messages.length - 1]?.seen_by
+                groupConversation.group_messages[groupConversation.group_messages.length - 1]?.seen_by
                   .map((obj) => obj.created_by.email)
                   .includes(userStore.user.email) === false
               "
@@ -203,7 +203,7 @@ import { useToastStore } from "../../stores/toast";
 import DeleteConversationModal from "../modals/DeleteConversationModal.vue";
 
 export default (await import("vue")).defineComponent({
-  name: "ConversationBox",
+  name: "GroupConversationBox",
   components: {
     Menu,
     MenuButton,
@@ -220,7 +220,7 @@ export default (await import("vue")).defineComponent({
     };
   },
   props: {
-    conversation: Object,
+    groupConversation: Object,
   },
   setup() {
     const userStore = useUserStore();
@@ -233,17 +233,17 @@ export default (await import("vue")).defineComponent({
   },
   computed: {
     getOtherUserId() {
-      return this.conversation.users?.filter(
+      return this.groupConversation.users?.filter(
         (user) => this.userStore.user.id !== user.id
       )[0];
     },
   },
   methods: {
     deleteConversation() {
-      this.$emit("deleteConversation", this.conversation.id);
+      this.$emit("deleteConversation", this.groupConversation.id);
 
       axios
-        .delete(`/api/chat/${this.conversation.id}/delete/`)
+        .delete(`/api/chat/${this.groupConversation.id}/delete/`)
         .then((res) => {
           setTimeout(() => {
             this.closeModal();

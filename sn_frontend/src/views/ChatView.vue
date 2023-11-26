@@ -35,12 +35,12 @@
             <PlusCircleIcon class="w-8 h-8" />
             <span @click="getFriends">Tạo đoạn chat nhóm</span>
           </div>
-          <!-- <div
-            v-for="conversation in groupConversations"
-            v-bind:key="conversation.id"
+          <div
+            v-for="groupConversation in groupConversations"
+            v-bind:key="groupConversation.id"
           >
-            <GroupConversationBox v-bind:conversation="conversation" />
-          </div> -->
+            <GroupConversationBox v-bind:groupConversation="groupConversation" />
+          </div>
         </div>
       </div>
     </div>
@@ -130,7 +130,8 @@ export default (await import("vue")).defineComponent({
       axios
         .get(`/api/friends/${this.userStore.user.id}/`)
         .then((res) => {
-          res.data.friends.forEach((friend) => {
+        // console.log(res.data)
+          res.data.friends?.forEach((friend) => {
             const obj = {};
             obj["label"] = friend.name;
             obj["value"] = friend.id;
@@ -146,7 +147,7 @@ export default (await import("vue")).defineComponent({
         .get("/api/chat/group/")
         .then((res) => {
           this.groupConversations = res.data
-          // console.log(this.groupConversations);
+          console.log(this.groupConversations);
         })
         .catch((error) => {
           console.log(error);

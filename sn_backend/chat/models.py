@@ -60,3 +60,17 @@ class ConversationMessage(models.Model):
     
     def created_at_formatted(self):
         return timesince(self.created_at)
+
+class GroupConversationMessage(models.Model):
+    id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
+    group_conversation = models.ForeignKey(GroupConversation, related_name='group_messages', on_delete=models.CASCADE)
+    body = models.TextField(blank=True)
+    attachments = models.ManyToManyField(MessageAttachment, blank=True)
+    sent_to = models.ForeignKey(User, related_name='group_received_messages', on_delete=models.CASCADE)
+    created_at = models.DateTimeField(auto_now_add=True)
+    created_by = models.ForeignKey(User, related_name='group_sent_messages', on_delete=models.CASCADE)
+    is_latest_message = models.BooleanField(default=False)
+    seen_by = models.ManyToManyField(SeenUser, related_name='group_seen_message')
+    
+    def created_at_formatted(self):
+        return timesince(self.created_at)

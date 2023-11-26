@@ -16,4 +16,5 @@ urlpatterns = [
     path('<uuid:pk>/get/', api.conversation_get, name='conversation_get'),
     path('<uuid:user_pk>/create/', api.conversation_create, name='conversation_create'),
     path('create-group-chat/', api.group_conversation_create, name='group_conversation_create'),
+    path('group/<uuid:pk>/get/', api.group_conversation_get, name='group_conversation_get'),
 ]

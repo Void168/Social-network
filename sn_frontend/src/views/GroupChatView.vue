@@ -24,11 +24,11 @@
             <span>Tạo đoạn chat nhóm</span>
           </div>
           <div
-            v-for="conversation in groupConversations"
-            v-bind:key="conversation.id"
+            v-for="groupConversation in groupConversations"
+            v-bind:key="groupConversation.id"
           >
             <GroupConversationBox
-              v-bind:conversation="conversation"
+              v-bind:groupConversation="groupConversation"
               @seenGroupMessage="seenGroupMessage"
             />
           </div>
@@ -82,6 +82,7 @@ export default (await import("vue")).defineComponent({
   },
   mounted() {
     this.getConversations();
+    this.getGroupConversations()
   },
   methods: {
     getConversations() {
@@ -99,7 +100,7 @@ export default (await import("vue")).defineComponent({
         .get("/api/chat/group/")
         .then((res) => {
           this.groupConversations = res.data;
-          console.log(this.groupConversations);
+          // console.log(this.groupConversations);
         })
         .catch((error) => {
           console.log(error);
@@ -107,12 +108,12 @@ export default (await import("vue")).defineComponent({
     },
     getMessages() {
       axios
-        .get(`/api/chat/${this.$route.params.id}/`)
+        .get(`/api/chat/group/${this.$route.params.id}/`)
         .then((res) => {
           this.activeConversation = res.data;
           this.seenMessage();
           // console.log(this.activeConversation)
-          this.listMessages = this.activeConversation.messages;
+          this.listMessages = this.activeConversation.group_messages;
         })
         .catch((error) => {
           console.log(error);
@@ -122,7 +123,7 @@ export default (await import("vue")).defineComponent({
       this.$emit("seenMessage", this.activeConversation.id);
 
       axios
-        .post(`/api/chat/${this.activeConversation.id}/set_seen/`)
+        .post(`/api/chat/${this.activeConversation.id}/group_set_seen/`)
         .then((res) => {
           // console.log(res.data);
         })
@@ -144,7 +145,7 @@ export default (await import("vue")).defineComponent({
           body: this.body,
         })
         .then((res) => {
-          this.activeConversation.messages.push(res.data);
+          this.activeConversation.group_messages.push(res.data);
           this.body = "";
         })
         .catch((error) => {

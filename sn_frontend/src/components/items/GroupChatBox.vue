@@ -7,7 +7,10 @@
           :class="[selectedTheme?.background, selectedTheme?.textColor]"
         >
           <div class="flex items-center gap-2">
-            <div class="h-14 w-16 relative">
+            <div
+              class="h-14 w-16 relative"
+              v-if="!activeConversation.get_avatar"
+            >
               <img
                 :src="avatar2"
                 alt="avatar-1"
@@ -20,6 +23,12 @@
                 :class="[selectedTheme?.ringAvatar]"
               />
             </div>
+            <img
+              v-else
+              :src="activeConversation.get_avatar"
+              alt="avatar-group"
+              class="w-14 h-14 rounded-full"
+            />
             <span class="font-bold">{{ activeConversation.group_name }}</span>
           </div>
 
@@ -336,12 +345,12 @@ export default (await import("vue")).defineComponent({
     avatar1() {
       return this.activeConversation?.users
         ?.filter((user) => this.userStore.user.id !== user.id)
-        .map((user) => user?.get_avatar)[0]
+        .map((user) => user?.get_avatar)[0];
     },
     avatar2() {
       return this.activeConversation?.users
         ?.filter((user) => this.userStore.user.id !== user.id)
-        .map((user) => user?.get_avatar)[1]
+        .map((user) => user?.get_avatar)[1];
     },
   },
   watch: {

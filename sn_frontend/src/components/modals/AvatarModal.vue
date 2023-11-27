@@ -282,8 +282,6 @@ export default (await import("vue")).defineComponent({
           .then((res) => {
             
             if (res.data.message === "avatar updated") {
-              // console.log(res.data);
-              // console.log(this.share)
               this.toastStore.showToast(
                 5000,
                 "Thay đổi ảnh đại diện thành công.",

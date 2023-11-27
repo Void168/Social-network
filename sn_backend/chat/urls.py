@@ -13,6 +13,7 @@ urlpatterns = [
     path('<uuid:pk>/choose_theme/', api.choose_theme, name='choose_theme'),
     path('group/<uuid:pk>/choose_group_theme/', api.choose_group_theme, name='choose_group_theme'),
     path('group/<uuid:pk>/change-group-name/', api.set_group_name, name='set_group_name'),
+    path('group/<uuid:pk>/change-group-avatar/', api.set_group_avatar, name='set_group_avatar'),
     path('<uuid:pk>/delete/', api.conversation_delete, name='conversation_delete'),
     path('group/<uuid:pk>/delete/', api.group_conversation_delete, name='group_conversation_delete'),
     path('<uuid:user_pk>/get-or-create/', api.conversation_get_or_create, name='conversation_get_or_create'),

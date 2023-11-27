@@ -31,3 +31,8 @@ class ChangeGroupNameForm(ModelForm):
     class Meta:
         model = GroupConversation
         fields = ('group_name',)
+
+class AvatarGroupForm(ModelForm):
+    class Meta:
+        model = GroupConversation
+        fields = ('avatar',)

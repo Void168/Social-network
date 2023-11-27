@@ -73,7 +73,7 @@
         </div>
         <div class="flex justify-between items-center">
           <div class="flex justify-center items-center gap-4 w-full">
-            <div class="h-14 w-16 relative">
+            <div class="h-14 w-16 relative" v-if="!groupConversation.get_avatar">
               <img
                 :src="getAvatars[1]"
                 alt="avatar-1"
@@ -85,6 +85,12 @@
                 class="w-9 h-9 rounded-full ring-4 ring-white dark:ring-slate-600 absolute bottom-0 z-20"
               />
             </div>
+            <img
+              v-else
+              :src="groupConversation.get_avatar"
+              alt="avatar-group"
+              class="w-14 h-14 rounded-full"
+            />
             <p class="text-sm font-bold dark:text-neutral-300 w-full truncate">
               {{ groupConversation.group_name }}
             </p>

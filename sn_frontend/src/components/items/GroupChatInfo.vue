@@ -1,7 +1,7 @@
 <template>
   <div class="py-4">
     <div class="flex flex-col items-center justify-center">
-      <div class="h-14 w-16 relative">
+      <div class="h-14 w-16 relative" v-if="!activeConversation.get_avatar">
         <img
           :src="avatar1"
           alt="avatar-1"
@@ -13,6 +13,12 @@
           class="w-9 h-9 rounded-full ring-4 ring-white dark:ring-slate-600 absolute bottom-0 z-20"
         />
       </div>
+      <img
+        v-else
+        :src="activeConversation.get_avatar"
+        alt="avatar-group"
+        class="w-20 h-20 rounded-full shadow-md"
+      />
       <p class="text-center font-semibold my-4 p-2">
         {{ activeConversation?.group_name }}
       </p>
@@ -79,6 +85,7 @@
               <PhotoIcon class="w-8 h-8 p-1 dark:text-neutral-200" />
               <span class="text-lg">Thay đổi ảnh nhóm</span>
               <ChangeGroupChatAvatarModal
+                :activeConversation="activeConversation"
                 :show="isChangeAvatarOpen"
                 @closeModal="closeChangeGroupChatAvatarModal"
                 @changeGroupChatAvatar="changeGroupChatAvatar"

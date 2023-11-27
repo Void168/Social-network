@@ -247,6 +247,17 @@ def set_group_name(request, pk):
         return JsonResponse({'message':'Failed'})
 
 @api_view(['POST'])
+def kick_user(request, pk, user_pk):
+    user_wanna_kick = User.objects.get(pk=user_pk)
+    group_conversation = GroupConversation.objects.filter(users__in=list([request.user])).get(pk=pk)
+    group_conversation.users.remove(user_wanna_kick)
+    group_conversation.save()
+    
+    serializer = GroupConversationSerializer(group_conversation)
+    
+    return JsonResponse(serializer.data)
+
+@api_view(['POST'])
 def set_seen(request, pk):
     conversation = Conversation.objects.filter(users__in=list([request.user])).get(pk=pk)
     seenUser = SeenUser.objects.create(created_by=request.user)

@@ -224,6 +224,7 @@
                             activeConversation.admin.id === userStore.user.id &&
                             activeConversation.admin.id !== user.id
                           "
+                          @click="kickUser(user)"
                         >
                           <MenuItem v-slot="{ active }">
                             <button
@@ -426,11 +427,13 @@ export default (await import("vue")).defineComponent({
     addUsers() {
       console.log("hello");
     },
-    changeGroupChatName() {
-      console.log("hello");
-    },
-    changeGroupChatAvatar() {
-      console.log("hello");
+    kickUser(user) {
+      axios
+        .post(
+          `/api/chat/group/${this.activeConversation.id}/kick-user/${user.id}/`
+        )
+        .then((res) => console.log(res.data))
+        .catch((error) => console.log(error));
     },
   },
   components: {

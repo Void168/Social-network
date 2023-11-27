@@ -49,7 +49,7 @@ class GroupConversationSerializer(serializers.ModelSerializer):
     group_messages = GroupConversationMessageSerializer(read_only=True, many=True)
     class Meta:
         model = GroupConversation
-        fields = ('id','name', 'admin', 'moderators', 'users', 'modified_at_formatted','group_messages','theme',)
+        fields = ('id','name', 'admin', 'moderators', 'users', 'get_avatar', 'modified_at_formatted','group_messages','theme',)
 
 class ConversationDetailSerializer(serializers.ModelSerializer):
     messages = ConversationMessageSerializer(read_only=True, many=True)

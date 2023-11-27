@@ -20,6 +20,7 @@ class GroupConversation(models.Model):
     id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
     name = models.CharField(default = '', max_length=255)
     users = models.ManyToManyField(User, related_name='group_conversations')
+    avatar = models.ImageField(upload_to='group_avatars', blank=True, null=True)
     admin = models.ForeignKey(User, related_name='admin_groupchat', on_delete=models.CASCADE)
     moderators = models.ManyToManyField(User, related_name='moderators_groupchat')
     created_at = models.DateTimeField(auto_now_add=True)
@@ -28,6 +29,10 @@ class GroupConversation(models.Model):
     
     def modified_at_formatted(self):
         return timesince(self.created_at)
+    
+    def get_avatar(self):
+        if self.avatar:
+            return 'http://127.0.0.1:8000' + self.avatar.url
 
 class SeenUser(models.Model):
     id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)

@@ -3,7 +3,7 @@ from django.http import JsonResponse
 from rest_framework.decorators import api_view, authentication_classes, permission_classes
 from django.db.models import Q
 
-from .forms import MessageForm, GroupMessageForm, AttachmentForm, ChooseThemeForm
+from .forms import MessageForm, GroupMessageForm, AttachmentForm, ChooseThemeForm, ChooseGroupThemeForm
 
 from account.models import User
 from .models import Conversation, GroupConversation, ConversationMessage, SeenUser
@@ -195,7 +195,23 @@ def choose_theme(request, pk):
         return JsonResponse(serializer.data)
     else: 
         return JsonResponse({'message':'Failed'})
+
+@api_view(['POST'])
+def choose_group_theme(request, pk):
+    current_user = request.user
+    group_conversation = GroupConversation.objects.filter(users__in=list([request.user])).get(pk=pk)
+    form = ChooseGroupThemeForm(data=request.POST, instance=current_user)
     
+    if form.is_valid():
+        form.save()
+        group_conversation.theme = request.POST['theme']
+        group_conversation.save()
+    
+        serializer = GroupConversationSerializer(group_conversation)
+    
+        return JsonResponse(serializer.data)
+    else: 
+        return JsonResponse({'message':'Failed'})
 
 @api_view(['POST'])
 def set_seen(request, pk):

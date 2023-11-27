@@ -1,6 +1,6 @@
 from django.forms import ModelForm
 
-from .models import ConversationMessage, GroupConversationMessage, MessageAttachment, Conversation
+from .models import ConversationMessage, GroupConversationMessage, MessageAttachment, Conversation, GroupConversation
 
 class MessageForm(ModelForm):
     class Meta:
@@ -20,4 +20,9 @@ class AttachmentForm(ModelForm):
 class ChooseThemeForm(ModelForm):
     class Meta:
         model = Conversation
+        fields = ('theme',)
+
+class ChooseGroupThemeForm(ModelForm):
+    class Meta:
+        model = GroupConversation
         fields = ('theme',)

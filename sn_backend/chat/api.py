@@ -3,7 +3,7 @@ from django.http import JsonResponse
 from rest_framework.decorators import api_view, authentication_classes, permission_classes
 from django.db.models import Q
 
-from .forms import MessageForm, GroupMessageForm, AttachmentForm, ChooseThemeForm, ChooseGroupThemeForm
+from .forms import MessageForm, GroupMessageForm, AttachmentForm, ChooseThemeForm, ChooseGroupThemeForm, ChangeGroupNameForm
 
 from account.models import User
 from .models import Conversation, GroupConversation, ConversationMessage, SeenUser
@@ -82,7 +82,7 @@ def group_conversation_create(request):
     users = request.data.get('users')
     user1 = User.objects.get(id=users[0])
     group_chat = GroupConversation.objects.create(admin=request.user)
-    group_chat.name = f'Đoạn chat nhóm giữa {request.user.name}, {user1.name} và {(len(users) - 1)} người khác nữa'
+    group_chat.group_name = f'Đoạn chat nhóm giữa {request.user.name}, {user1.name} và {(len(users) - 1)} người khác nữa'
     group_chat.users.add(request.user)
     
     for user in users:
@@ -208,6 +208,24 @@ def choose_group_theme(request, pk):
         group_conversation.save()
     
         serializer = GroupConversationSerializer(group_conversation)
+    
+        return JsonResponse(serializer.data)
+    else: 
+        return JsonResponse({'message':'Failed'})
+
+@api_view(['POST'])
+def set_group_name(request, pk):
+    current_user = request.user
+    group_conversation = GroupConversation.objects.filter(users__in=list([request.user])).get(pk=pk)
+    form = ChangeGroupNameForm(data=request.POST, instance=current_user)
+    
+    if form.is_valid():
+        form.save()
+        group_conversation.group_name = request.POST['group_name']
+        
+        group_conversation.save()
+    
+        serializer = GroupConversationSerializer(current_user)
     
         return JsonResponse(serializer.data)
     else: 

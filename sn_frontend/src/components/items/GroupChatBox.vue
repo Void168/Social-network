@@ -20,7 +20,7 @@
                 :class="[selectedTheme?.ringAvatar]"
               />
             </div>
-            <span class="font-bold">{{ activeConversation.name }}</span>
+            <span class="font-bold">{{ activeConversation.group_name }}</span>
           </div>
 
           <span class="font-semibold">Đang hoạt động</span>

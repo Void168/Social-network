@@ -18,7 +18,8 @@ class Conversation(models.Model):
 
 class GroupConversation(models.Model):
     id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
-    name = models.CharField(default = '', max_length=255)
+    name = models.TextField(default = '', max_length=255)
+    group_name = models.TextField(default = '', max_length=255)
     users = models.ManyToManyField(User, related_name='group_conversations')
     avatar = models.ImageField(upload_to='group_avatars', blank=True, null=True)
     admin = models.ForeignKey(User, related_name='admin_groupchat', on_delete=models.CASCADE)

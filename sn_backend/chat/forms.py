@@ -26,3 +26,8 @@ class ChooseGroupThemeForm(ModelForm):
     class Meta:
         model = GroupConversation
         fields = ('theme',)
+        
+class ChangeGroupNameForm(ModelForm):
+    class Meta:
+        model = GroupConversation
+        fields = ('group_name',)

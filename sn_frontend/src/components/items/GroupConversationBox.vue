@@ -86,7 +86,7 @@
               />
             </div>
             <p class="text-sm font-bold dark:text-neutral-300 w-full truncate">
-              {{ groupConversation.name }}
+              {{ groupConversation.group_name }}
             </p>
           </div>
         </div>
@@ -97,7 +97,7 @@
             class="flex gap-1 justify-between items-center w-full"
           >
             <div class="flex justify-between px-2 py-1 w-full">
-              <div class="flex gap-2 w-[90%]">
+              <div class="flex gap-2 w-full items-center">
                 <span
                   class="font-semibold"
                   v-if="

@@ -14,7 +14,7 @@
         />
       </div>
       <p class="text-center font-semibold my-4 p-2">
-        {{ activeConversation?.name }}
+        {{ activeConversation?.group_name }}
       </p>
       <div class="flex gap-3">
         <div class="flex flex-col items-center mb-4">
@@ -66,6 +66,7 @@
               <PencilIcon class="w-8 h-8 p-1 dark:text-neutral-200" />
               <span class="text-lg">Thay đổi tên nhóm</span>
               <ChangeGroupChatNameModal
+                :activeConversation="activeConversation"
                 :show="isChangeNameOpen"
                 @closeModal="closeChangeGroupChatNameModal"
                 @changeGroupChatName="changeGroupChatName"

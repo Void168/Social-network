@@ -35,11 +35,18 @@
         class="flex items-center gap-2 px-4 py-2 cursor-pointer"
       >
         <img
+          v-if="groupConversation.get_avatar"
+          :src="groupConversation.get_avatar"
+          alt=""
+          class="h-10 w-10 rounded-full"
+        />
+        <img
+          v-else
           :src="groupConversation.admin.get_avatar"
           alt=""
           class="h-10 w-10 rounded-full"
         />
-        <p class="font-semibold truncate">{{ groupConversation.name }}</p>
+        <p class="font-semibold truncate">{{ groupConversation.group_name }}</p>
       </RouterLink>
     </div>
     <div class="fixed flex gap-1 justify-end bottom-0 right-32 max-w-[1220px]">

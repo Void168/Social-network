@@ -75,7 +75,6 @@
                 :activeConversation="activeConversation"
                 :show="isChangeNameOpen"
                 @closeModal="closeChangeGroupChatNameModal"
-                @changeGroupChatName="changeGroupChatName"
               />
             </DisclosurePanel>
             <DisclosurePanel
@@ -88,7 +87,6 @@
                 :activeConversation="activeConversation"
                 :show="isChangeAvatarOpen"
                 @closeModal="closeChangeGroupChatAvatarModal"
-                @changeGroupChatAvatar="changeGroupChatAvatar"
               />
             </DisclosurePanel>
             <DisclosurePanel
@@ -129,7 +127,7 @@
             >
               <div
                 class="flex flex-col items-center mb-4"
-                v-if="(activeConversation.admin.id = userStore.user.id)"
+                v-if="activeConversation.admin.id === userStore.user.id"
               >
                 <PlusCircleIcon
                   @click="openAddUsersModal"
@@ -138,6 +136,7 @@
                 <span>Thêm thành viên</span>
               </div>
               <AddUsersGroupConversationModalVue
+                :options="options"
                 :show="isAddUsersOpen"
                 @closeModal="closeAddUsersModal"
                 @addUsers="addUsers"
@@ -298,6 +297,7 @@
               </div>
             </DisclosurePanel>
             <DisclosurePanel
+              @click="leaveGroup"
               class="px-8 pb-2 pt-2 text-lg dark:text-neutral-200 font-semibold hover:bg-neutral-300 dark:hover:bg-slate-700 rounded-md cursor-pointer transition duration-100"
             >
               <div class="flex gap-2 items-center">
@@ -364,6 +364,7 @@ export default (await import("vue")).defineComponent({
       isChangeNameOpen: false,
       isChangeAvatarOpen: false,
       isGroupConversationThemeModalOpen: false,
+      options: [],
       themes: themes,
     };
   },
@@ -405,6 +406,23 @@ export default (await import("vue")).defineComponent({
     },
     openAddUsersModal() {
       this.isAddUsersOpen = true;
+      axios
+        .get(`/api/friends/${this.userStore.user.id}/`)
+        .then((res) => {
+          const usersId = this.activeConversation.users.map((user) => user.id);
+          const filteredFiends = res.data.friends.filter(
+            (friend) => !usersId.includes(friend.id)
+          );
+          filteredFiends.forEach((friend) => {
+            const obj = {};
+            obj["label"] = friend.name;
+            obj["value"] = friend.id;
+            this.options.push(obj);
+          });
+        })
+        .catch((error) => {
+          console.log(error);
+        });
     },
     closeChangeGroupChatNameModal() {
       this.isChangeNameOpen = false;
@@ -432,9 +450,52 @@ export default (await import("vue")).defineComponent({
         .post(
           `/api/chat/group/${this.activeConversation.id}/kick-user/${user.id}/`
         )
-        .then((res) => console.log(res.data))
+        .then((res) => {
+          if (res.data.message === "kick user successfully") {
+            this.toastStore.showToast(
+              3000,
+              `Đã đá ${user.name} ra khỏi nhóm.`,
+              "bg-emerald-500 text-white"
+            );
+            setTimeout(() => {
+              this.$router.go(0);
+            }, 3500);
+          } else {
+            this.toastStore.showToast(
+              3000,
+              `Đá ${user.name} thất bại.`,
+              "bg-rose-400 text-white"
+            );
+          }
+        })
         .catch((error) => console.log(error));
     },
+    leaveGroup() {
+      axios
+        .post(
+          `/api/chat/group/${this.activeConversation.id}/leave-group/${this.userStore.user.id}/`
+        )
+        .then((res) => {
+          if (res.data.message === "Left group") {
+
+            this.toastStore.showToast(
+              3000,
+              `Đã rời khỏi nhóm.`,
+              "bg-emerald-500 text-white"
+            );
+            setTimeout(() => {
+              this.$router.push('/chat');
+            }, 3500);
+          } else {
+            this.toastStore.showToast(
+              3000,
+              `Rời nhóm thất bại.`,
+              "bg-rose-400 text-white"
+            );
+          }
+        })
+        .catch((error) => console.log(error));
+    }
   },
   components: {
     Menu,

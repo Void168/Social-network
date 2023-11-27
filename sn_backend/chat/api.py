@@ -247,15 +247,52 @@ def set_group_name(request, pk):
         return JsonResponse({'message':'Failed'})
 
 @api_view(['POST'])
-def kick_user(request, pk, user_pk):
-    user_wanna_kick = User.objects.get(pk=user_pk)
+def add_users(request, pk):
+    other_user_id =request.data.get('otherUser')
+    
+        
+    users = request.data.get('users')
     group_conversation = GroupConversation.objects.filter(users__in=list([request.user])).get(pk=pk)
-    group_conversation.users.remove(user_wanna_kick)
+    for user in users:
+        group_conversation.users.add(user)
+    
+    if other_user_id != "":
+        other_user = User.objects.get(id=other_user_id)
+    
+        group_conversation.users.add(other_user)
+    
+    # group_conversation.users.add(user_wanna_add)
     group_conversation.save()
     
     serializer = GroupConversationSerializer(group_conversation)
     
-    return JsonResponse(serializer.data)
+    return JsonResponse({'message':'users update', 'group_conversation': serializer.data})
+
+@api_view(['POST'])
+def kick_user(request, pk, user_pk):
+    user_wanna_kick = User.objects.get(pk=user_pk)
+    group_conversation = GroupConversation.objects.filter(users__in=list([request.user])).get(pk=pk)
+    
+    if group_conversation.admin == request.user:
+        group_conversation.users.remove(user_wanna_kick)
+        
+    group_conversation.save()
+    
+    serializer = GroupConversationSerializer(group_conversation)
+    
+    return JsonResponse({'message':'Left group'})
+
+@api_view(['POST'])
+def leave_group(request, pk, user_pk):
+    leave_user = User.objects.get(pk=user_pk)
+    group_conversation = GroupConversation.objects.filter(users__in=list([request.user])).get(pk=pk)
+    group_conversation.users.remove(leave_user)
+        
+    group_conversation.save()
+    
+    serializer = GroupConversationSerializer(group_conversation)
+    
+    return JsonResponse({'message':'kick user successfully', 'group_conversation': serializer.data})
 
 @api_view(['POST'])
 def set_seen(request, pk):

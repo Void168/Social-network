@@ -155,6 +155,11 @@
                       v-if="activeConversation.admin.name === user.name"
                       >Trưởng nhóm</span
                     >
+                    <span
+                      class="font-bold ml-4"
+                      v-if="getModeratorsIds.includes(user.id)"
+                      >Quản trị viên</span
+                    >
                   </div>
                   <Menu as="div" class="relative inline-block text-left">
                     <div>
@@ -214,6 +219,24 @@
                                 Trang cá nhân
                               </button>
                             </RouterLink>
+                          </MenuItem>
+                          <MenuItem v-slot="{ active }">
+                            <button
+                              @click="setModerator(user)"
+                              :class="[
+                                active
+                                  ? 'bg-slate-200 dark:bg-slate-500 dark:text-neutral-200'
+                                  : 'text-gray-900 dark:text-neutral-200',
+                                'group flex w-full items-center rounded-md px-2 py-2 text-sm',
+                              ]"
+                            >
+                              <ShieldExclamationIcon
+                                :active="active"
+                                class="mr-2 h-5 w-5 dark:text-neutral-200"
+                                aria-hidden="true"
+                              />
+                              Đặt làm quản trị viên
+                            </button>
                           </MenuItem>
                         </div>
 
@@ -352,6 +375,7 @@ import {
   ChatBubbleOvalLeftIcon,
   UserCircleIcon,
   PlusCircleIcon,
+  ShieldExclamationIcon,
 } from "@heroicons/vue/24/outline";
 
 export default (await import("vue")).defineComponent({
@@ -379,11 +403,11 @@ export default (await import("vue")).defineComponent({
     };
   },
   computed: {
-    // getOtherUserId() {
-    //   return this.activeConversation?.users?.filter(
-    //     (user) => this.userStore.user.id !== user.id
-    //   )[0];
-    // },
+    getModeratorsIds() {
+      return this.activeConversation?.moderators.map(
+        (moderator) => moderator.id
+      );
+    },
     selectedTheme() {
       return this.themes.filter(
         (theme) => theme.name === this.activeConversation.theme
@@ -442,6 +466,33 @@ export default (await import("vue")).defineComponent({
     openGroupConversationThemeModal() {
       this.isGroupConversationThemeModalOpen = true;
     },
+    setModerator(user) {
+      axios
+        .post(
+          `/api/chat/group/${this.activeConversation.id}/set_moderator/${user.id}/`
+        )
+        .then((res) => {
+          if (res.data.message === "Successful") {
+            this.toastStore.showToast(
+              3000,
+              `Đặt ${user.name} làm quản trị viên thành công.`,
+              "bg-emerald-500 text-white"
+            );
+            setTimeout(() => {
+              this.$router.go(0);
+            }, 3500);
+          } else {
+            this.toastStore.showToast(
+              3000,
+              `Đặt ${user.name} làm quản trị viên thất bại.`,
+              "bg-rose-400 text-white"
+            );
+          }
+        })
+        .catch((error) => {
+          console.log(error);
+        });
+    },
     addUsers() {
       console.log("hello");
     },
@@ -477,14 +528,13 @@ export default (await import("vue")).defineComponent({
         )
         .then((res) => {
           if (res.data.message === "Left group") {
-
             this.toastStore.showToast(
               3000,
               `Đã rời khỏi nhóm.`,
               "bg-emerald-500 text-white"
             );
             setTimeout(() => {
-              this.$router.push('/chat');
+              this.$router.push("/chat");
             }, 3500);
           } else {
             this.toastStore.showToast(
@@ -495,7 +545,7 @@ export default (await import("vue")).defineComponent({
           }
         })
         .catch((error) => console.log(error));
-    }
+    },
   },
   components: {
     Menu,
@@ -524,6 +574,7 @@ export default (await import("vue")).defineComponent({
     PlusCircleIcon,
     PhotoIcon,
     PencilIcon,
+    ShieldExclamationIcon,
   },
 });
 </script>

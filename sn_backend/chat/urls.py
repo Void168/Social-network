@@ -14,6 +14,7 @@ urlpatterns = [
     path('group/<uuid:pk>/choose_group_theme/', api.choose_group_theme, name='choose_group_theme'),
     path('group/<uuid:pk>/change-group-name/', api.set_group_name, name='set_group_name'),
     path('group/<uuid:pk>/change-group-avatar/', api.set_group_avatar, name='set_group_avatar'),
+    path('group/<uuid:pk>/set_moderator/<uuid:user_pk>/', api.set_moderator, name='set_moderator'),
     path('group/<uuid:pk>/kick-user/<uuid:user_pk>/', api.kick_user, name='kick_user'),
     path('group/<uuid:pk>/leave-group/<uuid:user_pk>/', api.leave_group, name='leave_group'),
     path('group/<uuid:pk>/add-users/', api.add_users, name='add_users'),

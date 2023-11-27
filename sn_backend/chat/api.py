@@ -250,7 +250,6 @@ def set_group_name(request, pk):
 def add_users(request, pk):
     other_user_id =request.data.get('otherUser')
     
-        
     users = request.data.get('users')
     group_conversation = GroupConversation.objects.filter(users__in=list([request.user])).get(pk=pk)
     for user in users:
@@ -267,6 +266,19 @@ def add_users(request, pk):
     serializer = GroupConversationSerializer(group_conversation)
     
     return JsonResponse({'message':'users update', 'group_conversation': serializer.data})
+
+@api_view(['POST'])
+def set_moderator(request, pk, user_pk):
+    user = User.objects.get(pk=user_pk)
+    group_conversation = GroupConversation.objects.filter(users__in=list([request.user])).get(pk=pk)
+    
+    group_conversation.moderators.add(user)
+        
+    group_conversation.save()
+    
+    serializer = GroupConversationSerializer(group_conversation)
+    
+    return JsonResponse({'message':'Successful'})
 
 @api_view(['POST'])
 def kick_user(request, pk, user_pk):

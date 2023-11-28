@@ -81,3 +81,17 @@ class GroupConversationMessage(models.Model):
     
     def created_at_formatted(self):
         return timesince(self.created_at)
+    
+class PollOption(models.Model):
+    id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
+    poll_option_name = models.TextField(default = '', max_length=255)
+    users_vote = models.ManyToManyField(User, related_name='users_vote')
+
+class GroupPoll(models.Model):
+    id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
+    poll_name = models.TextField(default = '', max_length=255)
+    poll_options = models.ManyToManyField(PollOption, blank=True)
+    created_at = models.DateTimeField(auto_now_add=True)
+    created_by = models.ForeignKey(User, related_name='user_create_poll', on_delete=models.CASCADE)
+    time_end = models.DateTimeField()
+    

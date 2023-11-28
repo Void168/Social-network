@@ -260,7 +260,6 @@ def add_users(request, pk):
     
         group_conversation.users.add(other_user)
     
-    # group_conversation.users.add(user_wanna_add)
     group_conversation.save()
     
     serializer = GroupConversationSerializer(group_conversation)
@@ -292,19 +291,25 @@ def kick_user(request, pk, user_pk):
     
     serializer = GroupConversationSerializer(group_conversation)
     
-    return JsonResponse({'message':'Left group'})
+    return JsonResponse({'message':'kick user successfully'})
 
 @api_view(['POST'])
 def leave_group(request, pk, user_pk):
     leave_user = User.objects.get(pk=user_pk)
     group_conversation = GroupConversation.objects.filter(users__in=list([request.user])).get(pk=pk)
-    group_conversation.users.remove(leave_user)
+    admin = group_conversation.admin
+    if leave_user == admin and group_conversation.moderators.count():
+        group_conversation.admin = group_conversation.moderators.all()[0]
         
+    else:
+        group_conversation.admin = group_conversation.users.all()[0]
+        
+    group_conversation.users.remove(leave_user)     
     group_conversation.save()
     
     serializer = GroupConversationSerializer(group_conversation)
     
-    return JsonResponse({'message':'kick user successfully', 'group_conversation': serializer.data})
+    return JsonResponse({'message':'Left group', 'group_conversation': serializer.data})
 
 @api_view(['POST'])
 def set_seen(request, pk):

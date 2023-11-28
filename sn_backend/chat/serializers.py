@@ -8,7 +8,7 @@ class SeenUserSerializer(serializers.ModelSerializer):
     created_by = UserSerializer(read_only=True)
     class Meta:
         model = SeenUser
-        fields = ('id', 'created_by', 'created_at_formatted')
+        fields = ('id', 'created_by', 'created_at_formatted', 'created_at',)
         
 class MessageAttachmentSerializer(serializers.ModelSerializer):
     class Meta:

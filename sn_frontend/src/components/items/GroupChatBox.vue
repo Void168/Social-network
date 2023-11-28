@@ -64,7 +64,7 @@
                         selectedTheme.textColor,
                       ]"
                     >
-                      <p class="text-sm">
+                      <p class="text-sm font-semibold">
                         {{ message.body }}
                       </p>
                     </div>
@@ -77,7 +77,7 @@
                           selectedTheme.textColor,
                         ]"
                       >
-                        <p class="text-sm">
+                        <p class="text-sm font-semibold">
                           {{ message.body }}
                         </p>
                       </div>
@@ -150,14 +150,16 @@
                       class="bg-gray-200 p-3 rounded-r-lg rounded-bl-lg dark:bg-slate-500 dark:border-slate-600 dark:text-neutral-200"
                       v-if="message?.created_by !== chats[0]?.users[0].name"
                     >
-                      <p class="text-sm">
+                      <p class="text-sm font-semibold">
                         {{ message.body }}
                       </p>
                     </div>
                     <span
                       class="text-xs text-gray-500 dark:text-neutral-200 leading-none"
                       v-if="
-                        message.id === listMessages[listMessages.length - 1].id
+                        message.id ===
+                          listMessages[listMessages.length - 1].id &&
+                        !listMessages[listMessages.length - 1].seen_by.length
                       "
                       >Đã gửi
                       {{
@@ -207,6 +209,40 @@
             </svg>
           </span>
         </div>
+      </div>
+      <div
+        @click="openSeenUsersModal"
+        v-if="listMessages[listMessages.length - 1]?.seen_by?.length"
+        class="flex items-center mt-2 gap-1 absolute bottom-2 right-5 cursor-pointer"
+      >
+        <SeenUsersModal
+          :show="isOpen"
+          @closeModal="closeSeenUsersModal"
+          :lastMessage="getSeenBy"
+        />
+        <span
+          v-if="getSeenBy.length > 3"
+          class="mr-1 bg-slate-400 px-1 rounded-full text-sm cursor-pointer"
+          >+{{ getSeenBy.length - 3 }}</span
+        >
+        <span
+          v-for="seen_by in getSeenBy.slice(0, 3)"
+          :key="seen_by.id"
+          class="text-sm text-gray-500 dark:text-neutral-200 leading-none relative group cursor-pointer"
+        >
+          <span
+            class="absolute w-56 px-4 py-2 rounded-lg leading-4 text-neutral-200 dark:text-slate-700 dark:bg-white bg-slate-700 top-[-60px] left-[-150px] hidden group-hover:block bg-opacity-80"
+          >
+            {{ seen_by.created_by.name }} đã xem lúc
+            {{ seen_by.created_at.slice(11, 19) }} ngày
+            {{ seen_by.created_at.slice(0, 10).split("-").reverse().join("-") }}
+          </span>
+          <img
+            :src="seen_by.created_by.get_avatar"
+            alt="seen-avatar"
+            class="w-4 h-4"
+          />
+        </span>
       </div>
     </div>
     <div
@@ -302,6 +338,8 @@ import ConversationBox from "./ConversationBox.vue";
 import { useUserStore } from "../../stores/user";
 import { RouterLink } from "vue-router";
 
+import SeenUsersModal from '../modals/SeenUsersModal.vue'
+
 import { Popover, PopoverButton, PopoverPanel } from "@headlessui/vue";
 import "emoji-picker-element";
 import {
@@ -352,6 +390,11 @@ export default (await import("vue")).defineComponent({
         ?.filter((user) => this.userStore.user.id !== user.id)
         .map((user) => user?.get_avatar)[1];
     },
+    getSeenBy() {
+      return this.listMessages[this.listMessages.length - 1].seen_by.filter(
+        (seen) => seen.created_by.id !== this.userStore.user.id
+      );
+    },
   },
   watch: {
     "$route.params.id": {
@@ -370,6 +413,12 @@ export default (await import("vue")).defineComponent({
     scrollToBottom() {
       const objDiv = document.querySelector("#chatview-container");
       objDiv.scrollTop = objDiv.scrollHeight;
+    },
+    closeSeenUsersModal() {
+      this.isOpen = false
+    },
+    openSeenUsersModal() {
+      this.isOpen = true
     },
     getMessages() {
       axios
@@ -451,6 +500,7 @@ export default (await import("vue")).defineComponent({
     PhotoIcon,
     GifIcon,
     PaperAirplaneIcon,
+    SeenUsersModal
   },
 });
 </script>

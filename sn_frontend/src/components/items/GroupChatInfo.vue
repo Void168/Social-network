@@ -220,7 +220,14 @@
                               </button>
                             </RouterLink>
                           </MenuItem>
-                          <MenuItem v-slot="{ active }">
+                          <MenuItem
+                            v-slot="{ active }"
+                            v-if="
+                              activeConversation.admin.id ===
+                                userStore.user.id &&
+                              activeConversation.admin.id !== user.id
+                            "
+                          >
                             <button
                               @click="setModerator(user)"
                               :class="[
@@ -243,8 +250,10 @@
                         <div
                           class="px-1 py-1"
                           v-if="
-                            activeConversation.admin.id === userStore.user.id &&
-                            activeConversation.admin.id !== user.id
+                            (activeConversation.admin.id ===
+                              userStore.user.id &&
+                              activeConversation.admin.id !== user.id) ||
+                            getModeratorsIds.includes(userStore.user.id)
                           "
                           @click="kickUser(user)"
                         >
@@ -497,29 +506,37 @@ export default (await import("vue")).defineComponent({
       console.log("hello");
     },
     kickUser(user) {
-      axios
-        .post(
-          `/api/chat/group/${this.activeConversation.id}/kick-user/${user.id}/`
-        )
-        .then((res) => {
-          if (res.data.message === "kick user successfully") {
-            this.toastStore.showToast(
-              3000,
-              `Đã đá ${user.name} ra khỏi nhóm.`,
-              "bg-emerald-500 text-white"
-            );
-            setTimeout(() => {
-              this.$router.go(0);
-            }, 3500);
-          } else {
-            this.toastStore.showToast(
-              3000,
-              `Đá ${user.name} thất bại.`,
-              "bg-rose-400 text-white"
-            );
-          }
-        })
-        .catch((error) => console.log(error));
+      if (user.id !== this.activeConversation.admin.id) {
+        axios
+          .post(
+            `/api/chat/group/${this.activeConversation.id}/kick-user/${user.id}/`
+          )
+          .then((res) => {
+            if (res.data.message === "kick user successfully") {
+              this.toastStore.showToast(
+                3000,
+                `Đã đá ${user.name} ra khỏi nhóm.`,
+                "bg-emerald-500 text-white"
+              );
+              setTimeout(() => {
+                this.$router.go(0);
+              }, 3500);
+            } else {
+              this.toastStore.showToast(
+                3000,
+                `Đá ${user.name} thất bại.`,
+                "bg-rose-400 text-white"
+              );
+            }
+          })
+          .catch((error) => console.log(error));
+      } else {
+        this.toastStore.showToast(
+          3000,
+          "Bạn không thể đá trưởng nhóm.",
+          "bg-rose-400 text-white"
+        );
+      }
     },
     leaveGroup() {
       axios

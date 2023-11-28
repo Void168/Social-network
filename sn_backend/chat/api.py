@@ -283,8 +283,11 @@ def set_moderator(request, pk, user_pk):
 def kick_user(request, pk, user_pk):
     user_wanna_kick = User.objects.get(pk=user_pk)
     group_conversation = GroupConversation.objects.filter(users__in=list([request.user])).get(pk=pk)
+    list_moderators = []
+    for moderator in group_conversation.moderators.all():
+        list_moderators.append(moderator)
     
-    if group_conversation.admin == request.user:
+    if group_conversation.admin == request.user or request.user in list_moderators:
         group_conversation.users.remove(user_wanna_kick)
         
     group_conversation.save()
@@ -300,6 +303,7 @@ def leave_group(request, pk, user_pk):
     admin = group_conversation.admin
     if leave_user == admin and group_conversation.moderators.count():
         group_conversation.admin = group_conversation.moderators.all()[0]
+        group_conversation.moderators.remove(group_conversation.admin)
         
     else:
         group_conversation.admin = group_conversation.users.all()[0]

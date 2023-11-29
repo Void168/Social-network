@@ -1,6 +1,6 @@
 from django.forms import ModelForm
 
-from .models import ConversationMessage, GroupConversationMessage, MessageAttachment, Conversation, GroupConversation
+from .models import ConversationMessage, GroupConversationMessage, MessageAttachment, Conversation, GroupConversation, GroupPoll
 
 class MessageForm(ModelForm):
     class Meta:

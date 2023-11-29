@@ -126,15 +126,29 @@
               class="px-4 pb-2 pt-4 text-sm dark:text-neutral-200 font-semibold"
             >
               <div
-                class="flex flex-col items-center mb-4"
+                class="flex justify-center items-center gap-4 mb-4"
                 v-if="activeConversation.admin.id === userStore.user.id"
               >
-                <PlusCircleIcon
-                  @click="openAddUsersModal"
-                  class="w-8 h-8 p-1 shadow-md bg-neutral-100 dark:bg-slate-700 hover:bg-neutral-200 dark:hover:bg-slate-500 transition rounded-full cursor-pointer"
-                />
-                <span>Thêm thành viên</span>
+                <div class="flex flex-col items-center">
+                  <PlusCircleIcon
+                    @click="openAddUsersModal"
+                    class="w-8 h-8 p-1 shadow-md bg-neutral-100 dark:bg-slate-700 hover:bg-neutral-200 dark:hover:bg-slate-500 transition rounded-full cursor-pointer"
+                  />
+                  <span>Thêm thành viên</span>
+                </div>
+                <div class="flex flex-col items-center">
+                  <PlusCircleIcon
+                    @click="openCreatePollModal"
+                    class="w-8 h-8 p-1 shadow-md bg-neutral-100 dark:bg-slate-700 hover:bg-neutral-200 dark:hover:bg-slate-500 transition rounded-full cursor-pointer"
+                  />
+                  <span>Cuộc thăm dò ý kiến</span>
+                </div>
               </div>
+              <CreatePollModal
+                :show="isCreatePollOpen"
+                @closeModal="closeCreatePollModal"
+                :activeConversation="activeConversation"
+              />
               <AddUsersGroupConversationModalVue
                 :options="options"
                 :show="isAddUsersOpen"
@@ -356,6 +370,7 @@ import AddUsersGroupConversationModalVue from "../modals/AddUsersGroupConversati
 import ChangeGroupChatNameModal from "../modals/ChangeGroupChatNameModal.vue";
 import ChangeGroupChatAvatarModal from "../modals/ChangeGroupChatAvatarModal.vue";
 import GroupConversationThemeModal from "../modals/GroupConversationThemeModal.vue";
+import CreatePollModal from "../modals/CreatePollModal.vue";
 
 import {
   Menu,
@@ -397,6 +412,7 @@ export default (await import("vue")).defineComponent({
       isChangeNameOpen: false,
       isChangeAvatarOpen: false,
       isGroupConversationThemeModalOpen: false,
+      isCreatePollOpen: false,
       options: [],
       themes: themes,
     };
@@ -475,6 +491,13 @@ export default (await import("vue")).defineComponent({
     openGroupConversationThemeModal() {
       this.isGroupConversationThemeModalOpen = true;
     },
+    closeCreatePollModal() {
+      this.isCreatePollOpen = false;
+    },
+    openCreatePollModal() {
+      this.isCreatePollOpen = true;
+    },
+
     setModerator(user) {
       axios
         .post(
@@ -563,6 +586,9 @@ export default (await import("vue")).defineComponent({
         })
         .catch((error) => console.log(error));
     },
+    createPoll() {
+      console.log("hello");
+    },
   },
   components: {
     Menu,
@@ -576,6 +602,7 @@ export default (await import("vue")).defineComponent({
     ChangeGroupChatNameModal,
     ChangeGroupChatAvatarModal,
     GroupConversationThemeModal,
+    CreatePollModal,
     EllipsisHorizontalIcon,
     TrashIcon,
     UserIcon,

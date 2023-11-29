@@ -6,8 +6,8 @@ from django.db.models import Q
 from .forms import MessageForm, GroupMessageForm, AttachmentForm, ChooseThemeForm, ChooseGroupThemeForm, ChangeGroupNameForm, AvatarGroupForm
 
 from account.models import User
-from .models import Conversation, GroupConversation, ConversationMessage, SeenUser
-from .serializers import ConversationSerializer, ConversationDetailSerializer, GroupConversationSerializer, ConversationMessageSerializer, GroupConversationMessageSerializer, SeenUserSerializer
+from .models import Conversation, GroupConversation, ConversationMessage, SeenUser, GroupPoll, PollOption
+from .serializers import ConversationSerializer, ConversationDetailSerializer, GroupConversationSerializer, ConversationMessageSerializer, GroupConversationMessageSerializer, SeenUserSerializer, GroupPollSerializer
 
 @api_view(['GET'])
 def conversation_list(request):
@@ -278,6 +278,28 @@ def set_moderator(request, pk, user_pk):
     serializer = GroupConversationSerializer(group_conversation)
     
     return JsonResponse({'message':'Successful'})
+
+@api_view(['POST'])
+def create_poll(request, pk):
+    group_conversation = GroupConversation.objects.filter(users__in=list([request.user])).get(pk=pk)
+    time_end = request.data.get('time_end')
+    poll_name = request.data.get('poll_name')
+    
+    poll = GroupPoll.objects.create(created_by=request.user,poll_name=poll_name, time_end=time_end)
+    
+    list_poll_options = request.data.get('options')
+    list_options = [sub['name'] for sub in list_poll_options]
+    for option in list_options:
+        poll_option = PollOption.objects.create(poll_option_name=option)
+        poll.poll_options.add(poll_option)
+        poll.save()
+    
+    serializer = GroupPollSerializer(poll)
+    
+    return JsonResponse(serializer.data, safe=False)
+
+# @api_view(['GET'])
+
 
 @api_view(['POST'])
 def kick_user(request, pk, user_pk):

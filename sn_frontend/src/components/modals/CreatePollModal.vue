@@ -63,7 +63,7 @@
                     />
                     <span>Thêm lựa chọn</span>
                   </div>
-                  <div class="dark:text-neutral-200" v-if="options.length">
+                  <div class="dark:text-neutral-200 max-h-96 overflow-y-auto scrollbar-corner-slate-200 scrollbar-thin scrollbar-thumb-slate-400 scrollbar-track-slate-800" v-if="options.length">
                     <span class="text-lg">Danh sách lựa chọn</span>
                     <div v-for="option in options" :key="option" class="my-4">
                       <div
@@ -173,10 +173,6 @@ export default (await import("vue")).defineComponent({
     };
   },
 
-  mounted() {
-    this.getPolls()
-  },
-
   methods: {
     createOption() {
       this.isAddOptionOpen = true;
@@ -208,16 +204,6 @@ export default (await import("vue")).defineComponent({
       } else {
         return "";
       }
-    },
-    getPolls() {
-      axios
-        .get(`/api/chat/group/${this.activeConversation.id}/get-polls/`)
-        .then((res) => {
-          console.log(res.data);
-        })
-        .catch((error) => {
-          console.log(error);
-        });
     },
     submitForm() {
       if (this.options.length > 1) {

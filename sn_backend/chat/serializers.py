@@ -60,9 +60,10 @@ class ConversationDetailSerializer(serializers.ModelSerializer):
         fields = ('id', 'users', 'modified_at_formatted', 'messages','theme',)
 
 class PollOptionSerializer(serializers.ModelSerializer):
+    users_vote = UserSerializer(read_only=True, many=True)
     class Meta:
         model = PollOption
-        fields = ('poll_option_name','users_vote',)
+        fields = ('id', 'poll_option_name','users_vote',)
 
 class GroupPollSerializer(serializers.ModelSerializer):
     poll_options = PollOptionSerializer(read_only=True, many=True)

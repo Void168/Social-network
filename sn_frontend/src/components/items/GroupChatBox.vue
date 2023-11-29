@@ -31,7 +31,18 @@
             />
             <span class="font-bold">{{ activeConversation.group_name }}</span>
           </div>
-
+          <div
+            class="font-semibold cursor-pointer p-4 bg-transparent shadow-md rounded-lg hover:bg-white/30 transition"
+            @click="openPollsListModal"
+          >
+            <p>Cuộc thảo luận</p>
+            <PollsListModal
+              :show="isPollsListOpen"
+              @closeModal="closePollsListModal"
+              :pollslist="pollslist"
+              :activeConversation="activeConversation"
+            />
+          </div>
           <span class="font-semibold">Đang hoạt động</span>
         </div>
       </div>
@@ -338,7 +349,8 @@ import ConversationBox from "./ConversationBox.vue";
 import { useUserStore } from "../../stores/user";
 import { RouterLink } from "vue-router";
 
-import SeenUsersModal from '../modals/SeenUsersModal.vue'
+import SeenUsersModal from "../modals/SeenUsersModal.vue";
+import PollsListModal from "../modals/PollsListModal.vue";
 
 import { Popover, PopoverButton, PopoverPanel } from "@headlessui/vue";
 import "emoji-picker-element";
@@ -367,9 +379,11 @@ export default (await import("vue")).defineComponent({
     return {
       receivedUser: {},
       listMessages: [],
+      pollslist: [],
       activeConversation: {},
       body: "",
       isOpen: false,
+      isPollsListOpen: false,
       url: null,
       themes: themes,
     };
@@ -415,10 +429,24 @@ export default (await import("vue")).defineComponent({
       objDiv.scrollTop = objDiv.scrollHeight;
     },
     closeSeenUsersModal() {
-      this.isOpen = false
+      this.isOpen = false;
     },
     openSeenUsersModal() {
-      this.isOpen = true
+      this.isOpen = true;
+    },
+    closePollsListModal() {
+      this.isPollsListOpen = false;
+    },
+    openPollsListModal() {
+      this.isPollsListOpen = true;
+      axios
+        .get(`/api/chat/group/${this.activeConversation?.id}/get-polls/`)
+        .then((res) => {
+          this.pollslist = res.data;
+        })
+        .catch((error) => {
+          console.log(error);
+        });
     },
     getMessages() {
       axios
@@ -441,7 +469,6 @@ export default (await import("vue")).defineComponent({
           console.log(error);
         });
     },
-
     Pick() {
       document
         .querySelector("emoji-picker")
@@ -500,7 +527,8 @@ export default (await import("vue")).defineComponent({
     PhotoIcon,
     GifIcon,
     PaperAirplaneIcon,
-    SeenUsersModal
+    SeenUsersModal,
+    PollsListModal,
   },
 });
 </script>

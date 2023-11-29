@@ -297,6 +297,7 @@ def create_poll(request, pk):
     for option in list_options:
         poll_option = PollOption.objects.create(poll_option_name=option)
         poll.poll_options.add(poll_option)
+        
     poll.save()
     
     serializer = GroupPollSerializer(poll)
@@ -312,6 +313,18 @@ def group_polls_list(request, pk):
     
     return JsonResponse(serializer.data, safe=False)
 
+@api_view(['POST'])
+def vote_poll(request, pk):
+    poll_option = PollOption.objects.get(pk=pk)
+    if poll_option.users_vote.all().filter(id=request.user.id).exists():
+        poll_option.users_vote.remove(request.user)
+        poll_option.save()
+    else: 
+        poll_option.users_vote.add(request.user)
+        poll_option.save()
+        
+    return JsonResponse({'message': 'Success'})
+    
 
 @api_view(['POST'])
 def kick_user(request, pk, user_pk):

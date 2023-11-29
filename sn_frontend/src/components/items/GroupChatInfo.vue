@@ -400,6 +400,7 @@ import {
   UserCircleIcon,
   PlusCircleIcon,
   ShieldExclamationIcon,
+  QuestionMarkCircleIcon,
 } from "@heroicons/vue/24/outline";
 
 export default (await import("vue")).defineComponent({
@@ -619,6 +620,7 @@ export default (await import("vue")).defineComponent({
     PhotoIcon,
     PencilIcon,
     ShieldExclamationIcon,
+    QuestionMarkCircleIcon,
   },
 });
 </script>

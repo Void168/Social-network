@@ -66,6 +66,8 @@ class PollOptionSerializer(serializers.ModelSerializer):
 
 class GroupPollSerializer(serializers.ModelSerializer):
     poll_options = PollOptionSerializer(read_only=True, many=True)
+    created_by = UserSerializer(read_only=True)
+    group_conversation=GroupConversationSerializer(read_only=True)
     class Meta:
         model = GroupPoll
-        fields = ('id','poll_name', 'poll_options','created_at', 'created_by', 'time_end',)
+        fields = ('id','poll_name', 'poll_options','created_at','group_conversation', 'created_by', 'time_end',)

@@ -285,20 +285,32 @@ def create_poll(request, pk):
     time_end = request.data.get('time_end')
     poll_name = request.data.get('poll_name')
     
-    poll = GroupPoll.objects.create(created_by=request.user,poll_name=poll_name, time_end=time_end)
+    poll = GroupPoll.objects.create(
+        created_by=request.user,
+        group_conversation=group_conversation, 
+        poll_name=poll_name, 
+        time_end=time_end
+    )
     
     list_poll_options = request.data.get('options')
     list_options = [sub['name'] for sub in list_poll_options]
     for option in list_options:
         poll_option = PollOption.objects.create(poll_option_name=option)
         poll.poll_options.add(poll_option)
-        poll.save()
+    poll.save()
     
     serializer = GroupPollSerializer(poll)
     
     return JsonResponse(serializer.data, safe=False)
 
-# @api_view(['GET'])
+@api_view(['GET'])
+def group_polls_list(request, pk):
+    group_conversation = GroupConversation.objects.filter(users__in=list([request.user])).get(pk=pk)
+    list_polls = GroupPoll.objects.filter(Q(group_conversation=group_conversation))
+    
+    serializer = GroupPollSerializer(list_polls, many=True)
+    
+    return JsonResponse(serializer.data, safe=False)
 
 
 @api_view(['POST'])

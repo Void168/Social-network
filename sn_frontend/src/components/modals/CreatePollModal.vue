@@ -173,6 +173,10 @@ export default (await import("vue")).defineComponent({
     };
   },
 
+  mounted() {
+    this.getPolls()
+  },
+
   methods: {
     createOption() {
       this.isAddOptionOpen = true;
@@ -199,14 +203,24 @@ export default (await import("vue")).defineComponent({
       const month = date?.getMonth() + 1;
       const year = date?.getFullYear();
 
-      if(day && month && year){
+      if (day && month && year) {
         return `${day}/${month}/${year}`;
       } else {
-        return ''
+        return "";
       }
     },
+    getPolls() {
+      axios
+        .get(`/api/chat/group/${this.activeConversation.id}/get-polls/`)
+        .then((res) => {
+          console.log(res.data);
+        })
+        .catch((error) => {
+          console.log(error);
+        });
+    },
     submitForm() {
-      if(this.options.length > 1){
+      if (this.options.length > 1) {
         axios
           .post(`/api/chat/group/${this.activeConversation.id}/create-poll/`, {
             poll_name: this.pollName,
@@ -214,15 +228,16 @@ export default (await import("vue")).defineComponent({
             time_end: this.date,
           })
           .then((res) => {
+            console.log(res.data)
             this.pollName = "";
             this.options = [];
-            this.date = null
+            this.date = null;
           })
           .catch((error) => {
             console.log(error);
           });
       } else {
-        console.log('Phải có từ 2 lựa chọn')
+        console.log("Phải có từ 2 lựa chọn");
       }
     },
   },

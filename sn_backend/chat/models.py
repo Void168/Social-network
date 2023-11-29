@@ -89,6 +89,7 @@ class PollOption(models.Model):
 
 class GroupPoll(models.Model):
     id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
+    group_conversation = models.ForeignKey(GroupConversation, related_name='group_poll',null=True, on_delete=models.CASCADE)
     poll_name = models.TextField(default = '', max_length=255)
     poll_options = models.ManyToManyField(PollOption, blank=True)
     created_at = models.DateTimeField(auto_now_add=True)

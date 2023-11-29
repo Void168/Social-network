@@ -19,6 +19,7 @@ urlpatterns = [
     path('group/<uuid:pk>/leave-group/<uuid:user_pk>/', api.leave_group, name='leave_group'),
     path('group/<uuid:pk>/add-users/', api.add_users, name='add_users'),
     path('group/<uuid:pk>/create-poll/', api.create_poll, name='create_poll'),
+    path('group/<uuid:pk>/get-polls/', api.group_polls_list, name='group_polls_list'),
     path('<uuid:pk>/delete/', api.conversation_delete, name='conversation_delete'),
     path('group/<uuid:pk>/delete/', api.group_conversation_delete, name='group_conversation_delete'),
     path('<uuid:user_pk>/get-or-create/', api.conversation_get_or_create, name='conversation_get_or_create'),

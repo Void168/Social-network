@@ -53,20 +53,20 @@
         <div class="flex flex-col flex-grow p-4 overflow-y-auto">
           <div v-if="activeConversation?.group_messages?.length > 0">
             <div
-              v-for="message in listMessages"
+              v-for="message in allMessages"
               v-bind:key="message.id"
               :id="message.id"
             >
               <div
                 class="flex flex-col w-full mt-2 space-x-3 items-end max-w-md ml-auto justify-end gap-2"
-                v-if="message.created_by?.id == userStore.user.id"
+                v-if="message.created_by?.id === userStore.user.id"
               >
                 <div class="flex gap-2">
                   <div>
                     <div
                       v-if="
-                        message.body &&
-                        !message.attachments.length &&
+                        message?.body &&
+                        !message?.attachments.length &&
                         selectedTheme
                       "
                       class="p-3 shadow-md rounded-l-lg rounded-br-lg"
@@ -76,12 +76,12 @@
                       ]"
                     >
                       <p class="text-sm font-semibold">
-                        {{ message.body }}
+                        {{ message?.body }}
                       </p>
                     </div>
-                    <div v-if="message.attachments.length > 0">
+                    <div v-if="message?.attachments.length > 0">
                       <div
-                        v-if="message.body"
+                        v-if="message?.body"
                         class="p-3 shadow-md rounded-t-lg"
                         :class="[
                           selectedTheme.background,
@@ -89,14 +89,14 @@
                         ]"
                       >
                         <p class="text-sm font-semibold">
-                          {{ message.body }}
+                          {{ message?.body }}
                         </p>
                       </div>
                       <img
-                        v-if="message.attachments.length > 0"
+                        v-if="message?.attachments.length > 0"
                         :src="message?.attachments[0]?.get_image"
                         :class="
-                          message.body
+                          message?.body
                             ? 'w-48 h-40 rounded-t-none'
                             : 'w-48 h-40'
                         "
@@ -114,6 +114,7 @@
                 <span
                   class="text-xs text-gray-500 dark:text-neutral-200 leading-none"
                   v-if="
+                    !message?.content &&
                     message.id === listMessages[listMessages.length - 1].id &&
                     listMessages[listMessages.length - 1].seen_by
                       .map((obj) => obj.created_by?.email)
@@ -139,7 +140,13 @@
                   trước</span
                 >
               </div>
-              <div class="flex w-full mt-2 space-x-3 max-w-md" v-else>
+              <div
+                v-if="message.content"
+                class="flex justify-center items-center"
+              >
+                {{ message.content }}
+              </div>
+              <div class="flex w-full mt-2 space-x-3 max-w-md" v-if="message.created_by?.id !== userStore.user.id && !message?.content">
                 <div class="flex-shrink-0 h-10 w-10 rounded-full bg-gray-300">
                   <img
                     :src="message?.created_by?.get_avatar"
@@ -162,7 +169,7 @@
                       v-if="message?.created_by !== chats[0]?.users[0].name"
                     >
                       <p class="text-sm font-semibold">
-                        {{ message.body }}
+                        {{ message?.body }}
                       </p>
                     </div>
                     <span
@@ -386,6 +393,7 @@ export default (await import("vue")).defineComponent({
       isPollsListOpen: false,
       url: null,
       themes: themes,
+      notifications: [],
     };
   },
   computed: {
@@ -409,6 +417,18 @@ export default (await import("vue")).defineComponent({
         (seen) => seen.created_by.id !== this.userStore.user.id
       );
     },
+    allMessages() {
+      return this.listMessages.concat(this.notifications).sort((a, b) => {
+        if (a.created_at < b.created_at) {
+          return -1;
+        }
+        if (a.created_at > b.created_at) {
+          return 1;
+        }
+
+        return 0;
+      });
+    },
   },
   watch: {
     "$route.params.id": {
@@ -422,8 +442,19 @@ export default (await import("vue")).defineComponent({
   mounted() {
     this.getMessages();
     this.scrollToBottom();
+    this.getNotifications();
   },
   methods: {
+    getNotifications() {
+      axios
+        .get(`/api/chat/group/${this.$route.params.id}/get-notifications/`)
+        .then((res) => {
+          this.notifications = res.data;
+        })
+        .catch((error) => {
+          console.log(error);
+        });
+    },
     scrollToBottom() {
       const objDiv = document.querySelector("#chatview-container");
       objDiv.scrollTop = objDiv.scrollHeight;
@@ -453,6 +484,7 @@ export default (await import("vue")).defineComponent({
         .get(`/api/chat/group/${this.$route.params.id}/`)
         .then((res) => {
           this.activeConversation = res.data;
+          console.log(this.activeConversation);
           this.listMessages = this.activeConversation?.group_messages;
           let users = [];
           for (let i = 0; i < this.activeConversation.users.length; i++) {

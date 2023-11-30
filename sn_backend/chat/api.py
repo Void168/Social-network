@@ -7,8 +7,8 @@ from django.db.models import Q
 from .forms import MessageForm, GroupMessageForm, AttachmentForm, ChooseThemeForm, ChooseGroupThemeForm, ChangeGroupNameForm, AvatarGroupForm
 
 from account.models import User
-from .models import Conversation, GroupConversation, ConversationMessage, SeenUser, GroupPoll, PollOption
-from .serializers import ConversationSerializer, ConversationDetailSerializer, GroupConversationSerializer, ConversationMessageSerializer, GroupConversationMessageSerializer, SeenUserSerializer, GroupPollSerializer
+from .models import Conversation, GroupConversation, ConversationMessage, SeenUser, GroupPoll, PollOption, GroupNotification
+from .serializers import ConversationSerializer, ConversationDetailSerializer, GroupConversationSerializer, ConversationMessageSerializer, GroupConversationMessageSerializer, SeenUserSerializer, GroupPollSerializer, GroupNotificationSerializer
 
 @api_view(['GET'])
 def conversation_list(request):
@@ -194,6 +194,15 @@ def group_conversation_send_message(request, pk):
     else:
         return JsonResponse({'error': 'add something here later!...'})
 
+@api_view(['GET'])
+def get_group_notifications(request, pk):
+    group_conversation = GroupConversation.objects.filter(users__in=list([request.user])).get(pk=pk)
+    notifications = GroupNotification.objects.filter(Q(group_conversation=group_conversation))
+    
+    serializer = GroupNotificationSerializer(notifications, many=True)
+    
+    return JsonResponse(serializer.data, safe=False)
+    
 @api_view(['POST'])
 def choose_theme(request, pk):
     current_user = request.user
@@ -221,10 +230,13 @@ def choose_group_theme(request, pk):
         form.save()
         group_conversation.theme = request.POST['theme']
         group_conversation.save()
+        content = f'{current_user.name} đã thay đổi chủ đề thành {group_conversation.theme}'
+        theme_notification = GroupNotification.objects.create(group_conversation=group_conversation,content=content)
     
         serializer = GroupConversationSerializer(group_conversation)
+        serializer1 = GroupNotificationSerializer(theme_notification)
     
-        return JsonResponse(serializer.data)
+        return JsonResponse({'group':serializer.data, 'notification':serializer1.data})
     else: 
         return JsonResponse({'message':'Failed'})
 

@@ -33,7 +33,7 @@ class GroupConversationMessageSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = GroupConversationMessage
-        fields = ('id', 'sent_to', 'attachments', 'created_by', 'created_at_formatted', 'body', 'seen_by')
+        fields = ('id', 'sent_to', 'attachments', 'created_by', 'created_at_formatted','created_at', 'body', 'seen_by')
         
 class ConversationSerializer(serializers.ModelSerializer):
     users = UserSerializer(read_only=True, many=True)
@@ -76,4 +76,4 @@ class GroupPollSerializer(serializers.ModelSerializer):
 class GroupNotificationSerializer(serializers.ModelSerializer):
     class Meta: 
         model = GroupNotification
-        fields = ('content',)
+        fields = ('id', 'content','created_at',)

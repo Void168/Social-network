@@ -2,6 +2,7 @@ import uuid
 
 from django.db import models
 from django.utils.timesince import timesince
+from django.utils import timezone
 
 from account.models import User
 # Create your models here.
@@ -67,6 +68,12 @@ class ConversationMessage(models.Model):
     
     def created_at_formatted(self):
         return timesince(self.created_at)
+
+class GroupNotification(models.Model):
+    id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
+    content = models.TextField(blank=True)
+    group_conversation = models.ForeignKey(GroupConversation, related_name='group_notifications', on_delete=models.CASCADE)
+    created_at = models.DateTimeField(auto_now_add=True)
 
 class GroupConversationMessage(models.Model):
     id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)

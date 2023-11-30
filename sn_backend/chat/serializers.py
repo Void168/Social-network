@@ -2,7 +2,7 @@ from rest_framework import serializers
 
 from account.serializers import UserSerializer
 
-from .models import Conversation, GroupConversation, ConversationMessage, GroupConversationMessage, SeenUser, MessageAttachment, PollOption, GroupPoll
+from .models import Conversation, GroupConversation, ConversationMessage, GroupConversationMessage, SeenUser, MessageAttachment, PollOption, GroupPoll, GroupNotification
 
 class SeenUserSerializer(serializers.ModelSerializer):
     created_by = UserSerializer(read_only=True)
@@ -72,3 +72,8 @@ class GroupPollSerializer(serializers.ModelSerializer):
     class Meta:
         model = GroupPoll
         fields = ('id','poll_name', 'poll_options','created_at','group_conversation', 'created_by', 'time_end',)
+
+class GroupNotificationSerializer(serializers.ModelSerializer):
+    class Meta: 
+        model = GroupNotification
+        fields = ('content',)

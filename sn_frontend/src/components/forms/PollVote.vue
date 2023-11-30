@@ -1,14 +1,36 @@
 <template>
   <div class="w-full">
-    <p class="my-1">{{ option.poll_option_name }}</p>
-    <div class="flex gap-3 justify-between items-center">
-      <div class="w-full bg-gray-200 rounded-full h-2.5 dark:bg-gray-700">
-        <div
-          class="h-2.5 rounded-full"
-          style="width: 45%"
-          :class="[selectedTheme.background]"
-        ></div>
+    <div class="flex gap-3 justify-between items-end">
+      <div class="flex flex-col w-full">
+        <div class="flex justify-between items-center">
+          <p class="my-1">{{ option.poll_option_name }}</p>
+          <div
+            class="flex items-center gap-1 cursor-pointer"
+            @click="openUsersVoteModal"
+          >
+            <span
+              v-if="usersVote.length"
+              class="bg-neutral-500 dark:text-neutral-200 rounded-full text-sm px-1"
+              >+{{ usersVote.length - 3 }}</span
+            >
+            <div v-for="user in usersVote.slice(0, 3)" :key="user.id">
+              <img
+                :src="user.get_avatar"
+                alt="avatar-vote"
+                class="w-4 h-4 rounded-full"
+              />
+            </div>
+          </div>
+        </div>
+        <div class="w-full bg-gray-200 rounded-full h-2.5 dark:bg-gray-700">
+          <div
+            class="h-2.5 rounded-full"
+            :style="{ width: width }"
+            :class="[selectedTheme.background]"
+          ></div>
+        </div>
       </div>
+
       <div @click="vote">
         <div
           @click="submitVote(option)"
@@ -62,6 +84,14 @@ export default (await import("vue")).defineComponent({
         .map((user) => user.id)
         .includes(this.user.id);
     },
+    usersVote() {
+      return this.option.users_vote.map((user) => user);
+    },
+    width() {
+      return `${parseFloat(
+        this.option.users_vote.length / this.activeConversation.users.length * 100
+      ).toFixed(2)}%`;
+    },
   },
 
   mounted() {
@@ -69,6 +99,7 @@ export default (await import("vue")).defineComponent({
   },
 
   methods: {
+    openUsersVoteModal() {},
     setIsVote() {
       if (this.filteredUser) {
         this.isVote = true;
@@ -81,7 +112,7 @@ export default (await import("vue")).defineComponent({
         .get(`/api/user-info/${this.userStore.user.id}`)
         .then((res) => {
           this.user = res.data.user;
-          this.setIsVote()
+          this.setIsVote();
         })
         .catch((error) => {
           console.log(error);
@@ -95,7 +126,7 @@ export default (await import("vue")).defineComponent({
         .post(`/api/chat/group/${option.id}/vote-poll/`)
         .then((res) => {
           console.log(res.data);
-        //   Toast
+          //   Toast
         })
         .catch((error) => {
           console.log(error);

@@ -363,7 +363,7 @@
 <script>
 import axios from "axios";
 import { RouterLink } from "vue-router";
-import themes from '../../data/themes'
+import themes from "../../data/themes";
 
 import {
   XMarkIcon,
@@ -420,11 +420,11 @@ export default (await import("vue")).defineComponent({
 
   props: {
     friend: Object,
-    conversation: Object,
   },
 
   data() {
     return {
+      conversation: {},
       friendsChat: [],
       body: "",
       isOpen: true,
@@ -432,7 +432,7 @@ export default (await import("vue")).defineComponent({
       url: null,
       isOpenSettings: false,
       isConversationThemeModalOpen: false,
-      themes: themes
+      themes: themes,
     };
   },
 
@@ -447,6 +447,7 @@ export default (await import("vue")).defineComponent({
   mounted() {
     document.addEventListener("click", this.clickOutside);
     this.scrollToBottom();
+    this.getConversation();
   },
 
   beforeUnmount() {
@@ -454,6 +455,15 @@ export default (await import("vue")).defineComponent({
   },
 
   methods: {
+    getConversation() {
+      axios
+        .get(`/api/chat/${this.friend?.id}/get-chat-window/`)
+        .then((res) => {
+          this.conversation = res.data.conversation
+          console.log(this.conversation)
+        })
+        .catch((error) => console.log(error));
+    },
     scrollToBottom() {
       const objDiv = document.getElementById("chat-container");
       objDiv.scrollTop = objDiv.scrollHeight;

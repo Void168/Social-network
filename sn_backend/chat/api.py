@@ -1,4 +1,5 @@
 from django.http import JsonResponse
+from datetime import datetime
 
 from rest_framework.decorators import api_view, authentication_classes, permission_classes
 from django.db.models import Q
@@ -33,8 +34,22 @@ def conversation_detail(request, pk):
     return JsonResponse(serializer.data, safe=False)
 
 @api_view(['GET'])
+def chat_window_detail(request, user_pk):
+    friend = User.objects.get(pk=user_pk)
+    conversation = Conversation.objects.filter(users__in=list([request.user])).filter(users__in=list([friend]))
+    
+    if conversation.count():
+        main_conversation = conversation[0]
+        serializer = ConversationSerializer(main_conversation)
+    
+        return JsonResponse({'message':'Success', 'conversation': serializer.data})
+    else:
+        return JsonResponse({'message':'Conversation not exists'})
+
+@api_view(['GET'])
 def group_conversation_detail(request, pk):
     group_conversation = GroupConversation.objects.filter(users__in=list([request.user])).get(pk=pk)
+
     serializer = GroupConversationSerializer(group_conversation)
     
     return JsonResponse(serializer.data, safe=False)
@@ -309,6 +324,10 @@ def group_polls_list(request, pk):
     group_conversation = GroupConversation.objects.filter(users__in=list([request.user])).get(pk=pk)
     list_polls = GroupPoll.objects.filter(Q(group_conversation=group_conversation))
     
+    for poll in list_polls:
+        if poll.time_end.isoformat() < datetime.today().isoformat():
+            poll.delete()
+    
     serializer = GroupPollSerializer(list_polls, many=True)
     
     return JsonResponse(serializer.data, safe=False)
@@ -322,6 +341,14 @@ def vote_poll(request, pk):
     else: 
         poll_option.users_vote.add(request.user)
         poll_option.save()
+        
+    return JsonResponse({'message': 'Success'})
+
+@api_view(['DELETE'])
+def delete_poll(request, pk):
+    poll = GroupPoll.objects.get(pk=pk)
+    if poll.created_by == request.user:
+        poll.delete()
         
     return JsonResponse({'message': 'Success'})
     

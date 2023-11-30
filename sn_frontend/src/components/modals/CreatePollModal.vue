@@ -206,6 +206,8 @@ export default (await import("vue")).defineComponent({
       }
     },
     submitForm() {
+      this.$emit("closeModal");
+      
       if (this.options.length > 1) {
         axios
           .post(`/api/chat/group/${this.activeConversation.id}/create-poll/`, {

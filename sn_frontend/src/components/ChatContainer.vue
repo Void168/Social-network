@@ -12,7 +12,6 @@
           <div @click="seenMessage">
             <div
               class="flex gap-2 items-center"
-              @click="getConversation(friend)"
             >
               <img :src="friend.get_avatar" class="w-10 h-10 rounded-full" />
               <span class="font-semibold">{{ friend.name }}</span>
@@ -236,11 +235,11 @@ export default (await import("vue")).defineComponent({
           return this.body;
         });
     },
-    getConversation(friend) {
-      this.conversation = this.conversations.filter((conversation) =>
-        conversation.users.map((user) => user.name).includes(friend.name)
-      )[0];
-    },
+    // getConversation(friend) {
+    //   this.conversation = this.conversations.filter((conversation) =>
+    //     conversation.users.map((user) => user.name).includes(friend.name)
+    //   )[0];
+    // },
     seenMessage() {
       this.$emit("seenMessage", this.conversation?.id);
       if (this.conversation?.id) {

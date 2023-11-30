@@ -41,27 +41,49 @@
               >
                 Danh sách cuộc thảo luận
               </DialogTitle>
-              <div
-                class="mt-2 flex justify-center items-center"
-                v-for="poll in pollslist"
-                :key="poll.id"
-              >
+              <div v-if="pollslist.length">
                 <div
-                  class="p-4 bg-neutral-200 dark:bg-slate-600 rounded-xl shadow-md my-2 w-[70%]"
+                  class="mt-2 flex gap-3 justify-around items-center"
+                  v-for="poll in pollslist"
+                  :key="poll.id"
                 >
-                  <div class="flex items-center justify-center">
-                    <p class="font-semibold">{{ poll.poll_name }}</p>
-                  </div>
-                  <div v-for="option in poll.poll_options" :key="option.id">
-                    <div class="flex justify-between items-center gap-4">
-                      <PollVote
-                        :option="option"
-                        :activeConversation="activeConversation"
-                      />
+                  <div
+                    class="p-4 bg-neutral-200 dark:bg-slate-600 rounded-xl shadow-md my-2 w-[70%]"
+                  >
+                    <p class="font-semibold text-center">
+                      {{ poll.poll_name }}
+                    </p>
+                    <p class="font-semibold text-center text-sm">
+                      Hạn chót {{ poll.time_end.slice(11, 19) }} ngày
+                      {{
+                        poll.time_end
+                          .slice(0, 10)
+                          .split("-")
+                          .reverse()
+                          .join("-")
+                      }}
+                    </p>
+                    <div v-for="option in poll.poll_options" :key="option.id">
+                      <div class="flex justify-between items-center gap-4">
+                        <PollVote
+                          :option="option"
+                          :activeConversation="activeConversation"
+                        />
+                      </div>
                     </div>
                   </div>
+                  <TrashIcon
+                    @click="openDeletePollModal"
+                    class="w-8 h-8 p-1 shadow-md bg-neutral-100 dark:bg-slate-700 hover:bg-neutral-200 dark:hover:bg-slate-500 transition rounded-full cursor-pointer"
+                  />
+                  <DeletePollModal
+                    :show="isOpen"
+                    @closeModal="closeModal"
+                    @deletePoll="deletePoll(poll.id)"
+                  />
                 </div>
               </div>
+              <p v-else class="text-center text-lg mt-4">Nhóm bạn chưa có cuộc thảo luận nào</p>
             </DialogPanel>
           </TransitionChild>
         </div>
@@ -72,6 +94,8 @@
 
 <script>
 import axios from "axios";
+import { useToastStore } from "../../stores/toast";
+
 import {
   TransitionRoot,
   TransitionChild,
@@ -79,10 +103,11 @@ import {
   DialogPanel,
   DialogTitle,
 } from "@headlessui/vue";
-import { XMarkIcon } from "@heroicons/vue/24/outline";
+import { XMarkIcon, TrashIcon } from "@heroicons/vue/24/outline";
 import themes from "../../data/themes";
 
 import PollVote from "../forms/PollVote.vue";
+import DeletePollModal from "../modals/DeletePollModal.vue";
 
 export default (await import("vue")).defineComponent({
   components: {
@@ -92,7 +117,16 @@ export default (await import("vue")).defineComponent({
     DialogPanel,
     DialogTitle,
     PollVote,
+    DeletePollModal,
     XMarkIcon,
+    TrashIcon,
+  },
+  setup() {
+    const toastStore = useToastStore();
+
+    return {
+      toastStore,
+    };
   },
   props: {
     isPollsListOpen: Boolean,
@@ -103,6 +137,7 @@ export default (await import("vue")).defineComponent({
   data() {
     return {
       themes: themes,
+      isOpen: false,
     };
   },
 
@@ -111,6 +146,40 @@ export default (await import("vue")).defineComponent({
       return this.themes.filter(
         (theme) => theme.name === this.activeConversation.theme
       )[0];
+    },
+  },
+
+  methods: {
+    openDeletePollModal() {
+      this.isOpen = !this.isOpen;
+    },
+    closeModal() {
+      this.isOpen = false;
+    },
+    deletePoll(id) {
+      axios
+        .delete(`/api/chat/group/${id}/delete-poll/`)
+        .then((res) => {
+          setTimeout(() => {
+            this.closeModal();
+          }, 500);
+          this.toastStore.showToast(
+            5000,
+            "Đã xóa đoạn cuộc thảo luận",
+            "bg-emerald-500 text-white"
+          );
+          setTimeout(() => {
+            this.$router.go(0);
+          }, 6000);
+        })
+        .catch((error) => {
+          console.log(error);
+          this.toastStore.showToast(
+            5000,
+            "Xóa cuộc thảo luận thất bại",
+            "bg-rose-500 text-white"
+          );
+        });
     },
   },
 });

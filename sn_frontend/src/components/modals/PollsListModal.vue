@@ -37,7 +37,7 @@
               </button>
               <DialogTitle
                 as="h3"
-                class="text-2xl font-medium leading-6 text-gray-900 dark:text-neutral-200 text-center"
+                class="text-2xl font-medium leading-6 text-gray-900 dark:text-neutral-200 text-center mb-4"
               >
                 Danh sách cuộc thảo luận
               </DialogTitle>
@@ -46,7 +46,7 @@
                 class="max-h-72 overflow-y-auto scrollbar-corner-slate-200 scrollbar-thin scrollbar-thumb-slate-400 scrollbar-track-slate-800"
               >
                 <div
-                  class="mt-2 flex gap-3 items-center"
+                  class="mt-2 mb-8 flex gap-3 items-center"
                   v-for="poll in pollslist"
                   :key="poll.id"
                 >
@@ -55,7 +55,7 @@
                     class="w-full flex flex-col justify-around items-center"
                   >
                     <div
-                      class="p-4 bg-neutral-200 dark:bg-slate-600 rounded-xl shadow-md my-2 w-[70%]"
+                      class="p-4 bg-neutral-200 dark:bg-slate-600 rounded-xl shadow-md mb-2 w-[70%]"
                     >
                       <p class="font-semibold text-center">
                         {{ poll.poll_name }}
@@ -80,7 +80,7 @@
                       </div>
                     </div>
                     <TrashIcon
-                      v-if="userStore.user.id === poll.created_by.id"
+                      v-if="userStore.user.id === poll.created_by.id || userStore.user.id === activeConversation.admin.id"
                       @click="deletePoll(poll.id)"
                       class="w-8 h-8 p-1 shadow-md bg-neutral-100 dark:bg-slate-700 hover:bg-neutral-200 dark:hover:bg-slate-500 transition rounded-full cursor-pointer"
                     />

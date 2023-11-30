@@ -484,7 +484,7 @@ export default (await import("vue")).defineComponent({
         .get(`/api/chat/group/${this.$route.params.id}/`)
         .then((res) => {
           this.activeConversation = res.data;
-          console.log(this.activeConversation);
+          // console.log(this.activeConversation);
           this.listMessages = this.activeConversation?.group_messages;
           let users = [];
           for (let i = 0; i < this.activeConversation.users.length; i++) {

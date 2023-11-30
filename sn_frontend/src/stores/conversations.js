@@ -17,7 +17,7 @@ export const useUnseenConversationsStore = defineStore({
         .then((res) => {
           const userStore = useUserStore();
           this.length = res.data.filter((conversation) =>
-            !conversation.messages[conversation.messages.length - 1].seen_by
+            !conversation.messages[conversation.messages.length - 1]?.seen_by
               .map((user) => user.created_by.name)
               .includes(userStore.user.name)
           ).length

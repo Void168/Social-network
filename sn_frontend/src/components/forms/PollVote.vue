@@ -8,6 +8,11 @@
             class="flex items-center gap-1 cursor-pointer"
             @click="openUsersVoteModal"
           >
+            <VotesListModal
+              :option="option"
+              :show="isOpen"
+              @closeModal="closeModal"
+            />
             <span
               v-if="usersVote.length > 3"
               class="bg-neutral-500 dark:text-neutral-200 rounded-full text-sm px-1"
@@ -51,8 +56,12 @@
 import axios from "axios";
 import themes from "../../data/themes";
 import { useUserStore } from "../../stores/user";
+import VotesListModal from "../modals/VotesListModal.vue";
 
 export default (await import("vue")).defineComponent({
+  components: {
+    VotesListModal
+  },
   setup() {
     const userStore = useUserStore();
 
@@ -70,6 +79,7 @@ export default (await import("vue")).defineComponent({
       themes: themes,
       isVote: false,
       user: {},
+      isOpen: false,
     };
   },
 
@@ -94,8 +104,8 @@ export default (await import("vue")).defineComponent({
       ).toFixed(2)}%`;
     },
     date() {
-      return new Date().getTime()
-    }
+      return new Date().getTime();
+    },
   },
 
   mounted() {
@@ -103,7 +113,12 @@ export default (await import("vue")).defineComponent({
   },
 
   methods: {
-    openUsersVoteModal() {},
+    closeModal(){
+      this.isOpen = false
+    },
+    openUsersVoteModal() {
+      this.isOpen = true
+    },
     setIsVote() {
       if (this.filteredUser) {
         this.isVote = true;

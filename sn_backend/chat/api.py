@@ -242,13 +242,15 @@ def choose_group_theme(request, pk):
 
 @api_view(['POST'])
 def set_group_avatar(request, pk):
-    user = request.user
+    current_user = request.user
     group_conversation = GroupConversation.objects.filter(users__in=list([request.user])).get(pk=pk)
 
     form = AvatarGroupForm(request.FILES, instance=user)
     if form.is_valid():
         form.save()
         group_conversation.avatar = request.FILES['avatar']
+        content = f'{current_user.name} đã thay đổi ảnh nhóm'
+        theme_notification = GroupNotification.objects.create(group_conversation=group_conversation,content=content)
         group_conversation.save()
     
     serializer = GroupConversationSerializer(group_conversation)
@@ -264,7 +266,8 @@ def set_group_name(request, pk):
     if form.is_valid():
         form.save()
         group_conversation.group_name = request.POST['group_name']
-        
+        content = f'{current_user.name} đã thay đổi tên nhóm thành {group_conversation.group_name}'
+        theme_notification = GroupNotification.objects.create(group_conversation=group_conversation,content=content)
         group_conversation.save()
     
         serializer = GroupConversationSerializer(current_user)
@@ -325,6 +328,9 @@ def create_poll(request, pk):
         poll_option = PollOption.objects.create(poll_option_name=option)
         poll.poll_options.add(poll_option)
         
+    content = f'{request.user.name} đã tạo cuộc thảo luận {poll_name}'
+    theme_notification = GroupNotification.objects.create(group_conversation=group_conversation,content=content)
+    
     poll.save()
     
     serializer = GroupPollSerializer(poll)
@@ -336,22 +342,21 @@ def group_polls_list(request, pk):
     group_conversation = GroupConversation.objects.filter(users__in=list([request.user])).get(pk=pk)
     list_polls = GroupPoll.objects.filter(Q(group_conversation=group_conversation))
     
-    for poll in list_polls:
-        if poll.time_end.isoformat() < datetime.today().isoformat():
-            poll.delete()
-    
     serializer = GroupPollSerializer(list_polls, many=True)
     
     return JsonResponse(serializer.data, safe=False)
 
 @api_view(['POST'])
-def vote_poll(request, pk):
+def vote_poll(request, pk, conversation_pk):
+    group_conversation = GroupConversation.objects.filter(users__in=list([request.user])).get(pk=conversation_pk)
     poll_option = PollOption.objects.get(pk=pk)
     if poll_option.users_vote.all().filter(id=request.user.id).exists():
         poll_option.users_vote.remove(request.user)
         poll_option.save()
     else: 
         poll_option.users_vote.add(request.user)
+        content = f'{request.user.name} đã bình chọn {poll_option.poll_option_name}'
+        theme_notification = GroupNotification.objects.create(group_conversation=group_conversation,content=content)
         poll_option.save()
         
     return JsonResponse({'message': 'Success'})

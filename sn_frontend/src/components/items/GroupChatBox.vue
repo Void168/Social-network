@@ -142,7 +142,7 @@
               </div>
               <div
                 v-if="message.content"
-                class="flex justify-center items-center"
+                class="flex justify-center items-center my-2"
               >
                 {{ message.content }}
               </div>

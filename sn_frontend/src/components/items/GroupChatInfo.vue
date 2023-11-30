@@ -125,11 +125,11 @@
             <DisclosurePanel
               class="px-4 pb-2 pt-4 text-sm dark:text-neutral-200 font-semibold"
             >
-              <div
-                class="flex justify-center items-center gap-4 mb-4"
-                v-if="activeConversation.admin.id === userStore.user.id"
-              >
-                <div class="flex flex-col items-center">
+              <div class="flex justify-center items-center gap-4 mb-4">
+                <div
+                  v-if="activeConversation.admin.id === userStore.user.id"
+                  class="flex flex-col items-center"
+                >
                   <PlusCircleIcon
                     @click="openAddUsersModal"
                     class="w-8 h-8 p-1 shadow-md bg-neutral-100 dark:bg-slate-700 hover:bg-neutral-200 dark:hover:bg-slate-500 transition rounded-full cursor-pointer"

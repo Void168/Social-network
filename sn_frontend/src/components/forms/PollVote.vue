@@ -9,7 +9,7 @@
             @click="openUsersVoteModal"
           >
             <span
-              v-if="usersVote.length"
+              v-if="usersVote.length > 3"
               class="bg-neutral-500 dark:text-neutral-200 rounded-full text-sm px-1"
               >+{{ usersVote.length - 3 }}</span
             >
@@ -89,9 +89,13 @@ export default (await import("vue")).defineComponent({
     },
     width() {
       return `${parseFloat(
-        this.option.users_vote.length / this.activeConversation.users.length * 100
+        (this.option.users_vote.length / this.activeConversation.users.length) *
+          100
       ).toFixed(2)}%`;
     },
+    date() {
+      return new Date().getTime()
+    }
   },
 
   mounted() {
@@ -123,7 +127,9 @@ export default (await import("vue")).defineComponent({
     },
     submitVote(option) {
       axios
-        .post(`/api/chat/group/${option.id}/vote-poll/`)
+        .post(
+          `/api/chat/group/${this.$route.params.id}/vote-poll/${option.id}/`
+        )
         .then((res) => {
           console.log(res.data);
           //   Toast

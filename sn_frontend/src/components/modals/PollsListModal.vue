@@ -41,20 +41,59 @@
               >
                 Danh sách cuộc thảo luận
               </DialogTitle>
-              <div v-if="pollslist.length">
+              <div
+                v-if="pollslist.length"
+                class="max-h-72 overflow-y-auto scrollbar-corner-slate-200 scrollbar-thin scrollbar-thumb-slate-400 scrollbar-track-slate-800"
+              >
                 <div
-                  class="mt-2 flex gap-3 justify-around items-center"
+                  class="mt-2 flex gap-3 items-center"
                   v-for="poll in pollslist"
                   :key="poll.id"
                 >
                   <div
+                    v-if="new Date(poll.time_end).getTime() > date"
+                    class="w-full flex flex-col justify-around items-center"
+                  >
+                    <div
+                      class="p-4 bg-neutral-200 dark:bg-slate-600 rounded-xl shadow-md my-2 w-[70%]"
+                    >
+                      <p class="font-semibold text-center">
+                        {{ poll.poll_name }}
+                      </p>
+                      <p class="font-semibold text-center text-sm">
+                        Hạn chót {{ poll.time_end.slice(11, 19) }} ngày
+                        {{
+                          poll.time_end
+                            .slice(0, 10)
+                            .split("-")
+                            .reverse()
+                            .join("-")
+                        }}
+                      </p>
+                      <div v-for="option in poll.poll_options" :key="option.id">
+                        <div class="flex justify-between items-center gap-4">
+                          <PollVote
+                            :option="option"
+                            :activeConversation="activeConversation"
+                          />
+                        </div>
+                      </div>
+                    </div>
+                    <TrashIcon
+                      v-if="userStore.user.id === poll.created_by.id"
+                      @click="deletePoll(poll.id)"
+                      class="w-8 h-8 p-1 shadow-md bg-neutral-100 dark:bg-slate-700 hover:bg-neutral-200 dark:hover:bg-slate-500 transition rounded-full cursor-pointer"
+                    />
+                  </div>
+                  <div
+                    v-else
                     class="p-4 bg-neutral-200 dark:bg-slate-600 rounded-xl shadow-md my-2 w-[70%]"
                   >
                     <p class="font-semibold text-center">
                       {{ poll.poll_name }}
                     </p>
                     <p class="font-semibold text-center text-sm">
-                      Hạn chót {{ poll.time_end.slice(11, 19) }} ngày
+                      Đã kết thúc vào {{ poll.time_end.slice(11, 19) }} ngày
                       {{
                         poll.time_end
                           .slice(0, 10)
@@ -63,27 +102,16 @@
                           .join("-")
                       }}
                     </p>
-                    <div v-for="option in poll.poll_options" :key="option.id">
-                      <div class="flex justify-between items-center gap-4">
-                        <PollVote
-                          :option="option"
-                          :activeConversation="activeConversation"
-                        />
-                      </div>
-                    </div>
+                    <p class="my-2">Kết quả</p>
+                    <p class="text-center font-bold text-lg">
+                      {{ result.poll_option_name }}
+                    </p>
                   </div>
-                  <TrashIcon
-                    @click="openDeletePollModal"
-                    class="w-8 h-8 p-1 shadow-md bg-neutral-100 dark:bg-slate-700 hover:bg-neutral-200 dark:hover:bg-slate-500 transition rounded-full cursor-pointer"
-                  />
-                  <DeletePollModal
-                    :show="isOpen"
-                    @closeModal="closeModal"
-                    @deletePoll="deletePoll(poll.id)"
-                  />
                 </div>
               </div>
-              <p v-else class="text-center text-lg mt-4">Nhóm bạn chưa có cuộc thảo luận nào</p>
+              <p v-else class="text-center text-lg mt-4">
+                Nhóm bạn chưa có cuộc thảo luận nào
+              </p>
             </DialogPanel>
           </TransitionChild>
         </div>
@@ -95,6 +123,7 @@
 <script>
 import axios from "axios";
 import { useToastStore } from "../../stores/toast";
+import { useUserStore } from "../../stores/user";
 
 import {
   TransitionRoot,
@@ -123,9 +152,11 @@ export default (await import("vue")).defineComponent({
   },
   setup() {
     const toastStore = useToastStore();
+    const userStore = useUserStore()
 
     return {
       toastStore,
+      userStore
     };
   },
   props: {
@@ -146,6 +177,14 @@ export default (await import("vue")).defineComponent({
       return this.themes.filter(
         (theme) => theme.name === this.activeConversation.theme
       )[0];
+    },
+    date() {
+      return new Date().getTime();
+    },
+    result() {
+      return this.pollslist.map((poll) =>
+        poll.poll_options.filter((option) => Math.max(option.users_vote.length))
+      )[0][0];
     },
   },
 

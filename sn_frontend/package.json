@@ -18,12 +18,15 @@
     "date-fns": "^2.30.0",
     "emoji-picker-element": "^1.18.4",
     "pinia": "^2.1.6",
+    "pusher-js": "^8.4.0-rc1",
+    "socket.io-client": "^4.7.2",
     "tailwind-scrollbar": "^3.0.5",
     "vue": "^3.3.4",
     "vue-multiselect": "^3.0.0-beta.3",
     "vue-router": "^4.2.4"
   },
   "devDependencies": {
+    "@types/pusher-js": "^5.1.0",
     "@vitejs/plugin-vue": "^4.3.4",
     "autoprefixer": "^10.4.16",
     "postcss": "^8.4.31",

@@ -23,7 +23,7 @@ class ConversationMessageSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = ConversationMessage
-        fields = ('id', 'sent_to', 'attachments', 'created_by', 'created_at_formatted', 'body', 'seen_by')
+        fields = ('id', 'sent_to', 'attachments', 'created_by', 'created_at_formatted', 'body', 'seen_by',)
         
 class GroupConversationMessageSerializer(serializers.ModelSerializer):
     sent_to = UserSerializer(read_only=True)

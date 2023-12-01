@@ -92,7 +92,7 @@ class GroupConversationMessage(models.Model):
 class PollOption(models.Model):
     id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
     poll_option_name = models.CharField(default = '', max_length=255)
-    users_vote = models.ManyToManyField(User, related_name='users_vote', null=True)
+    users_vote = models.ManyToManyField(User, related_name='users_vote')
 
 class GroupPoll(models.Model):
     id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)

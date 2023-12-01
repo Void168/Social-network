@@ -114,6 +114,16 @@ export default (await import("vue")).defineComponent({
     this.getGroupConversations();
   },
 
+  watch: {
+    "$route.params.id": {
+      handler: function () {
+        this.getConversations();
+      },
+      deep: true,
+      immediate: true,
+    },
+  },
+
   methods: {
     getConversations() {
       axios

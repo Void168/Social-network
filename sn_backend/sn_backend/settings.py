@@ -68,7 +68,10 @@ INSTALLED_APPS = [
     'information',
     'rest_framework',
     'rest_framework_simplejwt',
+    'channels',
 ]
+
+ASGI_APPLICATION = 'sn_backend.asgi.application'
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',

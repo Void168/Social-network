@@ -150,7 +150,6 @@ export default (await import("vue")).defineComponent({
           },
         })
         .then((res) => {
-          // this.selectedTheme.background = res.data.theme;
           // console.log(res.data)
         })
         .catch((error) => console.log(error));

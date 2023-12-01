@@ -94,7 +94,7 @@
               class="text-xs font-bold dark:text-neutral-300"
               v-if="
                 user.id !== userStore.user.id &&
-                conversation.messages[conversation.messages.length - 1]?.seen_by
+                lastMessage?.seen_by
                   .map((obj) => obj.created_by.email)
                   .includes(userStore.user.email) === false
               "
@@ -113,7 +113,7 @@
             v-if="conversation?.messages?.length"
             class="text-xs text-gray-600 dark:text-neutral-300"
             >{{
-              conversation.messages[conversation.messages.length - 1]
+              lastMessage
                 .created_at_formatted
             }}
             trước</span
@@ -129,30 +129,28 @@
               <span
                 class="font-semibold"
                 v-if="
-                  conversation.messages[conversation.messages.length - 1]
+                  lastMessage
                     .created_by.id === userStore.user.id
                 "
                 >Bạn:
               </span>
               <span
                 v-else-if="
-                  conversation.messages[conversation.messages.length - 1]
+                  lastMessage
                     .created_by.id !== userStore.user.id &&
-                  conversation.messages[
-                    conversation.messages.length - 1
-                  ]?.seen_by
+                    lastMessage?.seen_by
                     .map((obj) => obj.created_by.email)
                     .includes(userStore.user.email) === false
                 "
                 class="font-bold text-emerald-500 dark:text-neutral-200"
                 >{{
-                  conversation.messages[conversation.messages.length - 1]
+                  lastMessage
                     .created_by.name
                 }}:
               </span>
               <span class="dark:text-neutral-300" v-else
                 >{{
-                  conversation.messages[conversation.messages.length - 1]
+                  lastMessage
                     .created_by.name
                 }}:
               </span>
@@ -168,14 +166,12 @@
                   "
                 >
                   {{
-                    conversation?.messages[conversation.messages?.length - 1]
-                      .body
+                    lastMessage.body
                   }}
                 </p>
                 <p class="truncate dark:text-neutral-300" v-else>
                   {{
-                    conversation?.messages[conversation.messages?.length - 1]
-                      .body
+                      lastMessage.body
                   }}
                 </p>
               </div>
@@ -236,12 +232,16 @@ export default (await import("vue")).defineComponent({
       toastStore,
     };
   },
+
   computed: {
     getOtherUserId() {
       return this.conversation.users?.filter(
         (user) => this.userStore.user.id !== user.id
       )[0];
     },
+    lastMessage(){
+      return this.conversation?.messages[this.conversation.messages?.length - 1]
+    }
   },
 
   methods: {

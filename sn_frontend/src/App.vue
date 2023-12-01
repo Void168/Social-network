@@ -116,6 +116,9 @@ import Toast from "@/components/Toast.vue";
 import { useUserStore } from "./stores/user";
 import { useNotificationStore } from "./stores/notification";
 import { useUnseenConversationsStore } from "./stores/conversations";
+import { useConnectionStore } from "./stores/connection";
+import { socket } from "./socket";
+
 import axios from "axios";
 import { RouterLink } from "vue-router";
 import { useDark, useToggle } from "@vueuse/core";
@@ -125,6 +128,7 @@ import ProfileDropdown from "./components/dropdown/ProfileDropdown.vue";
 
 export default {
   setup() {
+    const connectionStore = useConnectionStore();
     const userStore = useUserStore();
     const userNotificationStore = useNotificationStore();
     const userUnseenConversationsStore = useUnseenConversationsStore();
@@ -133,6 +137,7 @@ export default {
     const enabled = ref(false);
 
     return {
+      connectionStore,
       userStore,
       userNotificationStore,
       userUnseenConversationsStore,
@@ -158,6 +163,9 @@ export default {
 
   beforeCreate() {
     this.userStore.initStore();
+    this.connectionStore.isConnected = true
+    socket.off();
+    this.connectionStore.bindEvents();
 
     const token = this.userStore.user.access;
 
@@ -167,6 +175,10 @@ export default {
       axios.defaults.headers.common["Authorization"] = "";
     }
   },
+
+  mounted(){
+    console.log(this.connectionStore.isConnected)
+  }
 };
 </script>
 

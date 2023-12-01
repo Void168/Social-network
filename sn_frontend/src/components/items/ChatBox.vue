@@ -167,8 +167,13 @@
           v-if="url"
           class="flex absolute bottom-0 w-full items-center p-4 shadow-md rounded-b-md bg-slate-100 dark:bg-slate-700"
         >
-          <img :src="url" class="w-20 h-20 rounded-lg border-[1px] border-slate-200 bg-slate-300 dark:border-slate-500 p-1" />
-          <span class="absolute top-5 right-5 cursor-pointer" @click="removeImage"
+          <img
+            :src="url"
+            class="w-20 h-20 rounded-lg border-[1px] border-slate-200 bg-slate-300 dark:border-slate-500 p-1"
+          />
+          <span
+            class="absolute top-5 right-5 cursor-pointer"
+            @click="removeImage"
             ><svg
               xmlns="http://www.w3.org/2000/svg"
               fill="none"
@@ -273,11 +278,13 @@
     </div>
   </div>
 </template>
-
 <script>
 import axios from "axios";
+import Pusher from 'pusher-js'
+
 import ConversationBox from "./ConversationBox.vue";
 import { useUserStore } from "../../stores/user";
+import { useConnectionStore } from "../../stores/connection";
 import { RouterLink } from "vue-router";
 
 import { Popover, PopoverButton, PopoverPanel } from "@headlessui/vue";
@@ -290,7 +297,7 @@ import {
   GifIcon,
 } from "@heroicons/vue/24/outline";
 
-import themes from '../../data/themes'
+import themes from "../../data/themes";
 
 export default (await import("vue")).defineComponent({
   props: {
@@ -298,8 +305,10 @@ export default (await import("vue")).defineComponent({
   },
   setup() {
     const userStore = useUserStore();
+    const connectionStore = useConnectionStore();
     return {
       userStore,
+      connectionStore,
     };
   },
 
@@ -311,7 +320,8 @@ export default (await import("vue")).defineComponent({
       body: "",
       isOpen: false,
       url: null,
-      themes: themes
+      themes: themes,
+      // lastMessage: {},
     };
   },
   computed: {
@@ -335,6 +345,18 @@ export default (await import("vue")).defineComponent({
     this.scrollToBottom();
   },
   methods: {
+    getPusher() {
+      Pusher.logToConsole = true;
+
+      const pusher = new Pusher(import.meta.env.VITE_PUSHER_KEY, {
+        cluster: "ap1",
+      });
+      const channel = pusher.subscribe(`${this.$route.params.id}`);
+      channel.bind("message:new", data => {
+        this.listMessages.push(JSON.parse(data.message));
+      });
+    },
+
     scrollToBottom() {
       const objDiv = document.getElementById("chatview-container");
       objDiv.scrollTop = objDiv.scrollHeight;
@@ -382,7 +404,7 @@ export default (await import("vue")).defineComponent({
 
     submitForm() {
       // console.log("submitForm", this.body);
-
+      this.getPusher()
       let formData = new FormData();
       if (this.$refs.file.files[0]) {
         formData.append("image", this.$refs.file.files[0]);
@@ -396,9 +418,10 @@ export default (await import("vue")).defineComponent({
           },
         })
         .then((res) => {
-          // console.log(res.data);
+          console.log(this.listMessages)
+          // this.lastMessage = res.data
           this.scrollToBottom();
-          this.recentConversation.messages?.push(res.data);
+          // this.recentConversation.messages?.push(res.data);
           this.$refs.file.value = null;
           this.url = null;
           this.body = "";

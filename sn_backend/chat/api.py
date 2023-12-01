@@ -1,5 +1,8 @@
 from django.http import JsonResponse
 from datetime import datetime
+from .pusher import pusher_client
+from django.core import serializers
+import json
 
 from rest_framework.decorators import api_view, authentication_classes, permission_classes
 from django.db.models import Q
@@ -124,7 +127,7 @@ def conversation_send_message(request, pk):
     attachment = None
     attachment_form = AttachmentForm(request.POST, request.FILES)
     
-    conversation = Conversation.objects.filter(users__in=list([request.user])).get(pk=pk)
+    conversation = Conversation.objects.filter(users__in=list([request.user])).get(id=pk)
     seenUser = SeenUser.objects.create(created_by=request.user)
     
     if attachment_form.is_valid():
@@ -149,8 +152,14 @@ def conversation_send_message(request, pk):
         
         message.seen_by.add(seenUser)
         message.save()
-
+        
         serializer = ConversationMessageSerializer(message)
+        
+        serializer_data = serializer.data
+        json_data = json.dumps(serializer_data)
+        
+        pusher_client.trigger(str(pk), 'message:new', {'message': json_data})
+    
 
         return JsonResponse(serializer.data, safe=False)
     else:

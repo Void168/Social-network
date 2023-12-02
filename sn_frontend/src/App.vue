@@ -94,6 +94,7 @@
                 ></path>
               </svg>
             </RouterLink>
+            {{ count }}
           </div>
 
           <div class="menu-right">
@@ -157,14 +158,22 @@ export default {
   data() {
     return {
       navbarHeight: null,
-      screenHeight: null
+      screenHeight: null,
+      count: 0
     }
   },
 
   beforeCreate() {
     this.userStore.initStore();
-    this.connectionStore.isConnected = true
     socket.off();
+    socket.on('connect', (socket) => {
+      this.connectionStore.isConnected = true
+      this.count++
+      socket.on('disconnect', () => {
+        this.connectionStore.isConnected = false
+        this.count--
+      })
+    })
     this.connectionStore.bindEvents();
 
     const token = this.userStore.user.access;

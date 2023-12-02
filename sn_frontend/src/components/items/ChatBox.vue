@@ -23,7 +23,7 @@
         class="overflow-y-scroll scrollbar-corner-slate-200 scrollbar-thin scrollbar-thumb-slate-400 scrollbar-track-slate-800 border border-gray-200 shadow-md dark:bg-slate-600 dark:border-slate-700 dark:text-neutral-200 h-[589px]"
       >
         <div class="flex flex-col flex-grow p-4 overflow-y-auto">
-          <div v-if="recentConversation?.messages?.length > 0">
+          <div v-if="listMessages?.length > 0">
             <div
               v-for="message in listMessages"
               v-bind:key="message.id"
@@ -122,7 +122,7 @@
                 <div>
                   <div
                     v-if="
-                      recentConversation?.messages?.filter(
+                      listMessages?.filter(
                         (user) => user.sent_to?.id === userStore.user.id
                       )
                     "
@@ -315,7 +315,6 @@ export default (await import("vue")).defineComponent({
   data() {
     return {
       receivedUser: {},
-      listMessages: [],
       recentConversation: {},
       body: "",
       isOpen: false,
@@ -330,6 +329,9 @@ export default (await import("vue")).defineComponent({
         (theme) => theme.name === this.recentConversation.theme
       )[0];
     },
+    listMessages(){
+      return this.recentConversation.messages
+    }
   },
   watch: {
     "$route.params.id": {
@@ -342,14 +344,14 @@ export default (await import("vue")).defineComponent({
   },
   mounted() {
     this.getMessages();
-    this.scrollToBottom();
+    this.getPusher()
   },
   methods: {
     getPusher() {
-      Pusher.logToConsole = true;
+      Pusher.logToConsole = false;
 
       const pusher = new Pusher(import.meta.env.VITE_PUSHER_KEY, {
-        cluster: "ap1",
+        cluster: `${import.meta.env.VITE_PUSHER_CLUSTER}`,
       });
       const channel = pusher.subscribe(`${this.$route.params.id}`);
       channel.bind("message:new", data => {
@@ -365,8 +367,8 @@ export default (await import("vue")).defineComponent({
       axios
         .get(`/api/chat/${this.$route.params.id}/`)
         .then((res) => {
+          this.scrollToBottom();
           this.recentConversation = res.data;
-          this.listMessages = this.recentConversation.messages;
           let users = [];
           for (let i = 0; i < this.recentConversation.users.length; i++) {
             users.push(this.recentConversation.users[i]);
@@ -404,7 +406,7 @@ export default (await import("vue")).defineComponent({
 
     submitForm() {
       // console.log("submitForm", this.body);
-      this.getPusher()
+      
       let formData = new FormData();
       if (this.$refs.file.files[0]) {
         formData.append("image", this.$refs.file.files[0]);
@@ -418,10 +420,7 @@ export default (await import("vue")).defineComponent({
           },
         })
         .then((res) => {
-          console.log(this.listMessages)
-          // this.lastMessage = res.data
           this.scrollToBottom();
-          // this.recentConversation.messages?.push(res.data);
           this.$refs.file.value = null;
           this.url = null;
           this.body = "";

@@ -111,34 +111,75 @@
                     />
                   </div>
                 </div>
-                <span
+                <div
                   class="text-xs text-gray-500 dark:text-neutral-200 leading-none"
                   v-if="
                     !message?.content &&
-                    message.id === listMessages[listMessages.length - 1].id &&
-                    listMessages[listMessages.length - 1].seen_by
+                    message.id === lastMessage?.id &&
+                    lastMessage?.seen_by
                       .map((obj) => obj.created_by?.email)
                       .includes(userStore.user.email) === true
                   "
-                  >Đã gửi
-                  {{
-                    listMessages[listMessages.length - 1].created_at_formatted
-                  }}
-                  trước</span
-                ><span
+                >
+                  <p>
+                    Đã gửi
+                    {{ lastMessage?.created_at_formatted }}
+                    trước
+                  </p>
+                  <div
+                    @click="openSeenUsersModal"
+                    v-if="lastMessage?.seen_by?.length"
+                    class="relative flex items-center justify-end mt-2 gap-1 cursor-pointer"
+                  >
+                    <SeenUsersModal
+                      :show="isOpen"
+                      @closeModal="closeSeenUsersModal"
+                      :lastMessage="getSeenBy"
+                    />
+                    <span
+                      v-if="getSeenBy.length > 3"
+                      class="mr-1 bg-slate-400 px-1 rounded-full text-sm cursor-pointer"
+                      >+{{ getSeenBy.length - 3 }}</span
+                    >
+                    <span
+                      v-for="seen_by in getSeenBy.slice(0, 3)"
+                      :key="seen_by.id"
+                      class="text-sm text-gray-500 dark:text-neutral-200 leading-none relative group cursor-pointer"
+                    >
+                      <span
+                        class="absolute z-50 w-56 px-4 py-2 rounded-lg leading-4 text-neutral-200 dark:text-slate-700 dark:bg-white bg-slate-700 top-[-60px] left-[-200px] hidden group-hover:block bg-opacity-80"
+                      >
+                        {{ seen_by.created_by.name }} đã xem lúc
+                        {{ seen_by.created_at.slice(11, 19) }} ngày
+                        {{
+                          seen_by.created_at
+                            .slice(0, 10)
+                            .split("-")
+                            .reverse()
+                            .join("-")
+                        }}
+                      </span>
+                      <img
+                        :src="seen_by.created_by.get_avatar"
+                        alt="seen-avatar"
+                        class="w-4 h-4"
+                      />
+                    </span>
+                  </div>
+                </div>
+                <div
                   class="text-xs text-gray-500 dark:text-neutral-200 leading-none"
                   v-if="
-                    message.id === listMessages[listMessages.length - 1].id &&
-                    listMessages[listMessages.length - 1].seen_by
+                    message.id === lastMessage?.id &&
+                    lastMessage?.seen_by
                       .map((obj) => obj.created_by?.email)
                       .includes(userStore.user.email) === false
                   "
-                  >Đã xem
-                  {{
-                    listMessages[listMessages.length - 1].created_at_formatted
-                  }}
-                  trước</span
                 >
+                  Đã xem
+                  {{ lastMessage?.created_at_formatted }}
+                  trước
+                </div>
               </div>
               <div
                 v-if="message.content"
@@ -146,7 +187,13 @@
               >
                 {{ message.content }}
               </div>
-              <div class="flex w-full mt-2 space-x-3 max-w-md" v-if="message.created_by?.id !== userStore.user.id && !message?.content">
+              <div
+                class="flex w-full mt-2 space-x-3 max-w-md"
+                v-if="
+                  message.created_by?.id !== userStore.user.id &&
+                  !message?.content
+                "
+              >
                 <div class="flex-shrink-0 h-10 w-10 rounded-full bg-gray-300">
                   <img
                     :src="message?.created_by?.get_avatar"
@@ -166,7 +213,6 @@
                   >
                     <div
                       class="bg-gray-200 p-3 rounded-r-lg rounded-bl-lg dark:bg-slate-500 dark:border-slate-600 dark:text-neutral-200"
-                      v-if="message?.created_by !== chats[0]?.users[0].name"
                     >
                       <p class="text-sm font-semibold">
                         {{ message?.body }}
@@ -175,15 +221,11 @@
                     <span
                       class="text-xs text-gray-500 dark:text-neutral-200 leading-none"
                       v-if="
-                        message.id ===
-                          listMessages[listMessages.length - 1].id &&
-                        !listMessages[listMessages.length - 1].seen_by.length
+                        message.id === lastMessage?.id &&
+                        lastMessage?.seen_by.length
                       "
                       >Đã gửi
-                      {{
-                        listMessages[listMessages.length - 1]
-                          .created_at_formatted
-                      }}
+                      {{ lastMessage?.created_at_formatted }}
                       trước</span
                     >
                   </div>
@@ -227,40 +269,6 @@
             </svg>
           </span>
         </div>
-      </div>
-      <div
-        @click="openSeenUsersModal"
-        v-if="listMessages[listMessages.length - 1]?.seen_by?.length"
-        class="flex items-center mt-2 gap-1 absolute bottom-2 right-5 cursor-pointer"
-      >
-        <SeenUsersModal
-          :show="isOpen"
-          @closeModal="closeSeenUsersModal"
-          :lastMessage="getSeenBy"
-        />
-        <span
-          v-if="getSeenBy.length > 3"
-          class="mr-1 bg-slate-400 px-1 rounded-full text-sm cursor-pointer"
-          >+{{ getSeenBy.length - 3 }}</span
-        >
-        <span
-          v-for="seen_by in getSeenBy.slice(0, 3)"
-          :key="seen_by.id"
-          class="text-sm text-gray-500 dark:text-neutral-200 leading-none relative group cursor-pointer"
-        >
-          <span
-            class="absolute w-56 px-4 py-2 rounded-lg leading-4 text-neutral-200 dark:text-slate-700 dark:bg-white bg-slate-700 top-[-60px] left-[-150px] hidden group-hover:block bg-opacity-80"
-          >
-            {{ seen_by.created_by.name }} đã xem lúc
-            {{ seen_by.created_at.slice(11, 19) }} ngày
-            {{ seen_by.created_at.slice(0, 10).split("-").reverse().join("-") }}
-          </span>
-          <img
-            :src="seen_by.created_by.get_avatar"
-            alt="seen-avatar"
-            class="w-4 h-4"
-          />
-        </span>
       </div>
     </div>
     <div
@@ -352,6 +360,7 @@
 
 <script>
 import axios from "axios";
+import Pusher from "pusher-js";
 import ConversationBox from "./ConversationBox.vue";
 import { useUserStore } from "../../stores/user";
 import { RouterLink } from "vue-router";
@@ -372,9 +381,6 @@ import {
 import themes from "../../data/themes";
 
 export default (await import("vue")).defineComponent({
-  props: {
-    chats: Array,
-  },
   setup() {
     const userStore = useUserStore();
     return {
@@ -412,6 +418,9 @@ export default (await import("vue")).defineComponent({
         ?.filter((user) => this.userStore.user.id !== user.id)
         .map((user) => user?.get_avatar)[1];
     },
+    lastMessage() {
+      return this.listMessages[this.listMessages?.length - 1];
+    },
     getSeenBy() {
       return this.listMessages[this.listMessages.length - 1].seen_by.filter(
         (seen) => seen.created_by.id !== this.userStore.user.id
@@ -442,10 +451,22 @@ export default (await import("vue")).defineComponent({
   mounted() {
     this.getMessages();
     this.scrollToBottom();
-    this.getNotifications();
+    this.getGroupNotifications();
+    this.getPusher();
   },
   methods: {
-    getNotifications() {
+    getPusher() {
+      Pusher.logToConsole = false;
+
+      const pusher = new Pusher(import.meta.env.VITE_PUSHER_KEY, {
+        cluster: `${import.meta.env.VITE_PUSHER_CLUSTER}`,
+      });
+      const channel = pusher.subscribe(`${this.$route.params.id}`);
+      channel.bind("group_message:new", (data) => {
+        this.listMessages.push(JSON.parse(data.message));
+      });
+    },
+    getGroupNotifications() {
       axios
         .get(`/api/chat/group/${this.$route.params.id}/get-notifications/`)
         .then((res) => {
@@ -483,9 +504,9 @@ export default (await import("vue")).defineComponent({
       axios
         .get(`/api/chat/group/${this.$route.params.id}/`)
         .then((res) => {
+          this.scrollToBottom();
           this.activeConversation = res.data;
-          // console.log(this.activeConversation);
-          this.listMessages = this.activeConversation?.group_messages;
+          this.listMessages = res.data.group_messages;
           let users = [];
           for (let i = 0; i < this.activeConversation.users.length; i++) {
             users.push(this.activeConversation.users[i]);
@@ -536,9 +557,7 @@ export default (await import("vue")).defineComponent({
           },
         })
         .then((res) => {
-          // console.log(res.data);
           this.scrollToBottom();
-          this.activeConversation.group_messages?.push(res.data);
           this.$refs.file.value = null;
           this.url = null;
           this.body = "";

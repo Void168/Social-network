@@ -196,8 +196,13 @@ def group_conversation_send_message(request, pk):
         
         group_message.seen_by.add(seenUser)
         group_message.save()
-
+        
         serializer = GroupConversationMessageSerializer(group_message)
+        
+        serializer_data = serializer.data
+        json_data = json.dumps(serializer_data)
+        
+        pusher_client.trigger(str(pk), 'group_message:new', {'message': json_data})
 
         return JsonResponse(serializer.data, safe=False)
     else:

@@ -37,7 +37,7 @@
     </div>
 
     <div class="main-center col-span-3 space-y-4">
-      <GroupChatBox v-bind:chats="conversations" />
+      <GroupChatBox />
     </div>
 
     <div

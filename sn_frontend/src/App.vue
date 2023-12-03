@@ -166,14 +166,6 @@ export default {
   beforeCreate() {
     this.userStore.initStore();
     socket.off();
-    socket.on('connect', (socket) => {
-      this.connectionStore.isConnected = true
-      this.count++
-      socket.on('disconnect', () => {
-        this.connectionStore.isConnected = false
-        this.count--
-      })
-    })
     this.connectionStore.bindEvents();
 
     const token = this.userStore.user.access;
@@ -186,7 +178,7 @@ export default {
   },
 
   mounted(){
-    console.log(this.connectionStore.isConnected)
+    console.log(this.connectionStore)
   }
 };
 </script>

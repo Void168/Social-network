@@ -87,9 +87,9 @@
                   class="text-xs text-gray-500 dark:text-neutral-200 leading-none"
                   v-if="
                     message.id === listMessages[listMessages.length - 1].id &&
-                    listMessages[listMessages.length - 1].seen_by
+                    !listMessages[listMessages.length - 1].seen_by
                       .map((obj) => obj.created_by?.email)
-                      .includes(userStore.user.email) === true
+                      .includes(receivedUser.email)
                   "
                   >Đã gửi
                   {{
@@ -98,17 +98,13 @@
                   trước</span
                 ><span
                   class="text-xs text-gray-500 dark:text-neutral-200 leading-none"
-                  v-if="
+                  v-else-if="
                     message.id === listMessages[listMessages.length - 1].id &&
                     listMessages[listMessages.length - 1].seen_by
                       .map((obj) => obj.created_by?.email)
-                      .includes(userStore.user.email) === false
+                      .includes(receivedUser.email)
                   "
-                  >Đã xem
-                  {{
-                    listMessages[listMessages.length - 1].created_at_formatted
-                  }}
-                  trước</span
+                  >Đã xem</span
                 >
               </div>
               <div class="flex w-full mt-2 space-x-3 max-w-md" v-else>
@@ -280,7 +276,7 @@
 </template>
 <script>
 import axios from "axios";
-import Pusher from 'pusher-js'
+import Pusher from "pusher-js";
 
 import ConversationBox from "./ConversationBox.vue";
 import { useUserStore } from "../../stores/user";
@@ -329,9 +325,9 @@ export default (await import("vue")).defineComponent({
         (theme) => theme.name === this.recentConversation.theme
       )[0];
     },
-    listMessages(){
-      return this.recentConversation.messages
-    }
+    listMessages() {
+      return this.recentConversation.messages;
+    },
   },
   watch: {
     "$route.params.id": {
@@ -344,19 +340,29 @@ export default (await import("vue")).defineComponent({
   },
   mounted() {
     this.getMessages();
-    this.getPusher()
+    this.getPusher();
   },
   methods: {
     getPusher() {
       Pusher.logToConsole = false;
 
       const pusher = new Pusher(import.meta.env.VITE_PUSHER_KEY, {
+        channelAuthorization: {
+          endpoint: "/api/pusher/auth",
+          transport: "ajax",
+        },
         cluster: `${import.meta.env.VITE_PUSHER_CLUSTER}`,
       });
       const channel = pusher.subscribe(`${this.$route.params.id}`);
-      channel.bind("message:new", data => {
+      channel.bind("message:new", (data) => {
         this.listMessages.push(JSON.parse(data.message));
       });
+
+      const presenceChannel = pusher.subscribe(
+        `presence-${this.$route.params.id}`
+      );
+
+      console.log(presenceChannel);
     },
 
     scrollToBottom() {
@@ -406,7 +412,7 @@ export default (await import("vue")).defineComponent({
 
     submitForm() {
       // console.log("submitForm", this.body);
-      
+
       let formData = new FormData();
       if (this.$refs.file.files[0]) {
         formData.append("image", this.$refs.file.files[0]);

@@ -75,6 +75,7 @@ class User(AbstractBaseUser, PermissionsMixin):
     posts_count = models.IntegerField(default=0)
     
     is_active = models.BooleanField(default=True)
+    is_online = models.BooleanField(default=False)
     is_superuser = models.BooleanField(default=True)
     is_staff = models.BooleanField(default=True)
     

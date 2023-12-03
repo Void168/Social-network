@@ -193,6 +193,7 @@
 
 <script>
 import axios from "axios";
+import Pusher from "pusher-js";
 import { useUserStore } from "../../stores/user";
 import { Menu, MenuButton, MenuItem, MenuItems } from "@headlessui/vue";
 import {
@@ -244,7 +245,22 @@ export default (await import("vue")).defineComponent({
     }
   },
 
+  mounted() {
+    this.getPusher()
+  },
+
   methods: {
+    getPusher() {
+      Pusher.logToConsole = false;
+
+      const pusher = new Pusher(import.meta.env.VITE_PUSHER_KEY, {
+        cluster: `${import.meta.env.VITE_PUSHER_CLUSTER}`,
+      });
+      const channel = pusher.subscribe(`${this.conversation.id}`);
+      channel.bind("message:new", (data) => {
+        this.conversation?.messages.push(JSON.parse(data.message));
+      });
+    },
     deleteConversation() {
       this.$emit("deleteConversation", this.conversation.id);
 

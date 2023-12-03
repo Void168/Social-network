@@ -33,7 +33,7 @@ def group_conversation_list(request):
 def conversation_detail(request, pk):
     conversation = Conversation.objects.filter(users__in=list([request.user])).get(pk=pk)
     serializer = ConversationDetailSerializer(conversation)
-    
+        
     return JsonResponse(serializer.data, safe=False)
 
 @api_view(['GET'])
@@ -160,7 +160,6 @@ def conversation_send_message(request, pk):
         
         pusher_client.trigger(str(pk), 'message:new', {'message': json_data})
     
-
         return JsonResponse(serializer.data, safe=False)
     else:
         return JsonResponse({'error': 'add something here later!...'})

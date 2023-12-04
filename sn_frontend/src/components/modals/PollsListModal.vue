@@ -80,7 +80,10 @@
                       </div>
                     </div>
                     <TrashIcon
-                      v-if="userStore.user.id === poll.created_by.id || userStore.user.id === activeConversation.admin.id"
+                      v-if="
+                        userStore.user.id === poll.created_by.id ||
+                        userStore.user.id === activeConversation.admin.id
+                      "
                       @click="deletePoll(poll.id)"
                       class="w-8 h-8 p-1 shadow-md bg-neutral-100 dark:bg-slate-700 hover:bg-neutral-200 dark:hover:bg-slate-500 transition rounded-full cursor-pointer"
                     />
@@ -104,7 +107,13 @@
                     </p>
                     <p class="my-2">Kết quả</p>
                     <p class="text-center font-bold text-lg">
-                      {{ result.poll_option_name }}
+                      {{
+                        poll.poll_options
+                          .map((poll_option) => poll_option)
+                          .filter((option) =>
+                            Math.max(option.users_vote.length)
+                          )[0].poll_option_name
+                      }}
                     </p>
                   </div>
                 </div>
@@ -152,11 +161,11 @@ export default (await import("vue")).defineComponent({
   },
   setup() {
     const toastStore = useToastStore();
-    const userStore = useUserStore()
+    const userStore = useUserStore();
 
     return {
       toastStore,
-      userStore
+      userStore,
     };
   },
   props: {
@@ -181,11 +190,15 @@ export default (await import("vue")).defineComponent({
     date() {
       return new Date().getTime();
     },
-    result() {
-      return this.pollslist.map((poll) =>
-        poll.poll_options.filter((option) => Math.max(option.users_vote.length))
-      )[0][0];
-    },
+    // result() {
+    //   return this.pollslist.map((poll) =>
+    //     poll.poll_options.filter((option) => Math.max(option.users_vote.length))
+    //   )[0][0];
+    // },
+  },
+
+  mounted() {
+    console.log(this.result);
   },
 
   methods: {

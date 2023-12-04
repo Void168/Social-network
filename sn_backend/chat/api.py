@@ -3,6 +3,8 @@ from datetime import datetime
 from .pusher import pusher_client
 from django.core import serializers
 import json
+from rest_framework.authentication import TokenAuthentication, SessionAuthentication, BasicAuthentication
+from rest_framework.permissions import IsAuthenticated
 
 from rest_framework.decorators import api_view, authentication_classes, permission_classes
 from django.db.models import Q
@@ -121,6 +123,31 @@ def group_conversation_get(request, pk):
     
     return JsonResponse(serializer.data, safe=False)
 
+@authentication_classes([TokenAuthentication,SessionAuthentication, BasicAuthentication,])
+@permission_classes([IsAuthenticated,])
+@api_view(['POST'])
+def pusher_auth(request, pk):
+    conversation = Conversation.objects.filter(users__in=list([request.user])).get(pk=pk)
+    if not request.user.is_authenticated:
+        return HttpResponseForbidden()
+
+    if not request.user.is_member_of_team(f'presence-{str(pk)}'):
+        return HttpResponseForbidden()
+
+    payload = pusher_client.authenticate(
+        channel=request.POST['channel_name'],
+        socket_id=request.POST['socket_id'],
+        custom_data={
+            'user_id': request.user.id,
+            'user_info': {
+                'username': request.user.name,
+                'useremail': request.user.email,
+            }
+        }
+    )
+        
+    return JsonResponse(payload)
+
 @api_view(['POST'])
 def conversation_send_message(request, pk):
     form = MessageForm(request.POST)
@@ -158,7 +185,7 @@ def conversation_send_message(request, pk):
         serializer_data = serializer.data
         json_data = json.dumps(serializer_data)
         
-        pusher_client.trigger(str(pk), 'message:new', {'message': json_data})
+        pusher_client.trigger(f'{str(pk)}', 'message:new', {'message': json_data})
     
         return JsonResponse(serializer.data, safe=False)
     else:
@@ -430,8 +457,14 @@ def set_seen(request, pk):
         if not message.seen_by.all().filter(created_by=request.user):
             message.seen_by.add(seenUser)
             message.save()
+   
+    serializer = ConversationMessageSerializer(messages, many=True)
+    serializer_data = serializer.data[-1]
+    json_data = json.dumps(serializer_data)
+        
+    pusher_client.trigger(str(pk), 'seen_message', {'message': json_data})
             
-    return JsonResponse({'message': 'Seen'})
+    return JsonResponse({'message': serializer.data})
 
 @api_view(['POST'])
 def group_set_seen(request, pk):

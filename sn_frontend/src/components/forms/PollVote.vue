@@ -35,7 +35,6 @@
           ></div>
         </div>
       </div>
-
       <div @click="vote">
         <div
           @click="submitVote(option)"

@@ -87,8 +87,8 @@
                   class="text-xs text-gray-500 dark:text-neutral-200 leading-none"
                   v-if="
                     message.id === listMessages[listMessages.length - 1].id &&
-                    !listMessages[listMessages.length - 1].seen_by
-                      .map((obj) => obj.created_by?.email)
+                    !lastMessage?.seen_by
+                      ?.map((obj) => obj.created_by?.email)
                       .includes(receivedUser.email)
                   "
                   >Đã gửi
@@ -100,14 +100,14 @@
                   class="text-xs text-gray-500 dark:text-neutral-200 leading-none"
                   v-else-if="
                     message.id === listMessages[listMessages.length - 1].id &&
-                    listMessages[listMessages.length - 1].seen_by
-                      .map((obj) => obj.created_by?.email)
+                    lastMessage?.seen_by
+                      ?.map((obj) => obj.created_by?.email)
                       .includes(receivedUser.email)
                   "
                   >Đã xem</span
                 >
               </div>
-              <div class="flex w-full mt-2 space-x-3 max-w-md" v-else>
+              <div class="flex w-full space-x-3 max-w-md" v-else>
                 <div class="flex-shrink-0 h-10 w-10 rounded-full bg-gray-300">
                   <img
                     :src="message?.created_by?.get_avatar"
@@ -123,10 +123,10 @@
                       )
                     "
                     v-bind:key="message.id"
-                    class="mb-4"
+                    class="mb-2"
                   >
                     <div
-                      class="bg-gray-200 p-3 rounded-r-lg rounded-bl-lg dark:bg-slate-500 dark:border-slate-600 dark:text-neutral-200"
+                      class="bg-gray-200 p-3 max-w-min rounded-r-lg rounded-bl-lg dark:bg-slate-500 dark:border-slate-600 dark:text-neutral-200"
                       v-if="message?.created_by !== chats[0]?.users[0].name"
                     >
                       <p class="text-sm">
@@ -328,6 +328,11 @@ export default (await import("vue")).defineComponent({
     listMessages() {
       return this.recentConversation.messages;
     },
+    lastMessage() {
+      return this.recentConversation.messages[
+        this.recentConversation.messages.length - 1
+      ];
+    },
   },
   watch: {
     "$route.params.id": {
@@ -346,9 +351,9 @@ export default (await import("vue")).defineComponent({
     getPusher() {
       Pusher.logToConsole = false;
 
-      const pusher = new Pusher(import.meta.env.VITE_PUSHER_KEY, {
+      const pusher = new Pusher(`${import.meta.env.VITE_PUSHER_KEY}`, {
         channelAuthorization: {
-          endpoint: "/api/pusher/auth",
+          endpoint: `http://127.0.0.1:8000/api/chat/${this.$route.params.id}/pusher/auth/`,
           transport: "ajax",
         },
         cluster: `${import.meta.env.VITE_PUSHER_CLUSTER}`,
@@ -357,12 +362,23 @@ export default (await import("vue")).defineComponent({
       channel.bind("message:new", (data) => {
         this.listMessages.push(JSON.parse(data.message));
       });
-
+      channel.bind("pusher:subscription_succeeded", function () {
+        console.log("Auth went OK!");
+      });
+      channel.bind("pusher:subscription_error", function () {
+        console.log("Auth rejected by server");
+      });
+      // console.log(window.csrfToken = document.querySelector('meta[name="csrf-token"]').content)
       const presenceChannel = pusher.subscribe(
         `presence-${this.$route.params.id}`
       );
-
-      console.log(presenceChannel);
+      presenceChannel.members.each(function (member) {
+        const userId = member.id;
+        const userInfo = member.info;
+      });
+      // channel.bind("seen_message", (data) => {
+      //     this.lastMessage = JSON.parse(data.message);
+      // });
     },
 
     scrollToBottom() {
@@ -411,8 +427,6 @@ export default (await import("vue")).defineComponent({
     },
 
     submitForm() {
-      // console.log("submitForm", this.body);
-
       let formData = new FormData();
       if (this.$refs.file.files[0]) {
         formData.append("image", this.$refs.file.files[0]);

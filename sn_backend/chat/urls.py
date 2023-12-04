@@ -7,6 +7,7 @@ urlpatterns = [
     path('<uuid:pk>/', api.conversation_detail, name='conversation_detail'),
     path('group/<uuid:pk>/', api.group_conversation_detail, name='group_conversation_detail'),
     path('<uuid:pk>/send/', api.conversation_send_message, name='conversation_send_message'),
+    path('<uuid:pk>/pusher/auth/', api.pusher_auth, name='pusher_auth'),
     path('<uuid:pk>/send_group/', api.group_conversation_send_message, name='group_conversation_send_message'),
     path('<uuid:pk>/set_seen/', api.set_seen, name='set_seen'),
     path('<uuid:pk>/group_set_seen/', api.group_set_seen, name='group_set_seen'),

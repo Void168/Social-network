@@ -5,7 +5,7 @@
       :to="{ name: 'conversation', params: { id: conversation.id } }"
     >
       <div
-        class="group relative flex flex-col w-full gap-1 px-3 py-2 rounded-lg hover:bg-gray-200 dark:hover:bg-slate-500 duration-100"
+        class="w-full group relative flex flex-col gap-1 px-3 py-2 rounded-lg hover:bg-gray-200 dark:hover:bg-slate-500 duration-100"
       >
         <div class="absolute right-3 bottom-2">
           <Menu
@@ -79,44 +79,34 @@
           />
         </div>
         <div class="flex justify-between items-center">
-          <div
-            v-for="user in conversation.users"
-            v-bind:key="user.id"
-            class="flex justify-center items-center gap-3"
-          >
+          <div class="flex justify-center items-center gap-3">
             <img
-              v-if="user.id !== userStore.user.id"
-              :src="user.get_avatar"
+              :src="friend?.get_avatar"
               alt="avatar"
               class="w-14 h-14 rounded-full shadow-lg"
             />
             <p
               class="text-xs font-bold dark:text-neutral-300"
               v-if="
-                user.id !== userStore.user.id &&
                 lastMessage?.seen_by
                   .map((obj) => obj.created_by.email)
                   .includes(userStore.user.email) === false
               "
             >
-              {{ user.name }}
+              {{ friend?.name }}
             </p>
             <p
-              v-else-if="user.id !== userStore.user.id"
+              v-else-if="friend?.id !== userStore.user.id"
               class="text-sm dark:text-neutral-300 font-semibold"
             >
-              {{ user.name }}
+              {{ friend?.name }}
             </p>
           </div>
 
           <span
             v-if="conversation?.messages?.length"
             class="text-xs text-gray-600 dark:text-neutral-300"
-            >{{
-              lastMessage
-                .created_at_formatted
-            }}
-            trước</span
+            >{{ lastMessage.created_at_formatted }} trước</span
           >
         </div>
 
@@ -125,36 +115,26 @@
             v-if="conversation?.messages?.length"
             class="flex gap-1 justify-between"
           >
-            <div class="flex gap-2 px-2 py-1">
+            <div class="flex gap-2 px-2 py-1 w-[50%]">
               <span
                 class="font-semibold"
-                v-if="
-                  lastMessage
-                    .created_by.id === userStore.user.id
-                "
+                v-if="lastMessage.created_by.id === userStore.user.id"
                 >Bạn:
               </span>
               <span
                 v-else-if="
-                  lastMessage
-                    .created_by.id !== userStore.user.id &&
-                    lastMessage?.seen_by
+                  lastMessage.created_by.id !== userStore.user.id &&
+                  lastMessage?.seen_by
                     .map((obj) => obj.created_by.email)
                     .includes(userStore.user.email) === false
                 "
                 class="font-bold text-emerald-500 dark:text-neutral-200"
-                >{{
-                  lastMessage
-                    .created_by.name
-                }}:
+                >{{ lastMessage.created_by.name }}:
               </span>
               <span class="dark:text-neutral-300" v-else
-                >{{
-                  lastMessage
-                    .created_by.name
-                }}:
+                >{{ lastMessage.created_by.name }}:
               </span>
-              <div class="flex justify-between">
+              <div class="flex justify-between w-full">
                 <p
                   class="truncate font-bold text-emerald-500 dark:text-neutral-200"
                   v-if="
@@ -165,14 +145,10 @@
                       .includes(userStore.user.email) === false
                   "
                 >
-                  {{
-                    lastMessage.body
-                  }}
+                  {{ lastMessage.body }}
                 </p>
                 <p class="truncate dark:text-neutral-300" v-else>
-                  {{
-                      lastMessage.body
-                  }}
+                  {{ lastMessage.body }}
                 </p>
               </div>
             </div>
@@ -181,9 +157,16 @@
               v-if="
                 conversation.messages[conversation.messages.length - 1]?.seen_by
                   .map((obj) => obj.created_by.email)
-                  .includes(userStore.user.email) === false
+                  .includes(userStore.user.email) === false 
               "
             ></span>
+            <span v-if="seen && lastMessage?.created_by?.id === userStore.user.id">
+              <img
+                :src="friend.get_avatar"
+                class="w-4 h-4 rounded-full"
+                alt="seen-avatar"
+              />
+            </span>
           </div>
         </div>
       </div>
@@ -219,6 +202,7 @@ export default (await import("vue")).defineComponent({
   data() {
     return {
       isOpen: false,
+      last: {},
     };
   },
   props: {
@@ -240,13 +224,25 @@ export default (await import("vue")).defineComponent({
         (user) => this.userStore.user.id !== user.id
       )[0];
     },
-    lastMessage(){
-      return this.conversation?.messages[this.conversation.messages?.length - 1]
-    }
+    lastMessage() {
+      return this.conversation?.messages[
+        this.conversation.messages?.length - 1
+      ];
+    },
+    friend() {
+      return this.conversation.users.filter(
+        (user) => user.id !== this.userStore.user.id
+      )[0];
+    },
+    seen() {
+      return this.lastMessage?.seen_by
+        ?.map((user) => user.created_by.id)
+        .includes(this.friend.id);
+    },
   },
 
   mounted() {
-    this.getPusher()
+    this.getPusher();
   },
 
   methods: {
@@ -259,6 +255,9 @@ export default (await import("vue")).defineComponent({
       const channel = pusher.subscribe(`${this.conversation.id}`);
       channel.bind("message:new", (data) => {
         this.conversation?.messages.push(JSON.parse(data.message));
+      });
+      channel.bind("seen_message", (data) => {
+        this.lastMessage = JSON.parse(data.message);
       });
     },
     deleteConversation() {

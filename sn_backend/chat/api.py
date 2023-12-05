@@ -1,8 +1,8 @@
 from django.http import JsonResponse
 from datetime import datetime
 from .pusher import pusher_client
-from django.core import serializers
 import json
+from django.core import serializers
 from rest_framework.authentication import TokenAuthentication, SessionAuthentication, BasicAuthentication
 from rest_framework.permissions import IsAuthenticated
 
@@ -183,10 +183,11 @@ def conversation_send_message(request, pk):
         serializer = ConversationMessageSerializer(message)
         
         serializer_data = serializer.data
+
         json_data = json.dumps(serializer_data)
         
         pusher_client.trigger(f'{str(pk)}', 'message:new', {'message': json_data})
-    
+        
         return JsonResponse(serializer.data, safe=False)
     else:
         return JsonResponse({'error': 'add something here later!...'})

@@ -394,7 +394,11 @@
             <p v-for="error in errors" v-bind:key="error">{{ error }}</p>
           </div>
         </template>
-        <form action="" class="space-y-6 flex flex-col" v-on:submit.prevent="submitForm">
+        <form
+          action=""
+          class="space-y-6 flex flex-col"
+          v-on:submit.prevent="submitForm"
+        >
           <div>
             <label for="">Tên người dùng</label>
             <input
@@ -458,7 +462,10 @@
               v-for="website in websites"
               v-bind:key="website.id"
             >
-              <WebsiteItem v-bind:website="website" v-on:deleteWebsite="deleteWebsite" />
+              <WebsiteItem
+                v-bind:website="website"
+                v-on:deleteWebsite="deleteWebsite"
+              />
             </div>
             <form action="" class="space-y-6 mt-4" v-if="addWebsite">
               <div>
@@ -503,7 +510,10 @@
               v-for="number in phoneNumbers"
               v-bind:key="number.id"
             >
-              <PhoneNumberItem v-bind:phoneNumber="number" v-on:deleteWebsite="deletePhoneNumber" />
+              <PhoneNumberItem
+                v-bind:phoneNumber="number"
+                v-on:deleteWebsite="deletePhoneNumber"
+              />
             </div>
             <form action="" class="space-y-6 mt-4" v-if="addPhoneNumber">
               <div>
@@ -624,7 +634,7 @@ export default (await import("vue")).defineComponent({
       userInfo.value = res;
     });
 
-    const status = relationshipStatus
+    const status = relationshipStatus;
     const selectedStatus = ref(status[0]);
 
     return {
@@ -713,13 +723,13 @@ export default (await import("vue")).defineComponent({
     this.getFriends();
     this.getWebsitesList();
     this.getPhoneNumbersList();
-    console.log(this.websiteUrl)
+    console.log(this.websiteUrl);
   },
 
   methods: {
     selectGender() {
       // console.log(this.gender);
-      this.userInfo.gender = this.gender.name.name
+      this.userInfo.gender = this.gender.name.name;
     },
     getUserInfo() {
       axios
@@ -981,7 +991,7 @@ export default (await import("vue")).defineComponent({
             },
           })
           .then((res) => {
-            //console.log(res.data);
+            console.log(res.data);
 
             if (res.data.message === "Failed") {
               this.toastStore.showToast(
@@ -995,9 +1005,9 @@ export default (await import("vue")).defineComponent({
                 "Thiết lập tình trạng quan hệ thành công",
                 "bg-emerald-400 text-white"
               );
-              setTimeout(() => {
-                this.$router.go(0);
-              }, 3500);
+              // setTimeout(() => {
+              //   this.$router.go(0);
+              // }, 3500);
             }
           })
           .catch((error) => {
@@ -1018,12 +1028,18 @@ export default (await import("vue")).defineComponent({
             }
           )
           .then((res) => {
-            //console.log(res.data);
+            console.log(res.data);
             this.status = res.data.message;
             if (this.status === "request already sent") {
               this.toastStore.showToast(
                 5000,
                 "Không thể gửi lần 2",
+                "bg-rose-400 text-white"
+              );
+            } else if (this.status === "don't be a third person") {
+              this.toastStore.showToast(
+                5000,
+                "Đừng trở thành người thứ 3",
                 "bg-rose-400 text-white"
               );
             } else {
@@ -1078,8 +1094,10 @@ export default (await import("vue")).defineComponent({
         this.errors.push("Tên đăng nhập trống");
       }
 
-      if(this.form.name.includes("^[\w.@+-]+\Z") || /\s/.test(this.form.name))
-      {
+      if (
+        this.form.name.includes("^[\w.@+-]+\Z") ||
+        /\s/.test(this.form.name)
+      ) {
         this.errors.push("Tên chi cho phép chứa các ký tự . hoặc _");
       }
 
@@ -1108,7 +1126,7 @@ export default (await import("vue")).defineComponent({
                 id: this.userStore.user.id,
                 name: this.form.name,
                 email: this.form.email,
-                avatar: this.userInfo.get_avatar
+                avatar: this.userInfo.get_avatar,
               });
 
               this.$router.go(0);
@@ -1177,7 +1195,9 @@ export default (await import("vue")).defineComponent({
       this.websites = this.websites.filter((website) => website.id !== id);
     },
     deletePhoneNumber(id) {
-      this.phoneNumbers = this.phoneNumbers.filter((phoneNumber) => phoneNumber.id !== id);
+      this.phoneNumbers = this.phoneNumbers.filter(
+        (phoneNumber) => phoneNumber.id !== id
+      );
     },
     closeModal() {
       this.isOpen = false;

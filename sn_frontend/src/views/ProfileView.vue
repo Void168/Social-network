@@ -565,7 +565,7 @@ export default {
           if (status === "accepted") {
             this.toastStore.showToast(
               5000,
-              "Đã đồng ý lời mời kết bạn",
+              "Đã đồng ý lời mời",
               "bg-emerald-500 text-white"
             );
             this.$router.go();
@@ -573,7 +573,7 @@ export default {
           if (status === "rejected") {
             this.toastStore.showToast(
               5000,
-              "Đã từ chối lời mời kết bạn",
+              "Đã từ chối lời mời",
               "bg-amber-500 text-white"
             );
             setTimeout(() => {

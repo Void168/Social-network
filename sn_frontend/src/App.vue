@@ -94,7 +94,6 @@
                 ></path>
               </svg>
             </RouterLink>
-            {{ count }}
           </div>
 
           <div class="menu-right">
@@ -159,7 +158,6 @@ export default {
     return {
       navbarHeight: null,
       screenHeight: null,
-      count: 0
     }
   },
 
@@ -176,10 +174,6 @@ export default {
       axios.defaults.headers.common["Authorization"] = "";
     }
   },
-
-  mounted(){
-    console.log(this.connectionStore)
-  }
 };
 </script>
 

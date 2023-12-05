@@ -16,7 +16,9 @@
           <p class="text-xs text-gray-500 dark:text-neutral-200">
             {{ friends?.length }} người bạn
           </p>
-          <p class="text-xs text-gray-500 dark:text-neutral-200">{{ user.posts_count }} bài đăng</p>
+          <p class="text-xs text-gray-500 dark:text-neutral-200">
+            {{ user.posts_count }} bài đăng
+          </p>
         </div>
       </div>
     </div>
@@ -57,14 +59,7 @@
             </div>
           </RouterLink>
           <div class="mt-6 space-x-4">
-            <button
-              @click="
-                handleRequest('accepted', friendshipRequest.created_by.id)
-              "
-              class="btn"
-            >
-              Đồng ý
-            </button>
+            
             <button
               @click="
                 handleRequest('rejected', friendshipRequest.created_by.id)
@@ -73,17 +68,24 @@
             >
               Từ chối
             </button>
+            <button
+              @click="
+                handleRequest('accepted', friendshipRequest.created_by.id)
+              "
+              class="btn"
+            >
+              Đồng ý
+            </button>
           </div>
         </div>
 
         <hr />
       </div>
-      <div class="p-4 bg-white border border-gray-200 rounded-lg dark:bg-slate-600 dark:border-slate-700 dark:text-neutral-200">
+      <div
+        class="p-4 bg-white border border-gray-200 rounded-lg dark:bg-slate-600 dark:border-slate-700 dark:text-neutral-200"
+      >
         <p class="font-semibold text-lg mb-4">Bạn bè {{ friends.length }}</p>
-        <div
-          v-if="friends.length"
-          class="grid grid-cols-2 gap-4"
-        >
+        <div v-if="friends.length" class="grid grid-cols-2 gap-4">
           <div
             v-for="friend in friends"
             v-bind:key="friend.id"
@@ -171,12 +173,11 @@ export default {
     },
 
     handleRequest(status, pk) {
-      // console.log("handleRequest", status);
 
       axios
         .post(`/api/friends/${pk}/${status}/`)
         .then((res) => {
-          // console.log("data", res.data);
+          console.log(status === "accepted");
 
           if (status === "accepted") {
             this.toastStore.showToast(
@@ -184,19 +185,19 @@ export default {
               "Đã đồng ý lời mời kết bạn",
               "bg-emerald-500 text-white"
             );
-            this.$router.push(`/profile/${this.$route.params.id}/friends`);
-          }
-          if (status === "rejected") {
+            // setTimeout(() => {
+            //   this.$router.go();
+            // }, 5500);
+          } else if (status === "rejected") {
             this.toastStore.showToast(
               5000,
               "Đã từ chối lời mời kết bạn",
               "bg-amber-500 text-white"
             );
             setTimeout(() => {
-              this.$router.go()
-            },5500)
-          }
-           else {
+              this.$router.go();
+            }, 5500);
+          } else {
             this.toastStore.showToast(
               5000,
               "Chấp nhận lời mời thất bại",

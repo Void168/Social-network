@@ -50,12 +50,21 @@
 
 <script>
 import axios from "axios";
+import Pusher from "pusher-js";
+import { useUserStore } from "../stores/user";
+
 import vi from "date-fns/locale/vi";
 import formatDistanceToNow from "date-fns/formatDistanceToNow";
 
 export default (await import("vue")).defineComponent({
   name: "notifications",
+  setup() {
+    const userStore = useUserStore()
 
+    return {
+      userStore
+    }
+  },
   data() {
     return {
       notifications: [],
@@ -68,6 +77,35 @@ export default (await import("vue")).defineComponent({
   },
 
   methods: {
+    getPusher() {
+      Pusher.logToConsole = false;
+
+      const pusher = new Pusher(`${import.meta.env.VITE_PUSHER_KEY}`, {
+        cluster: `${import.meta.env.VITE_PUSHER_CLUSTER}`,
+      });
+      const channel = pusher.subscribe(`${this.userStore.user.id}-notification`);
+      channel.bind("like-notification:new", (data) => {
+        this.notifications.push(JSON.parse(data.notification));
+      });
+      channel.bind("comment-notification:new", (data) => {
+        this.notifications.push(JSON.parse(data.notification));
+      });
+      channel.bind("relationship-request-notification:new", (data) => {
+        this.notifications.push(JSON.parse(data.notification));
+      });
+      channel.bind("accepted-relationship-notification:new", (data) => {
+        this.notifications.push(JSON.parse(data.notification));
+      });
+      channel.bind("send-friendship-notification:new", (data) => {
+        this.notifications.push(JSON.parse(data.notification));
+      });
+      channel.bind("accepted-friendship-notification:new", (data) => {
+        this.notifications.push(JSON.parse(data.notification));
+      });
+      channel.bind("tag-comment-notification:new", (data) => {
+        this.notifications.push(JSON.parse(data.notification));
+      });
+    },
     formatTime(t) {
       const d1 = new Date(t);
       const result = d1.getTime();
@@ -78,7 +116,7 @@ export default (await import("vue")).defineComponent({
         .get("/api/notifications/")
         .then((res) => {
           this.notifications = res.data;
-          // console.log(this.notifications);
+          this.getPusher();
         })
         .catch((error) => {
           console.log(error);
@@ -93,11 +131,9 @@ export default (await import("vue")).defineComponent({
     },
 
     async readNotification(notification) {
-      // console.log(notification.type_of_notification === "tag_comment");
       await axios
         .post(`/api/notifications/read/${notification.id}/`)
         .then((res) => {
-          // console.log(res.data);
           if (
             notification.type_of_notification === "post_like" ||
             notification.type_of_notification === "post_comment" ||
@@ -105,16 +141,17 @@ export default (await import("vue")).defineComponent({
           ) {
             this.$router.push({
               name: "postview",
-              params: { id: notification.post_id },
+              params: { id: notification.post.id },
             });
           }
           if (
-            notification.type_of_notification === "new_relationship_request"
+            notification.type_of_notification === "new_relationship_request" ||
+            notification.type_of_notification === "accepted_relationship_request"
           ) {
             this.$router.push({
               name: "profile",
               params: {
-                id: notification.created_for,
+                id: notification.created_for.id,
               },
             });
           }
@@ -125,7 +162,7 @@ export default (await import("vue")).defineComponent({
             this.$router.push({
               name: "friends",
               params: {
-                id: notification.created_for,
+                id: notification.created_for.id,
               },
             });
           }

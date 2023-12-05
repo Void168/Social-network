@@ -2,6 +2,8 @@ from django.contrib.auth.forms import PasswordChangeForm
 from django.db.models import Q
 from django.core.mail import send_mail
 from django.http import JsonResponse
+import json
+from .pusher import pusher_client
 
 from rest_framework.decorators import api_view, authentication_classes, permission_classes
 
@@ -9,7 +11,9 @@ from notification.utils import create_notification
 
 from .forms import SignupForm, ProfileForm, CoverImageForm, AvatarForm, RelationshipForm, BiographyForm, HomeTownForm, LivingCityForm
 from .models import User, FriendshipRequest, RelationshipRequest
+from notification.models import Notification
 from .serializers import UserSerializer, FriendshipRequestSerializer, RelationshipRequestSerializer
+from notification.serializers import NotificationSerializer
 
 @api_view(['GET'])
 def me(request):
@@ -196,8 +200,7 @@ def send_relationship_request(request, pk):
     user = User.objects.get(pk=pk)
     form = RelationshipForm(data=request.POST, instance=user)
     relationship_type = form.data["relationship_status"]
-    
-    received_user = request.user
+    received_user = User.objects.get(id=form.data["partner"])
     
     check1 = RelationshipRequest.objects.filter(created_for=received_user).filter(created_by=user)
     check2 = RelationshipRequest.objects.filter(created_for=user).filter(created_by=received_user)
@@ -207,11 +210,19 @@ def send_relationship_request(request, pk):
     
     if received_user.partner != '':
         return JsonResponse({'message': "don't be a third person"})
+    
     if not check1 and not check2:
         relationship_request = RelationshipRequest.objects.create(created_for=user, created_by=request.user, relationship_type=relationship_type)
         
         notification = create_notification(request, 'new_relationship_request', relationship_request_id=relationship_request.id)
 
+        serializer_notification = NotificationSerializer(notification)
+        
+        serializer_data = serializer_notification.data
+
+        json_data = json.dumps(serializer_data)
+                
+        pusher_client.trigger(f'{request.user.id}-notification', 'relationship-request-notification:new', {'notification': json_data})
         
         return JsonResponse({'message': 'relationship request created'})
     if check3 and check4:
@@ -222,32 +233,41 @@ def send_relationship_request(request, pk):
 
 @api_view(['POST'])
 def handle_request_relationship(request, pk, status):
-    user = User.objects.get(pk=pk)
+    sent_user = User.objects.get(pk=pk)
         
-    relationship_request = RelationshipRequest.objects.filter(created_for=request.user).get(created_by=user)
+    relationship_request = RelationshipRequest.objects.filter(created_for=request.user).get(created_by=sent_user)
     relationship_request.status = status
     relationship_request.save()
 
     partner = User.objects.get(Q(email=relationship_request.created_for))
     
     if status == 'accepted':
-        user.partner = partner.id
-        user.relationship_status = relationship_request.relationship_type
+        sent_user.partner = partner.id
+        sent_user.relationship_status = relationship_request.relationship_type
         
-        partner.partner = user.id
+        partner.partner = sent_user.id
         partner.relationship_status = relationship_request.relationship_type
             
         partner.save()
             
-        user.save()
+        sent_user.save()
         
-        serializer = UserSerializer(user)
+        notification = Notification.objects.create(
+            body=f'{sent_user.name} đã đồng ý',
+            type_of_notification='accepted_relationship_request',
+            created_by=request.user,
+            created_for=sent_user
+        )
         
-        notification = create_notification(request, 'accepted_relationship_request', relationship_request_id=relationship_request.id)
+        serializer_notification = NotificationSerializer(notification)
+        
+        serializer_data = serializer_notification.data
+
+        json_data = json.dumps(serializer_data)
+        pusher_client.trigger(f'{request.user.id}-notification', 'accepted-relationship-notification:new', {'notification': json_data})
     
     if status == 'rejected':
         RelationshipRequest.objects.filter(status='rejected').delete()
-
 
     return JsonResponse({'message': 'relationship request updated'})
 
@@ -317,19 +337,25 @@ def edit_password(request):
 
 @api_view(['POST'])
 def send_friendship_request(request, pk):
-    user = User.objects.get(pk=pk)
+    sent_user = User.objects.get(pk=pk)
     
-    check1 = FriendshipRequest.objects.filter(created_for=request.user).filter(created_by=user)
-    check2 = FriendshipRequest.objects.filter(created_for=user).filter(created_by=request.user)
+    check1 = FriendshipRequest.objects.filter(created_for=request.user).filter(created_by=sent_user)
+    check2 = FriendshipRequest.objects.filter(created_for=sent_user).filter(created_by=request.user)
     
-    check3 = FriendshipRequest.objects.filter(created_for=request.user).filter(created_by=user).filter(status=FriendshipRequest.REJECTED)
-    check4 = FriendshipRequest.objects.filter(created_for=user).filter(created_by=request.user).filter(status=FriendshipRequest.REJECTED)
+    check3 = FriendshipRequest.objects.filter(created_for=request.user).filter(created_by=sent_user).filter(status=FriendshipRequest.REJECTED)
+    check4 = FriendshipRequest.objects.filter(created_for=sent_user).filter(created_by=request.user).filter(status=FriendshipRequest.REJECTED)
     
     if not check1 and not check2:
-        friendrequest = FriendshipRequest.objects.create(created_for=user, created_by=request.user)
+        friendrequest = FriendshipRequest.objects.create(created_for=sent_user, created_by=request.user)
         
         notification = create_notification(request, 'new_friend_request', friendrequest_id=friendrequest.id)
 
+        serializer_notification = NotificationSerializer(notification)
+        
+        serializer_data = serializer_notification.data
+
+        json_data = json.dumps(serializer_data)
+        pusher_client.trigger(f'{request.user.id}-notification', 'send-friendship-notification:new', {'notification': json_data})
         
         return JsonResponse({'message': 'friendship request created'})
     if check3 and check4:
@@ -339,21 +365,35 @@ def send_friendship_request(request, pk):
 
 @api_view(['POST'])
 def handle_request(request, pk, status):
-    user = User.objects.get(pk=pk)
-    friendship_request = FriendshipRequest.objects.filter(created_for=request.user).get(created_by=user)
+    sent_user = User.objects.get(pk=pk)
+    friendship_request = FriendshipRequest.objects.filter(created_for=request.user).get(created_by=sent_user)
     friendship_request.status = status
     friendship_request.save()
 
     if status == 'accepted':
-        user.friends.add(request.user)
-        user.friends_count = user.friends_count + 1
-        user.save()
+        sent_user.friends.add(request.user)
+        sent_user.friends_count = sent_user.friends_count + 1
+        sent_user.save()
         
         request_user = request.user
         request_user.friends_count = request_user.friends_count + 1
         request_user.save()
         
-        notification = create_notification(request, 'accepted_friend_request', friendrequest_id=friendship_request.id)
+        notification = Notification.objects.create(
+            body=f'{sent_user.name} đã đồng ý lời mời kết bạn',
+            type_of_notification='accepted_friend_request',
+            created_by=request.user,
+            created_for=sent_user
+        )
+        
+        print(notification)
+        
+        serializer_notification = NotificationSerializer(notification)
+        
+        serializer_data = serializer_notification.data
+
+        json_data = json.dumps(serializer_data)
+        pusher_client.trigger(f'{request.user.id}-notification', 'accepted-friendship-notification:new', {'notification': json_data})
     
     if status == 'rejected':
         FriendshipRequest.objects.filter(status='rejected').delete()

@@ -1,6 +1,9 @@
 from django.db.models import Q
 from django.http import JsonResponse
 
+from .pusher import pusher_client
+import json
+
 from rest_framework.decorators import api_view, authentication_classes, permission_classes
 
 from account.models import User
@@ -12,6 +15,7 @@ from notification.utils import create_notification
 from .forms import PostForm, AttachmentForm
 from .models import Post, Comment, Like
 from .serializers import PostSerializer, PostDetailSerializer, CommentSerializer, TrendSerializer, LikeSerializer
+from notification.serializers import NotificationSerializer
 
 # Create your views here.
 @api_view(['GET'])
@@ -190,6 +194,15 @@ def post_like(request,pk):
         
         notification = create_notification(request, 'post_like', post_id=post.id)
         
+        serializer_notification = NotificationSerializer(notification)
+        
+        serializer_data = serializer_notification.data
+
+        json_data = json.dumps(serializer_data)
+                
+        pusher_client.trigger(f'{request.user.id}-notification', 'like-notification:new', {'notification': json_data})
+    
+        
         serializer = LikeSerializer(like)
         
         return JsonResponse(serializer.data, safe=False)
@@ -209,6 +222,21 @@ def post_create_comment(request, pk):
     
     if len(comment.tags) > 0:
         notification_tag = create_notification(request, 'tag_comment', post_id=post.id, comment_id=comment.id)
+        
+        # serializer_notification_tag_comment = NotificationSerializer(notification_tag)
+        
+        # serializer_tag_comment_data = serializer_notification_tag_comment.data
+
+        # json_tag_data = json.dumps(serializer_tag_comment_data)
+        # pusher_client.trigger(f'{request.user.id}-notification', 'tag-comment-notification:new', {'notification': json_tag_data})
+    
+    serializer_notification = NotificationSerializer(notification)
+        
+    serializer_data = serializer_notification.data
+
+    json_data = json.dumps(serializer_data)
+                
+    pusher_client.trigger(f'{request.user.id}-notification', 'comment-notification:new', {'notification': json_data})
     
     serializer = CommentSerializer(comment)
     

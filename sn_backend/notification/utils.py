@@ -22,14 +22,14 @@ def create_notification(request, type_of_notification, post_id=None, friendreque
         relationshiprequest = RelationshipRequest.objects.get(pk=relationship_request_id)
         created_for = relationshiprequest.created_for
         body = f'{request.user.name} đã thiết lập mối quan hệ với bạn'
-    elif type_of_notification == 'accepted_friend_request':
-        friendrequest = FriendshipRequest.objects.get(pk=friendrequest_id)
-        created_for = friendrequest.created_for
-        body = f'{request.user.name} đã đồng ý lời mời kết bạn'
-    elif type_of_notification == 'accepted_relationship_request':
-        relationshiprequest = RelationshipRequest.objects.get(pk=relationship_request_id)
-        created_for = relationshiprequest.created_for
-        body = f'{request.user.name} đã đồng ý'
+    # elif type_of_notification == 'accepted_friend_request':
+    #     friendrequest = FriendshipRequest.objects.get(pk=friendrequest_id)
+    #     created_for = friendrequest.created_for
+    #     body = f'{created_for.name} đã đồng ý lời mời kết bạn'
+    # elif type_of_notification == 'accepted_relationship_request':
+    #     relationshiprequest = RelationshipRequest.objects.get(pk=relationship_request_id)
+    #     created_for = relationshiprequest.created_for
+    #     body = f'{created_for.name} đã đồng ý'
     elif type_of_notification == 'tag_comment':
         body = f'{request.user.name} đã nhắc đến bạn trong một bình luận'
         comment = Comment.objects.get(pk=comment_id)

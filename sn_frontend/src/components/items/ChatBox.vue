@@ -352,30 +352,30 @@ export default (await import("vue")).defineComponent({
       Pusher.logToConsole = false;
 
       const pusher = new Pusher(`${import.meta.env.VITE_PUSHER_KEY}`, {
-        channelAuthorization: {
-          endpoint: `http://127.0.0.1:8000/api/chat/${this.$route.params.id}/pusher/auth/`,
-          transport: "ajax",
-        },
+        // channelAuthorization: {
+        //   endpoint: `http://127.0.0.1:8000/api/chat/${this.$route.params.id}/pusher/auth/`,
+        //   transport: "ajax",
+        // },
         cluster: `${import.meta.env.VITE_PUSHER_CLUSTER}`,
       });
       const channel = pusher.subscribe(`${this.$route.params.id}`);
       channel.bind("message:new", (data) => {
         this.listMessages.push(JSON.parse(data.message));
       });
-      channel.bind("pusher:subscription_succeeded", function () {
-        console.log("Auth went OK!");
-      });
-      channel.bind("pusher:subscription_error", function () {
-        console.log("Auth rejected by server");
-      });
+      // channel.bind("pusher:subscription_succeeded", function () {
+      //   console.log("Auth went OK!");
+      // });
+      // channel.bind("pusher:subscription_error", function () {
+      //   console.log("Auth rejected by server");
+      // });
       // console.log(window.csrfToken = document.querySelector('meta[name="csrf-token"]').content)
-      const presenceChannel = pusher.subscribe(
-        `presence-${this.$route.params.id}`
-      );
-      presenceChannel.members.each(function (member) {
-        const userId = member.id;
-        const userInfo = member.info;
-      });
+      // const presenceChannel = pusher.subscribe(
+      //   `presence-${this.$route.params.id}`
+      // );
+      // presenceChannel.members.each(function (member) {
+      //   const userId = member.id;
+      //   const userInfo = member.info;
+      // });
       // channel.bind("seen_message", (data) => {
       //     this.lastMessage = JSON.parse(data.message);
       // });

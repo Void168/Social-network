@@ -35,22 +35,22 @@
               >
                 <div class="flex gap-2">
                   <div>
-                    <div
+                    <p
                       v-if="
                         message.body &&
                         !message.attachments.length &&
                         selectedTheme
                       "
-                      class="p-3 shadow-md rounded-l-lg rounded-br-lg"
+                      class="p-3 shadow-md rounded-l-lg rounded-br-lg max-w-[500px] text-sm font-semibold"
                       :class="[
                         selectedTheme.background,
                         selectedTheme.textColor,
                       ]"
                     >
-                      <p class="text-sm">
+                      <span class="break-words block whitespace-normal">
                         {{ message.body }}
-                      </p>
-                    </div>
+                      </span>
+                    </p>
                     <div v-if="message.attachments.length > 0">
                       <div
                         v-if="message.body"
@@ -107,7 +107,7 @@
                   >Đã xem</span
                 >
               </div>
-              <div class="flex w-full space-x-3 max-w-md" v-else>
+              <div class="flex gap-2" v-else>
                 <div class="flex-shrink-0 h-10 w-10 rounded-full bg-gray-300">
                   <img
                     :src="message?.created_by?.get_avatar"
@@ -123,16 +123,16 @@
                       )
                     "
                     v-bind:key="message.id"
-                    class="mb-2"
+                    class="flex flex-col w-full space-x-3 items-start max-w-md ml-auto justify-end gap-2"
                   >
-                    <div
-                      class="bg-gray-200 p-3 max-w-min rounded-r-lg rounded-bl-lg dark:bg-slate-500 dark:border-slate-600 dark:text-neutral-200"
+                    <p
+                      class="bg-gray-200 p-3 rounded-r-lg rounded-bl-lg dark:bg-slate-500 dark:border-slate-600 dark:text-neutral-200 max-w-[500px] text-sm font-semibold"
                       v-if="message?.created_by !== chats[0]?.users[0].name"
                     >
-                      <p class="text-sm">
+                      <span class="block break-words whitespace-normal">
                         {{ message.body }}
-                      </p>
-                    </div>
+                      </span>
+                    </p>
                     <span
                       class="text-xs text-gray-500 dark:text-neutral-200 leading-none"
                       v-if="
@@ -347,6 +347,9 @@ export default (await import("vue")).defineComponent({
     this.getMessages();
     this.getPusher();
   },
+  updated(){
+    this.scrollToBottom();
+  },
   methods: {
     getPusher() {
       Pusher.logToConsole = false;
@@ -386,25 +389,26 @@ export default (await import("vue")).defineComponent({
       objDiv.scrollTop = objDiv.scrollHeight;
     },
     getMessages() {
-      axios
-        .get(`/api/chat/${this.$route.params.id}/`)
-        .then((res) => {
-          this.scrollToBottom();
-          this.recentConversation = res.data;
-          let users = [];
-          for (let i = 0; i < this.recentConversation.users.length; i++) {
-            users.push(this.recentConversation.users[i]);
-          }
-          const filteredUser = users
-            ?.map((user) => user.id)
-            .filter((id) => id !== this.userStore.user.id);
-          this.receivedUser = users.filter(
-            (user) => user.id === filteredUser[0]
-          )[0];
-        })
-        .catch((error) => {
-          console.log(error);
-        });
+      setTimeout(() => {
+        axios
+          .get(`/api/chat/${this.$route.params.id}/`)
+          .then((res) => {
+            this.recentConversation = res.data;
+            let users = [];
+            for (let i = 0; i < this.recentConversation.users.length; i++) {
+              users.push(this.recentConversation.users[i]);
+            }
+            const filteredUser = users
+              ?.map((user) => user.id)
+              .filter((id) => id !== this.userStore.user.id);
+            this.receivedUser = users.filter(
+              (user) => user.id === filteredUser[0]
+            )[0];
+          })
+          .catch((error) => {
+            console.log(error);
+          });
+      }, 1000)
     },
 
     Pick() {

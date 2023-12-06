@@ -59,11 +59,11 @@ import formatDistanceToNow from "date-fns/formatDistanceToNow";
 export default (await import("vue")).defineComponent({
   name: "notifications",
   setup() {
-    const userStore = useUserStore()
+    const userStore = useUserStore();
 
     return {
-      userStore
-    }
+      userStore,
+    };
   },
   data() {
     return {
@@ -76,6 +76,10 @@ export default (await import("vue")).defineComponent({
     this.getNotifications();
   },
 
+  updated() {
+    this.getPusher();
+  },
+
   methods: {
     getPusher() {
       Pusher.logToConsole = false;
@@ -83,9 +87,12 @@ export default (await import("vue")).defineComponent({
       const pusher = new Pusher(`${import.meta.env.VITE_PUSHER_KEY}`, {
         cluster: `${import.meta.env.VITE_PUSHER_CLUSTER}`,
       });
-      const channel = pusher.subscribe(`${this.userStore.user.id}-notification`);
+      const channel = pusher.subscribe(
+        `${this.userStore.user.id}-notification`
+      );
       channel.bind("like-notification:new", (data) => {
         this.notifications.push(JSON.parse(data.notification));
+        console.log(JSON.parse(data.notification))
       });
       channel.bind("comment-notification:new", (data) => {
         this.notifications.push(JSON.parse(data.notification));
@@ -112,15 +119,16 @@ export default (await import("vue")).defineComponent({
       return formatDistanceToNow(result, { locale: vi });
     },
     getNotifications() {
-      axios
-        .get("/api/notifications/")
-        .then((res) => {
-          this.notifications = res.data;
-          this.getPusher();
-        })
-        .catch((error) => {
-          console.log(error);
-        });
+      setTimeout(() => {
+        axios
+          .get("/api/notifications/")
+          .then((res) => {
+            this.notifications = res.data;
+          })
+          .catch((error) => {
+            console.log(error);
+          });
+      }, 500)
     },
 
     loadMore() {
@@ -146,7 +154,8 @@ export default (await import("vue")).defineComponent({
           }
           if (
             notification.type_of_notification === "new_relationship_request" ||
-            notification.type_of_notification === "accepted_relationship_request"
+            notification.type_of_notification ===
+              "accepted_relationship_request"
           ) {
             this.$router.push({
               name: "profile",

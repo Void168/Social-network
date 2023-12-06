@@ -126,42 +126,48 @@ export default (await import("vue")).defineComponent({
 
   methods: {
     getConversations() {
-      axios
-        .get("/api/chat/")
-        .then((res) => {
-          this.conversations = res.data;
-          // console.log(this.conversations);
-        })
-        .catch((error) => {
-          console.log(error);
-        });
+      setTimeout(() => {
+        axios
+          .get("/api/chat/")
+          .then((res) => {
+            this.conversations = res.data;
+            // console.log(this.conversations);
+          })
+          .catch((error) => {
+            console.log(error);
+          });
+      }, 500)
     },
     getFriends() {
-      axios
-        .get(`/api/friends/${this.userStore.user.id}/`)
-        .then((res) => {
-        // console.log(res.data)
-          res.data.friends?.forEach((friend) => {
-            const obj = {};
-            obj["label"] = friend.name;
-            obj["value"] = friend.id;
-            this.options.push(obj);
+      setTimeout(() => {
+        axios
+          .get(`/api/friends/${this.userStore.user.id}/`)
+          .then((res) => {
+          // console.log(res.data)
+            res.data.friends?.forEach((friend) => {
+              const obj = {};
+              obj["label"] = friend.name;
+              obj["value"] = friend.id;
+              this.options.push(obj);
+            });
+          })
+          .catch((error) => {
+            console.log(error);
           });
-        })
-        .catch((error) => {
-          console.log(error);
-        });
+      }, 2000)
     },
     getGroupConversations() {
-      axios
-        .get("/api/chat/group/")
-        .then((res) => {
-          this.groupConversations = res.data
-          console.log(this.groupConversations);
-        })
-        .catch((error) => {
-          console.log(error);
-        });
+      setTimeout(() => {
+        axios
+          .get("/api/chat/group/")
+          .then((res) => {
+            this.groupConversations = res.data
+            console.log(this.groupConversations);
+          })
+          .catch((error) => {
+            console.log(error);
+          });
+      }, 1000)
     },
     getQuery() {
       this.query = this.$refs.input.value;

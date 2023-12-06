@@ -93,57 +93,63 @@ export default (await import("vue")).defineComponent({
   },
   methods: {
     getConversations() {
-      axios
-        .get("/api/chat/")
-        .then((res) => {
-          this.conversations = res.data;
-        })
-        .catch((error) => {
-          console.log(error);
-        });
+        axios
+          .get("/api/chat/")
+          .then((res) => {
+            this.conversations = res.data;
+          })
+          .catch((error) => {
+            console.log(error);
+          });
     },
     getGroupConversations() {
-      axios
-        .get("/api/chat/group/")
-        .then((res) => {
-          this.groupConversations = res.data;
-        })
-        .catch((error) => {
-          console.log(error);
-        });
+        axios
+          .get("/api/chat/group/")
+          .then((res) => {
+            this.groupConversations = res.data;
+          })
+          .catch((error) => {
+            console.log(error);
+          });
     },
     getMessages() {
-      axios
-        .get(`/api/chat/group/${this.$route.params.id}/`)
-        .then((res) => {
-          this.activeConversation = res.data;
-          this.seenMessage();
-          // console.log(this.activeConversation)
-          this.listMessages = this.activeConversation?.group_messages;
-        })
-        .catch((error) => {
-          console.log(error);
-        });
+      setTimeout(() => {
+        axios
+          .get(`/api/chat/group/${this.$route.params.id}/`)
+          .then((res) => {
+            this.activeConversation = res.data;
+            this.seenMessage();
+            // console.log(this.activeConversation)
+            this.listMessages = this.activeConversation?.group_messages;
+          })
+          .catch((error) => {
+            console.log(error);
+          });
+      }, 1500)
     },
     seenMessage() {
-      this.$emit("seenMessage", this.activeConversation?.id);
-
-      axios
-        .post(`/api/chat/${this.activeConversation?.id}/group_set_seen/`)
-        .then((res) => {
-          // console.log(res.data);
-        })
-        .catch((error) => console.log(error));
+      setTimeout(() => {
+        this.$emit("seenMessage", this.activeConversation?.id);
+  
+        axios
+          .post(`/api/chat/${this.activeConversation?.id}/group_set_seen/`)
+          .then((res) => {
+            // console.log(res.data);
+          })
+          .catch((error) => console.log(error));
+      }, 2500)
     },
     seenGroupMessage() {
-      this.$emit("seenMessage", this.activeConversation?.id);
-
-      axios
-        .post(`/api/chat/${this.activeConversation?.id}/group_set_seen/`)
-        .then((res) => {
-          // console.log(res.data);
-        })
-        .catch((error) => console.log(error));
+      setTimeout(() => {
+        this.$emit("seenMessage", this.activeConversation?.id);
+  
+        axios
+          .post(`/api/chat/${this.activeConversation?.id}/group_set_seen/`)
+          .then((res) => {
+            // console.log(res.data);
+          })
+          .catch((error) => console.log(error));
+      }, 1500)
     },
     submitForm() {
       axios

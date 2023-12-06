@@ -1,6 +1,6 @@
 <template>
   <div class="relative">
-    <div class="mb-6 flex items-center justify-between">
+    <div class="mb-2 flex items-center justify-between">
       <div class="flex items-center space-x-6 p-4">
         <img :src="post.created_by.get_avatar" class="w-12 h-12 rounded-full" />
 

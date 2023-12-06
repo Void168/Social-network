@@ -83,53 +83,55 @@ export default (await import("vue")).defineComponent({
   },
   methods: {
     getConversations() {
-      axios
-        .get("/api/chat/")
-        .then((res) => {
-          this.conversations = res.data;
-        })
-        .catch((error) => {
-          console.log(error);
-        });
+      setTimeout(() => {
+        axios
+          .get("/api/chat/")
+          .then((res) => {
+            this.conversations = res.data;
+          })
+          .catch((error) => {
+            console.log(error);
+          });
+      }, 500)
     },
-    getGroupConversations() {
-      axios
-        .get("/api/chat/group/")
-        .then((res) => {
-          this.groupConversations = res.data
-          // console.log(this.groupConversations);
-        })
-        .catch((error) => {
-          console.log(error);
-        });
+    async getGroupConversations() {
+        await axios
+          .get("/api/chat/group/")
+          .then((res) => {
+            this.groupConversations = res.data
+            // console.log(this.groupConversations);
+          })
+          .catch((error) => {
+            console.log(error);
+          });
     },
-    getMessages() {
-      axios
-        .get(`/api/chat/${this.$route.params.id}/`)
-        .then((res) => {
-          this.activeConversation = res.data;
-          this.seenMessage();
-          // console.log(this.activeConversation)
-          this.listMessages = this.activeConversation.messages;
-        })
-        .catch((error) => {
-          console.log(error);
-        });
+    async getMessages() {
+        await axios
+          .get(`/api/chat/${this.$route.params.id}/`)
+          .then((res) => {
+            this.activeConversation = res.data;
+            this.seenMessage();
+            // console.log(this.activeConversation)
+            this.listMessages = this.activeConversation.messages;
+          })
+          .catch((error) => {
+            console.log(error);
+          });
     },
-    seenMessage() {
+    async seenMessage() {
       this.$emit("seenMessage", this.activeConversation.id);
 
-      axios
+      await axios
         .post(`/api/chat/${this.activeConversation.id}/set_seen/`)
         .then((res) => {
           // console.log(res.data);
         })
         .catch((error) => console.log(error));
     },
-    seenGroupMessage() {
+    async seenGroupMessage() {
       this.$emit("seenMessage", this.activeConversation.id);
 
-      axios
+      await axios
         .post(`/api/chat/${this.activeConversation.id}/group_set_seen/`)
         .then((res) => {
           // console.log(res.data);

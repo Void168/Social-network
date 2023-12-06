@@ -97,11 +97,11 @@
       </div>
     </div>
     <div
-      id="chat-container"
-      class="h-[346px] px-4 overflow-y-scroll scrollbar-corner-slate-200 scrollbar-thin scrollbar-thumb-slate-400 scrollbar-track-slate-800 border-b border-gray-200 dark:bg-slate-600 dark:border-slate-700 dark:text-neutral-200"
+      ref="chatContainer"
+      class="h-[346px] px-4 overflow-auto scrollbar-corner-slate-200 scrollbar-thin scrollbar-thumb-slate-400 scrollbar-track-slate-800 border-b border-gray-200 dark:bg-slate-600 dark:border-slate-700 dark:text-neutral-200"
     >
-      <div class="flex flex-col flex-grow p-4 overflow-y-auto">
-        <div v-if="conversation?.messages?.length > 0">
+      <div class="flex flex-col flex-grow p-4">
+        <div v-if="conversation?.messages?.length > 0 && conversation">
           <div
             v-for="message in conversation?.messages"
             v-bind:key="message.id"
@@ -111,83 +111,56 @@
               class="flex flex-col mt-2 space-x-3 items-end max-w-md ml-auto justify-end gap-2"
               v-if="message.created_by.id == userStore.user.id"
             >
-              <div class="flex gap-2">
-                <div>
-                  <div
-                    v-if="
-                      message.body &&
-                      !message.attachments.length &&
-                      selectedTheme
-                    "
-                    class="p-3 shadow-md rounded-full px-4 font-semibold"
-                    :class="[
-                      selectedTheme?.background,
-                      selectedTheme?.textColor,
-                    ]"
-                  >
-                    <p class="text-sm">
-                      {{ message.body }}
-                    </p>
-                  </div>
-                  <div v-if="message.attachments.length > 0">
-                    <div
-                      v-if="message.body"
-                      class="p-3 shadow-md rounded-t-lg font-semibold"
-                      :class="[
-                        selectedTheme?.background,
-                        selectedTheme?.textColor,
-                      ]"
-                    >
-                      <p class="text-sm">
-                        {{ message.body }}
-                      </p>
-                    </div>
-                    <img
-                      v-if="message.attachments.length > 0"
-                      :src="message?.attachments[0]?.get_image"
-                      :class="
-                        message.body ? 'w-48 h-40 rounded-t-none' : 'w-48 h-40'
-                      "
-                    />
-                  </div>
-                </div>
+              <p
+                v-if="
+                  message.body && !message.attachments.length && selectedTheme
+                "
+                class="p-3 text-sm shadow-md rounded-3xl max-w-[200px] px-4 font-semibold"
+                :class="[selectedTheme?.background, selectedTheme?.textColor]"
+              >
+                <span class="block whitespace-normal break-words">{{
+                  message.body
+                }}</span>
+              </p>
+              <div v-if="message.attachments.length > 0">
+                <p
+                  v-if="message.body"
+                  class="p-3 shadow-md max-w-[200px] rounded-t-lg font-semibold"
+                  :class="[selectedTheme?.background, selectedTheme?.textColor]"
+                >
+                  <span class="block whitespace-normal break-words">
+                    {{ message.body }}
+                  </span>
+                </p>
+                <img
+                  v-if="message.attachments.length > 0"
+                  :src="message?.attachments[0]?.get_image"
+                  :class="
+                    message.body ? 'w-48 h-40 rounded-t-none' : 'w-48 h-40'
+                  "
+                />
               </div>
+
               <span
                 class="text-xs text-gray-500 dark:text-neutral-200 leading-none"
                 v-if="
-                  message.id ===
-                    conversation.messages[conversation.messages.length - 1]
-                      .id &&
-                  conversation.messages[
-                    conversation.messages.length - 1
-                  ].seen_by
-                    .map((obj) => obj.created_by.email)
-                    .includes(userStore.user.email) === true
+                  message.id === lastMessage?.id &&
+                  !lastMessage?.seen_by
+                    .map((obj) => obj.created_by.id)
+                    .includes(receivedUser.id)
                 "
                 >Đã gửi
-                {{
-                  conversation.messages[conversation.messages.length - 1]
-                    .created_at_formatted
-                }}
+                {{ lastMessage?.created_at_formatted }}
                 trước</span
               ><span
                 class="text-xs text-gray-500 dark:text-neutral-200 leading-none"
                 v-if="
-                  message.id ===
-                    conversation.messages[conversation.messages.length - 1]
-                      .id &&
-                  conversation.messages[
-                    conversation.messages.length - 1
-                  ].seen_by
-                    .map((obj) => obj.created_by.email)
-                    .includes(userStore.user.email) === false
+                  message.id === lastMessage?.id &&
+                  lastMessage?.seen_by
+                    .map((obj) => obj.created_by.id)
+                    .includes(receivedUser.id)
                 "
-                >Đã xem
-                {{
-                  conversation.messages[conversation.messages.length - 1]
-                    .created_at_formatted
-                }}
-                trước</span
+                >Đã xem</span
               >
             </div>
             <div class="flex w-full mt-2 space-x-3 max-w-md" v-else>
@@ -198,7 +171,7 @@
                   class="w-10 h-10 rounded-full"
                 />
               </div>
-              <div>
+              <div class="flex flex-col w-full space-x-3 items-start max-w-md ml-auto justify-end gap-2">
                 <div
                   v-if="
                     conversation?.messages?.filter(
@@ -206,29 +179,23 @@
                     )
                   "
                   v-bind:key="message.id"
-                  class="mb-4"
+
                 >
-                  <div
-                    class="bg-gray-200 max-w-min p-3 rounded-3xl dark:bg-slate-500 dark:border-slate-600 dark:text-neutral-200"
+                  <p
+                    class="bg-gray-200 max-w-[200px] p-3 rounded-3xl dark:bg-slate-500 dark:border-slate-600 dark:text-neutral-200"
                   >
-                    <p class="text-sm">
+                    <span class="block whitespace-normal break-words">
                       {{ message.body }}
-                    </p>
-                  </div>
-                  <span
-                    class="text-xs text-gray-500 dark:text-neutral-200 leading-none"
-                    v-if="
-                      message.id ===
-                      conversation.messages[conversation.messages.length - 1].id
-                    "
-                    >Đã gửi
-                    {{
-                      conversation.messages[conversation.messages.length - 1]
-                        .created_at_formatted
-                    }}
-                    trước</span
-                  >
+                    </span>
+                  </p>
                 </div>
+                <span
+                  class="text-xs text-gray-500 dark:text-neutral-200 leading-none"
+                  v-if="message.id === lastMessage?.id"
+                  >Đã gửi
+                  {{ lastMessage?.created_at_formatted }}
+                  trước</span
+                >
               </div>
             </div>
           </div>
@@ -275,9 +242,9 @@
       </span>
     </div>
     <div
-      class="relative h-16 p-4 border-t-2 border-slate-400 dark:border-slate-300"
+      class="relative max-h-48 p-4 border-t-2 border-slate-400 dark:border-slate-300"
     >
-      <span class="absolute right-12 p-4 top-2 z-10">
+      <span class="absolute right-12 p-4 bottom-0 z-10">
         <Popover class="relative">
           <transition
             enter-active-class="transition duration-200 ease-out"
@@ -305,9 +272,9 @@
       <form
         v-on:submit.prevent="submitForm"
         @keyup.enter="submitForm"
-        class="flex items-center justify-between gap-1"
+        class="flex items-end justify-between gap-1"
       >
-        <div class="flex gap-1">
+        <div class="flex gap-1 items-end">
           <PlusCircleIcon
             class="w-8 h-8 cursor-pointer rounded-full hover:bg-slate-300 dark:hover:bg-slate-600 transition p-1"
             :class="[selectedTheme?.iconColor]"
@@ -334,15 +301,16 @@
             :class="[selectedTheme?.iconColor]"
           />
         </div>
-        <div class="relative flex items-center gap-2">
+        <div class="relative flex items-end gap-2">
           <textarea
             v-model="body"
             @keyup="getContent"
-            class="w-full py-2 px-4 bg-gray-100 rounded-3xl resize-none"
+            class="w-full py-2 pl-4 pr-8 bg-gray-100 rounded-xl resize-none overflow-auto scrollbar-corner-slate-200 scrollbar-thin scrollbar-thumb-slate-400 scrollbar-track-slate-800"
+            :class="rows > 5 ? 'overflow-y-auto' : ''"
             name=""
             id=""
+            :rows="rows || 1"
             cols="30"
-            rows="1"
             placeholder="Bạn muốn nói điều gì?"
           ></textarea>
           <button
@@ -362,6 +330,8 @@
 
 <script>
 import axios from "axios";
+import Pusher from "pusher-js";
+
 import { RouterLink } from "vue-router";
 import themes from "../../data/themes";
 
@@ -442,31 +412,77 @@ export default (await import("vue")).defineComponent({
         (theme) => theme.name === this.conversation?.theme
       )[0];
     },
+    rows() {
+      return Math.ceil(this.body.length / 30) < 6
+        ? Math.ceil(this.body.length / 30)
+        : 5;
+    },
+    lastMessage() {
+      return this.conversation?.messages[
+        this.conversation.messages?.length - 1
+      ];
+    },
+    seen() {
+      return this.lastMessage?.seen_by
+        ?.map((user) => user.created_by.id)
+        .includes(this.friend.id);
+    },
+    receivedUser() {
+      return this.conversation.users.filter(
+        (user) => user.id !== this.userStore.user.id
+      )[0];
+    },
   },
 
   mounted() {
     document.addEventListener("click", this.clickOutside);
-    this.scrollToBottom();
     this.getConversation();
+    this.getPusher();
   },
-
+  
   beforeUnmount() {
     document.removeEventListener("click", this.clickOutside);
   },
+  
+  updated() {
+    this.scrollToBottom();
+    this.seenMessage()
+  },
 
   methods: {
+    getPusher() {
+      Pusher.logToConsole = false;
+
+      const pusher = new Pusher(`${import.meta.env.VITE_PUSHER_KEY}`, {
+        cluster: `${import.meta.env.VITE_PUSHER_CLUSTER}`,
+      });
+      const channel = pusher.subscribe(`${this.conversation?.id}`);
+      channel.bind("message:new", (data) => {
+        this.listMessages.push(JSON.parse(data.message));
+      });
+    },
+    scrollToBottom() {
+      const objDiv = this.$refs.chatContainer;
+      objDiv.scrollTop = objDiv.scrollHeight;
+    },
     getConversation() {
       axios
         .get(`/api/chat/${this.friend?.id}/get-chat-window/`)
         .then((res) => {
-          this.conversation = res.data.conversation
-          console.log(this.conversation)
+          this.conversation = res.data.conversation;
+          console.log(this.conversation);
         })
         .catch((error) => console.log(error));
     },
-    scrollToBottom() {
-      const objDiv = document.getElementById("chat-container");
-      objDiv.scrollTop = objDiv.scrollHeight;
+    seenMessage() {
+      setTimeout(() => {
+        axios
+          .post(`/api/chat/${this.conversation?.id}/set_seen/`)
+          .then((res) => {
+            // console.log(res.data);
+          })
+          .catch((error) => console.log(error));
+      }, 2000)
     },
     Pick() {
       document
@@ -512,6 +528,7 @@ export default (await import("vue")).defineComponent({
         axios
           .post(`/api/chat/${this.friend.id}/create/`)
           .then((res) => {
+            this.conversation = res.data;
             let formData = new FormData();
             if (this.$refs.fileMessage.files[0]) {
               formData.append("image", this.$refs.fileMessage.files[0]);

@@ -454,18 +454,21 @@ def set_seen(request, pk):
         
     messages = conversation.messages.exclude(created_by=request.user)
     
-    for message in messages:
-        if not message.seen_by.all().filter(created_by=request.user):
-            message.seen_by.add(seenUser)
-            message.save()
-   
-    serializer = ConversationMessageSerializer(messages, many=True)
-    serializer_data = serializer.data[-1]
-    json_data = json.dumps(serializer_data)
-        
-    pusher_client.trigger(str(pk), 'seen_message', {'message': json_data})
+    if messages:
+        for message in messages:
+            if not message.seen_by.all().filter(created_by=request.user):
+                message.seen_by.add(seenUser)
+                message.save()
+    
+        serializer = ConversationMessageSerializer(messages, many=True)
+        serializer_data = serializer.data[-1]
+        json_data = json.dumps(serializer_data)
             
-    return JsonResponse({'message': serializer.data})
+        pusher_client.trigger(str(pk), 'seen_message', {'message': json_data})
+                
+        return JsonResponse({'message': serializer.data})
+    else:
+        return JsonResponse({'message': 'conversation not exists'})
 
 @api_view(['POST'])
 def group_set_seen(request, pk):

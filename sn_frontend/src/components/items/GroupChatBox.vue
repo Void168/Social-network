@@ -63,35 +63,35 @@
               >
                 <div class="flex gap-2">
                   <div>
-                    <div
+                    <p
                       v-if="
                         message?.body &&
                         !message?.attachments.length &&
                         selectedTheme
                       "
-                      class="p-3 shadow-md rounded-l-lg rounded-br-lg"
+                      class="p-3 shadow-md rounded-l-lg rounded-br-lg text-sm max-w-[500px] font-semibold"
                       :class="[
                         selectedTheme.background,
                         selectedTheme.textColor,
                       ]"
                     >
-                      <p class="text-sm font-semibold">
+                      <span class="block whitespace-normal break-words">
                         {{ message?.body }}
-                      </p>
-                    </div>
+                      </span>
+                    </p>
                     <div v-if="message?.attachments.length > 0">
-                      <div
+                      <p
                         v-if="message?.body"
-                        class="p-3 shadow-md rounded-t-lg"
+                        class="p-3 shadow-md rounded-t-lg max-w-[500px] text-sm font-semibold"
                         :class="[
                           selectedTheme.background,
                           selectedTheme.textColor,
                         ]"
                       >
-                        <p class="text-sm font-semibold">
+                        <span class="block whitespace-normal break-words">
                           {{ message?.body }}
-                        </p>
-                      </div>
+                        </span>
+                      </p>
                       <img
                         v-if="message?.attachments.length > 0"
                         :src="message?.attachments[0]?.get_image"
@@ -211,13 +211,13 @@
                     v-bind:key="message.id"
                     class="mb-4"
                   >
-                    <div
-                      class="bg-gray-200 p-3 rounded-r-lg rounded-bl-lg dark:bg-slate-500 dark:border-slate-600 dark:text-neutral-200"
+                    <p
+                      class="bg-gray-200 p-3 rounded-r-lg rounded-bl-lg dark:bg-slate-500 dark:border-slate-600 dark:text-neutral-200 max-w-[500px] text-sm font-semibold"
                     >
-                      <p class="text-sm font-semibold">
+                      <span class="break-words block whitespace-normal">
                         {{ message?.body }}
-                      </p>
-                    </div>
+                      </span>
+                    </p>
                     <span
                       class="text-xs text-gray-500 dark:text-neutral-200 leading-none"
                       v-if="
@@ -450,9 +450,11 @@ export default (await import("vue")).defineComponent({
   },
   mounted() {
     this.getMessages();
-    this.scrollToBottom();
     this.getGroupNotifications();
     this.getPusher();
+  },
+  updated(){
+    this.scrollToBottom();
   },
   methods: {
     getPusher() {
@@ -467,14 +469,16 @@ export default (await import("vue")).defineComponent({
       });
     },
     getGroupNotifications() {
-      axios
-        .get(`/api/chat/group/${this.$route.params.id}/get-notifications/`)
-        .then((res) => {
-          this.notifications = res.data;
-        })
-        .catch((error) => {
-          console.log(error);
-        });
+      setTimeout(() => {
+        axios
+          .get(`/api/chat/group/${this.$route.params.id}/get-notifications/`)
+          .then((res) => {
+            this.notifications = res.data;
+          })
+          .catch((error) => {
+            console.log(error);
+          }, 1000);
+      })
     },
     scrollToBottom() {
       const objDiv = document.querySelector("#chatview-container");
@@ -491,36 +495,40 @@ export default (await import("vue")).defineComponent({
     },
     openPollsListModal() {
       this.isPollsListOpen = true;
-      axios
-        .get(`/api/chat/group/${this.activeConversation?.id}/get-polls/`)
-        .then((res) => {
-          this.pollslist = res.data;
-        })
-        .catch((error) => {
-          console.log(error);
-        });
+      setTimeout(() => {
+        axios
+          .get(`/api/chat/group/${this.activeConversation?.id}/get-polls/`)
+          .then((res) => {
+            this.pollslist = res.data;
+          })
+          .catch((error) => {
+            console.log(error);
+          }, 1000);
+      })
     },
     getMessages() {
-      axios
-        .get(`/api/chat/group/${this.$route.params.id}/`)
-        .then((res) => {
-          this.scrollToBottom();
-          this.activeConversation = res.data;
-          this.listMessages = res.data.group_messages;
-          let users = [];
-          for (let i = 0; i < this.activeConversation.users.length; i++) {
-            users.push(this.activeConversation.users[i]);
-          }
-          const filteredUser = users
-            ?.map((user) => user.id)
-            .filter((id) => id !== this.userStore.user.id);
-          this.receivedUser = users.filter(
-            (user) => user.id === filteredUser[0]
-          )[0];
-        })
-        .catch((error) => {
-          console.log(error);
-        });
+      setTimeout(() => {
+        axios
+          .get(`/api/chat/group/${this.$route.params.id}/`)
+          .then((res) => {
+            this.scrollToBottom();
+            this.activeConversation = res.data;
+            this.listMessages = res.data.group_messages;
+            let users = [];
+            for (let i = 0; i < this.activeConversation.users.length; i++) {
+              users.push(this.activeConversation.users[i]);
+            }
+            const filteredUser = users
+              ?.map((user) => user.id)
+              .filter((id) => id !== this.userStore.user.id);
+            this.receivedUser = users.filter(
+              (user) => user.id === filteredUser[0]
+            )[0];
+          })
+          .catch((error) => {
+            console.log(error);
+          });
+      }, 1000)
     },
     Pick() {
       document

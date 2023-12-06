@@ -166,25 +166,29 @@ export default (await import("vue")).defineComponent({
         });
     },
     getConversations() {
-      axios
-        .get("/api/chat/")
-        .then((res) => {
-          this.conversations = res.data;
-        })
-        .catch((error) => {
-          console.log(error);
-        });
+      setTimeout(() => {
+        axios
+          .get("/api/chat/")
+          .then((res) => {
+            this.conversations = res.data;
+          })
+          .catch((error) => {
+            console.log(error);
+          });
+      },1500)
     },
     getGroupConversations() {
-      axios
-        .get("/api/chat/group/")
-        .then((res) => {
-          this.groupConversations = res.data;
-          console.log(this.groupConversations);
-        })
-        .catch((error) => {
-          console.log(error);
-        });
+      setTimeout(() => {
+        axios
+          .get("/api/chat/group/")
+          .then((res) => {
+            this.groupConversations = res.data;
+            console.log(this.groupConversations);
+          })
+          .catch((error) => {
+            console.log(error);
+          });
+      }, 1000)
     },
     miniatureChat(friend) {
       this.friendsChat = this.friendsChat?.filter((fc) => fc !== friend);
@@ -242,11 +246,6 @@ export default (await import("vue")).defineComponent({
           return this.body;
         });
     },
-    // getConversation(friend) {
-    //   this.conversation = this.conversations.filter((conversation) =>
-    //     conversation.users.map((user) => user.name).includes(friend.name)
-    //   )[0];
-    // },
     seenMessage() {
       this.$emit("seenMessage", this.conversation?.id);
       if (this.conversation?.id) {

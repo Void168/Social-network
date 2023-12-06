@@ -15,7 +15,8 @@ export const useNotificationStore = defineStore({
 
   actions: {
     getNotifications() {
-      axios
+      setTimeout(() => {
+        axios
         .get("/api/notifications/")
         .then((res) => {
           this.allNotifications = res.data;
@@ -51,12 +52,13 @@ export const useNotificationStore = defineStore({
           this.length = this.allNotifications.filter(
             (noti) => !noti.is_read
           ).length;
-          console.log(this.length)
+
         })
         .catch((error) => {
           console.log(error);
         });
-
+      }, 1500)
+  
         return this.length;
       },
   },

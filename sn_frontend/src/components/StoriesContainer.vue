@@ -2,7 +2,10 @@
   <div>
     <Swiper :slides-per-view="5" :space-between="20">
       <SwiperSlide
-        ><div class="relative cursor-pointer bg-slate-700 rounded-lg h-[213px]" @click="openModal">
+        ><div
+          class="relative cursor-pointer bg-slate-700 rounded-lg h-[213px]"
+          @click="openModal"
+        >
           <img
             :src="userStore.user.avatar"
             class="rounded-b-none h-[70%]"
@@ -28,7 +31,13 @@
       <SwiperSlide><Story /></SwiperSlide>
       <SwiperNavButton />
     </Swiper>
-    <CreateStoryModal :show="isOpen" @closeModal="closeModal" />
+    <CreateStoryModal
+      :show="isOpen"
+      :isTextStory="isTextStory"
+      @closeModal="closeModal"
+      @openTextStory="openTextStory"
+      @closeTextStory="closeTextStory"
+    />
   </div>
 </template>
 
@@ -63,16 +72,25 @@ export default {
   data() {
     return {
       isOpen: false,
+      isTextStory: false,
     };
   },
 
   methods: {
     openModal() {
       this.isOpen = true;
+      this.isTextStory = false;
     },
     closeModal() {
       this.isOpen = false;
+      this.isTextStory = false;
     },
+    openTextStory() {
+      this.isTextStory = true;
+    },
+    closeTextStory() {
+        this.isTextStory = false;
+    }
   },
 };
 </script>

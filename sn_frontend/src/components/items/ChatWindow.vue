@@ -304,7 +304,6 @@
         <div class="relative flex items-end gap-2">
           <textarea
             v-model="body"
-            @keyup="getContent"
             class="w-full py-2 pl-4 pr-8 bg-gray-100 rounded-xl resize-none overflow-auto scrollbar-corner-slate-200 scrollbar-thin scrollbar-thumb-slate-400 scrollbar-track-slate-800"
             :class="rows > 5 ? 'overflow-y-auto' : ''"
             name=""

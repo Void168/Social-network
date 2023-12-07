@@ -3,6 +3,11 @@
     <div class="col-span-1"></div>
     <div class="mx-auto w-[70%] main-center col-span-4 space-y-4">
       <div class="p-4 bg-white border border-gray-200 dark:bg-slate-600 dark:border-slate-700 dark:text-neutral-200 rounded-lg">
+        <StoriesContainer />
+      </div>
+      <div
+        class="p-4 bg-white border border-gray-200 dark:bg-slate-600 dark:border-slate-700 dark:text-neutral-200 rounded-lg"
+      >
         <PostForm v-bind:user="null" v-bind:posts="posts" />
         <div>
           <div
@@ -12,15 +17,20 @@
           >
             <FeedItem v-bind:post="post" v-on:deletePost="deletePost" />
           </div>
-          
-          <SkeletonLoadingPostVue v-show="!loadMore" v-if="posts.length !== postsList.length"/>
+
+          <SkeletonLoadingPostVue
+            v-show="!loadMore"
+            v-if="posts.length !== postsList.length"
+          />
           <div v-else class="flex justify-center items-center h-48">
             <p class="text-xl font-semibold">Đã tải hết bài viết</p>
           </div>
         </div>
       </div>
     </div>
-    <div class="main-right col-span-1 space-y-4 sticky top-[155px] h-[900px] z-9">
+    <div
+      class="main-right col-span-1 space-y-4 sticky top-[155px] h-[900px] z-9"
+    >
       <PeopleYouMayKnow />
       <Trends />
       <ChatContainer />
@@ -33,10 +43,11 @@ import axios from "axios";
 import PeopleYouMayKnow from "../components/PeopleYouMayKnow.vue";
 import Trends from "../components/Trends.vue";
 import ChatContainer from "../components/ChatContainer.vue";
+import StoriesContainer from "../components/StoriesContainer.vue";
 
 import PostForm from "../components/forms/PostForm.vue";
 import FeedItem from "../components/items/FeedItem.vue";
-import SkeletonLoadingPostVue from '../components/loadings/SkeletonLoadingPost.vue';
+import SkeletonLoadingPostVue from "../components/loadings/SkeletonLoadingPost.vue";
 
 export default {
   name: "FeedView",
@@ -46,7 +57,8 @@ export default {
     FeedItem,
     PostForm,
     SkeletonLoadingPostVue,
-    ChatContainer
+    ChatContainer,
+    StoriesContainer,
   },
 
   data() {
@@ -91,14 +103,14 @@ export default {
       if (height < scrollY + 1000) {
         setTimeout(() => {
           this.loadMore = true;
-        }, 1000)
+        }, 1000);
         if (this.loadMore === true) {
           const newPosts = this.postsList.slice(
             this.posts.length,
             this.posts.length + this.PostToShow
           );
           this.posts.push(...newPosts);
-        } 
+        }
       } else {
         this.loadMore = false;
       }

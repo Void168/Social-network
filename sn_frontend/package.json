@@ -20,6 +20,7 @@
     "pinia": "^2.1.6",
     "pusher-js": "^8.4.0-rc1",
     "socket.io-client": "^4.7.2",
+    "swiper": "^11.0.5",
     "tailwind-scrollbar": "^3.0.5",
     "vue": "^3.3.4",
     "vue-multiselect": "^3.0.0-beta.3",

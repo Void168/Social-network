@@ -50,7 +50,6 @@
 
 <script>
 import axios from "axios";
-import ConversationBox from "../components/items/ConversationBox.vue";
 import GroupConversationBox from "../components/items/GroupConversationBox.vue";
 import GroupChatBox from "../components/items/GroupChatBox.vue";
 import GroupChatInfo from "../components/items/GroupChatInfo.vue";
@@ -59,6 +58,13 @@ import { useUserStore } from "../stores/user";
 import { PlusCircleIcon } from "@heroicons/vue/24/outline";
 
 import { RouterLink } from "vue-router";
+import { defineAsyncComponent } from "vue";
+import SkeletonLoadingPost from "../components/loadings/SkeletonLoadingPost.vue";
+
+const ConversationBox = defineAsyncComponent({
+  loader: () => import ('../components/items/ConversationBox.vue'),
+  loadingComponent: SkeletonLoadingPost
+})
 
 export default (await import("vue")).defineComponent({
   name: "groupchat",
@@ -172,6 +178,7 @@ export default (await import("vue")).defineComponent({
     GroupConversationBox,
     GroupChatInfo,
     GroupChatBox,
+    SkeletonLoadingPost
   },
 });
 </script>

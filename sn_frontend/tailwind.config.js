@@ -12,6 +12,9 @@ module.exports = {
         style: ["Dancing Script", "cursive"],
         normal: ["Kanit", "sans-serif"],
         succinct: ["Oswald", "sans-serif"],
+      },
+      rotate: {
+        '270': '270deg',
       }
     },
     screens: {

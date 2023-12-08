@@ -1,5 +1,5 @@
 <template>
-  <TransitionRoot @click="$emit('closeModal')" appear as="template">
+  <TransitionRoot appear as="template">
     <Dialog as="div" class="relative z-10">
       <TransitionChild
         as="template"
@@ -32,6 +32,7 @@
               >
                 <div>
                   <button
+                    @click="removeAll"
                     class="m-4 p-2 bg-slate-900 rounded-full hover:bg-slate-700"
                   >
                     <XMarkIcon
@@ -73,7 +74,7 @@
                         class="w-full"
                         :fonts="fonts"
                         @getOption="getOption"
-                        />
+                      />
                       <div
                         class="p-4 border mt-8 border-slate-700 rounded-lg h-48"
                       >
@@ -83,7 +84,7 @@
                         <div class="flex flex-wrap gap-2 my-4 justify-center">
                           <div v-for="theme in themes" :key="theme">
                             <div
-                              @click="chooseTheme"
+                              @click="chooseTheme(theme)"
                               class="w-12 h-12 rounded-full cursor-pointer"
                               :class="[theme.background]"
                             ></div>
@@ -108,7 +109,7 @@
                     @click="$emit('closeTextStory')"
                     class="flex justify-center py-2 px-4 w-[40%] dark:bg-slate-700 shadow-md rounded-lg font-semibold hover:bg-slate-600 transition duration-100 cursor-pointer"
                   >
-                    <button @click="removeUrl" class="w-full">Bỏ</button>
+                    <button @click="removeAll" class="w-full">Bỏ</button>
                   </div>
                   <button
                     class="w-[60%] dark:bg-emerald-500 hover:bg-emerald-400 py-2 px-4 shadow-md rounded-lg font-semibold"
@@ -172,26 +173,68 @@
                   class="bg-slate-800 h-full w-[65%] rounded-xl p-4"
                 >
                   <div
-                    class="flex justify-center items-center bg-slate-900 h-full rounded-xl p-4"
+                    class="flex justify-center flex-col items-center bg-slate-900 h-full rounded-xl p-4"
                   >
                     <div
                       v-if="!url"
-                      :class="[selectedFont.font]"
-                      class="h-full bg-blue-500 w-[50%] rounded-xl flex justify-center items-center text-2xl font-semibold text-neutral-200/50"
+                      :class="[
+                        selectedFont.font,
+                        selectedTheme.background,
+                        body ? 'text-neutral-200' : 'text-neutral-200/60',
+                      ]"
+                      class="h-full bg-emerald-500 w-[50%] rounded-xl flex justify-center items-center text-2xl font-semibold"
                     >
-                      {{ body || "Bắt đầu nhập" }}
+                      <p
+                        class="break-words w-full text-center px-12"
+                        :class="[selectedTheme.textColor]"
+                      >
+                        {{ body || "Bắt đầu nhập" }}
+                      </p>
                     </div>
                     <div
                       v-else
                       class="h-full w-[50%] border rounded-xl flex justify-center items-center text-2xl font-semibold text-neutral-200/50"
                       :style="{ backgroundColor: color }"
                     >
-                      <img
-                        :src="url"
-                        alt="story-url"
-                        class="rounded-none w-full"
-                        ref="myImage"
-                      />
+                      <div>
+                        <img
+                          :src="url"
+                          alt="story-url"
+                          class="rounded-none w-full cursor-pointer"
+                          :class="deg"
+                          ref="myImage"
+                          @click="editImage"
+                        />
+                      </div>
+                    </div>
+                    <div
+                      class="text-neutral-200 text-lg mt-4 flex items-center gap-3"
+                    >
+                      <h3 v-if="!isRotate" class="px-2 py-1">
+                        Chọn ảnh để cắt và xoay
+                      </h3>
+                      <div
+                        v-if="isRotate"
+                        class="flex gap-3 justify-center items-center"
+                      >
+                        <span>-</span>
+                        <Slider
+                          v-model="value"
+                          class="w-96 h-1"
+                          @slide="getValue(value)"
+                          :tooltips=false
+                          
+                        />
+                        <span>+</span>
+                      </div>
+                      <button
+                        v-if="isRotate"
+                        class="flex items-center gap-2 bg-slate-700 px-2 py-1 rounded-md"
+                        @click="rotate"
+                      >
+                        <ArrowPathIcon class="w-6 h-6" />
+                        <span>Xoay</span>
+                      </button>
                     </div>
                   </div>
                 </div>
@@ -213,11 +256,17 @@ import {
   DialogPanel,
   DialogTitle,
 } from "@headlessui/vue";
-import { XMarkIcon, Cog8ToothIcon, PhotoIcon } from "@heroicons/vue/24/solid";
+import {
+  XMarkIcon,
+  Cog8ToothIcon,
+  PhotoIcon,
+  ArrowPathIcon,
+} from "@heroicons/vue/24/solid";
 import ChooseFontStory from "../dropdown/ChooseFontStory.vue";
 import themes from "../../data/themes";
 import fonts from "../../data/fonts";
 import ColorThief from "../../../node_modules/colorthief/dist/color-thief.mjs";
+import Slider from "@vueform/slider";
 
 export default (await import("vue")).defineComponent({
   components: {
@@ -226,10 +275,12 @@ export default (await import("vue")).defineComponent({
     Dialog,
     DialogPanel,
     DialogTitle,
+    Slider,
     ChooseFontStory,
     XMarkIcon,
     Cog8ToothIcon,
     PhotoIcon,
+    ArrowPathIcon,
   },
   setup() {
     const userStore = useUserStore();
@@ -246,20 +297,33 @@ export default (await import("vue")).defineComponent({
   data() {
     return {
       isMediaStory: false,
+      isRotate: false,
       body: "",
-      themes: themes.reverse(),
       url: null,
       color: null,
       fonts: fonts,
-      selectedFont: {}
+      selectedFont: {},
+      selectedTheme: {},
+      deg: null,
+      toggle: 0,
+      value: 20,
     };
   },
+
+  computed: {
+    themes() {
+      return themes.reverse();
+    },
+  },
+
   methods: {
     getOption(selectedFont) {
-      this.$emit('getOption', selectedFont)
-      this.selectedFont = selectedFont
+      this.$emit("getOption", selectedFont);
+      this.selectedFont = selectedFont;
     },
-    chooseTheme() {},
+    chooseTheme(theme) {
+      this.selectedTheme = theme;
+    },
     chooseMedia(e) {
       const file = e.target.files[0];
       this.url = URL.createObjectURL(file);
@@ -276,7 +340,6 @@ export default (await import("vue")).defineComponent({
         if (img.complete) {
           const rgb = colorThief.getColor(img);
           this.color = `rgba(${rgb.toString()},0.8)`;
-          console.log(this.color);
         } else {
           img.addEventListener("load", function () {
             colorThief.getColor(img);
@@ -284,10 +347,39 @@ export default (await import("vue")).defineComponent({
         }
       });
     },
-    removeUrl() {
+    editImage() {
+      this.isRotate = true;
+    },
+    rotate() {
+      // let toggle = 0;
+      this.toggle += 1;
+      if (this.toggle === 4) {
+        this.toggle = 0;
+      }
+      if (this.toggle === 1) {
+        this.deg = "rotate-90";
+      } else if (this.toggle === 2) {
+        this.deg = "rotate-180";
+      } else if (this.toggle === 3) {
+        this.deg = "rotate-270";
+      } else {
+        this.deg = "rotate-0";
+      }
+    },
+    getValue(value) {
+      console.log(value);
+    },
+    removeAll() {
       this.url = null;
       this.color = null;
+      this.body = "";
+      this.selectedTheme = {};
+      this.selectedFont = {};
+      this.deg = "rotate-0";
+      this.isRotate = false;
     },
   },
 });
 </script>
+
+<style src="@vueform/slider/themes/default.css"></style>

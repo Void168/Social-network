@@ -11,6 +11,7 @@
     "@headlessui/vue": "^1.7.16",
     "@heroicons/vue": "^2.0.18",
     "@vueform/multiselect": "^2.6.6",
+    "@vueform/slider": "^2.1.9",
     "@vuepic/vue-datepicker": "^7.3.0",
     "@vueuse/core": "^10.5.0",
     "axios": "^1.5.1",
@@ -25,7 +26,8 @@
     "tailwind-scrollbar": "^3.0.5",
     "vue": "^3.3.4",
     "vue-multiselect": "^3.0.0-beta.3",
-    "vue-router": "^4.2.4"
+    "vue-router": "^4.2.4",
+    "vue-slider-component": "^3.2.24"
   },
   "devDependencies": {
     "@types/pusher-js": "^5.1.0",

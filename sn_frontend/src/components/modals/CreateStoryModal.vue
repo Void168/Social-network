@@ -69,7 +69,11 @@
                         cols="30"
                         placeholder="Bắt đầu nhập"
                       ></textarea>
-                      <ChooseFontStory @getOption="getOption" class="w-full" />
+                      <ChooseFontStory
+                        class="w-full"
+                        :fonts="fonts"
+                        @getOption="getOption"
+                        />
                       <div
                         class="p-4 border mt-8 border-slate-700 rounded-lg h-48"
                       >
@@ -172,6 +176,7 @@
                   >
                     <div
                       v-if="!url"
+                      :class="[selectedFont.font]"
                       class="h-full bg-blue-500 w-[50%] rounded-xl flex justify-center items-center text-2xl font-semibold text-neutral-200/50"
                     >
                       {{ body || "Bắt đầu nhập" }}
@@ -179,7 +184,7 @@
                     <div
                       v-else
                       class="h-full w-[50%] border rounded-xl flex justify-center items-center text-2xl font-semibold text-neutral-200/50"
-                      :style="{backgroundColor: color}"
+                      :style="{ backgroundColor: color }"
                     >
                       <img
                         :src="url"
@@ -211,6 +216,7 @@ import {
 import { XMarkIcon, Cog8ToothIcon, PhotoIcon } from "@heroicons/vue/24/solid";
 import ChooseFontStory from "../dropdown/ChooseFontStory.vue";
 import themes from "../../data/themes";
+import fonts from "../../data/fonts";
 import ColorThief from "../../../node_modules/colorthief/dist/color-thief.mjs";
 
 export default (await import("vue")).defineComponent({
@@ -244,17 +250,22 @@ export default (await import("vue")).defineComponent({
       themes: themes.reverse(),
       url: null,
       color: null,
+      fonts: fonts,
+      selectedFont: {}
     };
   },
   methods: {
-    getOption() {},
+    getOption(selectedFont) {
+      this.$emit('getOption', selectedFont)
+      this.selectedFont = selectedFont
+    },
     chooseTheme() {},
     chooseMedia(e) {
       const file = e.target.files[0];
       this.url = URL.createObjectURL(file);
       setTimeout(() => {
         this.getColor();
-      }, 50);
+      }, 10);
     },
     getColor() {
       const colorThief = new ColorThief();
@@ -264,8 +275,8 @@ export default (await import("vue")).defineComponent({
 
         if (img.complete) {
           const rgb = colorThief.getColor(img);
-          this.color = `rgba(${rgb.toString()},0.8)`
-          console.log(this.color)
+          this.color = `rgba(${rgb.toString()},0.8)`;
+          console.log(this.color);
         } else {
           img.addEventListener("load", function () {
             colorThief.getColor(img);
@@ -274,8 +285,9 @@ export default (await import("vue")).defineComponent({
       });
     },
     removeUrl() {
-        this.url = null
-    }
+      this.url = null;
+      this.color = null;
+    },
   },
 });
 </script>

@@ -29,7 +29,7 @@
             :key="font.name"
             :value="font"
             as="template"
-            @click="$emit('getOption')"
+            @click="$emit('getOption', selectedFont)"
           >
             <li
               :class="[
@@ -75,7 +75,6 @@ import {
   LockClosedIcon,
 } from "@heroicons/vue/24/outline";
 import { CheckIcon, ChevronUpDownIcon } from "@heroicons/vue/20/solid";
-import fonts from "../../data/font";
 
 export default {
   components: {
@@ -91,14 +90,14 @@ export default {
     LockClosedIcon,
   },
   props: {
-    selection: String,
+    selection: Object,
+    fonts: Object,
   },
 
   data() {
     return {
-      fonts: fonts,
-      selectedFont: ""
-    };
-  },
+      selectedFont: {}
+    }
+  }
 };
 </script>

@@ -6,7 +6,14 @@ module.exports = {
     "./src/**/*.{js,ts,jsx,tsx,vue}",
   ],
   theme: {
-    extend: {},
+    extend: {
+      fontFamily: {
+        title: ["Comfortaa", "sans-serif"],
+        style: ["Dancing Script", "cursive"],
+        normal: ["Kanit", "sans-serif"],
+        succinct: ["Oswald", "sans-serif"],
+      }
+    },
     screens: {
       'xs': '320px',
       'sm': '640px',

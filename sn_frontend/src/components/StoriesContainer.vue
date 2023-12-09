@@ -29,7 +29,7 @@
       <SwiperSlide><Story /></SwiperSlide>
       <SwiperSlide><Story /></SwiperSlide>
       <SwiperSlide><Story /></SwiperSlide>
-      <SwiperNavButton />
+      <SwiperStoryContainerButton />
     </Swiper>
     <CreateStoryModal
       :show="isOpen"
@@ -49,7 +49,7 @@ import { Swiper, SwiperSlide } from "swiper/vue";
 
 import "swiper/css";
 
-import SwiperNavButton from "./items/story/SwiperNavButton.vue";
+import SwiperStoryContainerButton from "./items/story/SwiperStoryContainerButton.vue";
 import CreateStoryModal from "./modals/story/CreateStoryModal.vue";
 
 export default {
@@ -58,7 +58,7 @@ export default {
     Story,
     Swiper,
     SwiperSlide,
-    SwiperNavButton,
+    SwiperStoryContainerButton,
     CreateStoryModal,
   },
   setup() {

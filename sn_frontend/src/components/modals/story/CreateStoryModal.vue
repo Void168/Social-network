@@ -284,7 +284,7 @@ import {
 import ChooseFontStory from "../../dropdown/ChooseFontStory.vue";
 import themes from "../../../data/themes";
 import fonts from "../../../data/fonts";
-import ColorThief from "../../../node_modules/colorthief/dist/color-thief.mjs";
+import ColorThief from "../../../../node_modules/colorthief/dist/color-thief.mjs";
 import Slider from "@vueform/slider";
 
 export default (await import("vue")).defineComponent({

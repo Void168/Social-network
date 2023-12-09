@@ -4,7 +4,7 @@
       <img
         :src="userStore.user.avatar"
         alt=""
-        class="absolute top-4 left-4 w-10 h-10 rounded-full ring-4 ring-blue-500 z-20"
+        class="absolute top-4 left-4 w-10 h-10 rounded-full ring-4 ring-emerald-400 z-20"
       />
       <div
         class="relative h-[213px] flex items-center justify-center overflow-hidden shadow-sm rounded-lg cursor-pointer"

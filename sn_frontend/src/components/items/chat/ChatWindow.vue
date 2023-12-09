@@ -332,7 +332,7 @@ import axios from "axios";
 import Pusher from "pusher-js";
 
 import { RouterLink } from "vue-router";
-import themes from "../../data/themes";
+import themes from "../../../data/themes";
 
 import {
   XMarkIcon,
@@ -349,12 +349,12 @@ import {
 
 import "emoji-picker-element";
 
-import ConversationThemeModal from "../modals/ConversationThemeModal.vue";
-import DeleteConversationModal from "../modals/DeleteConversationModal.vue";
+import ConversationThemeModal from "../../modals/chat/ConversationThemeModal.vue";
+import DeleteConversationModal from "../../modals/chat/DeleteConversationModal.vue";
 
 import { Popover, PopoverButton, PopoverPanel } from "@headlessui/vue";
-import { useUserStore } from "../../stores/user";
-import { useToastStore } from "../../stores/toast";
+import { useUserStore } from "../../../stores/user";
+import { useToastStore } from "../../../stores/toast";
 
 export default (await import("vue")).defineComponent({
   name: "chat",

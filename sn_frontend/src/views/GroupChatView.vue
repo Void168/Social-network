@@ -50,9 +50,9 @@
 
 <script>
 import axios from "axios";
-import GroupConversationBox from "../components/items/GroupConversationBox.vue";
-import GroupChatBox from "../components/items/GroupChatBox.vue";
-import GroupChatInfo from "../components/items/GroupChatInfo.vue";
+import GroupConversationBox from "../components/items/chat/GroupConversationBox.vue";
+import GroupChatBox from "../components/items/chat/GroupChatBox.vue";
+import GroupChatInfo from "../components/items/chat/GroupChatInfo.vue";
 
 import { useUserStore } from "../stores/user";
 import { PlusCircleIcon } from "@heroicons/vue/24/outline";
@@ -62,7 +62,7 @@ import { defineAsyncComponent } from "vue";
 import SkeletonLoadingPost from "../components/loadings/SkeletonLoadingPost.vue";
 
 const ConversationBox = defineAsyncComponent({
-  loader: () => import ('../components/items/ConversationBox.vue'),
+  loader: () => import ('../components/items/chat/ConversationBox.vue'),
   loadingComponent: SkeletonLoadingPost
 })
 

@@ -362,15 +362,15 @@
 
 <script>
 import axios from "axios";
-import { useUserStore } from "../../stores/user";
-import { useToastStore } from "../../stores/toast";
-import themes from "../../data/themes";
+import { useUserStore } from "../../../stores/user";
+import { useToastStore } from "../../../stores/toast";
+import themes from "../../../data/themes";
 
-import AddUsersGroupConversationModalVue from "../modals/AddUsersGroupConversationModal.vue";
-import ChangeGroupChatNameModal from "../modals/ChangeGroupChatNameModal.vue";
-import ChangeGroupChatAvatarModal from "../modals/ChangeGroupChatAvatarModal.vue";
-import GroupConversationThemeModal from "../modals/GroupConversationThemeModal.vue";
-import CreatePollModal from "../modals/CreatePollModal.vue";
+import AddUsersGroupConversationModalVue from "../../modals/chat/AddUsersGroupConversationModal.vue";
+import ChangeGroupChatNameModal from "../../modals/chat/ChangeGroupChatNameModal.vue";
+import ChangeGroupChatAvatarModal from "../../modals/chat/ChangeGroupChatAvatarModal.vue";
+import GroupConversationThemeModal from "../../modals/chat/GroupConversationThemeModal.vue";
+import CreatePollModal from "../../modals/chat/CreatePollModal.vue";
 
 import {
   Menu,

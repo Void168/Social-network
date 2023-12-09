@@ -46,7 +46,7 @@ import ChatContainer from "../components/ChatContainer.vue";
 import StoriesContainer from "../components/StoriesContainer.vue";
 
 import PostForm from "../components/forms/PostForm.vue";
-import FeedItem from "../components/items/FeedItem.vue";
+import FeedItem from "../components/items/post/FeedItem.vue";
 import SkeletonLoadingPostVue from "../components/loadings/SkeletonLoadingPost.vue";
 
 export default {

@@ -74,10 +74,10 @@
 
 <script>
 import axios from "axios";
-import { useUserStore } from "../../stores/user";
-import { useToastStore } from "../../stores/toast";
-import DeleteWebsiteModal from "../modals/DeleteWebsiteModal.vue";
-import PrivacySelector from "../dropdown/PrivacySelector.vue";
+import { useUserStore } from "../../../stores/user";
+import { useToastStore } from "../../../stores/toast";
+import DeleteWebsiteModal from "../../modals/profile/DeleteWebsiteModal.vue";
+import PrivacySelector from "../../dropdown/PrivacySelector.vue";
 import {
   GlobeAsiaAustraliaIcon,
   UserGroupIcon,

@@ -15,7 +15,7 @@
 
 <script>
 import axios from "axios";
-import ImageShowcase from "../components/items/ImageShowcase.vue";
+import ImageShowcase from "../components/items/profile/ImageShowcase.vue";
 
 export default {
   components: {

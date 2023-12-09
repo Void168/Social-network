@@ -1,6 +1,6 @@
 <template>
   <TransitionRoot
-    @click="$emit('closeGroupConversationThemeModal')"
+    @click="$emit('closeConversationThemeModal')"
     appear
     as="template"
   >
@@ -31,7 +31,7 @@
             leave-to="opacity-0 scale-95"
           >
             <DialogPanel
-              class="w-full max-w-md transform overflow-hidden rounded-2xl bg-white dark:bg-slate-800 p-6 text-left align-middle shadow-xl transition-all"
+              class="w-full max-w-md transform overflow-hidden rounded-2xl bg-white dark:bg-slate-700 p-6 text-left align-middle shadow-xl transition-all"
             >
               <DialogTitle
                 as="h3"
@@ -60,15 +60,15 @@
                 <button
                   type="button"
                   class="btn inline-flex justify-center rounded-md border border-transparent bg-rose-400 text-white px-4 py-2 text-sm font-medium hover:bg-rose-600 focus:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 focus-visible:ring-offset-2"
-                  @click="$emit('closeGroupConversationThemeModal')"
+                  @click="$emit('closeConversationThemeModal')"
                 >
                   Hủy
                 </button>
-                <div @click="$emit('closeGroupConversationThemeModal')">
+                <div @click="$emit('closeConversationThemeModal')">
                   <button
                     type="button"
                     class="btn inline-flex justify-center rounded-md border border-transparent bg-emerald-400 text-white px-4 py-2 text-sm font-medium hover:bg-emerald-600 focus:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 focus-visible:ring-offset-2"
-                    @click="confirmGroupConversationTheme"
+                    @click="confirmConversationTheme"
                   >
                     Đồng ý
                   </button>
@@ -92,8 +92,8 @@ import {
   DialogTitle,
 } from "@headlessui/vue";
 
-import ConversationTheme from "../items/ConversationTheme.vue";
-import themes from '../../data/themes'
+import ConversationTheme from "../../items/chat/ConversationTheme.vue";
+import themes from '../../../data/themes'
 
 export default (await import("vue")).defineComponent({
   components: {
@@ -105,7 +105,7 @@ export default (await import("vue")).defineComponent({
     ConversationTheme,
   },
   props: {
-    isGroupConversationThemeModalOpen: Boolean,
+    isOpen: Boolean,
     currentTheme: Object,
   },
   data() {
@@ -127,7 +127,7 @@ export default (await import("vue")).defineComponent({
   methods: {
     getTheme() {
       axios
-        .get(`/api/chat/group/${this.currentTheme?.id}/get/`)
+        .get(`/api/chat/${this.currentTheme?.id}/get/`)
         .then((res) => {
           this.chosenTheme = res.data.theme;
         })
@@ -138,18 +138,19 @@ export default (await import("vue")).defineComponent({
     chooseTheme(theme) {
       this.chosenTheme = theme.name;
     },
-    confirmGroupConversationTheme() {
+    confirmConversationTheme() {
       let formData = new FormData();
 
       formData.append("theme", this.chosenTheme);
 
       axios
-        .post(`/api/chat/group/${this.currentTheme?.id}/choose_group_theme/`, formData, {
+        .post(`/api/chat/${this.currentTheme?.id}/choose_theme/`, formData, {
           headers: {
             "Content-Type": "multipart/form-data",
           },
         })
         .then((res) => {
+          // this.selectedTheme.background = res.data.theme;
           // console.log(res.data)
         })
         .catch((error) => console.log(error));

@@ -78,7 +78,7 @@
 
 <script>
 import axios from "axios";
-import { useToastStore } from "../../stores/toast";
+import { useToastStore } from "../../../stores/toast";
 import {
   TransitionRoot,
   TransitionChild,

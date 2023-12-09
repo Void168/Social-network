@@ -43,14 +43,14 @@
 
 <script>
 import { useUserStore } from "../stores/user";
-import Story from "./items/Story.vue";
+import Story from "./items/story/Story.vue";
 import { PlusCircleIcon } from "@heroicons/vue/24/solid";
 import { Swiper, SwiperSlide } from "swiper/vue";
 
 import "swiper/css";
 
-import SwiperNavButton from "./items/SwiperNavButton.vue";
-import CreateStoryModal from "./modals/CreateStoryModal.vue";
+import SwiperNavButton from "./items/story/SwiperNavButton.vue";
+import CreateStoryModal from "./modals/story/CreateStoryModal.vue";
 
 export default {
   components: {

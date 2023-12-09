@@ -61,9 +61,9 @@ import axios from "axios";
 import { useUserStore } from "../stores/user";
 import { RouterLink } from "vue-router";
 
-import ConversationBox from "../components/items/ConversationBox.vue";
-import CreateGroupChatModal from "../components/modals/CreateGroupChatModal.vue";
-import GroupConversationBox from "../components/items/GroupConversationBox.vue";
+import ConversationBox from "../components/items/chat/ConversationBox.vue";
+import CreateGroupChatModal from "../components/modals/chat/CreateGroupChatModal.vue";
+import GroupConversationBox from "../components/items/chat/GroupConversationBox.vue";
 
 import { MagnifyingGlassIcon, PlusCircleIcon } from "@heroicons/vue/24/outline";
 

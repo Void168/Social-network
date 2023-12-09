@@ -41,9 +41,9 @@
 
 <script>
 import axios from "axios";
-import ConversationBox from "../components/items/ConversationBox.vue";
-import GroupConversationBox from "../components/items/GroupConversationBox.vue";
-import ChatBox from "../components/items/ChatBox.vue";
+import ConversationBox from "../components/items/chat/ConversationBox.vue";
+import GroupConversationBox from "../components/items/chat/GroupConversationBox.vue";
+import ChatBox from "../components/items/chat/ChatBox.vue";
 
 import { useUserStore } from "../stores/user";
 import { PlusCircleIcon } from "@heroicons/vue/24/outline";

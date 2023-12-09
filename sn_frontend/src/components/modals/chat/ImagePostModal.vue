@@ -234,9 +234,9 @@ import {
   ArrowRightCircleIcon,
 } from "@heroicons/vue/24/outline";
 
-import { useUserStore } from "../../stores/user";
-import { useToastStore } from "../../stores/toast";
-import CommentItem from "../items/CommentItem.vue";
+import { useUserStore } from "../../../stores/user";
+import { useToastStore } from "../../../stores/toast";
+import CommentItem from "../../items/post/CommentItem.vue";
 
 export default (await import("vue")).defineComponent({
   setup() {

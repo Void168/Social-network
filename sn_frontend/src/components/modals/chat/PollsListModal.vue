@@ -131,8 +131,8 @@
 
 <script>
 import axios from "axios";
-import { useToastStore } from "../../stores/toast";
-import { useUserStore } from "../../stores/user";
+import { useToastStore } from "../../../stores/toast";
+import { useUserStore } from "../../../stores/user";
 
 import {
   TransitionRoot,
@@ -142,10 +142,10 @@ import {
   DialogTitle,
 } from "@headlessui/vue";
 import { XMarkIcon, TrashIcon } from "@heroicons/vue/24/outline";
-import themes from "../../data/themes";
+import themes from "../../../data/themes";
 
-import PollVote from "../forms/PollVote.vue";
-import DeletePollModal from "../modals/DeletePollModal.vue";
+import PollVote from "../../forms/PollVote.vue";
+import DeletePollModal from "./DeletePollModal.vue";
 
 export default (await import("vue")).defineComponent({
   components: {

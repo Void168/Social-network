@@ -585,13 +585,13 @@ import {
 } from "@heroicons/vue/24/outline";
 import { CheckIcon, ChevronUpDownIcon } from "@heroicons/vue/20/solid";
 import getUserInfo from "../api/getUserInfo";
-import DeleteRelationshipModal from "../components/modals/DeleteRelationship.vue";
+import DeleteRelationshipModal from "../components/modals/profile/DeleteRelationship.vue";
 import SelectCountryForm from "../components/forms/SelectCountryForm.vue";
 import SelectCityForm from "../components/forms/SelectCityForm.vue";
 import SelectStateForm from "../components/forms/SelectStateForm.vue";
 import GenderSelector from "../components/dropdown/GenderSelector.vue";
-import WebsiteItem from "../components/items/WebsiteItem.vue";
-import PhoneNumberItem from "../components/items/PhoneNumberItem.vue";
+import WebsiteItem from "../components/items/profile/WebsiteItem.vue";
+import PhoneNumberItem from "../components/items/profile/PhoneNumberItem.vue";
 import { RouterLink } from "vue-router";
 
 export default (await import("vue")).defineComponent({

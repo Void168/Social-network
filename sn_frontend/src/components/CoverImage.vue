@@ -12,7 +12,7 @@
 </template>
 <script>
 import { useUserStore } from "../stores/user";
-import CoverImageModal from "./modals/CoverImageModal.vue";
+import CoverImageModal from "./modals/profile/CoverImageModal.vue";
 
 export default {
   setup() {

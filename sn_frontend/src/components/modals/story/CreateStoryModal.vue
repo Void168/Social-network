@@ -63,7 +63,7 @@
                       <textarea
                         v-model="body"
                         @keyup="getContent"
-                        class="w-full py-2 pl-4 pr-8 bg-gray-100 border rounded-xl resize-none overflow-auto scrollbar-corner-slate-200 scrollbar-thin scrollbar-thumb-slate-400 scrollbar-track-slate-800"
+                        class="w-full py-2 pl-4 pr-8 bg-gray-100 border rounded-lg resize-none overflow-auto scrollbar-corner-slate-200 scrollbar-thin scrollbar-thumb-slate-400 scrollbar-track-slate-800"
                         name=""
                         id=""
                         :rows="6"
@@ -93,15 +93,30 @@
                       </div>
                     </div>
                   </div>
-                  <div
-                    v-if="url"
-                    class="p-4 flex gap-3 items-center font-semibold hover:bg-slate-700 rounded-lg mx-4 cursor-pointer"
-                  >
-                    <span
-                      class="rounded-full bg-slate-600 p-1 w-12 h-12 flex items-center justify-center text-xl"
-                      >Aa</span
+                  <div v-if="url" class="flex flex-col space-y-4">
+                    <div
+                      class="p-4 flex gap-3 items-center font-semibold hover:bg-slate-700 rounded-lg mx-4 cursor-pointer"
                     >
-                    <p class="text-xl">Thêm văn bản</p>
+                      <span
+                        class="rounded-full bg-slate-600 p-1 w-12 h-12 flex items-center justify-center text-xl"
+                        >Aa</span
+                      >
+                      <p class="text-xl">Thêm văn bản</p>
+                    </div>
+                    <div class="p-4 flex flex-col gap-3 items-start font-semibold">
+                      <label for="title" class="text-xl">
+                        Tiêu đề
+                      </label>
+                      <textarea
+                        v-model="imageTitle"
+                        class="w-full py-2 pl-4 pr-8 bg-gray-100 border rounded-lg resize-none overflow-auto scrollbar-corner-slate-200 scrollbar-thin scrollbar-thumb-slate-400 scrollbar-track-slate-800"
+                        name="title"
+                        id="title"
+                        :rows="3"
+                        cols="30"
+                        placeholder="Nhập tiêu đề"
+                      ></textarea>
+                    </div>
                   </div>
                 </div>
                 <div class="my-4 px-6 flex gap-2" v-if="isTextStory || url">
@@ -120,7 +135,9 @@
               </div>
               <div
                 class="col-span-4 flex items-center gap-6 py-12"
-                :class="isTextStory || url ? 'justify-evenly' : 'justify-center'"
+                :class="
+                  isTextStory || url ? 'justify-evenly' : 'justify-center'
+                "
               >
                 <div
                   v-if="!isTextStory && !url"
@@ -203,7 +220,7 @@
                       <img
                         :src="url"
                         alt="story-url"
-                        class="rounded-none w-full cursor-pointer"
+                        class="rounded-none w-full cursor-pointer shadow-none"
                         :class="deg"
                         :style="{ scale: zoom + value / 50 }"
                         ref="myImage"
@@ -213,7 +230,7 @@
                     <div
                       class="text-neutral-200 text-lg mt-4 flex items-center gap-3"
                     >
-                      <h3 v-if="!isRotate" class="px-2 py-1">
+                      <h3 v-if="!isRotate && url" class="px-2 py-1">
                         Chọn ảnh để cắt và xoay
                       </h3>
                       <div
@@ -250,7 +267,7 @@
 </template>
 
 <script>
-import { useUserStore } from "../../stores/user";
+import { useUserStore } from "../../../stores/user";
 import {
   TransitionRoot,
   TransitionChild,
@@ -264,9 +281,9 @@ import {
   PhotoIcon,
   ArrowPathIcon,
 } from "@heroicons/vue/24/solid";
-import ChooseFontStory from "../dropdown/ChooseFontStory.vue";
-import themes from "../../data/themes";
-import fonts from "../../data/fonts";
+import ChooseFontStory from "../../dropdown/ChooseFontStory.vue";
+import themes from "../../../data/themes";
+import fonts from "../../../data/fonts";
 import ColorThief from "../../../node_modules/colorthief/dist/color-thief.mjs";
 import Slider from "@vueform/slider";
 

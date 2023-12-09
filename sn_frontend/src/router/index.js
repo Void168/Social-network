@@ -14,6 +14,7 @@ import EditProfileView from '../views/EditProfileView.vue'
 import EditPasswordView from '../views/EditPasswordView.vue'
 import NotificationsView from '../views/NotificationsView.vue'
 import ConversationView from '../views/ConversationView.vue'
+import StoryView from '../views/StoryView.vue'
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
@@ -32,6 +33,11 @@ const router = createRouter({
       path: '/',
       name: 'feed',
       component: FeedView
+    },
+    {
+      path: '/stories',
+      name: 'story',
+      component: StoryView
     },
     {
       path: '/search',

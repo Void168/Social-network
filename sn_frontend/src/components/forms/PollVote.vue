@@ -55,7 +55,7 @@
 import axios from "axios";
 import themes from "../../data/themes";
 import { useUserStore } from "../../stores/user";
-import VotesListModal from "../modals/VotesListModal.vue";
+import VotesListModal from "../modals/chat/VotesListModal.vue";
 
 export default (await import("vue")).defineComponent({
   components: {

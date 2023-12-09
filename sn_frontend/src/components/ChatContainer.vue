@@ -75,10 +75,10 @@ import { useUserStore } from "../stores/user";
 import { useConnectionStore } from "../stores/connection";
 
 import { RouterLink } from "vue-router";
-import GroupConversationBox from "../components/items/GroupConversationBox.vue";
+import GroupConversationBox from "./items/chat/GroupConversationBox.vue";
 
-import ChatWindow from "../components/items/ChatWindow.vue";
-import ChatBubble from "../components/items/ChatBubble.vue";
+import ChatWindow from "./items/chat/ChatWindow.vue";
+import ChatBubble from "./items/chat/ChatBubble.vue";
 
 import {
   XMarkIcon,

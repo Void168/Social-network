@@ -172,7 +172,7 @@ import {
   LockClosedIcon,
 } from "@heroicons/vue/20/solid";
 
-import PrivacySelector from "../dropdown/PrivacySelector.vue";
+import PrivacySelector from "../../dropdown/PrivacySelector.vue";
 
 export default (await import("vue")).defineComponent({
   setup() {

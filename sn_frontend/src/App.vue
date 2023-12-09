@@ -1,6 +1,7 @@
 <template>
   <div class="relative">
     <nav
+      v-if="path !== '/stories'"
       class="py-10 px-8 border-b border-gray-200 bg-gray-100 dark:bg-slate-700 dark:border-slate-800 dark:text-neutral-200 shadow-lg sticky w-full z-10 top-0"
     >
       <div class="max-w-7xl mx-auto">
@@ -103,7 +104,10 @@
       </div>
     </nav>
 
-    <main class="px-8 py-6 bg-gray-100 dark:bg-slate-700 min-h-screen">
+    <main
+      class="bg-gray-100 dark:bg-slate-700"
+      :class="path === '/stories' ? 'h-screen p-0' : 'min-h-screen px-8 py-6'"
+    >
       <RouterView />
     </main>
 
@@ -118,6 +122,8 @@ import { useNotificationStore } from "./stores/notification";
 import { useUnseenConversationsStore } from "./stores/conversations";
 import { useConnectionStore } from "./stores/connection";
 import { socket } from "./socket";
+import { useRoute } from "vue-router";
+import { computed } from "vue";
 
 import axios from "axios";
 import { RouterLink } from "vue-router";
@@ -135,6 +141,9 @@ export default {
     const isDark = useDark();
     const toggleDark = useToggle(isDark);
     const enabled = ref(false);
+    const route = useRoute();
+
+    const path = computed(() => route.path);
 
     return {
       connectionStore,
@@ -144,6 +153,7 @@ export default {
       toggleDark,
       isDark,
       enabled,
+      path,
     };
   },
 
@@ -158,7 +168,7 @@ export default {
     return {
       navbarHeight: null,
       screenHeight: null,
-    }
+    };
   },
 
   beforeCreate() {

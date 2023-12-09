@@ -120,7 +120,7 @@
               </div>
               <div
                 class="col-span-4 flex items-center gap-6 py-12"
-                :class="isTextStory ? 'justify-evenly' : 'justify-center'"
+                :class="isTextStory || url ? 'justify-evenly' : 'justify-center'"
               >
                 <div
                   v-if="!isTextStory && !url"
@@ -163,7 +163,7 @@
                   </h4>
                 </div>
                 <h3
-                  v-if="isTextStory"
+                  v-if="isTextStory || url"
                   class="dark:text-neutral-200 font-semibold text-lg"
                 >
                   Xem trước
@@ -182,7 +182,7 @@
                         selectedTheme.background,
                         body ? 'text-neutral-200' : 'text-neutral-200/60',
                       ]"
-                      class="h-full bg-emerald-500 w-[50%] rounded-xl flex justify-center items-center text-2xl font-semibold"
+                      class="h-full bg-emerald-500 w-[50%] border-4 rounded-xl flex justify-center items-center text-2xl font-semibold"
                     >
                       <p
                         class="break-words w-full text-center px-12"
@@ -193,19 +193,22 @@
                     </div>
                     <div
                       v-else
-                      class="h-full w-[50%] border rounded-xl flex justify-center items-center text-2xl font-semibold text-neutral-200/50"
-                      :style="{ backgroundColor: color }"
+                      class="h-full w-[50%] flex justify-center items-center text-2xl font-semibold text-neutral-200/50"
+                      :style="{
+                        backgroundColor: color,
+                        maskImage: `url(${url})`,
+                        WebkitMaskImage: `url(${url})`,
+                      }"
                     >
-                      <div>
-                        <img
-                          :src="url"
-                          alt="story-url"
-                          class="rounded-none w-full cursor-pointer"
-                          :class="deg"
-                          ref="myImage"
-                          @click="editImage"
-                        />
-                      </div>
+                      <img
+                        :src="url"
+                        alt="story-url"
+                        class="rounded-none w-full cursor-pointer"
+                        :class="deg"
+                        :style="{ scale: zoom + value / 50 }"
+                        ref="myImage"
+                        @click="editImage"
+                      />
                     </div>
                     <div
                       class="text-neutral-200 text-lg mt-4 flex items-center gap-3"
@@ -221,9 +224,8 @@
                         <Slider
                           v-model="value"
                           class="w-96 h-1"
-                          @slide="getValue(value)"
-                          :tooltips=false
-                          
+                          @set="getValue"
+                          :tooltips="true"
                         />
                         <span>+</span>
                       </div>
@@ -306,7 +308,8 @@ export default (await import("vue")).defineComponent({
       selectedTheme: {},
       deg: null,
       toggle: 0,
-      value: 20,
+      value: 25,
+      zoom: 0.5,
     };
   },
 
@@ -366,8 +369,10 @@ export default (await import("vue")).defineComponent({
         this.deg = "rotate-0";
       }
     },
-    getValue(value) {
-      console.log(value);
+    getValue() {
+      // console.log(this.value);
+      const element = document.querySelector("#slider-tooltip-top");
+      console.log(element);
     },
     removeAll() {
       this.url = null;

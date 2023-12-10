@@ -1,4 +1,4 @@
-@import url('https://fonts.googleapis.com/css2?family=Comfortaa:wght@500&family=Dancing+Script&family=Kanit:wght@300&family=Oswald&display=swap');
+@import url("https://fonts.googleapis.com/css2?family=Comfortaa:wght@500&family=Dancing+Script&family=Kanit:wght@300&family=Oswald&display=swap");
 
 @tailwind base;
 @tailwind components;
@@ -21,22 +21,25 @@
   }
 
   textarea {
-    @apply dark:bg-slate-800 dark:border-slate-700 dark:text-neutral-200
+    @apply dark:bg-slate-800 dark:border-slate-700 dark:text-neutral-200;
   }
 
-  .detail-story > .swiper-wrapper{
-    @apply !items-center !justify-center
+  .detail-story > .swiper-wrapper {
+    @apply !items-center !justify-center;
   }
-  .detail-story > .swiper-wrapper > .swiper-slide{
-    @apply !flex !items-center !justify-center
+  .detail-story > .swiper-wrapper > .swiper-slide {
+    @apply !flex !items-center !justify-center;
   }
-  .swiper-pagination{
-    @apply !flex !top-2 !px-2
+  .swiper-pagination {
+    @apply !flex !top-2 !px-2 before:content-[''] before:flex before:absolute before:gap-2 before:h-[6px] before:px-4;
   }
-  .swiper-pagination-bullet{
-    @apply !bg-white !opacity-70 !rounded-2xl !w-full !h-[6px]
+  .swiper-pagination > .swiper-pagination-bullet {
+    @apply !flex;
   }
-  .swiper-pagination-bullet-active{
-    @apply !bg-white !opacity-100 !rounded-2xl
+  .swiper-pagination-bullet {
+    @apply !relative !opacity-70 !rounded-2xl !w-full !h-[6px] ;
+  }
+  .swiper-pagination-bullet-active {
+    @apply !bg-white !opacity-70 !rounded-2xl;
   }
 }

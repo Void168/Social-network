@@ -19,10 +19,22 @@
           </div>
         </div>
         <div class="flex gap-2 items-center">
-          <PauseIcon class="w-6 h-6 cursor-pointer" @click="pause" v-if="!isPause"/>
-          <PlayIcon class="w-6 h-6 cursor-pointer" @click="pause" v-else/>
-          <SpeakerWaveIcon class="w-6 h-6 cursor-pointer" @click="mute" v-if="!isMute"/>
-          <SpeakerXMarkIcon class="w-6 h-6 cursor-pointer" @click="mute" v-else/>
+          <PauseIcon
+            class="w-6 h-6 cursor-pointer"
+            @click="pause"
+            v-if="!isPause"
+          />
+          <PlayIcon class="w-6 h-6 cursor-pointer" @click="pause" v-else />
+          <SpeakerWaveIcon
+            class="w-6 h-6 cursor-pointer"
+            @click="mute"
+            v-if="!isMute"
+          />
+          <SpeakerXMarkIcon
+            class="w-6 h-6 cursor-pointer"
+            @click="mute"
+            v-else
+          />
           <EllipsisHorizontalIcon class="w-8 h-8 cursor-pointer" />
         </div>
       </div>
@@ -32,7 +44,7 @@
         :centerInsufficientSlides="true"
         :centeredSlidesBounds="true"
         :keyboard="true"
-        :space-between="20"
+        :space-between="0"
         :setWrapperSize="true"
         :autoplay="{
           stopOnLastSlide: true,
@@ -41,6 +53,7 @@
         :pagination="{
           clickable: false,
         }"
+        :watchSlidesProgress="true"
         :modules="modules"
         containerModifierClass="swiper-wrapper"
         bulletActiveClass="swiper-pagination-bullet-active"
@@ -54,7 +67,7 @@
             class="rounded-none"
             alt="img-story"
         /></SwiperSlide>
-        <SwiperSlide data-swiper-autoplay="3000"
+        <SwiperSlide data-swiper-autoplay="5000"
           ><img
             src="https://assets.catawiki.nl/assets/2017/10/29/1/8/4/184748d5-042b-4c98-ad28-1305006e9499.jpg"
             class="rounded-none"
@@ -66,7 +79,11 @@
             class="rounded-none"
             alt="img-story"
         /></SwiperSlide>
-        <SwiperStoryContainerButton />
+        <SwiperStoryContainerButton
+          @prev="prev"
+          @next="next"
+          :activeSlide="activeSlide"
+        />
       </Swiper>
     </div>
   </div>
@@ -88,6 +105,7 @@ import SwiperStoryContainerButton from "./SwiperStoryContainerButton.vue";
 
 import "swiper/css/pagination";
 import "swiper/css";
+
 export default (await import("vue")).defineComponent({
   components: {
     Swiper,
@@ -113,18 +131,110 @@ export default (await import("vue")).defineComponent({
     return {
       isPause: false,
       isMute: false,
+      isNext: false,
+      isPrev: false,
+      activeSlide: 0,
+      percentage: 0,
     };
   },
 
+  mounted() {
+    this.addProgressBar();
+  },
+
   methods: {
+    addProgressBar() {
+      const bulletList = document.querySelectorAll(".swiper-pagination-bullet");
+      bulletList.forEach((bullet) => {
+        const progress = document.createElement("span");
+        bullet.appendChild(progress);
+        progress.className = "progress";
+        progress.style.height = "6px";
+        progress.style.borderRadius = "16px";
+        progress.style.backgroundColor = "rgb(52, 211, 153)";
+      });
+      this.doProgress();
+    },
+    doProgress() {
+      const progressList = document.querySelectorAll(".progress");
+      const task = (i) => {
+        setTimeout(() => {
+          let interval = setInterval(() => {
+            if (this.percentage <= 100) {
+              this.percentage += 0.1;
+              progressList[i].style.width = `${this.percentage}%`;
+              // console.log(this.percentage)
+            } else {
+              this.activeSlide += 1;
+              console.log(this.activeSlide);
+              this.percentage = 0;
+              this.getNewUserStories();
+              clearInterval(interval);
+            }
+          }, 5);
+        }, 5200 * i);
+      };
+      for (let i = 0; i < progressList.length; i++) {
+        task(i);
+      }
+    },
+    next() {
+      this.isNext = true
+      const progressList = document.querySelectorAll(".progress");
+      if (this.activeSlide < progressList.length - 1) {
+        this.activeSlide +=1;
+        // this.percentage = 100;
+        if (this.activeSlide < progressList.length) {
+          progressList[this.activeSlide - 1].style.width = '100%';
+        }
+      }
+      
+      this.getNewUserStories()
+      
+    },
+    prev() {
+      const progressList = document.querySelectorAll(".progress");
+      if (this.activeSlide <= progressList.length) {
+        this.activeSlide--;
+        this.percentage = 0;
+        this.percentage += 0.1;
+        this.doProgress();
+        progressList[this.activeSlide].style.backgroundColor = "white";
+        console.log(this.activeSlide);
+      } else {
+        console.log("hello");
+        console.log(this.activeSlide);
+        console.log(this.percentage);
+      }
+    },
+
     pause() {
       this.isPause = !this.isPause;
-      console.log(this.isPause)
+      console.log(this.isPause);
     },
     mute() {
       this.isMute = !this.isMute;
-      console.log(this.isMute)
+      console.log(this.isMute);
+    },
+
+    getNewUserStories() {
+      const progressList = document.querySelectorAll(".progress");
+      if (progressList.length === this.activeSlide) {
+        console.log("load new user's stories");
+        this.activeSlide = 0;
+        this.percentage = 0;
+        for (let i = 0; i < progressList.length; i++) {
+          progressList[i].style.width = `${this.percentage}%`;
+        }
+        this.doProgress();
+      }
     },
   },
 });
 </script>
+
+<style>
+.swiper-pagination-bullet {
+  background-color: rgb(255, 255, 255);
+}
+</style>

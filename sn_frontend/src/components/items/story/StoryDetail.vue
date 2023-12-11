@@ -39,11 +39,13 @@
         </div>
       </div>
       <Swiper
+        @swiper="onSwiper"
         class="detail-story h-full"
         :centeredSlides="true"
         :centerInsufficientSlides="true"
         :centeredSlidesBounds="true"
         :keyboard="true"
+        :watchSlidesProgress="true"
         :space-between="0"
         :setWrapperSize="true"
         :autoplay="{
@@ -53,7 +55,6 @@
         :pagination="{
           clickable: false,
         }"
-        :watchSlidesProgress="true"
         :modules="modules"
         containerModifierClass="swiper-wrapper"
         bulletActiveClass="swiper-pagination-bullet-active"
@@ -61,19 +62,19 @@
         modifierClass="swiper-pagination"
         slideClass="swiper-slide"
       >
-        <SwiperSlide data-swiper-autoplay="5000"
+        <SwiperSlide data-swiper-autoplay="3000"
           ><img
             :src="userStore.user.avatar"
             class="rounded-none"
             alt="img-story"
         /></SwiperSlide>
-        <SwiperSlide data-swiper-autoplay="5000"
+        <SwiperSlide data-swiper-autoplay="3000"
           ><img
             src="https://assets.catawiki.nl/assets/2017/10/29/1/8/4/184748d5-042b-4c98-ad28-1305006e9499.jpg"
             class="rounded-none"
             alt="img-story"
         /></SwiperSlide>
-        <SwiperSlide data-swiper-autoplay="5000"
+        <SwiperSlide data-swiper-autoplay="3000"
           ><img
             :src="userStore.user.avatar"
             class="rounded-none"
@@ -138,79 +139,112 @@ export default (await import("vue")).defineComponent({
     };
   },
 
+  watch: {
+    isPause(newVal, oldVal) {
+      if (newVal) {
+        this.doProgress();
+      }
+    },
+    isNext(newVal, oldVal) {
+      return newVal;
+    },
+  },
+
   mounted() {
-    this.addProgressBar();
+    this.doProgress();
+  },
+
+  updated() {
+    this.onSwiper()
   },
 
   methods: {
-    addProgressBar() {
+    onSwiper(sw) {
+      this.swiper = sw;
+    },
+    doProgress() {
       const bulletList = document.querySelectorAll(".swiper-pagination-bullet");
       bulletList.forEach((bullet) => {
         const progress = document.createElement("span");
         bullet.appendChild(progress);
         progress.className = "progress";
-        progress.style.height = "6px";
-        progress.style.borderRadius = "16px";
-        progress.style.backgroundColor = "rgb(52, 211, 153)";
       });
-      this.doProgress();
-    },
-    doProgress() {
+
       const progressList = document.querySelectorAll(".progress");
-      const task = (i) => {
-        setTimeout(() => {
-          let interval = setInterval(() => {
-            if (this.percentage <= 100) {
-              this.percentage += 0.1;
-              progressList[i].style.width = `${this.percentage}%`;
-              // console.log(this.percentage)
-            } else {
-              this.activeSlide += 1;
-              console.log(this.activeSlide);
+      for (let i = this.swiper.activeIndex; i < progressList.length; i++) {
+        const timeout = () => {
+          setTimeout(() => {
+            let interval = setInterval(() => {
+              if (!this.isPause) {
+                if (
+                  this.percentage <= 100 &&
+                  this.swiper.activeIndex < progressList.length || this.swiper.activeIndex === 0
+                ) {
+                  this.percentage += 2;
+                  progressList[i].style.width = `${this.percentage}%`;
+                  this.activeSlide = this.swiper.activeIndex;
+                  // console.log(this.percentage);
+                } else {
+                  this.percentage = 0;
+                  clearInterval(interval);
+                }
+              }
+            }, 60);
+            if(this.isPrev){
               this.percentage = 0;
-              this.getNewUserStories();
               clearInterval(interval);
             }
-          }, 5);
-        }, 5200 * i);
-      };
-      for (let i = 0; i < progressList.length; i++) {
-        task(i);
+          }, 3200 * i);
+        };
+        if (this.isPause) {
+          clearTimeout(timeout);
+        } else {
+          timeout();
+        }
       }
     },
     next() {
-      this.isNext = true
+      this.isNext = true;
+      // console.log(this.swiper.activeIndex)
       const progressList = document.querySelectorAll(".progress");
-      if (this.activeSlide < progressList.length - 1) {
-        this.activeSlide +=1;
-        // this.percentage = 100;
-        if (this.activeSlide < progressList.length) {
-          progressList[this.activeSlide - 1].style.width = '100%';
+      // this.percentage = 100;
+      if (this.swiper.activeIndex < progressList.length - 1) {
+        if (this.swiper.activeIndex < progressList.length) {
+          progressList[this.swiper.activeIndex].style.width = "100%";
         }
+      } else {
+        this.getNewUserStories();
       }
-      
-      this.getNewUserStories()
-      
     },
     prev() {
+      this.isPrev = true;
       const progressList = document.querySelectorAll(".progress");
-      if (this.activeSlide <= progressList.length) {
-        this.activeSlide--;
-        this.percentage = 0;
-        this.percentage += 0.1;
-        this.doProgress();
-        progressList[this.activeSlide].style.backgroundColor = "white";
-        console.log(this.activeSlide);
+      console.log(this.swiper.activeIndex)
+      if (this.swiper.activeIndex >= 0) {
+        // this.percentage = 0;
+        if (this.swiper.activeIndex < progressList.length) {
+          // progressList[
+          //   this.swiper.activeIndex - 1
+          // ].style.width = `${this.percentage}%`;
+          progressList[this.swiper.activeIndex].style.width = "0%";
+          // this.doProgress();
+        }
       } else {
-        console.log("hello");
-        console.log(this.activeSlide);
-        console.log(this.percentage);
+        this.getNewUserStories();
       }
+      setTimeout(() => {
+        this.isPrev = false;
+      }, 100);
     },
 
     pause() {
       this.isPause = !this.isPause;
-      console.log(this.isPause);
+      if (this.isPause) {
+        this.swiper.autoplay.pause();
+        console.log(this.swiper);
+      } else {
+        this.swiper.autoplay.resume();
+      }
     },
     mute() {
       this.isMute = !this.isMute;
@@ -219,14 +253,17 @@ export default (await import("vue")).defineComponent({
 
     getNewUserStories() {
       const progressList = document.querySelectorAll(".progress");
-      if (progressList.length === this.activeSlide) {
+      if (progressList.length - 1 === this.swiper.activeIndex) {
         console.log("load new user's stories");
-        this.activeSlide = 0;
+        console.log(this.swiper.activeIndex);
+        this.swiper.activeIndex = 0;
         this.percentage = 0;
         for (let i = 0; i < progressList.length; i++) {
           progressList[i].style.width = `${this.percentage}%`;
         }
         this.doProgress();
+      } else {
+        console.log("hello");
       }
     },
   },

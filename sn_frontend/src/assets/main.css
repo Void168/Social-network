@@ -42,4 +42,7 @@
   .swiper-pagination-bullet-active {
     @apply !bg-white !opacity-70 !rounded-2xl;
   }
+  .progress{
+    @apply h-[6px] rounded-2xl bg-emerald-400
+  }
 }

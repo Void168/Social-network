@@ -66,6 +66,7 @@ INSTALLED_APPS = [
     'chat',
     'notification',
     'information',
+    'story',
     'rest_framework',
     'rest_framework_simplejwt',
     'channels',

@@ -5,6 +5,23 @@ from django.db import models
 from account.models import User
 from django.utils.timesince import timesince
 # Create your models here.
+class StoryAttachment(models.Model):
+    id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
+    image = models.ImageField(upload_to='story_attachments_image', null=True)
+    video = models.FileField(upload_to='story_attachments_video', null=True)
+    created_by = models.ForeignKey(User, related_name='story_attachments', on_delete=models.CASCADE)
+    
+    def get_image(self):
+        if self.image:
+            return 'http://127.0.0.1:8000' + self.image.url
+        else:
+            return ''
+    def get_video(self):
+        if self.video:
+            return 'http://127.0.0.1:8000' + self.video.url
+        else:
+            return ''
+
 class TextStory(models.Model):
     id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
     body = models.TextField(blank=True)

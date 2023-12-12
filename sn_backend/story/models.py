@@ -23,6 +23,29 @@ class StoryAttachment(models.Model):
         else:
             return ''
 
+class ReactStory(models.Model):
+    LIKE = 'like'
+    HEART = 'heart'
+    LOVE = 'love'
+    LAUGH = 'laugh'
+    SUPRISE = 'suprise'
+    SAD = 'sad'
+    ANGRY = 'angry'
+    
+    CHOICES_TYPE_OF_REACT = (
+        (LIKE, 'Like story'),
+        (HEART, 'Heart story'),
+        (LOVE, 'Love story'),
+        (LAUGH, 'Laugh story'),
+        (SUPRISE, 'Suprise story'),
+        (SAD, 'Sad story'),
+        (ANGRY, 'Angry story'),
+    )
+    
+    id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
+    type_of_react = models.CharField(choices=CHOICES_TYPE_OF_REACT, max_length=50)
+    created_by = models.ForeignKey(User, related_name="created_react_story", on_delete=models.CASCADE)
+
 class TextStory(models.Model):
     id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
     body = models.TextField(blank=True)
@@ -37,6 +60,7 @@ class TextStory(models.Model):
     is_private = models.BooleanField(default=False)
     only_me = models.BooleanField(default=False)
     
+    react_by = models.ManyToManyField(ReactStory, related_name='react_text_story')
     seen_by = models.ManyToManyField(User, related_name='seen_text_story')
     seen_count = models.IntegerField(default=0)
     
@@ -58,6 +82,7 @@ class MediaStory(models.Model):
     is_private = models.BooleanField(default=False)
     only_me = models.BooleanField(default=False)
     
+    react_by = models.ManyToManyField(ReactStory, related_name='react_media_story')
     seen_by = models.ManyToManyField(User, related_name='seen_media_story')
     seen_count = models.IntegerField(default=0)
     

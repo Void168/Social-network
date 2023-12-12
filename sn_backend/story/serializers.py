@@ -29,16 +29,16 @@ class MediaStorySerializer(serializers.ModelSerializer):
 
 class TextStoryDetailSerializer(serializers.ModelSerializer):
     created_by = UserSerializer(read_only=True)
-    react_by = UserSerializer(read_only=True, many=True)
+    reacted_by = UserSerializer(read_only=True, many=True)
     class Meta:
         model = TextStory
-        fields = ('id', 'body', 'font', 'is_private', 'only_me', 'theme', 'seen_count', 'seen_by', 'created_by', 'created_at_formatted','duaration',)  
+        fields = ('id', 'body', 'font', 'is_private', 'only_me', 'theme', 'seen_count', 'seen_by', 'created_by', 'created_at_formatted','duaration', 'reacted_by',)  
 
 class MediaStoryDetailSerializer(serializers.ModelSerializer):
     created_by = UserSerializer(read_only=True)
     attachments = StoryAttachmentSerializer(read_only=True, many=True)
-    react_by = UserSerializer(read_only=True, many=True)
+    reacted_by = UserSerializer(read_only=True, many=True)
     seen_by = UserSerializer(read_only=True, many=True)
     class Meta:
         model = TextStory
-        fields = ('id', 'caption', 'attachments', 'font', 'theme', 'created_by', 'created_at_formatted', 'duaration', 'is_private', 'only_me', 'react_by', 'seen_by', 'seen_count')
+        fields = ('id', 'caption', 'attachments', 'font', 'theme', 'created_by', 'created_at_formatted', 'duaration', 'is_private', 'only_me', 'reacted_by', 'seen_by', 'seen_count')

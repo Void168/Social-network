@@ -60,7 +60,7 @@ class TextStory(models.Model):
     is_private = models.BooleanField(default=False)
     only_me = models.BooleanField(default=False)
     
-    react_by = models.ManyToManyField(ReactStory, related_name='react_text_story')
+    reacted_by = models.ManyToManyField(ReactStory, related_name='react_text_story')
     seen_by = models.ManyToManyField(User, related_name='seen_text_story')
     seen_count = models.IntegerField(default=0)
     
@@ -82,7 +82,7 @@ class MediaStory(models.Model):
     is_private = models.BooleanField(default=False)
     only_me = models.BooleanField(default=False)
     
-    react_by = models.ManyToManyField(ReactStory, related_name='react_media_story')
+    reacted_by = models.ManyToManyField(ReactStory, related_name='react_media_story')
     seen_by = models.ManyToManyField(User, related_name='seen_media_story')
     seen_count = models.IntegerField(default=0)
     

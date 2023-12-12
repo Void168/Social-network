@@ -14,6 +14,7 @@ class LikeSerializer(serializers.ModelSerializer):
     class Meta:
         model = Like
         fields = ('id', 'created_by',)
+        
 class CommentSerializer(serializers.ModelSerializer):
     created_by = UserSerializer(read_only=True)
     class Meta:

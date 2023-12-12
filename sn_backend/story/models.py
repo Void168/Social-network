@@ -33,13 +33,13 @@ class ReactStory(models.Model):
     ANGRY = 'angry'
     
     CHOICES_TYPE_OF_REACT = (
-        (LIKE, 'Like story'),
-        (HEART, 'Heart story'),
-        (LOVE, 'Love story'),
-        (LAUGH, 'Laugh story'),
-        (SUPRISE, 'Suprise story'),
-        (SAD, 'Sad story'),
-        (ANGRY, 'Angry story'),
+        (LIKE, 'Like react'),
+        (HEART, 'Heart react'),
+        (LOVE, 'Love react'),
+        (LAUGH, 'Laugh react'),
+        (SUPRISE, 'Suprise react'),
+        (SAD, 'Sad react'),
+        (ANGRY, 'Angry react'),
     )
     
     id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)

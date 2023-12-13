@@ -9,7 +9,7 @@ module.exports = {
     extend: {
       fontFamily: {
         title: ["Comfortaa", "sans-serif"],
-        style: ["Dancing Script", "cursive"],
+        style: ["Indie Flower", "cursive"],
         normal: ["Kanit", "sans-serif"],
         succinct: ["Oswald", "sans-serif"],
       },

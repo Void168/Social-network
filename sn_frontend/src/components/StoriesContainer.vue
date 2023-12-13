@@ -21,19 +21,39 @@
           </div>
         </div></SwiperSlide
       >
-      <SwiperSlide><Story /></SwiperSlide>
-      <SwiperSlide><Story /></SwiperSlide>
-      <SwiperSlide><Story /></SwiperSlide>
-      <SwiperSlide><Story /></SwiperSlide>
-      <SwiperSlide><Story /></SwiperSlide>
-      <SwiperSlide><Story /></SwiperSlide>
-      <SwiperSlide><Story /></SwiperSlide>
-      <SwiperSlide><Story /></SwiperSlide>
+      <SwiperSlide
+        ><div class="relative cursor-pointer rounded-lg group">
+          <RouterLink to="/stories">
+            <img
+              :src="userStore.user.avatar"
+              alt=""
+              class="absolute top-4 left-4 w-10 h-10 rounded-full ring-4 ring-emerald-400 z-20"
+            />
+            <div
+              class="relative h-[213px] flex items-center justify-center overflow-hidden shadow-sm rounded-lg cursor-pointer"
+            >
+              <div
+                alt="story-image"
+                class="h-full w-full group-hover:scale-105 group-hover:rounded-lg absolute z-10 bg-cover transition flex items-center justify-center"
+                :class="[selectedTheme?.background, selectedFont?.font]"
+              >
+                <span class="text-xs" :class="[selectedTheme?.textColor]">{{
+                  yourLastStory?.body
+                }}</span>
+              </div>
+            </div>
+          </RouterLink>
+        </div></SwiperSlide
+      >
+      <SwiperSlide v-for="story in exceptYourStoriesList" :key="story.id"
+        ><Story :story="story"
+      /></SwiperSlide>
       <SwiperStoryContainerButton />
     </Swiper>
     <CreateStoryModal
       :show="isOpen"
       :isTextStory="isTextStory"
+      :yourStories="yourStories"
       @closeModal="closeModal"
       @openTextStory="openTextStory"
       @closeTextStory="closeTextStory"
@@ -42,10 +62,13 @@
 </template>
 
 <script>
+import axios from "axios";
 import { useUserStore } from "../stores/user";
 import Story from "./items/story/Story.vue";
 import { PlusCircleIcon } from "@heroicons/vue/24/solid";
 import { Swiper, SwiperSlide } from "swiper/vue";
+import themes from "../data/themes";
+import fonts from "../data/fonts";
 
 import "swiper/css";
 
@@ -73,10 +96,51 @@ export default {
     return {
       isOpen: false,
       isTextStory: false,
+      yourStories: [],
+      themes: themes,
+      fonts: fonts,
     };
   },
 
+  computed: {
+    yourLastStory() {
+      return this.yourStories.filter(
+        (stories) => stories.created_by.id === this.userStore.user.id
+      )[0];
+    },
+    exceptYourStoriesList() {
+      return this.yourStories.filter(
+        (stories) => stories.created_by.id !== this.userStore.user.id
+      );
+    },
+    selectedTheme() {
+      return this.themes?.filter(
+        (theme) => theme.name === this.yourLastStory?.theme
+      )[0];
+    },
+    selectedFont() {
+      return this.fonts?.filter(
+        (font) => font.name === this.yourLastStory?.font
+      )[0];
+    },
+  },
+
+  mounted() {
+    this.getTextStories();
+  },
+
   methods: {
+    getTextStories() {
+      axios
+        .get("/api/story/text-stories/")
+        .then((res) => {
+          this.yourStories = res.data;
+          console.log(this.yourStories);
+        })
+        .catch((error) => {
+          console.log(error);
+        });
+    },
     openModal() {
       this.isOpen = true;
       this.isTextStory = false;
@@ -89,8 +153,8 @@ export default {
       this.isTextStory = true;
     },
     closeTextStory() {
-        this.isTextStory = false;
-    }
+      this.isTextStory = false;
+    },
   },
 };
 </script>

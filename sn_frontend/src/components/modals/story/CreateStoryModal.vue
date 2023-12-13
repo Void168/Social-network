@@ -60,37 +60,39 @@
                   </div>
                   <div v-if="isTextStory">
                     <div class="p-4">
-                      <textarea
-                        v-model="body"
-                        @keyup="getContent"
-                        class="w-full py-2 pl-4 pr-8 bg-gray-100 border rounded-lg resize-none overflow-auto scrollbar-corner-slate-200 scrollbar-thin scrollbar-thumb-slate-400 scrollbar-track-slate-800"
-                        name=""
-                        id=""
-                        :rows="6"
-                        cols="30"
-                        placeholder="Bắt đầu nhập"
-                      ></textarea>
-                      <ChooseFontStory
-                        class="w-full"
-                        :fonts="fonts"
-                        @getOption="getOption"
-                      />
-                      <div
-                        class="p-4 border mt-8 border-slate-700 rounded-lg h-48"
-                      >
-                        <h3 class="dark:text-neutral-200/70 text-lg">
-                          Phông nền
-                        </h3>
-                        <div class="flex flex-wrap gap-2 my-4 justify-center">
-                          <div v-for="theme in themes" :key="theme">
-                            <div
-                              @click="chooseTheme(theme)"
-                              class="w-12 h-12 rounded-full cursor-pointer"
-                              :class="[theme.background]"
-                            ></div>
+                      <form>
+                        <textarea
+                          v-model="body"
+                          @keyup="getContent"
+                          class="w-full py-2 pl-4 pr-8 bg-gray-100 border rounded-lg resize-none overflow-auto scrollbar-corner-slate-200 scrollbar-thin scrollbar-thumb-slate-400 scrollbar-track-slate-800"
+                          name=""
+                          id=""
+                          :rows="6"
+                          cols="30"
+                          placeholder="Bắt đầu nhập"
+                        ></textarea>
+                        <ChooseFontStory
+                          class="w-full"
+                          :fonts="fonts"
+                          @getOption="getOption"
+                        />
+                        <div
+                          class="p-2 border mt-8 border-slate-700 rounded-lg max-h-max"
+                        >
+                          <h3 class="dark:text-neutral-200/70 text-lg">
+                            Phông nền
+                          </h3>
+                          <div class="flex flex-wrap gap-2 my-4">
+                            <div v-for="theme in themes" :key="theme">
+                              <div
+                                @click="chooseTheme(theme)"
+                                class="w-12 h-12 rounded-full cursor-pointer"
+                                :class="[theme.background]"
+                              ></div>
+                            </div>
                           </div>
                         </div>
-                      </div>
+                      </form>
                     </div>
                   </div>
                   <div v-if="url" class="flex flex-col space-y-4">
@@ -103,10 +105,10 @@
                       >
                       <p class="text-xl">Thêm văn bản</p>
                     </div>
-                    <div class="p-4 flex flex-col gap-3 items-start font-semibold">
-                      <label for="title" class="text-xl">
-                        Tiêu đề
-                      </label>
+                    <div
+                      class="p-4 flex flex-col gap-3 items-start font-semibold"
+                    >
+                      <label for="title" class="text-xl"> Tiêu đề </label>
                       <textarea
                         v-model="imageTitle"
                         class="w-full py-2 pl-4 pr-8 bg-gray-100 border rounded-lg resize-none overflow-auto scrollbar-corner-slate-200 scrollbar-thin scrollbar-thumb-slate-400 scrollbar-track-slate-800"
@@ -127,6 +129,7 @@
                     <button @click="removeAll" class="w-full">Bỏ</button>
                   </div>
                   <button
+                    @click="submitForm"
                     class="w-[60%] dark:bg-emerald-500 hover:bg-emerald-400 py-2 px-4 shadow-md rounded-lg font-semibold"
                   >
                     Chia sẻ lên tin
@@ -267,7 +270,9 @@
 </template>
 
 <script>
+import axios from "axios";
 import { useUserStore } from "../../../stores/user";
+import { useToastStore } from "../../../stores/toast";
 import {
   TransitionRoot,
   TransitionChild,
@@ -303,14 +308,17 @@ export default (await import("vue")).defineComponent({
   },
   setup() {
     const userStore = useUserStore();
+    const toastStore = useToastStore()
 
     return {
       userStore,
+      toastStore
     };
   },
   props: {
     isOpen: Boolean,
     isTextStory: Boolean,
+    yourStories: Array
   },
 
   data() {
@@ -319,6 +327,8 @@ export default (await import("vue")).defineComponent({
       isRotate: false,
       body: "",
       url: null,
+      is_private: false,
+      only_me: false,
       color: null,
       fonts: fonts,
       selectedFont: {},
@@ -399,6 +409,44 @@ export default (await import("vue")).defineComponent({
       this.selectedFont = {};
       this.deg = "rotate-0";
       this.isRotate = false;
+    },
+    submitForm() {
+      if(this.isTextStory){
+        let formData = new FormData();
+
+        formData.append("body", this.body);
+        formData.append("is_private", this.is_private);
+        formData.append("only_me", this.only_me);
+        formData.append("theme", this.selectedTheme.name);
+        formData.append("font", this.selectedFont.name);
+
+        axios
+        .post("/api/story/create-text-story/", formData, {
+          headers: {
+            "Content-Type": "multipart/form-data",
+          },
+        })
+        .then((res) => {
+          this.yourStories.unshift(res.data);
+          this.body = "";
+          this.is_private = false;
+          this.only_me = false;
+          this.selectedFont = this.fonts[0]
+          this.selectedTheme = this.themes[0]
+
+          this.toastStore.showToast(
+            2000,
+            "Đã tạo tin",
+            "bg-emerald-500 text-white"
+          );
+          setTimeout(() => {
+            this.$router.go(0)
+          }, 2500)
+        })
+        .catch((error) => {
+          console.log("error", error);
+        });
+      }
     },
   },
 });

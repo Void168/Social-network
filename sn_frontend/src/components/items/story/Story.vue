@@ -2,7 +2,7 @@
   <div class="relative cursor-pointer rounded-lg group">
     <RouterLink to="/stories">
       <img
-        :src="userStore.user.avatar"
+        :src="story.created_by.get_avatar"
         alt=""
         class="absolute top-4 left-4 w-10 h-10 rounded-full ring-4 ring-emerald-400 z-20"
       />
@@ -11,8 +11,11 @@
       >
         <div
           alt="story-image"
-          class="h-full w-full group-hover:scale-105 group-hover:rounded-lg absolute z-10 bg-cover transition bg-[url('https://assets.catawiki.nl/assets/2017/10/29/1/8/4/184748d5-042b-4c98-ad28-1305006e9499.jpg')]"
-        />
+          class="flex justify-center items-center h-full w-full group-hover:scale-105 group-hover:rounded-lg absolute z-10 bg-cover transition"
+          :class="[selectedFont.font, selectedTheme.background]"
+        >
+          <span class="text-xs" :class="[selectedTheme.textColor]">{{ story?.body }}</span>
+        </div>
       </div>
     </RouterLink>
   </div>
@@ -21,6 +24,9 @@
 <script>
 import { useUserStore } from "../../../stores/user";
 import { RouterLink } from "vue-router";
+import themes from "../../../data/themes";
+import fonts from "../../../data/fonts";
+import { computed } from "vue";
 
 export default (await import("vue")).defineComponent({
   components: {
@@ -32,6 +38,28 @@ export default (await import("vue")).defineComponent({
     return {
       userStore,
     };
+  },
+
+  props: {
+    story: Object,
+  },
+
+  data() {
+    return {
+      themes: themes,
+      fonts: fonts,
+    };
+  },
+
+  computed: {
+    selectedTheme() {
+      return this.themes?.filter(
+        (theme) => theme.name === this.story?.theme
+      )[0];
+    },
+    selectedFont() {
+      return this.fonts?.filter((font) => font.name === this.story?.font)[0];
+    },
   },
 });
 </script>

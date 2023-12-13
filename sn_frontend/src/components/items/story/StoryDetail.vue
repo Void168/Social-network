@@ -5,16 +5,19 @@
     >
       <div
         class="flex items-center justify-between absolute top-4 w-full h-16 p-4 z-20"
+        :class="[selectedTheme?.textColor]"
       >
         <div class="flex gap-4 items-center">
           <img
-            :src="userStore.user.avatar"
+            :src="currentStoryStore?.currentStory[0]?.created_by?.get_avatar"
             alt=""
             class="rounded-full w-12 h-12"
           />
           <div class="flex gap-1 items-center">
             <span class="font-semibold text-lg">{{ userStore.user.name }}</span>
-            <span>3 giờ</span>
+            <span>{{
+              currentStoryStore?.currentStory[activeSlide]?.created_at_formatted
+            }}</span>
             <GlobeAsiaAustraliaIcon class="w-5 h-5" />
           </div>
         </div>
@@ -40,7 +43,8 @@
       </div>
       <Swiper
         @swiper="onSwiper"
-        class="detail-story h-full"
+        class="detail-story h-full w-full"
+        :class="[selectedTheme.background]"
         :centeredSlides="true"
         :centerInsufficientSlides="true"
         :centeredSlidesBounds="true"
@@ -62,24 +66,22 @@
         modifierClass="swiper-pagination"
         slideClass="swiper-slide"
       >
-        <SwiperSlide data-swiper-autoplay="3000"
+        <SwiperSlide
+          data-swiper-autoplay="3000"
+          v-for="story in currentStoryStore.currentStory"
+          :key="story.id"
           ><img
+            v-if="story.attachments"
             :src="userStore.user.avatar"
             class="rounded-none"
             alt="img-story"
-        /></SwiperSlide>
-        <SwiperSlide data-swiper-autoplay="3000"
-          ><img
-            src="https://assets.catawiki.nl/assets/2017/10/29/1/8/4/184748d5-042b-4c98-ad28-1305006e9499.jpg"
-            class="rounded-none"
-            alt="img-story"
-        /></SwiperSlide>
-        <SwiperSlide data-swiper-autoplay="3000"
-          ><img
-            :src="userStore.user.avatar"
-            class="rounded-none"
-            alt="img-story"
-        /></SwiperSlide>
+          />
+          <div v-else class="w-full flex justify-center items-center">
+            <span class="text-2xl" :class="[selectedFont?.font]">
+              {{ story.body }}
+            </span>
+          </div>
+        </SwiperSlide>
         <SwiperStoryContainerButton
           @prev="prev"
           @next="next"
@@ -93,6 +95,7 @@
 <script>
 import { Swiper, SwiperSlide } from "swiper/vue";
 import { useUserStore } from "../../../stores/user";
+import { useCurrentStoryStore } from "../../../stores/currentStory";
 import { Autoplay, Mousewheel, Keyboard, Pagination } from "swiper/modules";
 import {
   GlobeAsiaAustraliaIcon,
@@ -106,6 +109,8 @@ import SwiperStoryContainerButton from "./SwiperStoryContainerButton.vue";
 
 import "swiper/css/pagination";
 import "swiper/css";
+import themes from "../../../data/themes";
+import fonts from "../../../data/fonts";
 
 export default (await import("vue")).defineComponent({
   components: {
@@ -121,9 +126,10 @@ export default (await import("vue")).defineComponent({
   },
   setup() {
     const userStore = useUserStore();
-
+    const currentStoryStore = useCurrentStoryStore();
     return {
       userStore,
+      currentStoryStore,
       modules: [Autoplay, Mousewheel, Keyboard, Pagination],
     };
   },
@@ -136,6 +142,8 @@ export default (await import("vue")).defineComponent({
       isPrev: false,
       activeSlide: 0,
       percentage: 0,
+      themes: themes,
+      fonts: fonts,
     };
   },
 
@@ -150,12 +158,28 @@ export default (await import("vue")).defineComponent({
     },
   },
 
-  mounted() {
-    this.doProgress();
+  computed: {
+    selectedTheme() {
+      return this.themes?.filter(
+        (theme) =>
+          theme.name ===
+          this.currentStoryStore?.currentStory[this.activeSlide]?.theme
+      )[0];
+    },
+    selectedFont() {
+      return this.fonts?.filter(
+        (font) =>
+          font.name === this.currentStoryStore?.currentStory[this.activeSlide]?.font
+      )[0];
+    },
   },
 
-  updated() {
-    this.onSwiper()
+  beforeMount() {
+    this.onSwiper();
+  },
+
+  mounted() {
+    this.doProgress();
   },
 
   methods: {
@@ -177,8 +201,9 @@ export default (await import("vue")).defineComponent({
             let interval = setInterval(() => {
               if (!this.isPause) {
                 if (
-                  this.percentage <= 100 &&
-                  this.swiper.activeIndex < progressList.length || this.swiper.activeIndex === 0
+                  (this.percentage <= 100 &&
+                    this.swiper.activeIndex < progressList.length) ||
+                  this.swiper.activeIndex === 0
                 ) {
                   this.percentage += 2;
                   progressList[i].style.width = `${this.percentage}%`;
@@ -190,7 +215,7 @@ export default (await import("vue")).defineComponent({
                 }
               }
             }, 60);
-            if(this.isPrev){
+            if (this.isPrev) {
               this.percentage = 0;
               clearInterval(interval);
             }
@@ -219,7 +244,7 @@ export default (await import("vue")).defineComponent({
     prev() {
       this.isPrev = true;
       const progressList = document.querySelectorAll(".progress");
-      console.log(this.swiper.activeIndex)
+      console.log(this.swiper.activeIndex);
       if (this.swiper.activeIndex >= 0) {
         // this.percentage = 0;
         if (this.swiper.activeIndex < progressList.length) {

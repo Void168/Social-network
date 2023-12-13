@@ -30,6 +30,28 @@ def text_story_list(request):
     return JsonResponse(serializer.data, safe=False)
 
 @api_view(['GET'])
+def user_text_story_list(request, id):
+    user = User.objects.get(pk=id)
+    text_stories = TextStory.objects.filter(created_by_id=id)
+
+    if not request.user in user.friends.all():
+        text_stories = text_stories.filter(Q(is_private=False) & Q(only_me=False))
+    
+    if request.user in user.friends.all():
+        text_stories = text_stories.filter(only_me=False)
+        
+    if request.user == user:
+        text_stories = TextStory.objects.filter(created_by_id=id)
+    
+    text_stories.order_by('-created_at')
+        
+    text_stories_serializer = TextStoryDetailSerializer(text_stories, many=True)
+
+    return JsonResponse({
+        'stories': text_stories_serializer.data,
+    }, safe=False)
+    
+@api_view(['GET'])
 def media_story_list(request):
     user_ids = [request.user.id]
     current_user = request.user

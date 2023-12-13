@@ -82,6 +82,7 @@
 </template>
 
 <script>
+import { useCurrentStoryStore } from "../stores/currentStory";
 import { RouterLink } from "vue-router";
 import { XMarkIcon, PlusIcon } from "@heroicons/vue/24/solid";
 import StoryBox from "../components/items/story/StoryBox.vue";
@@ -99,7 +100,13 @@ export default {
     XMarkIcon,
     PlusIcon,
   },
+  setup() {
+    const currentStoryStore = useCurrentStoryStore()
 
+    return {
+      currentStoryStore
+    }
+  },
   data() {
     return {
       isCreateStoryOpen: false,

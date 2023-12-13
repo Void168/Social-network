@@ -1,42 +1,46 @@
 <template>
-  <div class="relative cursor-pointer rounded-lg group">
-    <RouterLink to="/stories">
-      <img
-        :src="story.created_by.get_avatar"
-        alt=""
-        class="absolute top-4 left-4 w-10 h-10 rounded-full ring-4 ring-emerald-400 z-20"
-      />
+  <div
+    class="relative cursor-pointer rounded-lg group"
+    @click="getUserStories(story.created_by.id)"
+  >
+    <img
+      :src="story.created_by.get_avatar"
+      alt=""
+      class="absolute top-4 left-4 w-10 h-10 rounded-full ring-4 ring-emerald-400 z-20"
+    />
+    <div
+      class="relative h-[213px] flex items-center justify-center overflow-hidden shadow-sm rounded-lg cursor-pointer"
+    >
       <div
-        class="relative h-[213px] flex items-center justify-center overflow-hidden shadow-sm rounded-lg cursor-pointer"
+        alt="story-image"
+        class="flex justify-center items-center h-full w-full group-hover:scale-105 group-hover:rounded-lg absolute z-10 bg-cover transition"
+        :class="[selectedFont?.font, selectedTheme?.background]"
       >
-        <div
-          alt="story-image"
-          class="flex justify-center items-center h-full w-full group-hover:scale-105 group-hover:rounded-lg absolute z-10 bg-cover transition"
-          :class="[selectedFont.font, selectedTheme.background]"
-        >
-          <span class="text-xs" :class="[selectedTheme.textColor]">{{ story?.body }}</span>
-        </div>
+        <span class="text-xs" :class="[selectedTheme?.textColor]">{{
+          story?.body
+        }}</span>
       </div>
-    </RouterLink>
+    </div>
   </div>
 </template>
 
 <script>
 import { useUserStore } from "../../../stores/user";
-import { RouterLink } from "vue-router";
+import { useCurrentStoryStore } from "../../../stores/currentStory";
+
+import axios from "axios";
+
 import themes from "../../../data/themes";
 import fonts from "../../../data/fonts";
-import { computed } from "vue";
 
 export default (await import("vue")).defineComponent({
-  components: {
-    RouterLink,
-  },
   setup() {
     const userStore = useUserStore();
+    const currentStoryStore = useCurrentStoryStore();
 
     return {
       userStore,
+      currentStoryStore,
     };
   },
 
@@ -59,6 +63,24 @@ export default (await import("vue")).defineComponent({
     },
     selectedFont() {
       return this.fonts?.filter((font) => font.name === this.story?.font)[0];
+    },
+  },
+
+  methods: {
+    getUserStories(userId) {
+      axios
+        .get(`/api/story/get-text-stories/${userId}`)
+        .then((res) => {
+          this.currentStoryStore.getCurrentUserStory(res.data.stories);
+          // console.log(res.data)
+
+          setTimeout(() => {
+            this.$router.push("/stories");
+          }, 200);
+        })
+        .catch((error) => {
+          console.log("error", error);
+        });
     },
   },
 });

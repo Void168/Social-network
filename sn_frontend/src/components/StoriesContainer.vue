@@ -21,9 +21,8 @@
           </div>
         </div></SwiperSlide
       >
-      <SwiperSlide
-        ><div class="relative cursor-pointer rounded-lg group">
-          <RouterLink to="/stories">
+      <SwiperSlide v-if="yourLastStory"
+        ><div class="relative cursor-pointer rounded-lg group" @click="getUserStories">
             <img
               :src="userStore.user.avatar"
               alt=""
@@ -42,12 +41,11 @@
                 }}</span>
               </div>
             </div>
-          </RouterLink>
         </div></SwiperSlide
       >
-      <SwiperSlide v-for="story in exceptYourStoriesList" :key="story.id"
-        ><Story :story="story"
-      /></SwiperSlide>
+      <SwiperSlide v-for="story in setStory" :key="story.id">
+        <Story :story="story[0]" />
+      </SwiperSlide>
       <SwiperStoryContainerButton />
     </Swiper>
     <CreateStoryModal
@@ -64,12 +62,14 @@
 <script>
 import axios from "axios";
 import { useUserStore } from "../stores/user";
+import { useCurrentStoryStore } from "../stores/currentStory";
 import Story from "./items/story/Story.vue";
-import { PlusCircleIcon } from "@heroicons/vue/24/solid";
 import { Swiper, SwiperSlide } from "swiper/vue";
-import themes from "../data/themes";
-import fonts from "../data/fonts";
 
+import { PlusCircleIcon } from "@heroicons/vue/24/solid";
+
+import fonts from "../data/fonts";
+import themes from "../data/themes";
 import "swiper/css";
 
 import SwiperStoryContainerButton from "./items/story/SwiperStoryContainerButton.vue";
@@ -86,9 +86,11 @@ export default {
   },
   setup() {
     const userStore = useUserStore();
+    const currentStoryStore = useCurrentStoryStore()
 
     return {
       userStore,
+      currentStoryStore
     };
   },
 
@@ -97,6 +99,7 @@ export default {
       isOpen: false,
       isTextStory: false,
       yourStories: [],
+      setStory: [],
       themes: themes,
       fonts: fonts,
     };
@@ -107,11 +110,6 @@ export default {
       return this.yourStories.filter(
         (stories) => stories.created_by.id === this.userStore.user.id
       )[0];
-    },
-    exceptYourStoriesList() {
-      return this.yourStories.filter(
-        (stories) => stories.created_by.id !== this.userStore.user.id
-      );
     },
     selectedTheme() {
       return this.themes?.filter(
@@ -135,10 +133,36 @@ export default {
         .get("/api/story/text-stories/")
         .then((res) => {
           this.yourStories = res.data;
-          console.log(this.yourStories);
+
+          this.getSetStories();
         })
         .catch((error) => {
           console.log(error);
+        });
+    },
+    getSetStories() {
+      const result = Object.groupBy(
+        this.yourStories.filter(
+          (story) => story.created_by.id !== this.userStore.user.id
+        ),
+        ({ created_by }) => created_by.id
+      );
+      this.setStory = result;
+      // console.log(this.setStory);
+    },
+    getUserStories() {
+      axios
+        .get(`/api/story/get-text-stories/${this.userStore.user.id}`)
+        .then((res) => {
+          this.currentStoryStore.getCurrentUserStory(res.data.stories);
+          // console.log(res.data)
+
+          setTimeout(() => {
+            this.$router.push("/stories");
+          }, 200);
+        })
+        .catch((error) => {
+          console.log("error", error);
         });
     },
     openModal() {

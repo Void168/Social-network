@@ -9,6 +9,7 @@ from django.utils.timesince import timesince
 class StoryAttachment(models.Model):
     id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
     image = models.ImageField(upload_to='story_attachments_image', null=True)
+    zoom_image = models.CharField(default='1', max_length=50)
     video = models.FileField(upload_to='story_attachments_video', null=True)
     created_by = models.ForeignKey(User, related_name='story_attachments', on_delete=models.CASCADE)
     
@@ -82,7 +83,7 @@ class MediaStory(models.Model):
     is_private = models.BooleanField(default=False)
     only_me = models.BooleanField(default=False)
     
-    reacted_by = models.ManyToManyField(ReactStory, related_name='react_media_story', null=True)
+    reacted_by = models.ManyToManyField(ReactStory, related_name='react_media_story')
     seen_by = models.ManyToManyField(User, related_name='seen_media_story')
     seen_count = models.IntegerField(default=0)
     

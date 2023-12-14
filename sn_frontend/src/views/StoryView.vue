@@ -41,12 +41,31 @@
             />
           </div>
         </div>
+        <div v-if="yourLastStory">
+          <div
+            class="flex gap-3 items-center p-4 hover:bg-slate-700 rounded-lg cursor-pointer"
+          >
+            <img
+              :src="userStore.user.avatar"
+              alt="story-owner"
+              class="w-16 h-16 rounded-full ring-4 ring-emerald-400"
+            />
+            <div class="flex flex-col space-y-2">
+              <h3 class="text-lg font-semibold">{{ userStore.user.name }}</h3>
+              <p class="flex gap-2">
+                <span class="text-emerald-400">{{ yourLastStory.length }} thẻ mới</span>
+                <span>{{ yourLastStory[0].created_at_formatted }}</span>
+              </p>
+            </div>
+          </div>
+        </div>
       </div>
       <div>
         <div class="">
           <h2 class="text-xl font-semibold ml-4">Tất cả tin</h2>
-          <div v-for="n in 10" :key="n">
-            <StoryBox />
+
+          <div v-for="story in setStory" :key="story.id">
+            <StoryBox :story="story" />
           </div>
         </div>
       </div>
@@ -82,6 +101,9 @@
 </template>
 
 <script>
+import axios from "axios";
+
+import { useUserStore } from "../stores/user";
 import { useCurrentStoryStore } from "../stores/currentStory";
 import { RouterLink } from "vue-router";
 import { XMarkIcon, PlusIcon } from "@heroicons/vue/24/solid";
@@ -101,18 +123,34 @@ export default {
     PlusIcon,
   },
   setup() {
-    const currentStoryStore = useCurrentStoryStore()
+    const currentStoryStore = useCurrentStoryStore();
+    const userStore = useUserStore();
 
     return {
-      currentStoryStore
-    }
+      currentStoryStore,
+      userStore,
+    };
   },
   data() {
     return {
       isCreateStoryOpen: false,
       isTextStory: false,
       emojiList: emojiStory,
+      yourStories: [],
+      setStory: [],
     };
+  },
+
+  computed: {
+    yourLastStory() {
+      return this.yourStories.filter(
+        (stories) => stories.created_by.id === this.userStore.user.id
+      );
+    },
+  },
+
+  mounted() {
+    this.getTextStories();
   },
 
   methods: {
@@ -129,6 +167,28 @@ export default {
     },
     closeTextStory() {
       this.isTextStory = false;
+    },
+    getTextStories() {
+      axios
+        .get("/api/story/text-stories/")
+        .then((res) => {
+          this.yourStories = res.data;
+
+          this.getSetStories();
+        })
+        .catch((error) => {
+          console.log(error);
+        });
+    },
+    getSetStories() {
+      const result = Object.groupBy(
+        this.yourStories.filter(
+          (story) => story.created_by.id !== this.userStore.user.id
+        ),
+        ({ created_by }) => created_by.id
+      );
+      this.setStory = result;
+      // console.log(this.setStory);
     },
   },
 };

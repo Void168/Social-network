@@ -14,7 +14,9 @@
             class="rounded-full w-12 h-12"
           />
           <div class="flex gap-1 items-center">
-            <span class="font-semibold text-lg">{{ userStore.user.name }}</span>
+            <span class="font-semibold text-lg">{{
+              currentStoryStore?.currentStory[activeSlide]?.created_by.name
+            }}</span>
             <span>{{
               currentStoryStore?.currentStory[activeSlide]?.created_at_formatted
             }}</span>
@@ -44,7 +46,7 @@
       <Swiper
         @swiper="onSwiper"
         class="detail-story h-full w-full"
-        :class="[selectedTheme.background]"
+        :class="[selectedTheme?.background]"
         :centeredSlides="true"
         :centerInsufficientSlides="true"
         :centeredSlidesBounds="true"
@@ -169,7 +171,8 @@ export default (await import("vue")).defineComponent({
     selectedFont() {
       return this.fonts?.filter(
         (font) =>
-          font.name === this.currentStoryStore?.currentStory[this.activeSlide]?.font
+          font.name ===
+          this.currentStoryStore?.currentStory[this.activeSlide]?.font
       )[0];
     },
   },

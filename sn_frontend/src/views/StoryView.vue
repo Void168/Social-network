@@ -41,9 +41,17 @@
             />
           </div>
         </div>
-        <div v-if="yourLastStory">
+        <div
+          v-if="yourLastStory"
+          @click="otherStory(yourLastStory[0]?.created_by.id)"
+        >
           <div
             class="flex gap-3 items-center p-4 hover:bg-slate-700 rounded-lg cursor-pointer"
+            :class="
+              !isOtherStory && isYourStory && !isFirstStory
+                ? 'bg-slate-700'
+                : ''
+            "
           >
             <img
               :src="userStore.user.avatar"
@@ -53,26 +61,79 @@
             <div class="flex flex-col space-y-2">
               <h3 class="text-lg font-semibold">{{ userStore.user.name }}</h3>
               <p class="flex gap-2">
-                <span class="text-emerald-400">{{ yourLastStory.length }} thẻ mới</span>
-                <span>{{ yourLastStory[0].created_at_formatted }}</span>
+                <span class="text-emerald-400"
+                  >{{ yourLastStory.length }} thẻ mới</span
+                >
+                <span>{{ yourLastStory[0]?.created_at_formatted }}</span>
               </p>
             </div>
           </div>
         </div>
       </div>
       <div>
-        <div class="">
-          <h2 class="text-xl font-semibold ml-4">Tất cả tin</h2>
-
+        <h2 class="text-xl font-semibold ml-4">Tất cả tin</h2>
+        <div class="my-2">
+          <div @click="firstStory">
+            <div
+              @click="
+                otherStory(currentStoryStore?.currentStory[0]?.created_by.id)
+              "
+              v-if="
+                currentStoryStore?.currentStory[0]?.created_by.id !==
+                yourLastStory[0]?.created_by.id
+              "
+              class="flex gap-3 items-center py-4 px-8 hover:bg-slate-700 rounded-lg cursor-pointer"
+              :class="isOtherStory && isFirstStory ? 'bg-slate-700' : ''"
+            >
+              <img
+                :src="
+                  currentStoryStore?.currentStory[0]?.created_by?.get_avatar
+                "
+                alt="story-owner"
+                class="w-16 h-16 rounded-full ring-4 ring-emerald-400"
+              />
+              <div class="flex flex-col space-y-2">
+                <h3 class="text-lg font-semibold">
+                  {{ currentStoryStore?.currentStory[0]?.created_by?.name }}
+                </h3>
+                <p class="flex gap-2">
+                  <span class="text-emerald-400"
+                    >{{ currentStoryStore?.currentStory?.length }} thẻ mới</span
+                  >
+                  <span
+                    >{{
+                      currentStoryStore?.currentStory[0]?.created_at_formatted
+                    }}
+                    trước</span
+                  >
+                </p>
+              </div>
+            </div>
+          </div>
           <div v-for="story in setStory" :key="story.id">
-            <StoryBox :story="story" />
+            <StoryBox
+              :story="story"
+              @otherStory="otherStory(story[0].created_by.id)"
+              :isOtherStory="isOtherStory"
+              :class="
+                story[0]?.created_by?.id === userStories[0]?.created_by?.id
+                  ? 'bg-slate-700'
+                  : ''
+              "
+            />
           </div>
         </div>
       </div>
     </div>
     <div class="col-span-4 bg-slate-900 flex flex-col relative">
       <div class="py-4 h-full">
-        <StoryDetail />
+        <StoryDetail
+          :userStories="userStories"
+          :isOtherStory="isOtherStory"
+          :isYourStory="isYourStory"
+          :yourStory="yourLastStory"
+          :isFirstStory="isFirstStory"
+        />
       </div>
       <div class="flex justify-center items-center gap-2">
         <input
@@ -138,6 +199,11 @@ export default {
       emojiList: emojiStory,
       yourStories: [],
       setStory: [],
+      isOtherStory: false,
+      userStories: [],
+      userId: null,
+      isFirstStory: false,
+      isYourStory: false,
     };
   },
 
@@ -147,6 +213,10 @@ export default {
         (stories) => stories.created_by.id === this.userStore.user.id
       );
     },
+  },
+
+  beforeMount() {
+    this.settingActiveStory();
   },
 
   mounted() {
@@ -183,12 +253,70 @@ export default {
     getSetStories() {
       const result = Object.groupBy(
         this.yourStories.filter(
-          (story) => story.created_by.id !== this.userStore.user.id
+          (story) =>
+            story?.created_by?.id !== this.userStore.user.id &&
+            story?.created_by?.id !==
+              this.currentStoryStore?.currentStory[0]?.created_by?.id
         ),
         ({ created_by }) => created_by.id
       );
       this.setStory = result;
       // console.log(this.setStory);
+    },
+    settingActiveStory() {
+      if (
+        this.currentStoryStore?.currentStory?.userId ===
+          this.yourLastStory[0]?.created_by?.id &&
+        this.yourLastStory[0]?.created_by?.id ===
+          this.userStories[0]?.created_by?.id
+      ) {
+        this.isFirstStory = false;
+        this.isOtherStory = false;
+        this.isYourStory = true;
+      }
+      if (
+        this.currentStoryStore?.currentStory?.userId ===
+        this.userStories[0]?.created_by?.id
+      ) {
+        this.isFirstStory = true;
+        this.isOtherStory = true;
+        this.isYourStory = false;
+      }
+    },
+    firstStory() {
+      this.isFirstStory = true;
+    },
+    otherStory(userId) {
+      this.userId = userId;
+      this.$emit("otherStory");
+      if (this.currentStoryStore.userId !== userId) {
+        this.isFirstStory = false;
+      } else {
+        this.isFirstStory = true;
+      }
+
+      if (this.yourLastStory[0]?.created_by?.id === userId) {
+        this.isOtherStory = false;
+        this.isYourStory = true;
+      } else {
+        this.isOtherStory = true;
+        this.isYourStory = false;
+      }
+
+      if (
+        this.currentStoryStore.userId === this.yourLastStory[0]?.created_by?.id
+      ) {
+        this.isFirstStory = false;
+      }
+
+      axios
+        .get(`api/story/get-text-stories/${userId}/`)
+        .then((res) => {
+          this.userStories = res.data.stories;
+        })
+        .catch((error) => {
+          console.log(error);
+        });
     },
   },
 };

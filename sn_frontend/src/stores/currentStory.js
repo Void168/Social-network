@@ -6,11 +6,13 @@ export const useCurrentStoryStore = defineStore({
 
   state: () => ({
     currentStory: [],
+    userId: null
   }),
 
   actions: {
     getCurrentUserStory(data) {
       this.currentStory = data
+      this.userId = data[0].created_by.id
     },
   },
 });

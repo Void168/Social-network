@@ -1,5 +1,6 @@
 <template>
   <div
+    @click="$emit('otherStory')"
     class="flex gap-3 items-center py-4 px-8 hover:bg-slate-700 rounded-lg cursor-pointer"
   >
     <img
@@ -8,7 +9,7 @@
       class="w-16 h-16 rounded-full ring-4 ring-emerald-400"
     />
     <div class="flex flex-col space-y-2">
-      <h3 class="text-lg font-semibold">{{ userStore.user.name }}</h3>
+      <h3 class="text-lg font-semibold">{{ story[0].created_by.name }}</h3>
       <p class="flex gap-2">
         <span class="text-emerald-400">{{ story.length }} thẻ mới</span>
         <span>{{story[0].created_at_formatted}} trước</span>
@@ -19,18 +20,22 @@
 
 <script>
 import { useUserStore } from "../../../stores/user";
+import { useCurrentStoryStore } from "../../../stores/currentStory";
 
 export default (await import("vue")).defineComponent({
   setup() {
     const userStore = useUserStore();
+    const currentStoryStore = useCurrentStoryStore()
 
     return {
       userStore,
+      currentStoryStore,
     };
   },
 
   props: {
     story: Object,
+    isOtherStory: Boolean
   },
 });
 </script>

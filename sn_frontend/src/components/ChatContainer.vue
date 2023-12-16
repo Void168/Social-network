@@ -1,22 +1,23 @@
 <template>
   <div
-    class="mr-5 bg-white border border-gray-200 dark:bg-slate-600 dark:border-slate-700 dark:text-neutral-200 rounded-lg h-[630px]"
+    class="mr-5 scrollbar-corner-slate-200 scrollbar-none hover:scrollbar-thin scrollbar-thumb-slate-400 scrollbar-track-slate-800 h-[400px] bg-white border border-gray-200 dark:bg-slate-600 dark:border-slate-700 dark:text-neutral-200 rounded-lg overflow-y-auto"
   >
     <h3 class="text-xl p-4">Người liên hệ</h3>
-    <div class="flex flex-col">
+    <div class="flex flex-col ">
       <div v-for="friend in friends" :key="friend.id">
         <div
           @click="getFriendId(friend)"
           class="px-4 py-2 cursor-pointer hover:bg-slate-300 dark:hover:bg-slate-700"
         >
           <div @click="seenMessage">
-            <div
-              class="flex gap-2 items-center"
-            >
-            <div class="relative">
-              <img :src="friend.get_avatar" class="w-10 h-10 rounded-full" />
-              <span v-if="connectionStore.isConnected" class="w-3 h-3 bg-emerald-400 shadow-md absolute top-0 right-0 ring-4 dark:ring-slate-600 rounded-full"></span>
-            </div>
+            <div class="flex gap-2 items-center">
+              <div class="relative">
+                <img :src="friend.get_avatar" class="w-10 h-10 rounded-full" />
+                <span
+                  v-if="connectionStore.isConnected"
+                  class="w-3 h-3 bg-emerald-400 shadow-md absolute top-0 right-0 ring-4 dark:ring-slate-600 rounded-full"
+                ></span>
+              </div>
               <span class="font-semibold">{{ friend.name }}</span>
             </div>
           </div>
@@ -120,11 +121,11 @@ export default (await import("vue")).defineComponent({
   },
   setup() {
     const userStore = useUserStore();
-    const connectionStore = useConnectionStore()
+    const connectionStore = useConnectionStore();
 
     return {
       userStore,
-      connectionStore
+      connectionStore,
     };
   },
 
@@ -175,7 +176,7 @@ export default (await import("vue")).defineComponent({
           .catch((error) => {
             console.log(error);
           });
-      },1500)
+      }, 1500);
     },
     getGroupConversations() {
       setTimeout(() => {
@@ -188,7 +189,7 @@ export default (await import("vue")).defineComponent({
           .catch((error) => {
             console.log(error);
           });
-      }, 1000)
+      }, 1000);
     },
     miniatureChat(friend) {
       this.friendsChat = this.friendsChat?.filter((fc) => fc !== friend);

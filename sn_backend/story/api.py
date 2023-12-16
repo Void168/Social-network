@@ -81,3 +81,9 @@ def create_text_story(request):
     else:
         return JsonResponse({'error': 'add something here later!...'})
 
+@api_view(['DELETE'])
+def text_story_delete(request, pk):
+    text_story = TextStory.objects.filter(created_by=request.user).get(pk=pk)
+    text_story.delete()
+    
+    return JsonResponse({'message': 'text story deleted'})

@@ -29,7 +29,7 @@
       </div>
     </div>
     <div
-      class="main-right col-span-1 space-y-4 sticky top-[155px] h-[900px] z-9"
+      class="main-right col-span-1 space-y-4 sticky top-[155px] h-[750px] z-9"
     >
       <PeopleYouMayKnow />
       <Trends />

@@ -10,6 +10,7 @@ class StoryAttachment(models.Model):
     id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
     image = models.ImageField(upload_to='story_attachments_image', null=True)
     zoom_image = models.CharField(default='1', max_length=50)
+    rotate = models.CharField(default='0deg', max_length=50)
     video = models.FileField(upload_to='story_attachments_video', null=True)
     created_by = models.ForeignKey(User, related_name='story_attachments', on_delete=models.CASCADE)
     

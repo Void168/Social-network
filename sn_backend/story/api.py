@@ -1,5 +1,6 @@
 from django.db.models import Q
 from django.http import JsonResponse
+from datetime import datetime, timedelta
 
 from rest_framework.decorators import api_view, authentication_classes, permission_classes
 
@@ -22,9 +23,14 @@ def text_story_list(request):
     
     for user in request.user.friends.all():
         user_ids.append(user.id)
-            
-    text_stories = TextStory.objects.filter(Q(created_by__in=list(user_ids), only_me=False))
     
+    text_stories = TextStory.objects.filter(Q(created_by__in=list(user_ids), only_me=False))
+    now = datetime.now()
+    
+    for text_story in text_stories:
+        if (now - timedelta(hours=24)).timestamp() > (text_story.created_at).timestamp():
+            text_story.delete()
+            
     serializer = TextStorySerializer(text_stories, many=True)
     
     return JsonResponse(serializer.data, safe=False)

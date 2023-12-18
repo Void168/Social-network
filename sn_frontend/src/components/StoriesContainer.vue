@@ -8,7 +8,7 @@
         >
           <img
             :src="userStore.user.avatar"
-            class="rounded-b-none h-[70%]"
+            class="rounded-b-none h-[70%] w-full"
             alt="create-story"
           />
           <div class="flex justify-center items-center relative h-[30%]">
@@ -22,25 +22,28 @@
         </div></SwiperSlide
       >
       <SwiperSlide v-if="yourLastStory"
-        ><div class="relative cursor-pointer rounded-lg group" @click="getUserStories">
-            <img
-              :src="userStore.user.avatar"
-              alt=""
-              class="absolute top-4 left-4 w-10 h-10 rounded-full ring-4 ring-emerald-400 z-20"
-            />
+        ><div
+          class="relative cursor-pointer rounded-lg group"
+          @click="getUserStories"
+        >
+          <img
+            :src="userStore.user.avatar"
+            alt=""
+            class="absolute top-4 left-4 w-10 h-10 rounded-full ring-4 ring-emerald-400 z-20"
+          />
+          <div
+            class="relative h-[213px] flex items-center justify-center overflow-hidden shadow-sm rounded-lg cursor-pointer"
+          >
             <div
-              class="relative h-[213px] flex items-center justify-center overflow-hidden shadow-sm rounded-lg cursor-pointer"
+              alt="story-image"
+              class="h-full w-full group-hover:scale-105 group-hover:rounded-lg absolute z-10 bg-cover transition flex items-center justify-center"
+              :class="[selectedTheme?.background, selectedFont?.font]"
             >
-              <div
-                alt="story-image"
-                class="h-full w-full group-hover:scale-105 group-hover:rounded-lg absolute z-10 bg-cover transition flex items-center justify-center"
-                :class="[selectedTheme?.background, selectedFont?.font]"
-              >
-                <span class="text-xs" :class="[selectedTheme?.textColor]">{{
-                  yourLastStory?.body
-                }}</span>
-              </div>
+              <span class="text-xs" :class="[selectedTheme?.textColor]">{{
+                yourLastStory?.body
+              }}</span>
             </div>
+          </div>
         </div></SwiperSlide
       >
       <SwiperSlide v-for="story in setStory" :key="story.id">
@@ -86,11 +89,11 @@ export default {
   },
   setup() {
     const userStore = useUserStore();
-    const currentStoryStore = useCurrentStoryStore()
+    const currentStoryStore = useCurrentStoryStore();
 
     return {
       userStore,
-      currentStoryStore
+      currentStoryStore,
     };
   },
 
@@ -132,8 +135,10 @@ export default {
       axios
         .get("/api/story/text-stories/")
         .then((res) => {
-          this.yourStories = res.data;
-
+          this.yourStories = res.data.sort(
+            (a, b) => new Date(b.created_at) - new Date(a.created_at)
+          );
+          // console.log(this.yourStories);
           this.getSetStories();
         })
         .catch((error) => {
@@ -147,6 +152,7 @@ export default {
         ),
         ({ created_by }) => created_by.id
       );
+      // console.log(result)
       this.setStory = result;
       // console.log(this.setStory);
     },
@@ -155,8 +161,6 @@ export default {
         .get(`/api/story/get-text-stories/${this.userStore.user.id}`)
         .then((res) => {
           this.currentStoryStore.getCurrentUserStory(res.data.stories);
-          // console.log(res.data)
-
           setTimeout(() => {
             this.$router.push("/stories");
           }, 200);

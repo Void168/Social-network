@@ -19,7 +19,7 @@ class TextStorySerializer(serializers.ModelSerializer):
     created_by = UserSerializer(read_only=True)
     class Meta:
         model = TextStory
-        fields = ('id', 'body', 'is_private', 'only_me', 'seen_by', 'font', 'theme', 'created_by', 'created_at_formatted',)
+        fields = ('id', 'body', 'is_private', 'only_me', 'seen_by', 'font', 'theme', 'created_by', 'created_at_formatted', 'created_at',)
 
 class MediaStorySerializer(serializers.ModelSerializer):
     created_by = UserSerializer(read_only=True)

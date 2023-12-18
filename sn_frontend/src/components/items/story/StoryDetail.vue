@@ -39,7 +39,13 @@
             @click="mute"
             v-else
           />
-          <EllipsisHorizontalIcon class="w-8 h-8 cursor-pointer" />
+          <StoryDropdown @openModal="openModal" :yourStory="yourStory[0]" />
+          <DeleteStoryModalVue
+            :show="isOpen"
+            @closeModal="closeModal"
+            @deleteStory="deleteStory"
+          />
+          {{ yourStory }}
         </div>
       </div>
       <div
@@ -80,7 +86,15 @@
             @click="mute"
             v-else
           />
-          <EllipsisHorizontalIcon class="w-8 h-8 cursor-pointer" />
+          <StoryDropdown
+            @openModal="openModal"
+            :yourStory="currentStoryStore.currentStory[0]"
+          />
+          <DeleteStoryModalVue
+            :show="isOpen"
+            @closeModal="closeModal"
+            @deleteStory="deleteStory(currentStoryStore.currentStory)"
+          />
         </div>
       </div>
       <div
@@ -119,7 +133,12 @@
             @click="mute"
             v-else
           />
-          <EllipsisHorizontalIcon class="w-8 h-8 cursor-pointer" />
+          <StoryDropdown @openModal="openModal" :yourStory="userStories[0]" />
+          <DeleteStoryModalVue
+            :show="isOpen"
+            @closeModal="closeModal"
+            @deleteStory="deleteStory"
+          />
         </div>
       </div>
       <Swiper
@@ -286,15 +305,20 @@
 </template>
 
 <script>
+import axios from "axios";
+
 import { Swiper, SwiperSlide } from "swiper/vue";
 import { useUserStore } from "../../../stores/user";
 import { useCurrentStoryStore } from "../../../stores/currentStory";
+import { useToastStore } from "../../../stores/toast";
 import { Autoplay, Mousewheel, Keyboard, Pagination } from "swiper/modules";
+import StoryDropdown from "../../dropdown/StoryDropdown.vue";
+import DeleteStoryModalVue from "../../modals/story/DeleteStoryModal.vue";
+
 import {
   GlobeAsiaAustraliaIcon,
   PlayIcon,
   PauseIcon,
-  EllipsisHorizontalIcon,
   SpeakerXMarkIcon,
   SpeakerWaveIcon,
 } from "@heroicons/vue/24/solid";
@@ -309,11 +333,12 @@ export default (await import("vue")).defineComponent({
   components: {
     Swiper,
     SwiperSlide,
+    StoryDropdown,
+    DeleteStoryModalVue,
     SwiperStoryContainerButton,
     GlobeAsiaAustraliaIcon,
     PlayIcon,
     PauseIcon,
-    EllipsisHorizontalIcon,
     SpeakerXMarkIcon,
     SpeakerWaveIcon,
   },
@@ -327,9 +352,11 @@ export default (await import("vue")).defineComponent({
   setup() {
     const userStore = useUserStore();
     const currentStoryStore = useCurrentStoryStore();
+    const toastStore = useToastStore();
     return {
       userStore,
       currentStoryStore,
+      toastStore,
       modules: [Autoplay, Mousewheel, Keyboard, Pagination],
     };
   },
@@ -344,6 +371,7 @@ export default (await import("vue")).defineComponent({
       percentage: 0,
       themes: themes,
       fonts: fonts,
+      isOpen: false,
     };
   },
 
@@ -502,7 +530,6 @@ export default (await import("vue")).defineComponent({
       this.isPause = !this.isPause;
       if (this.isPause) {
         this.swiper.autoplay.pause();
-        console.log(this.swiper);
       } else {
         this.swiper.autoplay.resume();
       }
@@ -526,6 +553,51 @@ export default (await import("vue")).defineComponent({
       } else {
         console.log("hello");
       }
+    },
+
+    openModal() {
+      this.$emit("openModal", this.isOpen);
+      this.isOpen = true;
+      
+      this.pause()
+    },
+    closeModal() {
+      this.isOpen = false;
+    },
+    deleteStory(yourStory) {
+      // this.$emit("deleteStory", yourStory[this.swiper.activeIndex]);
+      // console.log(yourStory[this.swiper.activeIndex]);
+
+      axios
+        .delete(
+          `/api/story/text-story/${
+            yourStory[this.swiper.activeIndex].id
+          }/delete/`
+        )
+        .then((res) => {
+          if (res.data.message === "text story deleted") {
+            setTimeout(() => {
+              this.closeModal();
+            }, 1000);
+            this.toastStore.showToast(
+              3000,
+              "Tin đã được xóa",
+              "bg-emerald-500 text-white"
+            );
+            setTimeout(() => {
+              this.$router.go(-1);
+            }, 3500);
+          } else {
+            this.toastStore.showToast(
+              3000,
+              "Xóa tin thất bại",
+              "bg-rose-500 text-white"
+            );
+          }
+        })
+        .catch((error) => {
+          console.log(error);
+        });
     },
   },
 });

@@ -7,7 +7,7 @@ from .models import TextStory, StoryAttachment, MediaStory, ReactStory
 class StoryAttachmentSerializer(serializers.ModelSerializer):
     class Meta:
         model = StoryAttachment
-        fields = ('id', 'get_image', 'get_video')
+        fields = ('id', 'get_image', 'get_video', 'zoom', 'rotate',)
 
 class ReactStorySerializer(serializers.ModelSerializer):
     created_by = UserSerializer(read_only=True)
@@ -24,8 +24,8 @@ class TextStorySerializer(serializers.ModelSerializer):
 class MediaStorySerializer(serializers.ModelSerializer):
     created_by = UserSerializer(read_only=True)
     class Meta:
-        model = TextStory
-        fields = ('id', 'is_private', 'only_me', 'seen_by', 'created_by', 'created_at_formatted',)
+        model = MediaStory
+        fields = ('id', 'is_private', 'caption', 'attachments', 'only_me', 'theme', 'seen_by', 'created_by', 'created_at_formatted', 'created_at',)
 
 class TextStoryDetailSerializer(serializers.ModelSerializer):
     created_by = UserSerializer(read_only=True)

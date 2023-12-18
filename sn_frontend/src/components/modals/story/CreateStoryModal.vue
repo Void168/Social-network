@@ -108,12 +108,12 @@
                     <div
                       class="p-4 flex flex-col gap-3 items-start font-semibold"
                     >
-                      <label for="title" class="text-xl"> Tiêu đề </label>
+                      <label for="caption" class="text-xl"> Tiêu đề </label>
                       <textarea
-                        v-model="imageTitle"
+                        v-model="caption"
                         class="w-full py-2 pl-4 pr-8 bg-gray-100 border rounded-lg resize-none overflow-auto scrollbar-corner-slate-200 scrollbar-thin scrollbar-thumb-slate-400 scrollbar-track-slate-800"
-                        name="title"
-                        id="title"
+                        name="caption"
+                        id="caption"
                         :rows="3"
                         cols="30"
                         placeholder="Nhập tiêu đề"
@@ -155,7 +155,7 @@
                     <label for="story-image">
                       <input
                         type="file"
-                        ref="story-image"
+                        ref="story"
                         id="story-image"
                         name="story-image"
                         @change="chooseMedia"
@@ -244,7 +244,6 @@
                         <Slider
                           v-model="value"
                           class="w-96 h-1"
-                          @set="getValue"
                           :tooltips="true"
                         />
                         <span>+</span>
@@ -326,6 +325,7 @@ export default (await import("vue")).defineComponent({
       isMediaStory: false,
       isRotate: false,
       body: "",
+      caption: "",
       url: null,
       is_private: false,
       only_me: false,
@@ -337,6 +337,7 @@ export default (await import("vue")).defineComponent({
       toggle: 0,
       value: 25,
       zoom: 0.5,
+      raw: null
     };
   },
 
@@ -355,6 +356,7 @@ export default (await import("vue")).defineComponent({
       this.selectedTheme = theme;
     },
     chooseMedia(e) {
+      this.raw = this.$refs.story.files[0]
       const file = e.target.files[0];
       this.url = URL.createObjectURL(file);
       setTimeout(() => {
@@ -396,11 +398,7 @@ export default (await import("vue")).defineComponent({
         this.deg = "rotate-0";
       }
     },
-    getValue() {
-      // console.log(this.value);
-      const element = document.querySelector("#slider-tooltip-top");
-      console.log(element);
-    },
+
     removeAll() {
       this.url = null;
       this.color = null;
@@ -409,6 +407,7 @@ export default (await import("vue")).defineComponent({
       this.selectedFont = {};
       this.deg = "rotate-0";
       this.isRotate = false;
+      this.zoom = 0.5
     },
     submitForm() {
       if(this.isTextStory){
@@ -433,6 +432,48 @@ export default (await import("vue")).defineComponent({
           this.only_me = false;
           this.selectedFont = this.fonts[0]
           this.selectedTheme = this.themes[0]
+
+          this.toastStore.showToast(
+            2000,
+            "Đã tạo tin",
+            "bg-emerald-500 text-white"
+          );
+          setTimeout(() => {
+            this.$router.go(0)
+          }, 2500)
+        })
+        .catch((error) => {
+          console.log("error", error);
+        });
+      }
+
+      if(this.url) {
+        let formData = new FormData();
+        if(this.raw.name.includes('.png') ||this.raw.name.includes('.jpg')){
+          formData.append("image", this.raw);
+        } else {
+          formData.append("video", this.raw);
+        }
+
+        formData.append("is_private", this.is_private);
+        formData.append("only_me", this.only_me);
+        formData.append("theme", this.color);
+        formData.append("caption", this.caption);
+
+        axios
+        .post("/api/story/create-media-story/", formData, {
+          headers: {
+            "Content-Type": "multipart/form-data",
+          },
+        })
+        .then((res) => {
+          this.yourStories.unshift(res.data);
+          this.caption = "";
+          this.is_private = false;
+          this.only_me = false;
+          this.color = null
+          this.url = null
+          this.raw = null
 
           this.toastStore.showToast(
             2000,

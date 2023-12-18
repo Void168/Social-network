@@ -6,3 +6,13 @@ class TextStoryForm(ModelForm):
     class Meta:
         model = TextStory
         fields = ('body','is_private','only_me','theme','font',)
+
+class MediaStoryForm(ModelForm):
+    class Meta:
+        model = MediaStory
+        fields = ('caption','is_private','only_me','theme',)
+
+class AttachmentForm(ModelForm):
+    class Meta:
+        model = StoryAttachment
+        fields = ('image', 'video',)

@@ -6,7 +6,7 @@ from rest_framework.decorators import api_view, authentication_classes, permissi
 
 from account.models import User
 from account.serializers import UserSerializer
-from .forms import TextStoryForm
+from .forms import TextStoryForm, MediaStoryForm, AttachmentForm
 
 from notification.utils import create_notification
 
@@ -82,6 +82,31 @@ def create_text_story(request):
         text_story.save()
 
         serializer = TextStorySerializer(text_story)
+
+        return JsonResponse(serializer.data, safe=False)
+    else:
+        return JsonResponse({'error': 'add something here later!...'})
+
+@api_view(['POST'])
+def create_media_story(request):
+    form = MediaStoryForm(request.POST)
+    attachment = None
+    attachment_form = AttachmentForm(request.POST, request.FILES)
+
+    if attachment_form.is_valid():
+        attachment = attachment_form.save(commit=False)
+        attachment.created_by = request.user
+        attachment.save()
+
+    if form.is_valid():
+        media_story = form.save(commit=False)
+        media_story.created_by = request.user
+        media_story.save()
+
+        if attachment:
+            media_story.attachments.add(attachment)
+
+        serializer = MediaStorySerializer(media_story)
 
         return JsonResponse(serializer.data, safe=False)
     else:

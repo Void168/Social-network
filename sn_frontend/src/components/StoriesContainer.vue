@@ -128,6 +128,7 @@ export default {
 
   mounted() {
     this.getTextStories();
+    this.getMediaStories();
   },
 
   methods: {
@@ -140,6 +141,19 @@ export default {
           );
           // console.log(this.yourStories);
           this.getSetStories();
+        })
+        .catch((error) => {
+          console.log(error);
+        });
+    },
+    getMediaStories() {
+      axios
+        .get("/api/story/media-stories/")
+        .then((res) => {
+          const mediaStories = res.data.sort(
+            (a, b) => new Date(b.created_at) - new Date(a.created_at)
+          );
+          console.log(mediaStories);
         })
         .catch((error) => {
           console.log(error);

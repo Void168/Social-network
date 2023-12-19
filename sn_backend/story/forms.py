@@ -12,7 +12,7 @@ class MediaStoryForm(ModelForm):
         model = MediaStory
         fields = ('caption','is_private','only_me','theme',)
 
-class AttachmentForm(ModelForm):
+class StoryAttachmentForm(ModelForm):
     class Meta:
         model = StoryAttachment
-        fields = ('image', 'video',)
+        fields = ('image',)

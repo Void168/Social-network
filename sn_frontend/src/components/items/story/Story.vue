@@ -3,22 +3,42 @@
     class="relative cursor-pointer rounded-lg group"
     @click="getUserStories(story.created_by.id)"
   >
-    <img
-      :src="story.created_by.get_avatar"
-      alt=""
-      class="absolute top-4 left-4 w-10 h-10 rounded-full ring-4 ring-emerald-400 z-20"
-    />
-    <div
-      class="relative h-[213px] flex items-center justify-center overflow-hidden shadow-sm rounded-lg cursor-pointer"
-    >
+    <div v-if="story.body">
+      <img
+        :src="story?.created_by?.get_avatar"
+        alt=""
+        class="absolute top-4 left-4 w-10 h-10 rounded-full ring-4 ring-emerald-400 z-20"
+      />
       <div
-        alt="story-image"
-        class="flex justify-center items-center h-full w-full group-hover:scale-105 group-hover:rounded-lg absolute z-10 bg-cover transition"
-        :class="[selectedFont?.font, selectedTheme?.background]"
+        class="relative h-[213px] flex items-center justify-center overflow-hidden shadow-sm rounded-lg cursor-pointer"
       >
-        <span class="text-xs" :class="[selectedTheme?.textColor]">{{
-          story?.body
-        }}</span>
+        <div
+          alt="story-image"
+          class="flex justify-center items-center h-full w-full group-hover:scale-105 group-hover:rounded-lg absolute z-10 bg-cover transition"
+          :class="[selectedFont?.font, selectedTheme?.background]"
+        >
+          <span class="text-xs" :class="[selectedTheme?.textColor]">{{
+            story?.body
+          }}</span>
+        </div>
+      </div>
+    </div>
+    <div v-if="story?.attachments">
+      <img
+        :src="story?.created_by?.get_avatar"
+        alt=""
+        class="absolute top-4 left-4 w-10 h-10 rounded-full ring-4 ring-emerald-400 z-20"
+      />
+      <div
+        class="relative h-[213px] flex items-center justify-center overflow-hidden shadow-sm rounded-lg cursor-pointer"
+      >
+        <div
+          alt="story-image"
+          class="flex justify-center items-center h-full w-full group-hover:scale-105 group-hover:rounded-lg absolute z-10 bg-cover transition"
+          :style="{backgroundColor: story.theme}"
+        >
+          <img :src="story?.attachments[0].get_image" class="rounded-none">
+        </div>
       </div>
     </div>
   </div>

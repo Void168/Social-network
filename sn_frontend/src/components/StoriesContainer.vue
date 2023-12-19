@@ -102,6 +102,7 @@ export default {
       isOpen: false,
       isTextStory: false,
       yourStories: [],
+      mediaStories: [],
       setStory: [],
       themes: themes,
       fonts: fonts,
@@ -127,48 +128,64 @@ export default {
   },
 
   mounted() {
-    this.getTextStories();
-    this.getMediaStories();
+    this.getStories();
   },
 
   methods: {
-    getTextStories() {
-      axios
-        .get("/api/story/text-stories/")
-        .then((res) => {
-          this.yourStories = res.data.sort(
-            (a, b) => new Date(b.created_at) - new Date(a.created_at)
-          );
-          // console.log(this.yourStories);
-          this.getSetStories();
-        })
-        .catch((error) => {
-          console.log(error);
-        });
-    },
-    getMediaStories() {
-      axios
-        .get("/api/story/media-stories/")
-        .then((res) => {
-          const mediaStories = res.data.sort(
-            (a, b) => new Date(b.created_at) - new Date(a.created_at)
-          );
-          console.log(mediaStories);
-        })
-        .catch((error) => {
-          console.log(error);
-        });
+    getStories() {
+      setTimeout(() => {
+        axios
+          .get("/api/story/text-stories/")
+          .then((res) => {
+            this.yourStories = res.data.sort(
+              (a, b) => new Date(b.created_at) - new Date(a.created_at)
+            );
+            console.log(this.yourStories);
+          })
+          .catch((error) => {
+            console.log(error);
+          });
+      }, 100)
+
+      setTimeout(() => {
+        axios
+          .get("/api/story/media-stories/")
+          .then((res) => {
+            this.mediaStories = res.data.sort(
+              (a, b) => new Date(b.created_at) - new Date(a.created_at)
+            );
+            console.log(this.mediaStories);
+            this.getSetStories();
+          })
+          .catch((error) => {
+            console.log(error);
+          });
+      }, 200)
+
+      setTimeout(() => {
+        this.getSetStories();
+      }, 300)
     },
     getSetStories() {
-      const result = Object.groupBy(
+      const resultText = Object.groupBy(
         this.yourStories.filter(
           (story) => story.created_by.id !== this.userStore.user.id
         ),
         ({ created_by }) => created_by.id
       );
-      // console.log(result)
-      this.setStory = result;
-      // console.log(this.setStory);
+
+      const resultMedia = Object.groupBy(
+        this.mediaStories.filter(
+          (story) => story.created_by.id !== this.userStore.user.id
+        ),
+        ({ created_by }) => created_by.id
+      );
+
+      console.log(resultMedia)
+
+      this.setStory = Object.assign(resultText, resultMedia)
+      // this.setStory = resultText
+      console.log(this.setStory);
     },
     getUserStories() {
       axios

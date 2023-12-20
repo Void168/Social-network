@@ -72,6 +72,28 @@ def media_story_list(request):
     
     return JsonResponse(serializer.data, safe=False)
 
+@api_view(['GET'])
+def user_media_story_list(request, id):
+    user = User.objects.get(pk=id)
+    media_stories = MediaStory.objects.filter(created_by_id=id)
+
+    if not request.user in user.friends.all():
+        media_stories = media_stories.filter(Q(is_private=False) & Q(only_me=False))
+    
+    if request.user in user.friends.all():
+        media_stories = media_stories.filter(only_me=False)
+        
+    if request.user == user:
+        media_stories = MediaStory.objects.filter(created_by_id=id)
+    
+    media_stories.order_by('-created_at')
+        
+    media_stories_serializer = MediaStoryDetailSerializer(media_stories, many=True)
+
+    return JsonResponse({
+        'stories': media_stories_serializer.data,
+    }, safe=False)
+
 @api_view(['POST'])
 def create_text_story(request):
     form = TextStoryForm(request.POST)

@@ -41,5 +41,5 @@ class MediaStoryDetailSerializer(serializers.ModelSerializer):
     reacted_by = UserSerializer(read_only=True, many=True)
     seen_by = UserSerializer(read_only=True, many=True)
     class Meta:
-        model = TextStory
+        model = MediaStory
         fields = ('id', 'caption', 'attachments', 'font', 'theme', 'created_by', 'created_at_formatted', 'duaration', 'is_private', 'only_me', 'reacted_by', 'seen_by', 'seen_count')

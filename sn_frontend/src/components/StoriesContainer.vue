@@ -210,17 +210,33 @@ export default {
       );
     },
     getUserStories() {
-      axios
-        .get(`/api/story/get-text-stories/${this.userStore.user.id}`)
-        .then((res) => {
-          this.currentStoryStore.getCurrentUserStory(res.data.stories);
-          setTimeout(() => {
-            this.$router.push("/stories");
-          }, 200);
-        })
-        .catch((error) => {
-          console.log("error", error);
-        });
+      if(this.yourLastStory?.body) {
+        axios
+          .get(`/api/story/get-text-stories/${this.userStore.user.id}`)
+          .then((res) => {
+            this.currentStoryStore.getCurrentUserStory(res.data.stories);
+            setTimeout(() => {
+              this.$router.push("/stories");
+            }, 200);
+          })
+          .catch((error) => {
+            console.log("error", error);
+          });
+      }
+
+      if(this.yourLastStory?.attachments){
+        axios
+          .get(`/api/story/get-media-stories/${this.userStore.user.id}`)
+          .then((res) => {
+            this.currentStoryStore.getCurrentUserStory(res.data.stories);
+            setTimeout(() => {
+              this.$router.push("/stories");
+            }, 200);
+          })
+          .catch((error) => {
+            console.log("error", error);
+          });
+      }
     },
     openModal() {
       this.isOpen = true;

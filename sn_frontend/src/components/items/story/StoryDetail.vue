@@ -565,9 +565,6 @@ export default (await import("vue")).defineComponent({
       this.isOpen = false;
     },
     deleteStory(yourStory) {
-      // this.$emit("deleteStory", yourStory[this.swiper.activeIndex]);
-      // console.log(yourStory[this.swiper.activeIndex]);
-
       axios
         .delete(
           `/api/story/text-story/${

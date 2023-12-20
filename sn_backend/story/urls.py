@@ -9,4 +9,5 @@ urlpatterns = [
     path('create-media-story/',api.create_media_story, name='create_media_story'),
     path('text-story/<uuid:pk>/delete/',api.text_story_delete, name='text_story_delete'),
     path('get-text-stories/<uuid:id>/', api.user_text_story_list, name='user_text_story_list'),
+    path('get-media-stories/<uuid:id>/', api.user_media_story_list, name='user_media_story_list'),
 ]

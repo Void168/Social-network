@@ -37,7 +37,7 @@
           class="flex justify-center items-center h-full w-full group-hover:scale-105 group-hover:rounded-lg absolute z-10 bg-cover transition"
           :style="{backgroundColor: story.theme}"
         >
-          <img :src="story?.attachments[0].get_image" class="rounded-none">
+          <img :src="story?.attachments[0].get_image" class="rounded-none" ref="image">
         </div>
       </div>
     </div>
@@ -72,6 +72,10 @@ export default (await import("vue")).defineComponent({
     return {
       themes: themes,
       fonts: fonts,
+      dimensions: {
+        width: 0,
+        height: 0
+      }
     };
   },
 
@@ -86,7 +90,15 @@ export default (await import("vue")).defineComponent({
     },
   },
 
+  mounted() {
+    this.getImagePixel()
+  },
+
   methods: {
+    getImagePixel() {
+      let height = this.$refs.image?.clientHeight
+      this.dimensions.height = height
+    },
     getUserStories(userId) {
       axios
         .get(`/api/story/get-text-stories/${userId}`)

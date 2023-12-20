@@ -38,14 +38,27 @@
               alt="story-image"
               class="h-full w-full group-hover:scale-105 group-hover:rounded-lg absolute z-10 bg-cover transition flex items-center justify-center"
               :class="[selectedTheme?.background, selectedFont?.font]"
+              v-if="yourLastStory?.body"
             >
               <span class="text-xs" :class="[selectedTheme?.textColor]">{{
                 yourLastStory?.body
               }}</span>
             </div>
+            <div
+              v-else
+              alt="story-image"
+              class="h-full w-full group-hover:scale-105 group-hover:rounded-lg absolute z-10 bg-cover transition flex items-center justify-center"
+              :style="{ backgroundColor: yourLastStory?.theme }"
+            >
+              <img
+                :src="yourLastStory?.attachments[0].get_image"
+                class="rounded-none"
+                ref="image"
+              />
+            </div>
           </div>
-        </div></SwiperSlide
-      >
+        </div>
+      </SwiperSlide>
       <SwiperSlide v-for="story in setStory" :key="story.id">
         <Story :story="story[0]" />
       </SwiperSlide>
@@ -54,7 +67,7 @@
     <CreateStoryModal
       :show="isOpen"
       :isTextStory="isTextStory"
-      :yourStories="yourStories"
+      :textStories="textStories"
       @closeModal="closeModal"
       @openTextStory="openTextStory"
       @closeTextStory="closeTextStory"
@@ -101,8 +114,9 @@ export default {
     return {
       isOpen: false,
       isTextStory: false,
-      yourStories: [],
+      textStories: [],
       mediaStories: [],
+      yourStories: [],
       setStory: [],
       themes: themes,
       fonts: fonts,
@@ -137,15 +151,19 @@ export default {
         axios
           .get("/api/story/text-stories/")
           .then((res) => {
-            this.yourStories = res.data.sort(
+            this.textStories = res.data.sort(
               (a, b) => new Date(b.created_at) - new Date(a.created_at)
             );
-            console.log(this.yourStories);
+            // console.log(this.textStories);
+
+            this.textStories.forEach((textStory) => {
+              this.yourStories.unshift(textStory);
+            });
           })
           .catch((error) => {
             console.log(error);
           });
-      }, 100)
+      }, 100);
 
       setTimeout(() => {
         axios
@@ -154,37 +172,32 @@ export default {
             this.mediaStories = res.data.sort(
               (a, b) => new Date(b.created_at) - new Date(a.created_at)
             );
-            console.log(this.mediaStories);
+            // console.log(this.mediaStories);
+            this.mediaStories.forEach((mediaStory) => {
+              this.yourStories.unshift(mediaStory);
+            });
+
             this.getSetStories();
           })
           .catch((error) => {
             console.log(error);
           });
-      }, 200)
+      }, 200);
 
       setTimeout(() => {
         this.getSetStories();
-      }, 300)
+        // console.log(this.yourStories)
+      }, 300);
     },
     getSetStories() {
-      const resultText = Object.groupBy(
+      const resultAll = Object.groupBy(
         this.yourStories.filter(
           (story) => story.created_by.id !== this.userStore.user.id
         ),
         ({ created_by }) => created_by.id
       );
 
-      const resultMedia = Object.groupBy(
-        this.mediaStories.filter(
-          (story) => story.created_by.id !== this.userStore.user.id
-        ),
-        ({ created_by }) => created_by.id
-      );
-
-      console.log(resultMedia)
-
-      this.setStory = Object.assign(resultText, resultMedia)
-      // this.setStory = resultText
+      this.setStory = resultAll;
       console.log(this.setStory);
     },
     getUserStories() {

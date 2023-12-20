@@ -317,7 +317,7 @@ export default (await import("vue")).defineComponent({
   props: {
     isOpen: Boolean,
     isTextStory: Boolean,
-    yourStories: Array
+    textStories: Array
   },
 
   data() {
@@ -426,7 +426,7 @@ export default (await import("vue")).defineComponent({
           },
         })
         .then((res) => {
-          this.yourStories.unshift(res.data);
+          this.textStories.unshift(res.data);
           this.body = "";
           this.is_private = false;
           this.only_me = false;
@@ -467,7 +467,7 @@ export default (await import("vue")).defineComponent({
           },
         })
         .then((res) => {
-          this.yourStories.unshift(res.data);
+          this.textStories.unshift(res.data);
           this.caption = "";
           this.is_private = false;
           this.only_me = false;

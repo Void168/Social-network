@@ -51,7 +51,9 @@
               :style="{ backgroundColor: yourLastStory?.theme }"
             >
               <img
-                :src="yourLastStory?.attachments[0].get_image"
+                :src="yourLastStory?.attachments[0]?.get_image"
+                :class="[yourLastStory?.attachments[0]?.rotate]"
+                :style="{ scale: yourLastStory?.attachments[0]?.zoom_image }"
                 class="rounded-none"
                 ref="image"
               />
@@ -186,7 +188,10 @@ export default {
 
       setTimeout(() => {
         this.getSetStories();
-        // console.log(this.yourStories)
+        this.yourStories = this.yourStories.sort(
+          (a, b) => new Date(b.created_at) - new Date(a.created_at)
+        );
+        console.log(this.yourStories);
       }, 300);
     },
     getSetStories() {
@@ -198,7 +203,11 @@ export default {
       );
 
       this.setStory = resultAll;
-      console.log(this.setStory);
+      console.log(
+        this.yourStories
+          .filter((stories) => stories.created_by.id === this.userStore.user.id)
+          .sort((a, b) => new Date(b.created_at) - new Date(a.created_at))
+      );
     },
     getUserStories() {
       axios

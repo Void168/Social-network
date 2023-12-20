@@ -15,4 +15,4 @@ class MediaStoryForm(ModelForm):
 class StoryAttachmentForm(ModelForm):
     class Meta:
         model = StoryAttachment
-        fields = ('image',)
+        fields = ('image', 'zoom_image', 'rotate')

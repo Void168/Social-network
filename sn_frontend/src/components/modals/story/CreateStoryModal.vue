@@ -307,17 +307,17 @@ export default (await import("vue")).defineComponent({
   },
   setup() {
     const userStore = useUserStore();
-    const toastStore = useToastStore()
+    const toastStore = useToastStore();
 
     return {
       userStore,
-      toastStore
+      toastStore,
     };
   },
   props: {
     isOpen: Boolean,
     isTextStory: Boolean,
-    textStories: Array
+    textStories: Array,
   },
 
   data() {
@@ -337,7 +337,7 @@ export default (await import("vue")).defineComponent({
       toggle: 0,
       value: 25,
       zoom: 0.5,
-      raw: null
+      raw: null,
     };
   },
 
@@ -356,7 +356,7 @@ export default (await import("vue")).defineComponent({
       this.selectedTheme = theme;
     },
     chooseMedia(e) {
-      this.raw = this.$refs.story.files[0]
+      this.raw = this.$refs.story.files[0];
       const file = e.target.files[0];
       this.url = URL.createObjectURL(file);
       setTimeout(() => {
@@ -407,10 +407,10 @@ export default (await import("vue")).defineComponent({
       this.selectedFont = {};
       this.deg = "rotate-0";
       this.isRotate = false;
-      this.zoom = 0.5
+      this.zoom = 0.5;
     },
     submitForm() {
-      if(this.isTextStory){
+      if (this.isTextStory) {
         let formData = new FormData();
 
         formData.append("body", this.body);
@@ -420,37 +420,39 @@ export default (await import("vue")).defineComponent({
         formData.append("font", this.selectedFont.name);
 
         axios
-        .post("/api/story/create-text-story/", formData, {
-          headers: {
-            "Content-Type": "multipart/form-data",
-          },
-        })
-        .then((res) => {
-          this.textStories.unshift(res.data);
-          this.body = "";
-          this.is_private = false;
-          this.only_me = false;
-          this.selectedFont = this.fonts[0]
-          this.selectedTheme = this.themes[0]
+          .post("/api/story/create-text-story/", formData, {
+            headers: {
+              "Content-Type": "multipart/form-data",
+            },
+          })
+          .then((res) => {
+            this.textStories.unshift(res.data);
+            this.body = "";
+            this.is_private = false;
+            this.only_me = false;
+            this.selectedFont = this.fonts[0];
+            this.selectedTheme = this.themes[0];
 
-          this.toastStore.showToast(
-            2000,
-            "Đã tạo tin",
-            "bg-emerald-500 text-white"
-          );
-          setTimeout(() => {
-            this.$router.go(0)
-          }, 2500)
-        })
-        .catch((error) => {
-          console.log("error", error);
-        });
+            this.toastStore.showToast(
+              2000,
+              "Đã tạo tin",
+              "bg-emerald-500 text-white"
+            );
+            setTimeout(() => {
+              this.$router.go(0);
+            }, 2500);
+          })
+          .catch((error) => {
+            console.log("error", error);
+          });
       }
 
-      if(this.url) {
+      if (this.url) {
         let formData = new FormData();
-        if(this.raw.name.includes('.png') ||this.raw.name.includes('.jpg')){
+        if (this.raw.name.includes(".png") || this.raw.name.includes(".jpg")) {
           formData.append("image", this.raw);
+          formData.append("zoom_image", `${this.zoom + this.value / 50}`)
+          formData.append("rotate", this.deg)
         } else {
           formData.append("video", this.raw);
         }
@@ -461,32 +463,36 @@ export default (await import("vue")).defineComponent({
         formData.append("caption", this.caption);
 
         axios
-        .post("/api/story/create-media-story/", formData, {
-          headers: {
-            "Content-Type": "multipart/form-data",
-          },
-        })
-        .then((res) => {
-          this.textStories.unshift(res.data);
-          this.caption = "";
-          this.is_private = false;
-          this.only_me = false;
-          this.color = null
-          this.url = null
-          this.raw = null
+          .post(
+            "/api/story/create-media-story/",
+            formData,
+            {
+              headers: {
+                "Content-Type": "multipart/form-data",
+              },
+            }
+          )
+          .then((res) => {
+            this.textStories.unshift(res.data);
+            this.caption = "";
+            this.is_private = false;
+            this.only_me = false;
+            this.color = null;
+            this.url = null;
+            this.raw = null;
 
-          this.toastStore.showToast(
-            2000,
-            "Đã tạo tin",
-            "bg-emerald-500 text-white"
-          );
-          setTimeout(() => {
-            this.$router.go(0)
-          }, 2500)
-        })
-        .catch((error) => {
-          console.log("error", error);
-        });
+            this.toastStore.showToast(
+              2000,
+              "Đã tạo tin",
+              "bg-emerald-500 text-white"
+            );
+            setTimeout(() => {
+              this.$router.go(0);
+            }, 2500);
+          })
+          .catch((error) => {
+            console.log("error", error);
+          });
       }
     },
   },

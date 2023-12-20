@@ -96,7 +96,6 @@ def create_media_story(request):
     if story_attachment_form.is_valid():
         attachment = story_attachment_form.save(commit=False)
         attachment.created_by = request.user
-        print(attachment)
         attachment.save()
         
     if form.is_valid():

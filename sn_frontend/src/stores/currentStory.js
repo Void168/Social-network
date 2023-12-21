@@ -1,4 +1,5 @@
 import { defineStore } from "pinia";
+import router from '../router'
 
 export const useCurrentStoryStore = defineStore({
   id: "currentUserStory",
@@ -19,5 +20,8 @@ export const useCurrentStoryStore = defineStore({
       });
       this.userId = data[0]?.created_by?.id;
     },
+    resetCurrentStory(){
+      this.currentStory = []
+    }
   },
 });

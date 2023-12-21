@@ -154,7 +154,7 @@ export default {
           .get("/api/story/text-stories/")
           .then((res) => {
             this.textStories = res.data.sort(
-              (a, b) => new Date(b.created_at) - new Date(a.created_at)
+              (a, b) => new Date(a.created_at) - new Date(b.created_at)
             );
             // console.log(this.textStories);
 
@@ -172,7 +172,7 @@ export default {
           .get("/api/story/media-stories/")
           .then((res) => {
             this.mediaStories = res.data.sort(
-              (a, b) => new Date(b.created_at) - new Date(a.created_at)
+              (a, b) => new Date(a.created_at) - new Date(b.created_at)
             );
             // console.log(this.mediaStories);
             this.mediaStories.forEach((mediaStory) => {
@@ -196,9 +196,9 @@ export default {
     },
     getSetStories() {
       const resultAll = Object.groupBy(
-        this.yourStories.filter(
-          (story) => story?.created_by?.id !== this.userStore.user.id
-        ),
+        this.yourStories
+          .filter((story) => story?.created_by?.id !== this.userStore.user.id)
+          .sort((a, b) => new Date(a.created_at) - new Date(b.created_at)),
         ({ created_by }) => created_by?.id
       );
 
@@ -208,6 +208,7 @@ export default {
       axios
         .get(`/api/story/get-text-stories/${this.userStore.user.id}`)
         .then((res) => {
+          this.currentStoryStore.resetCurrentStory()
           this.currentStoryStore.getCurrentUserStory(res.data.stories);
           setTimeout(() => {
             this.$router.push("/stories");

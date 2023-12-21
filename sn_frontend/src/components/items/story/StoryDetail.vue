@@ -18,7 +18,7 @@
             <span class="font-semibold text-lg">{{
               yourStory[0]?.created_by?.name
             }}</span>
-            <span>{{ yourStory[0]?.created_at_formatted }}</span>
+            <span class="font-medium">{{ yourStory[0]?.created_at_formatted }}</span>
             <GlobeAsiaAustraliaIcon class="w-5 h-5" />
           </div>
         </div>
@@ -62,7 +62,7 @@
             <span class="font-semibold text-lg">{{
               currentStoryStore.currentStory[0]?.created_by?.name
             }}</span>
-            <span>{{
+            <span class="font-medium">{{
               currentStoryStore.currentStory[activeSlide]?.created_at_formatted
             }}</span>
             <GlobeAsiaAustraliaIcon class="w-5 h-5" />
@@ -111,7 +111,7 @@
             <span class="font-semibold text-lg">{{
               userStories[0]?.created_by?.name
             }}</span>
-            <span>{{ userStories[0]?.created_at_formatted }}</span>
+            <span class="font-medium">{{ userStories[0]?.created_at_formatted }}</span>
             <GlobeAsiaAustraliaIcon class="w-5 h-5" />
           </div>
         </div>
@@ -170,12 +170,20 @@
           :data-swiper-autoplay="duration.toString()"
           v-for="story in yourStory"
           :key="story.id"
-          ><img
+          class="overflow-hidden"
+          ><div
             v-if="story.attachments"
-            :src="userStore.user.avatar"
-            class="rounded-none"
-            alt="img-story"
-          />
+            class="w-full h-full flex justify-center items-center"
+            :style="{ backgroundColor: story?.theme }"
+            :class="[story?.attachments[0]?.rotate]"
+          >
+            <img
+              :src="userStore.user.avatar"
+              :style="{scale: story?.attachments[0]?.zoom_image}"
+              class="rounded-none"
+              alt="img-story"
+            />
+          </div>
           <div v-else class="w-full flex justify-center items-center">
             <span
               class="text-2xl"
@@ -187,7 +195,6 @@
               {{ story.body }}
             </span>
           </div>
-          
         </SwiperSlide>
         <SwiperStoryContainerButton
           @prev="prev"
@@ -226,15 +233,20 @@
           v-for="story in currentStoryStore.currentStory"
           :key="story.id"
           class="overflow-hidden"
-          >
-          <img
+        >
+          <div
             v-if="story.attachments"
-            :src="story.attachments[0].get_image"
-            class="rounded-none"
-            :class="[story.attachments[0].rotate]"
-            :style="{scale: story.attachments[0]?.zoom_image}"
-            alt="img-story"
-          />
+            class="w-full h-full flex justify-center items-center"
+            :style="{ backgroundColor: story?.theme }"
+          >
+            <img
+              :src="story.attachments[0].get_image"
+              class="rounded-none"
+              :class="[story.attachments[0].rotate]"
+              :style="{ scale: story.attachments[0]?.zoom_image }"
+              alt="img-story"
+            />
+          </div>
           <div v-else class="w-full flex justify-center items-center">
             <span
               class="text-2xl"
@@ -280,13 +292,22 @@
           :data-swiper-autoplay="otherStoryDuration.toString()"
           v-for="story in userStories"
           :key="story.id"
-          ><img
+          ><div
             v-if="story.attachments"
-            :src="userStore.user.avatar"
-            class="rounded-none"
-            alt="img-story"
-          />
-          <div v-else class="w-full flex justify-center items-center">
+            class="w-full h-full flex justify-center items-center"
+            :style="{ backgroundColor: story?.theme }"
+            :class="[story?.attachments[0]?.rotate]"
+          >
+            <img
+              :src="story?.attachments[0]?.get_image"
+              :style="{scale: story?.attachments[0]?.zoom_image}"
+              class="rounded-none"
+              alt="img-story"
+            />
+          </div>
+          <div v-else class="w-full h-full flex justify-center items-center" :class="[
+                selectedOtherStoryTheme?.background,
+              ]">
             <span
               class="text-2xl"
               :class="[
@@ -562,8 +583,8 @@ export default (await import("vue")).defineComponent({
     openModal() {
       this.$emit("openModal", this.isOpen);
       this.isOpen = true;
-      
-      this.pause()
+
+      this.pause();
     },
     closeModal() {
       this.isOpen = false;

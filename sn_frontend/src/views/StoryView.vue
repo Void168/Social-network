@@ -346,7 +346,23 @@ export default {
       axios
         .get(`api/story/get-text-stories/${userId}/`)
         .then((res) => {
-          this.userStories = res.data.stories;
+          if(this.userStories){
+            this.userStories = []
+            res.data.stories.forEach((textStory) => {
+              this.userStories.unshift(textStory);
+            });
+          }
+        })
+        .catch((error) => {
+          console.log(error);
+        });
+
+      axios
+        .get(`api/story/get-media-stories/${userId}/`)
+        .then((res) => {
+          res.data.stories.forEach((mediaStory) => {
+            this.userStories.unshift(mediaStory);
+          });
         })
         .catch((error) => {
           console.log(error);

@@ -35,9 +35,15 @@
         <div
           alt="story-image"
           class="flex justify-center items-center h-full w-full group-hover:scale-105 group-hover:rounded-lg absolute z-10 bg-cover transition"
-          :style="{backgroundColor: story.theme}"
+          :style="{ backgroundColor: story.theme }"
         >
-          <img :src="story?.attachments[0].get_image" class="rounded-none" ref="image">
+          <img
+            :src="story?.attachments[0].get_image"
+            class="rounded-none"
+            :class="[story?.attachments[0]?.rotate]"
+            ref="image"
+            :style="{ scale: story?.attachments[0]?.zoom_image }"
+          />
         </div>
       </div>
     </div>
@@ -74,8 +80,8 @@ export default (await import("vue")).defineComponent({
       fonts: fonts,
       dimensions: {
         width: 0,
-        height: 0
-      }
+        height: 0,
+      },
     };
   },
 
@@ -91,21 +97,34 @@ export default (await import("vue")).defineComponent({
   },
 
   mounted() {
-    this.getImagePixel()
+    this.getImagePixel();
   },
 
   methods: {
     getImagePixel() {
-      let height = this.$refs.image?.clientHeight
-      this.dimensions.height = height
+      let height = this.$refs.image?.clientHeight;
+      this.dimensions.height = height;
     },
     getUserStories(userId) {
       axios
         .get(`/api/story/get-text-stories/${userId}`)
         .then((res) => {
+          this.currentStoryStore.resetCurrentStory()
           this.currentStoryStore.getCurrentUserStory(res.data.stories);
           // console.log(res.data)
 
+          setTimeout(() => {
+            this.$router.push("/stories");
+          }, 200);
+        })
+        .catch((error) => {
+          console.log("error", error);
+        });
+
+      axios
+        .get(`/api/story/get-media-stories/${userId}`)
+        .then((res) => {
+          this.currentStoryStore.getCurrentUserStory(res.data.stories);
           setTimeout(() => {
             this.$router.push("/stories");
           }, 200);

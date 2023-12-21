@@ -45,7 +45,6 @@
             @closeModal="closeModal"
             @deleteStory="deleteStory"
           />
-          {{ yourStory }}
         </div>
       </div>
       <div
@@ -64,7 +63,7 @@
               currentStoryStore.currentStory[0]?.created_by?.name
             }}</span>
             <span>{{
-              currentStoryStore.currentStory[0]?.created_at_formatted
+              currentStoryStore.currentStory[activeSlide]?.created_at_formatted
             }}</span>
             <GlobeAsiaAustraliaIcon class="w-5 h-5" />
           </div>
@@ -188,6 +187,7 @@
               {{ story.body }}
             </span>
           </div>
+          
         </SwiperSlide>
         <SwiperStoryContainerButton
           @prev="prev"
@@ -225,10 +225,14 @@
           :data-swiper-autoplay="duration.toString()"
           v-for="story in currentStoryStore.currentStory"
           :key="story.id"
-          ><img
+          class="overflow-hidden"
+          >
+          <img
             v-if="story.attachments"
-            :src="userStore.user.avatar"
+            :src="story.attachments[0].get_image"
             class="rounded-none"
+            :class="[story.attachments[0].rotate]"
+            :style="{scale: story.attachments[0]?.zoom_image}"
             alt="img-story"
           />
           <div v-else class="w-full flex justify-center items-center">

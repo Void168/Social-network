@@ -127,9 +127,9 @@ export default {
 
   computed: {
     yourLastStory() {
-      return this.yourStories.filter(
-        (stories) => stories.created_by.id === this.userStore.user.id
-      )[0];
+      return this.yourStories
+        .filter((stories) => stories?.created_by?.id === this.userStore.user.id)
+        .sort((a, b) => new Date(a.created_at) - new Date(b.created_at))[0];
     },
     selectedTheme() {
       return this.themes?.filter(
@@ -197,46 +197,37 @@ export default {
     getSetStories() {
       const resultAll = Object.groupBy(
         this.yourStories.filter(
-          (story) => story.created_by.id !== this.userStore.user.id
+          (story) => story?.created_by?.id !== this.userStore.user.id
         ),
-        ({ created_by }) => created_by.id
+        ({ created_by }) => created_by?.id
       );
 
       this.setStory = resultAll;
-      console.log(
-        this.yourStories
-          .filter((stories) => stories.created_by.id === this.userStore.user.id)
-          .sort((a, b) => new Date(b.created_at) - new Date(a.created_at))
-      );
     },
     getUserStories() {
-      if(this.yourLastStory?.body) {
-        axios
-          .get(`/api/story/get-text-stories/${this.userStore.user.id}`)
-          .then((res) => {
-            this.currentStoryStore.getCurrentUserStory(res.data.stories);
-            setTimeout(() => {
-              this.$router.push("/stories");
-            }, 200);
-          })
-          .catch((error) => {
-            console.log("error", error);
-          });
-      }
+      axios
+        .get(`/api/story/get-text-stories/${this.userStore.user.id}`)
+        .then((res) => {
+          this.currentStoryStore.getCurrentUserStory(res.data.stories);
+          setTimeout(() => {
+            this.$router.push("/stories");
+          }, 200);
+        })
+        .catch((error) => {
+          console.log("error", error);
+        });
 
-      if(this.yourLastStory?.attachments){
-        axios
-          .get(`/api/story/get-media-stories/${this.userStore.user.id}`)
-          .then((res) => {
-            this.currentStoryStore.getCurrentUserStory(res.data.stories);
-            setTimeout(() => {
-              this.$router.push("/stories");
-            }, 200);
-          })
-          .catch((error) => {
-            console.log("error", error);
-          });
-      }
+      axios
+        .get(`/api/story/get-media-stories/${this.userStore.user.id}`)
+        .then((res) => {
+          this.currentStoryStore.getCurrentUserStory(res.data.stories);
+          setTimeout(() => {
+            this.$router.push("/stories");
+          }, 200);
+        })
+        .catch((error) => {
+          console.log("error", error);
+        });
     },
     openModal() {
       this.isOpen = true;

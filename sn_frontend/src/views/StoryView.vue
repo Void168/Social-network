@@ -209,9 +209,9 @@ export default {
 
   computed: {
     yourLastStory() {
-      return this.yourStories.filter(
-        (stories) => stories.created_by.id === this.userStore.user.id
-      );
+      return this.yourStories
+        .filter((stories) => stories.created_by.id === this.userStore.user.id)
+        .sort((a, b) => new Date(a.created_at) - new Date(b.created_at));
     },
   },
 
@@ -220,7 +220,7 @@ export default {
   },
 
   mounted() {
-    this.getTextStories();
+    this.getStories();
   },
 
   methods: {
@@ -238,17 +238,51 @@ export default {
     closeTextStory() {
       this.isTextStory = false;
     },
-    getTextStories() {
-      axios
-        .get("/api/story/text-stories/")
-        .then((res) => {
-          this.yourStories = res.data;
+    getStories() {
+      setTimeout(() => {
+        axios
+          .get("/api/story/text-stories/")
+          .then((res) => {
+            this.textStories = res.data.sort(
+              (a, b) => new Date(b.created_at) - new Date(a.created_at)
+            );
+            // console.log(this.textStories);
 
-          this.getSetStories();
-        })
-        .catch((error) => {
-          console.log(error);
-        });
+            this.textStories.forEach((textStory) => {
+              this.yourStories.unshift(textStory);
+            });
+          })
+          .catch((error) => {
+            console.log(error);
+          });
+      }, 100);
+
+      setTimeout(() => {
+        axios
+          .get("/api/story/media-stories/")
+          .then((res) => {
+            this.mediaStories = res.data.sort(
+              (a, b) => new Date(b.created_at) - new Date(a.created_at)
+            );
+            // console.log(this.mediaStories);
+            this.mediaStories.forEach((mediaStory) => {
+              this.yourStories.unshift(mediaStory);
+            });
+
+            this.getSetStories();
+          })
+          .catch((error) => {
+            console.log(error);
+          });
+      }, 200);
+
+      setTimeout(() => {
+        this.getSetStories();
+        this.yourStories = this.yourStories.sort(
+          (a, b) => new Date(b.created_at) - new Date(a.created_at)
+        );
+        console.log(this.yourStories);
+      }, 300);
     },
     getSetStories() {
       const result = Object.groupBy(

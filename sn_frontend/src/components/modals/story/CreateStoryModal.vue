@@ -416,8 +416,8 @@ export default (await import("vue")).defineComponent({
         formData.append("body", this.body);
         formData.append("is_private", this.is_private);
         formData.append("only_me", this.only_me);
-        formData.append("theme", this.selectedTheme.name);
-        formData.append("font", this.selectedFont.name);
+        formData.append("theme", this.selectedTheme.name || 'Cổ điển');
+        formData.append("font", this.selectedFont.name || 'Đơn giản');
 
         axios
           .post("/api/story/create-text-story/", formData, {

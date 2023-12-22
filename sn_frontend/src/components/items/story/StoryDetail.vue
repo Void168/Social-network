@@ -180,7 +180,7 @@
             <img
               :src="userStore.user.avatar"
               :style="{scale: story?.attachments[0]?.zoom_image}"
-              class="rounded-none"
+              class="rounded-none w-full"
               alt="img-story"
             />
           </div>
@@ -230,7 +230,7 @@
       >
         <SwiperSlide
           :data-swiper-autoplay="duration.toString()"
-          v-for="story in currentStoryStore.currentStory"
+          v-for="story in currentStoryStore?.currentStory"
           :key="story.id"
           class="overflow-hidden"
         >
@@ -241,7 +241,7 @@
           >
             <img
               :src="story.attachments[0].get_image"
-              class="rounded-none"
+              class="rounded-none w-full"
               :class="[story.attachments[0].rotate]"
               :style="{ scale: story.attachments[0]?.zoom_image }"
               alt="img-story"
@@ -301,7 +301,7 @@
             <img
               :src="story?.attachments[0]?.get_image"
               :style="{scale: story?.attachments[0]?.zoom_image}"
-              class="rounded-none"
+              class="rounded-none w-full"
               alt="img-story"
             />
           </div>
@@ -520,14 +520,17 @@ export default (await import("vue")).defineComponent({
     next() {
       this.isNext = true;
       // console.log(this.swiper.activeIndex)
-      const progressList = document.querySelectorAll(".progress");
+      // const progressList = document.querySelectorAll(".progress");
       // this.percentage = 100;
-      if (this.swiper.activeIndex < progressList.length - 1) {
-        if (this.swiper.activeIndex < progressList.length) {
-          progressList[this.swiper.activeIndex].style.width = "100%";
-        }
-      } else {
-        this.getNewUserStories();
+      // if (this.swiper.activeIndex < progressList.length - 1) {
+      //   if (this.swiper.activeIndex < progressList.length) {
+      //     progressList[this.swiper.activeIndex].style.width = "100%";
+      //   }
+      // } else {
+      //   this.getNewUserStories();
+      // }
+      if(this.swiper.isEnd){
+        console.log('hello')
       }
     },
     prev() {

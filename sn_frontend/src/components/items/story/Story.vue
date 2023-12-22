@@ -53,7 +53,6 @@
 <script>
 import { useUserStore } from "../../../stores/user";
 import { useCurrentStoryStore } from "../../../stores/currentStory";
-
 import axios from "axios";
 
 import themes from "../../../data/themes";
@@ -106,16 +105,13 @@ export default (await import("vue")).defineComponent({
       this.dimensions.height = height;
     },
     getUserStories(userId) {
+      this.currentStoryStore.resetCurrentStory();
+      
       axios
         .get(`/api/story/get-text-stories/${userId}`)
         .then((res) => {
-          this.currentStoryStore.resetCurrentStory()
           this.currentStoryStore.getCurrentUserStory(res.data.stories);
           // console.log(res.data)
-
-          setTimeout(() => {
-            this.$router.push("/stories");
-          }, 200);
         })
         .catch((error) => {
           console.log("error", error);
@@ -125,13 +121,14 @@ export default (await import("vue")).defineComponent({
         .get(`/api/story/get-media-stories/${userId}`)
         .then((res) => {
           this.currentStoryStore.getCurrentUserStory(res.data.stories);
-          setTimeout(() => {
-            this.$router.push("/stories");
-          }, 200);
         })
         .catch((error) => {
           console.log("error", error);
         });
+
+      setTimeout(() => {
+        this.$router.push("/stories");
+      }, 200);
     },
   },
 });

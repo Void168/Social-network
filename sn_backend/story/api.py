@@ -68,6 +68,12 @@ def media_story_list(request):
             
     media_stories = MediaStory.objects.filter(Q(created_by__in=list(user_ids), only_me=False))
     
+    now = datetime.now()
+    
+    for media_story in media_stories:
+        if (now - timedelta(hours=24)).timestamp() > (media_story.created_at).timestamp():
+            media_story.delete()
+    
     serializer = MediaStorySerializer(media_stories, many=True)
     
     return JsonResponse(serializer.data, safe=False)

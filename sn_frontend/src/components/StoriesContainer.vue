@@ -62,7 +62,13 @@
         </div>
       </SwiperSlide>
       <SwiperSlide v-for="story in setStory" :key="story.id">
-        <Story :story="story[0]" />
+        <Story
+          :story="
+            story.sort(
+              (a, b) => new Date(a.created_at) - new Date(b.created_at)
+            )[0]
+          "
+        />
       </SwiperSlide>
       <SwiperStoryContainerButton />
     </Swiper>
@@ -81,8 +87,8 @@
 import axios from "axios";
 import { useUserStore } from "../stores/user";
 import { useCurrentStoryStore } from "../stores/currentStory";
-import Story from "./items/story/Story.vue";
 import { Swiper, SwiperSlide } from "swiper/vue";
+import { defineAsyncComponent } from "vue";
 
 import { PlusCircleIcon } from "@heroicons/vue/24/solid";
 
@@ -96,7 +102,7 @@ import CreateStoryModal from "./modals/story/CreateStoryModal.vue";
 export default {
   components: {
     PlusCircleIcon,
-    Story,
+    Story: defineAsyncComponent(() => import("./items/story/Story.vue")),
     Swiper,
     SwiperSlide,
     SwiperStoryContainerButton,
@@ -153,9 +159,7 @@ export default {
         axios
           .get("/api/story/text-stories/")
           .then((res) => {
-            this.textStories = res.data.sort(
-              (a, b) => new Date(a.created_at) - new Date(b.created_at)
-            );
+            this.textStories = res.data;
             // console.log(this.textStories);
 
             this.textStories.forEach((textStory) => {
@@ -171,9 +175,7 @@ export default {
         axios
           .get("/api/story/media-stories/")
           .then((res) => {
-            this.mediaStories = res.data.sort(
-              (a, b) => new Date(a.created_at) - new Date(b.created_at)
-            );
+            this.mediaStories = res.data;
             // console.log(this.mediaStories);
             this.mediaStories.forEach((mediaStory) => {
               this.yourStories.unshift(mediaStory);
@@ -186,19 +188,17 @@ export default {
           });
       }, 200);
 
-      setTimeout(() => {
-        this.getSetStories();
-        this.yourStories = this.yourStories.sort(
-          (a, b) => new Date(b.created_at) - new Date(a.created_at)
-        );
-        console.log(this.yourStories);
-      }, 300);
+      this.getSetStories();
+      this.yourStories = this.yourStories.sort(
+        (a, b) => new Date(b.created_at) - new Date(a.created_at)
+      );
+      // console.log(this.yourStories);
     },
     getSetStories() {
       const resultAll = Object.groupBy(
         this.yourStories
           .filter((story) => story?.created_by?.id !== this.userStore.user.id)
-          .sort((a, b) => new Date(a.created_at) - new Date(b.created_at)),
+          .sort((a, b) => new Date(b.created_at) - new Date(a.created_at)),
         ({ created_by }) => created_by?.id
       );
 
@@ -208,7 +208,7 @@ export default {
       axios
         .get(`/api/story/get-text-stories/${this.userStore.user.id}`)
         .then((res) => {
-          this.currentStoryStore.resetCurrentStory()
+          this.currentStoryStore.resetCurrentStory();
           this.currentStoryStore.getCurrentUserStory(res.data.stories);
           setTimeout(() => {
             this.$router.push("/stories");

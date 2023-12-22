@@ -4,7 +4,7 @@
       class="col-span-1 bg-slate-800 overflow-y-auto scrollbar-corner-slate-200 scrollbar-none hover:scrollbar-thin scrollbar-thumb-slate-400 scrollbar-track-slate-800"
     >
       <div class="p-4 border-b border-slate-700 bg-slate-800 sticky top-0">
-        <RouterLink to="/">
+        <RouterLink to="/" class="w-10 block">
           <XMarkIcon
             class="text-neutral-200 h-10 w-10 cursor-pointer transition p-2 bg-slate-700 rounded-full hover:bg-slate-600"
           />
@@ -42,7 +42,7 @@
           </div>
         </div>
         <div
-          v-if="yourLastStory"
+          v-if="yourLastStory.length"
           @click="otherStory(yourLastStory[0]?.created_by.id)"
         >
           <div
@@ -204,6 +204,7 @@ export default {
       userId: null,
       isFirstStory: false,
       isYourStory: false,
+      userIdList: []
     };
   },
 
@@ -222,7 +223,10 @@ export default {
   mounted() {
     this.getStories();
   },
-
+  beforeUnmount() {
+    console.log(this.setStory)
+  },
+  
   methods: {
     openModal() {
       this.isCreateStoryOpen = true;
@@ -281,7 +285,7 @@ export default {
         this.yourStories = this.yourStories.sort(
           (a, b) => new Date(b.created_at) - new Date(a.created_at)
         );
-        console.log(this.yourStories);
+        // console.log(this.yourStories);
       }, 300);
     },
     getSetStories() {
@@ -343,11 +347,12 @@ export default {
         this.isFirstStory = false;
       }
 
+      this.userStories = []
+
       axios
         .get(`api/story/get-text-stories/${userId}/`)
         .then((res) => {
           if(this.userStories){
-            this.userStories = []
             res.data.stories.forEach((textStory) => {
               this.userStories.unshift(textStory);
             });

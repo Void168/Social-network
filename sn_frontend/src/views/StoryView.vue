@@ -135,7 +135,10 @@
           :isFirstStory="isFirstStory"
         />
       </div>
-      <div class="flex justify-center items-center gap-2">
+      <div
+        class="flex justify-center items-center gap-2"
+        v-if="currentStoryStore.currentUserId"
+      >
         <input
           ref="replyStory"
           type="text"
@@ -204,7 +207,7 @@ export default {
       userId: null,
       isFirstStory: false,
       isYourStory: false,
-      userIdList: []
+      userIdList: [],
     };
   },
 
@@ -223,10 +226,7 @@ export default {
   mounted() {
     this.getStories();
   },
-  beforeUnmount() {
-    console.log(this.setStory)
-  },
-  
+
   methods: {
     openModal() {
       this.isCreateStoryOpen = true;
@@ -290,12 +290,14 @@ export default {
     },
     getSetStories() {
       const result = Object.groupBy(
-        this.yourStories.filter(
-          (story) =>
-            story?.created_by?.id !== this.userStore.user.id &&
-            story?.created_by?.id !==
-              this.currentStoryStore?.currentStory[0]?.created_by?.id
-        ),
+        this.yourStories
+          .filter(
+            (story) =>
+              story?.created_by?.id !== this.userStore.user.id &&
+              story?.created_by?.id !==
+                this.currentStoryStore?.currentStory[0]?.created_by?.id
+          )
+          .sort((a, b) => new Date(b.created_at) - new Date(a.created_at)),
         ({ created_by }) => created_by.id
       );
       this.setStory = result;
@@ -347,12 +349,12 @@ export default {
         this.isFirstStory = false;
       }
 
-      this.userStories = []
+      this.userStories = [];
 
       axios
         .get(`api/story/get-text-stories/${userId}/`)
         .then((res) => {
-          if(this.userStories){
+          if (this.userStories) {
             res.data.stories.forEach((textStory) => {
               this.userStories.unshift(textStory);
             });

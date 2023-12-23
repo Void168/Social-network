@@ -155,6 +155,7 @@ export default {
 
   methods: {
     getStories() {
+      this.currentStoryStore.getCurrentUserId(this.userStore.user.id)
       setTimeout(() => {
         axios
           .get("/api/story/text-stories/")
@@ -192,7 +193,6 @@ export default {
       this.yourStories = this.yourStories.sort(
         (a, b) => new Date(b.created_at) - new Date(a.created_at)
       );
-      // console.log(this.yourStories);
     },
     getSetStories() {
       const resultAll = Object.groupBy(
@@ -203,6 +203,13 @@ export default {
       );
 
       this.setStory = resultAll;
+      const listId = this.yourStories
+        .filter((story) => story?.created_by?.id !== this.userStore.user.id)
+        .sort((a, b) => new Date(a.created_at) - new Date(b.created_at))
+        .map((story) => story.created_by.id);
+      const removeDuplicate = [...new Set(listId)]
+      this.currentStoryStore.resetListId();
+      this.currentStoryStore.getUserIdList(removeDuplicate);
     },
     getUserStories() {
       axios

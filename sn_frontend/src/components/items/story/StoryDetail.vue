@@ -18,7 +18,9 @@
             <span class="font-semibold text-lg">{{
               yourStory[0]?.created_by?.name
             }}</span>
-            <span class="font-medium">{{ yourStory[0]?.created_at_formatted }}</span>
+            <span class="font-medium">{{
+              yourStory[0]?.created_at_formatted
+            }}</span>
             <GlobeAsiaAustraliaIcon class="w-5 h-5" />
           </div>
         </div>
@@ -48,7 +50,7 @@
         </div>
       </div>
       <div
-        v-else-if="!isYourStory && isFirstStory && isOtherStory"
+        v-else-if="!isYourStory && isFirstStory && isOtherStory && !isNext"
         class="flex items-center justify-between absolute top-4 w-full h-16 p-4 z-20"
         :class="selectedTheme?.textColor"
       >
@@ -97,6 +99,58 @@
         </div>
       </div>
       <div
+        v-else-if="
+          !isYourStory &&
+          isFirstStory &&
+          isOtherStory &&
+          isNext &&
+          currentStoryStore.listId.length >= index + 2
+        "
+        class="flex items-center justify-between absolute top-4 w-full h-16 p-4 z-20"
+        :class="selectedNextStoryTheme?.textColor"
+      >
+        <div class="flex gap-4 items-center">
+          <img
+            :src="nextStories[0]?.created_by?.get_avatar"
+            alt=""
+            class="rounded-full w-12 h-12"
+          />
+          <div class="flex gap-1 items-center">
+            <span class="font-semibold text-lg">{{
+              nextStories[0]?.created_by?.name
+            }}</span>
+            <span class="font-medium">{{
+              nextStories[activeSlide]?.created_at_formatted
+            }}</span>
+            <GlobeAsiaAustraliaIcon class="w-5 h-5" />
+          </div>
+        </div>
+        <div class="flex gap-2 items-center">
+          <PauseIcon
+            class="w-6 h-6 cursor-pointer"
+            @click="pause"
+            v-if="!isPause"
+          />
+          <PlayIcon class="w-6 h-6 cursor-pointer" @click="pause" v-else />
+          <SpeakerWaveIcon
+            class="w-6 h-6 cursor-pointer"
+            @click="mute"
+            v-if="!isMute"
+          />
+          <SpeakerXMarkIcon
+            class="w-6 h-6 cursor-pointer"
+            @click="mute"
+            v-else
+          />
+          <StoryDropdown @openModal="openModal" :yourStory="nextStories[0]" />
+          <DeleteStoryModalVue
+            :show="isOpen"
+            @closeModal="closeModal"
+            @deleteStory="deleteStory(currentStoryStore.currentStory)"
+          />
+        </div>
+      </div>
+      <div
         v-else-if="!isYourStory && !isFirstStory && isOtherStory"
         class="flex items-center justify-between absolute top-4 w-full h-16 p-4 z-20"
         :class="selectedOtherStoryTheme?.textColor"
@@ -111,7 +165,9 @@
             <span class="font-semibold text-lg">{{
               userStories[0]?.created_by?.name
             }}</span>
-            <span class="font-medium">{{ userStories[0]?.created_at_formatted }}</span>
+            <span class="font-medium">{{
+              userStories[0]?.created_at_formatted
+            }}</span>
             <GlobeAsiaAustraliaIcon class="w-5 h-5" />
           </div>
         </div>
@@ -179,7 +235,7 @@
           >
             <img
               :src="userStore.user.avatar"
-              :style="{scale: story?.attachments[0]?.zoom_image}"
+              :style="{ scale: story?.attachments[0]?.zoom_image }"
               class="rounded-none w-full"
               alt="img-story"
             />
@@ -203,7 +259,7 @@
         />
       </Swiper>
       <Swiper
-        v-else-if="isOtherStory && isFirstStory && !isYourStory"
+        v-else-if="isOtherStory && isFirstStory && !isYourStory && !isNext"
         @swiper="onSwiper"
         class="detail-story h-full w-full"
         :class="[selectedTheme?.background]"
@@ -263,6 +319,76 @@
         />
       </Swiper>
       <Swiper
+        v-else-if="
+          isOtherStory &&
+          isFirstStory &&
+          !isYourStory &&
+          isNext &&
+          currentStoryStore.listId.length >= index + 2
+        "
+        @swiper="onSwiper"
+        class="detail-story h-full w-full"
+        :class="[selectedNextStoryTheme?.background]"
+        :centeredSlides="true"
+        :centerInsufficientSlides="true"
+        :centeredSlidesBounds="true"
+        :keyboard="true"
+        :watchSlidesProgress="true"
+        :space-between="0"
+        :setWrapperSize="true"
+        :autoplay="{
+          stopOnLastSlide: true,
+          disableOnInteraction: false,
+        }"
+        :pagination="{
+          clickable: false,
+        }"
+        :modules="modules"
+        containerModifierClass="swiper-wrapper"
+        bulletActiveClass="swiper-pagination-bullet-active"
+        bulletClass="swiper-pagination-bullet"
+        modifierClass="swiper-pagination"
+        slideClass="swiper-slide"
+      >
+        <SwiperSlide
+          :data-swiper-autoplay="duration.toString()"
+          v-for="story in nextStories"
+          :key="story.id"
+          class="overflow-hidden"
+        >
+          <div
+            v-if="story.attachments"
+            class="w-full h-full flex justify-center items-center"
+            :style="{ backgroundColor: story?.theme }"
+          >
+            <img
+              :src="story.attachments[0].get_image"
+              class="rounded-none w-full"
+              :class="[story.attachments[0].rotate]"
+              :style="{ scale: story.attachments[0]?.zoom_image }"
+              alt="img-story"
+            />
+          </div>
+          <div v-else class="w-full flex justify-center items-center">
+            <span
+              class="text-2xl"
+              :class="[
+                selectedNextStoryFont?.font,
+                selectedNextStoryTheme?.textColor,
+              ]"
+            >
+              {{ story.body }}
+            </span>
+          </div>
+        </SwiperSlide>
+        <SwiperStoryContainerButton
+          @prev="prev"
+          @next="next"
+          :activeSlide="activeSlide"
+        />
+      </Swiper>
+
+      <Swiper
         v-else-if="isOtherStory && !isFirstStory && !isYourStory"
         @swiper="onSwiper"
         class="detail-story h-full w-full"
@@ -300,14 +426,16 @@
           >
             <img
               :src="story?.attachments[0]?.get_image"
-              :style="{scale: story?.attachments[0]?.zoom_image}"
+              :style="{ scale: story?.attachments[0]?.zoom_image }"
               class="rounded-none w-full"
               alt="img-story"
             />
           </div>
-          <div v-else class="w-full h-full flex justify-center items-center" :class="[
-                selectedOtherStoryTheme?.background,
-              ]">
+          <div
+            v-else
+            class="w-full h-full flex justify-center items-center"
+            :class="[selectedOtherStoryTheme?.background]"
+          >
             <span
               class="text-2xl"
               :class="[
@@ -325,6 +453,7 @@
           :activeSlide="activeSlide"
         />
       </Swiper>
+      <div class="text-white text-xl" v-else><p>Đã xem hết tin</p></div>
     </div>
   </div>
 </template>
@@ -397,6 +526,8 @@ export default (await import("vue")).defineComponent({
       themes: themes,
       fonts: fonts,
       isOpen: false,
+      nextStories: [],
+      index: 0,
     };
   },
 
@@ -420,6 +551,16 @@ export default (await import("vue")).defineComponent({
     selectedYourStoryFont() {
       return this.fonts?.filter(
         (font) => font.name === this.yourStory[this.activeSlide]?.font
+      )[0];
+    },
+    selectedNextStoryTheme() {
+      return this.themes?.filter(
+        (theme) => theme.name === this.nextStories[this.activeSlide]?.theme
+      )[0];
+    },
+    selectedNextStoryFont() {
+      return this.fonts?.filter(
+        (font) => font.name === this.nextStories[this.activeSlide]?.font
       )[0];
     },
     selectedTheme() {
@@ -518,19 +659,57 @@ export default (await import("vue")).defineComponent({
       }
     },
     next() {
-      this.isNext = true;
-      // console.log(this.swiper.activeIndex)
-      // const progressList = document.querySelectorAll(".progress");
-      // this.percentage = 100;
-      // if (this.swiper.activeIndex < progressList.length - 1) {
-      //   if (this.swiper.activeIndex < progressList.length) {
-      //     progressList[this.swiper.activeIndex].style.width = "100%";
-      //   }
-      // } else {
-      //   this.getNewUserStories();
-      // }
-      if(this.swiper.isEnd){
-        console.log('hello')
+      if (this.swiper.isEnd) {
+        // this.isFirstStory = false;
+        // this.isOtherStory = true;
+        // this.isYourStory = false;
+        this.nextStories = [];
+        this.isNext = true;
+        const index = this.currentStoryStore.listId.indexOf(
+          this.currentStoryStore.currentUserId
+        );
+        this.index = index;
+
+        this.currentStoryStore.getCurrentUserId(
+          this.currentStoryStore.listId[index + 1]
+        );
+
+        if (this.currentStoryStore.listId.length - index >= 2) {
+          axios
+            .get(
+              `/api/story/get-text-stories/${
+                this.currentStoryStore.listId[index + 1]
+              }/`
+            )
+            .then((res) => {
+              if (res.data.stories.length) {
+                res.data.stories.forEach((story) => {
+                  this.nextStories.unshift(story);
+                });
+              }
+            })
+            .catch((error) => {
+              console.log(error);
+            });
+        }
+        if (this.currentStoryStore.listId.length - index >= 2) {
+          axios
+            .get(
+              `/api/story/get-media-stories/${
+                this.currentStoryStore.listId[index + 1]
+              }/`
+            )
+            .then((res) => {
+              if (res.data.stories.length) {
+                res.data.stories.forEach((story) => {
+                  this.nextStories.unshift(story);
+                });
+              }
+            })
+            .catch((error) => {
+              console.log(error);
+            });
+        }
       }
     },
     prev() {

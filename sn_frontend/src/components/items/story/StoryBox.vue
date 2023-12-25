@@ -2,6 +2,11 @@
   <div
     @click="$emit('otherStory')"
     class="flex gap-3 items-center py-4 px-8 hover:bg-slate-700 rounded-lg cursor-pointer"
+    :class="
+      currentStoryStore.currentUserId === story[0].created_by.id
+        ? 'bg-slate-700'
+        : ''
+    "
   >
     <img
       :src="story[0].created_by.get_avatar"
@@ -12,7 +17,7 @@
       <h3 class="text-lg font-semibold">{{ story[0].created_by.name }}</h3>
       <p class="flex gap-2">
         <span class="text-emerald-400">{{ story.length }} thẻ mới</span>
-        <span>{{story[0].created_at_formatted}} trước</span>
+        <span>{{ story[0].created_at_formatted }} trước</span>
       </p>
     </div>
   </div>
@@ -25,7 +30,7 @@ import { useCurrentStoryStore } from "../../../stores/currentStory";
 export default (await import("vue")).defineComponent({
   setup() {
     const userStore = useUserStore();
-    const currentStoryStore = useCurrentStoryStore()
+    const currentStoryStore = useCurrentStoryStore();
 
     return {
       userStore,
@@ -35,7 +40,7 @@ export default (await import("vue")).defineComponent({
 
   props: {
     story: Object,
-    isOtherStory: Boolean
+    isOtherStory: Boolean,
   },
 });
 </script>

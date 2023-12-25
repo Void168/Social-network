@@ -41,8 +41,6 @@ export const useCurrentStoryStore = defineStore({
         }
       }
       this.listId = [... new Set(this.listId)]
-
-      console.log(this.listId)
     },
     resetCurrentStory() {
       this.currentStory = [];

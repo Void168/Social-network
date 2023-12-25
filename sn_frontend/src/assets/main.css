@@ -1,4 +1,4 @@
-@import url('https://fonts.googleapis.com/css2?family=Comfortaa:wght@500&family=Indie+Flower&family=Kanit:wght@300&family=Oswald&display=swap');
+@import url("https://fonts.googleapis.com/css2?family=Comfortaa:wght@500&family=Indie+Flower&family=Kanit:wght@300&family=Oswald&display=swap");
 
 @tailwind base;
 @tailwind components;
@@ -31,18 +31,33 @@
     @apply !flex !items-center !justify-center;
   }
   .swiper-pagination {
-    @apply !flex !top-2 !px-2 before:content-[''] before:flex before:absolute before:gap-2 before:h-[6px] before:px-4;
+    @apply !flex !gap-1 !top-2 !px-2 !bg-inherit !rounded-3xl before:content-[''] before:w-[98%] before:h-[6px] before:absolute before:left-0 before:z-10 before:rounded-3xl;
   }
-  .swiper-pagination > .swiper-pagination-bullet {
-    @apply !flex;
+
+  .swiper-pagination-progressbar {
+    @apply !px-2 !inset-x-1 !rounded-3xl;
   }
-  .swiper-pagination-bullet {
-    @apply !relative !opacity-70 !rounded-2xl !w-full !h-[6px] ;
+
+  .swiper-pagination-progressbar-fill {
+    @apply flex !opacity-70 !inset-x-2 rounded-3xl !h-[6px] !bg-emerald-700 z-20 !w-[97%] !scale-x-0;
   }
-  .swiper-pagination-bullet-active {
+
+  .progress {
+    @apply h-[6px] relative flex items-center rounded-3xl
+  }
+
+  .progress-item {
+    @apply w-full bg-white/30 h-[6px] z-30 rounded-3xl
+  }
+
+  .progress-main {
+    @apply w-full rounded-3xl
+  }
+
+  /* .swiper-pagination-bullet-active {
     @apply !bg-white !opacity-70 !rounded-2xl;
   }
   .progress{
     @apply h-[6px] rounded-2xl bg-emerald-400
-  }
+  } */
 }

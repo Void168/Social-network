@@ -56,15 +56,12 @@
             <img
               :src="userStore.user.avatar"
               alt="story-owner"
-              class="w-16 h-16 rounded-full ring-4 ring-emerald-400"
+              class="w-16 h-16 rounded-full"
             />
             <div class="flex flex-col space-y-2">
               <h3 class="text-lg font-semibold">{{ userStore.user.name }}</h3>
               <p class="flex gap-2">
-                <span class="text-emerald-400"
-                  >{{ yourLastStory.length }} thẻ mới</span
-                >
-                <span>{{ yourLastStory[0]?.created_at_formatted }}</span>
+                <span class="dark:text-neutral-400">{{ yourLastStory[0]?.created_at_formatted }}</span>
               </p>
             </div>
           </div>

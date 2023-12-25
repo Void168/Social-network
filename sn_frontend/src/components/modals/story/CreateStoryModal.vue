@@ -371,7 +371,7 @@ export default (await import("vue")).defineComponent({
 
         if (img.complete) {
           const rgb = colorThief.getColor(img);
-          this.color = `rgba(${rgb.toString()},0.8)`;
+          this.color = `rgba(${rgb.toString()},1)`;
         } else {
           img.addEventListener("load", function () {
             colorThief.getColor(img);

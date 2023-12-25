@@ -155,7 +155,7 @@ export default {
 
   methods: {
     getStories() {
-      this.currentStoryStore.getCurrentUserId(this.userStore.user.id)
+      this.currentStoryStore.getCurrentUserId(this.userStore.user.id);
       setTimeout(() => {
         axios
           .get("/api/story/text-stories/")
@@ -207,7 +207,7 @@ export default {
         .filter((story) => story?.created_by?.id !== this.userStore.user.id)
         .sort((a, b) => new Date(a.created_at) - new Date(b.created_at))
         .map((story) => story.created_by.id);
-      const removeDuplicate = [...new Set(listId)]
+      const removeDuplicate = [...new Set(listId)];
       this.currentStoryStore.resetListId();
       this.currentStoryStore.getUserIdList(removeDuplicate);
     },
@@ -217,25 +217,23 @@ export default {
         .then((res) => {
           this.currentStoryStore.resetCurrentStory();
           this.currentStoryStore.getCurrentUserStory(res.data.stories);
-          setTimeout(() => {
-            this.$router.push("/stories");
-          }, 200);
         })
         .catch((error) => {
           console.log("error", error);
         });
-
-      axios
-        .get(`/api/story/get-media-stories/${this.userStore.user.id}`)
-        .then((res) => {
-          this.currentStoryStore.getCurrentUserStory(res.data.stories);
-          setTimeout(() => {
-            this.$router.push("/stories");
-          }, 200);
-        })
-        .catch((error) => {
-          console.log("error", error);
-        });
+      setTimeout(() => {
+        axios
+          .get(`/api/story/get-media-stories/${this.userStore.user.id}`)
+          .then((res) => {
+            this.currentStoryStore.getCurrentUserStory(res.data.stories);
+          })
+          .catch((error) => {
+            console.log("error", error);
+          });
+      }, 100);
+      setTimeout(() => {
+        this.$router.push("/stories");
+      }, 500);
     },
     openModal() {
       this.isOpen = true;

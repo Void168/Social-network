@@ -151,6 +151,59 @@
         </div>
       </div>
       <div
+        v-else-if="
+          isOtherStory &&
+          isFirstStory &&
+          !isYourStory &&
+          isPrev &&
+          currentStoryStore.listId.length <=
+            index + currentStoryStore.listId.length
+        "
+        class="flex items-center justify-between absolute top-4 w-full h-16 p-4 z-20"
+        :class="selectedPrevStoryTheme?.textColor"
+      >
+        <div class="flex gap-4 items-center">
+          <img
+            :src="prevStories[0]?.created_by?.get_avatar"
+            alt=""
+            class="rounded-full w-12 h-12"
+          />
+          <div class="flex gap-1 items-center">
+            <span class="font-semibold text-lg">{{
+              prevStories[0]?.created_by?.name
+            }}</span>
+            <span class="font-medium">{{
+              prevStories[activeSlide]?.created_at_formatted
+            }}</span>
+            <GlobeAsiaAustraliaIcon class="w-5 h-5" />
+          </div>
+        </div>
+        <div class="flex gap-2 items-center">
+          <PauseIcon
+            class="w-6 h-6 cursor-pointer"
+            @click="pause"
+            v-if="!isPause"
+          />
+          <PlayIcon class="w-6 h-6 cursor-pointer" @click="pause" v-else />
+          <SpeakerWaveIcon
+            class="w-6 h-6 cursor-pointer"
+            @click="mute"
+            v-if="!isMute"
+          />
+          <SpeakerXMarkIcon
+            class="w-6 h-6 cursor-pointer"
+            @click="mute"
+            v-else
+          />
+          <StoryDropdown @openModal="openModal" :yourStory="prevStories[0]" />
+          <DeleteStoryModalVue
+            :show="isOpen"
+            @closeModal="closeModal"
+            @deleteStory="deleteStory(currentStoryStore.currentStory)"
+          />
+        </div>
+      </div>
+      <div
         v-else-if="!isYourStory && !isFirstStory && isOtherStory"
         class="flex items-center justify-between absolute top-4 w-full h-16 p-4 z-20"
         :class="selectedOtherStoryTheme?.textColor"
@@ -208,17 +261,18 @@
         :watchSlidesProgress="true"
         :space-between="0"
         :setWrapperSize="true"
+        :simulate-touch="false"
         :autoplay="{
           stopOnLastSlide: true,
           disableOnInteraction: false,
         }"
         :pagination="{
           clickable: false,
+          type: 'progressbar',
         }"
         :modules="modules"
         containerModifierClass="swiper-wrapper"
-        bulletActiveClass="swiper-pagination-bullet-active"
-        bulletClass="swiper-pagination-bullet"
+        progressbarFillClass="swiper-pagination-progressbar-fill"
         modifierClass="swiper-pagination"
         slideClass="swiper-slide"
       >
@@ -259,13 +313,16 @@
         />
       </Swiper>
       <Swiper
-        v-else-if="isOtherStory && isFirstStory && !isYourStory && !isNext"
+        v-else-if="
+          isOtherStory && isFirstStory && !isYourStory && !isNext && !isPrev
+        "
         @swiper="onSwiper"
         class="detail-story h-full w-full"
         :class="[selectedTheme?.background]"
         :centeredSlides="true"
         :centerInsufficientSlides="true"
         :centeredSlidesBounds="true"
+        :simulate-touch="false"
         :keyboard="true"
         :watchSlidesProgress="true"
         :space-between="0"
@@ -276,11 +333,11 @@
         }"
         :pagination="{
           clickable: false,
+          type: 'progressbar',
         }"
         :modules="modules"
         containerModifierClass="swiper-wrapper"
-        bulletActiveClass="swiper-pagination-bullet-active"
-        bulletClass="swiper-pagination-bullet"
+        progressbarFillClass="swiper-pagination-progressbar-fill"
         modifierClass="swiper-pagination"
         slideClass="swiper-slide"
       >
@@ -296,10 +353,10 @@
             :style="{ backgroundColor: story?.theme }"
           >
             <img
-              :src="story.attachments[0].get_image"
+              :src="story?.attachments[0]?.get_image"
               class="rounded-none w-full"
-              :class="[story.attachments[0].rotate]"
-              :style="{ scale: story.attachments[0]?.zoom_image }"
+              :class="[story?.attachments[0]?.rotate]"
+              :style="{ scale: story?.attachments[0]?.zoom_image }"
               alt="img-story"
             />
           </div>
@@ -342,11 +399,11 @@
         }"
         :pagination="{
           clickable: false,
+          type: 'progressbar',
         }"
         :modules="modules"
         containerModifierClass="swiper-wrapper"
-        bulletActiveClass="swiper-pagination-bullet-active"
-        bulletClass="swiper-pagination-bullet"
+        progressbarFillClass="swiper-pagination-progressbar-fill"
         modifierClass="swiper-pagination"
         slideClass="swiper-slide"
       >
@@ -387,7 +444,77 @@
           :activeSlide="activeSlide"
         />
       </Swiper>
-
+      <Swiper
+        v-else-if="
+          isOtherStory &&
+          isFirstStory &&
+          !isYourStory &&
+          isPrev &&
+          currentStoryStore.listId.length <=
+            index + currentStoryStore.listId.length
+        "
+        @swiper="onSwiper"
+        class="detail-story h-full w-full"
+        :class="[selectedPrevStoryTheme?.background]"
+        :centeredSlides="true"
+        :centerInsufficientSlides="true"
+        :centeredSlidesBounds="true"
+        :keyboard="true"
+        :watchSlidesProgress="true"
+        :simulate-touch="false"
+        :space-between="0"
+        :setWrapperSize="true"
+        :autoplay="{
+          stopOnLastSlide: true,
+          disableOnInteraction: false,
+        }"
+        :pagination="{
+          clickable: false,
+          type: 'progressbar',
+        }"
+        :modules="modules"
+        containerModifierClass="swiper-wrapper"
+        progressbarFillClass="swiper-pagination-progressbar-fill"
+        modifierClass="swiper-pagination"
+        slideClass="swiper-slide"
+      >
+        <SwiperSlide
+          :data-swiper-autoplay="duration.toString()"
+          v-for="story in prevStories"
+          :key="story.id"
+          class="overflow-hidden"
+        >
+          <div
+            v-if="story?.attachments"
+            class="w-full h-full flex justify-center items-center"
+            :style="{ backgroundColor: story?.theme }"
+          >
+            <img
+              :src="story?.attachments[0]?.get_image"
+              class="rounded-none w-full"
+              :class="[story?.attachments[0]?.rotate]"
+              :style="{ scale: story?.attachments[0]?.zoom_image }"
+              alt="img-story"
+            />
+          </div>
+          <div v-else class="w-full flex justify-center items-center">
+            <span
+              class="text-2xl"
+              :class="[
+                selectedPrevStoryFont?.font,
+                selectedPrevStoryTheme?.textColor,
+              ]"
+            >
+              {{ story?.body }}
+            </span>
+          </div>
+        </SwiperSlide>
+        <SwiperStoryContainerButton
+          @prev="prev"
+          @next="next"
+          :activeSlide="activeSlide"
+        />
+      </Swiper>
       <Swiper
         v-else-if="isOtherStory && !isFirstStory && !isYourStory"
         @swiper="onSwiper"
@@ -398,6 +525,7 @@
         :centeredSlidesBounds="true"
         :keyboard="true"
         :watchSlidesProgress="true"
+        :simulate-touch="false"
         :space-between="0"
         :setWrapperSize="true"
         :autoplay="{
@@ -406,11 +534,11 @@
         }"
         :pagination="{
           clickable: false,
+          type: 'progressbar',
         }"
         :modules="modules"
         containerModifierClass="swiper-wrapper"
-        bulletActiveClass="swiper-pagination-bullet-active"
-        bulletClass="swiper-pagination-bullet"
+        progressbarFillClass="swiper-pagination-progressbar-fill"
         modifierClass="swiper-pagination"
         slideClass="swiper-slide"
       >
@@ -527,6 +655,7 @@ export default (await import("vue")).defineComponent({
       fonts: fonts,
       isOpen: false,
       nextStories: [],
+      prevStories: [],
       index: 0,
     };
   },
@@ -563,6 +692,16 @@ export default (await import("vue")).defineComponent({
         (font) => font.name === this.nextStories[this.activeSlide]?.font
       )[0];
     },
+    selectedPrevStoryTheme() {
+      return this.themes?.filter(
+        (theme) => theme.name === this.prevStories[this.activeSlide]?.theme
+      )[0];
+    },
+    selectedPrevStoryFont() {
+      return this.fonts?.filter(
+        (font) => font.name === this.prevStories[this.activeSlide]?.font
+      )[0];
+    },
     selectedTheme() {
       return this.themes?.filter(
         (theme) =>
@@ -584,11 +723,17 @@ export default (await import("vue")).defineComponent({
           1000
         );
       }
-      if (this.isOtherStory && !this.isFirstStory && !this.isYourStory) {
+      if (this.userStories.length > 0) {
         return this.userStories[this.activeSlide]?.duaration * 1000;
       }
-      if (!this.isOtherStory && !this.isFirstStory && this.isYourStory) {
+      if (this.yourStory.length > 0) {
         return this.yourStory[this.activeSlide]?.duaration * 1000;
+      }
+      if (this.nextStories.length > 0) {
+        return this.nextStories[this.activeSlide]?.duaration * 1000;
+      }
+      if (this.prevStories.length > 0) {
+        return this.prevStories[this.activeSlide]?.duaration * 1000;
       }
     },
     selectedOtherStoryTheme() {
@@ -619,118 +764,193 @@ export default (await import("vue")).defineComponent({
       this.swiper = sw;
     },
     doProgress() {
-      const bulletList = document.querySelectorAll(".swiper-pagination-bullet");
-      bulletList.forEach((bullet) => {
-        const progress = document.createElement("span");
-        bullet.appendChild(progress);
-        progress.className = "progress";
-      });
+      const progressbar = document.querySelectorAll(
+        ".swiper-pagination-progressbar-fill"
+      );
 
-      const progressList = document.querySelectorAll(".progress");
-      for (let i = this.swiper.activeIndex; i < progressList.length; i++) {
-        const timeout = () => {
-          setTimeout(() => {
-            let interval = setInterval(() => {
-              if (!this.isPause) {
-                if (
-                  this.percentage < 100 &&
-                  this.swiper.activeIndex < progressList.length
-                ) {
-                  this.percentage += 2;
-                  progressList[i].style.width = `${this.percentage}%`;
-                  this.activeSlide = this.swiper.activeIndex;
-                } else {
-                  this.percentage = 0;
-                  clearInterval(interval);
-                }
-              }
-            }, (this.duration * 2) / 100);
-            // if (this.isPrev) {
-            //   this.percentage = 0;
-            //   clearInterval(interval);
-            // }
-          }, (this.duration + this.duration / 100) * i);
-        };
-        if (this.isPause) {
-          clearTimeout(timeout);
-        } else {
-          timeout();
-        }
+      const length =
+        this.userStories.length ||
+        this.yourStory.length ||
+        this.currentStoryStore.currentStory.length ||
+        this.nextStories.length ||
+        this.prevStories.length;
+
+      const pagination = document.querySelectorAll(".swiper-pagination");
+      
+      for (let i = 1; i <= length; i++) {
+        const progressItem = document.createElement("span");
+        pagination[0].appendChild(progressItem);
+        progressItem.className = "progress-item";
       }
+
+      let interval = setInterval(() => {
+        if (this.percentage < 1 && !this.isPause) {
+          this.activeSlide = this.swiper.realIndex;
+          this.percentage += (this.duration * 2) / 1000 / 1000 / length;
+
+          progressbar[0].style.setProperty(
+            "transform",
+            `scaleX(${this.percentage})`,
+            "important"
+          );
+        } else {
+          clearInterval(interval);
+        }
+      }, (this.duration * 2) / 100);
     },
     next() {
-      if (this.swiper.isEnd) {
-        // this.isFirstStory = false;
-        // this.isOtherStory = true;
-        // this.isYourStory = false;
-        this.nextStories = [];
-        this.isNext = true;
-        const index = this.currentStoryStore.listId.indexOf(
-          this.currentStoryStore.currentUserId
-        );
-        this.index = index;
+      if (this.yourStory.length > 0) {
+        this.percentage = (this.activeSlide + 1) / this.yourStory.length;
+      }
+      if (this.nextStories.length > 0) {
+        this.percentage = (this.activeSlide + 1) / this.nextStories.length;
+      }
+      if (this.prevStories.length > 0) {
+        this.percentage = (this.activeSlide + 1) / this.prevStories.length;
+      }
+      if (this.userStories.length > 0) {
+        this.percentage = (this.activeSlide + 1) / this.userStories.length;
+      }
+      if (this.currentStoryStore.currentStory.length > 0) {
+        this.percentage =
+          (this.activeSlide + 1) / this.currentStoryStore.currentStory.length;
+      }
 
-        this.currentStoryStore.getCurrentUserId(
-          this.currentStoryStore.listId[index + 1]
-        );
+      this.$emit("next");
+      let nextIndex = this.activeSlide;
+      nextIndex++;
+      if (
+        nextIndex > this.currentStoryStore?.currentStory?.length - 1 ||
+        (this.nextStories.length && nextIndex > this.nextStories?.length - 1)
+      ) {
+        this.percentage = 0;
 
-        if (this.currentStoryStore.listId.length - index >= 2) {
-          axios
-            .get(
-              `/api/story/get-text-stories/${
-                this.currentStoryStore.listId[index + 1]
-              }/`
-            )
-            .then((res) => {
-              if (res.data.stories.length) {
-                res.data.stories.forEach((story) => {
-                  this.nextStories.unshift(story);
-                });
-              }
-            })
-            .catch((error) => {
-              console.log(error);
-            });
-        }
-        if (this.currentStoryStore.listId.length - index >= 2) {
-          axios
-            .get(
-              `/api/story/get-media-stories/${
-                this.currentStoryStore.listId[index + 1]
-              }/`
-            )
-            .then((res) => {
-              if (res.data.stories.length) {
-                res.data.stories.forEach((story) => {
-                  this.nextStories.unshift(story);
-                });
-              }
-            })
-            .catch((error) => {
-              console.log(error);
-            });
-        }
+        nextIndex = 0;
+        nextIndex++;
+        setTimeout(() => {
+          this.nextStories = [];
+          this.isNext = true;
+          const index = this.currentStoryStore.listId.indexOf(
+            this.currentStoryStore.currentUserId
+          );
+          this.index = index;
+
+          this.currentStoryStore.getCurrentUserId(
+            this.currentStoryStore.listId[index + 1]
+          );
+
+          if (this.currentStoryStore.listId.length - index >= 2) {
+            axios
+              .get(
+                `/api/story/get-text-stories/${
+                  this.currentStoryStore.listId[index + 1]
+                }/`
+              )
+              .then((res) => {
+                if (res.data.stories.length) {
+                  res.data.stories.forEach((story) => {
+                    this.nextStories.unshift(story);
+                  });
+                }
+              })
+              .catch((error) => {
+                console.log(error);
+              });
+          }
+          if (this.currentStoryStore.listId.length - index >= 2) {
+            axios
+              .get(
+                `/api/story/get-media-stories/${
+                  this.currentStoryStore.listId[index + 1]
+                }/`
+              )
+              .then((res) => {
+                if (res.data.stories.length) {
+                  res.data.stories.forEach((story) => {
+                    this.nextStories.unshift(story);
+                  });
+                }
+              })
+              .catch((error) => {
+                console.log(error);
+              });
+          }
+        }, 200);
       }
     },
     prev() {
-      this.isPrev = true;
-      const progressList = document.querySelectorAll(".progress");
-      console.log(this.swiper.activeIndex);
-      if (this.swiper.activeIndex >= 0) {
-        // this.percentage = 0;
-        if (this.swiper.activeIndex < progressList.length) {
-          // progressList[
-          //   this.swiper.activeIndex - 1
-          // ].style.width = `${this.percentage}%`;
-          progressList[this.swiper.activeIndex].style.width = "0%";
-          // this.doProgress();
-        }
-      } else {
-        this.getNewUserStories();
+      if (this.yourStory.length > 0) {
+        this.percentage = (this.activeSlide - 1) / this.yourStory.length;
       }
-      setTimeout(() => {
-        this.isPrev = false;
-      }, 100);
+      if (this.nextStories.length > 0) {
+        this.percentage = (this.activeSlide - 1) / this.nextStories.length;
+      }
+      if (this.prevStories.length > 0) {
+        this.percentage = (this.activeSlide - 1) / this.prevStories.length;
+      }
+      if (this.userStories.length > 0) {
+        this.percentage = (this.activeSlide - 1) / this.userStories.length;
+      }
+      if (this.currentStoryStore.currentStory.length > 0) {
+        this.percentage =
+          (this.activeSlide - 1) / this.currentStoryStore.currentStory.length;
+      }
+      console.log(this.percentage)
+      // this.$emit("prev");
+      // if (this.activeSlide === 0) {
+      //   this.prevStories = [];
+      //   this.isPrev = true;
+      //   const index = this.currentStoryStore.listId.indexOf(
+      //     this.currentStoryStore.currentUserId
+      //   );
+      //   this.index = index;
+      //   this.currentStoryStore.getCurrentUserId(
+      //     this.currentStoryStore.listId[index - 1]
+      //   );
+      //   if (
+      //     this.currentStoryStore.listId.length - index <=
+      //     this.currentStoryStore.listId.length
+      //   ) {
+      //     axios
+      //       .get(
+      //         `/api/story/get-text-stories/${
+      //           this.currentStoryStore.listId[index - 1]
+      //         }/`
+      //       )
+      //       .then((res) => {
+      //         if (res.data.stories.length) {
+      //           res.data.stories.forEach((story) => {
+      //             this.prevStories.unshift(story);
+      //           });
+      //         }
+      //       })
+      //       .catch((error) => {
+      //         console.log(error);
+      //       });
+      //   }
+      //   if (
+      //     this.currentStoryStore.listId.length - index <=
+      //     this.currentStoryStore.listId.length
+      //   ) {
+      //     axios
+      //       .get(
+      //         `/api/story/get-media-stories/${
+      //           this.currentStoryStore.listId[index - 1]
+      //         }/`
+      //       )
+      //       .then((res) => {
+      //         if (res.data.stories.length) {
+      //           res.data.stories.forEach((story) => {
+      //             this.prevStories.unshift(story);
+      //           });
+      //         }
+      //       })
+      //       .catch((error) => {
+      //         console.log(error);
+      //       });
+      //   }
+      //   console.log(this.prevStories);
+      // }
     },
 
     pause() {
@@ -746,22 +966,6 @@ export default (await import("vue")).defineComponent({
       console.log(this.isMute);
     },
 
-    getNewUserStories() {
-      const progressList = document.querySelectorAll(".progress");
-      if (progressList.length - 1 === this.swiper.activeIndex) {
-        console.log("load new user's stories");
-        console.log(this.swiper.activeIndex);
-        this.swiper.activeIndex = 0;
-        this.percentage = 0;
-        for (let i = 0; i < progressList.length; i++) {
-          progressList[i].style.width = `${this.percentage}%`;
-        }
-        this.doProgress();
-      } else {
-        console.log("hello");
-      }
-    },
-
     openModal() {
       this.$emit("openModal", this.isOpen);
       this.isOpen = true;
@@ -772,36 +976,69 @@ export default (await import("vue")).defineComponent({
       this.isOpen = false;
     },
     deleteStory(yourStory) {
-      axios
-        .delete(
-          `/api/story/text-story/${
-            yourStory[this.swiper.activeIndex].id
-          }/delete/`
-        )
-        .then((res) => {
-          if (res.data.message === "text story deleted") {
-            setTimeout(() => {
-              this.closeModal();
-            }, 1000);
-            this.toastStore.showToast(
-              3000,
-              "Tin đã được xóa",
-              "bg-emerald-500 text-white"
-            );
-            setTimeout(() => {
-              this.$router.go(-1);
-            }, 3500);
-          } else {
-            this.toastStore.showToast(
-              3000,
-              "Xóa tin thất bại",
-              "bg-rose-500 text-white"
-            );
-          }
-        })
-        .catch((error) => {
-          console.log(error);
-        });
+      if (yourStory[0].body) {
+        axios
+          .delete(
+            `/api/story/text-story/${
+              yourStory[this.swiper.realIndex].id
+            }/delete/`
+          )
+          .then((res) => {
+            if (res.data.message === "text story deleted") {
+              setTimeout(() => {
+                this.closeModal();
+              }, 1000);
+              this.toastStore.showToast(
+                3000,
+                "Tin đã được xóa",
+                "bg-emerald-500 text-white"
+              );
+              setTimeout(() => {
+                this.$router.go(-1);
+              }, 3500);
+            } else {
+              this.toastStore.showToast(
+                3000,
+                "Xóa tin thất bại",
+                "bg-rose-500 text-white"
+              );
+            }
+          })
+          .catch((error) => {
+            console.log(error);
+          });
+      } else {
+        axios
+          .delete(
+            `/api/story/media-story/${
+              yourStory[this.swiper.realIndex].id
+            }/delete/`
+          )
+          .then((res) => {
+            if (res.data.message === "text media deleted") {
+              setTimeout(() => {
+                this.closeModal();
+              }, 1000);
+              this.toastStore.showToast(
+                3000,
+                "Tin đã được xóa",
+                "bg-emerald-500 text-white"
+              );
+              setTimeout(() => {
+                this.$router.go(-1);
+              }, 3500);
+            } else {
+              this.toastStore.showToast(
+                3000,
+                "Xóa tin thất bại",
+                "bg-rose-500 text-white"
+              );
+            }
+          })
+          .catch((error) => {
+            console.log(error);
+          });
+      }
     },
   },
 });

@@ -146,3 +146,10 @@ def text_story_delete(request, pk):
     text_story.delete()
     
     return JsonResponse({'message': 'text story deleted'})
+
+@api_view(['DELETE'])
+def text_media_delete(request, pk):
+    media_story = MediaStory.objects.filter(created_by=request.user).get(pk=pk)
+    media_story.delete()
+    
+    return JsonResponse({'message': 'text media deleted'})

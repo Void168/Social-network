@@ -10,16 +10,28 @@
         currentStoryStore.listId.indexOf(currentStoryStore.currentUserId) > 0
       "
     >
-      <ChevronLeftIcon
-        @click="$emit('prev')"
-        class="w-12 bg-slate-700/50 p-2 rounded-full hover:bg-slate-600 transition duration-100"
-      />
+      <div @click="$emit('prev')">
+        <ChevronLeftIcon
+          class="w-12 bg-slate-700/50 p-2 rounded-full hover:bg-slate-600 transition duration-100"
+        />
+      </div>
     </button>
-    <button @click="swiper.slideNext()" class="absolute inset-y-0 z-10 right-4">
-      <ChevronRightIcon
-        @click="$emit('next')"
-        class="w-12 bg-slate-700/50 p-2 rounded-full hover:bg-slate-600 transition duration-100"
-      />
+    <button
+      @click="swiper.slideNext()"
+      class="absolute inset-y-0 z-10 right-4"
+      v-if="
+        (activeSlide > 0 &&
+          currentStoryStore.listId.indexOf(currentStoryStore.currentUserId) ===
+            currentStoryStore.listId.length - 1) ||
+        currentStoryStore.listId.indexOf(currentStoryStore.currentUserId) <
+          currentStoryStore.listId.length
+      "
+    >
+      <div @click="$emit('next')">
+        <ChevronRightIcon
+          class="w-12 bg-slate-700/50 p-2 rounded-full hover:bg-slate-600 transition duration-100"
+        />
+      </div>
     </button>
   </div>
 </template>

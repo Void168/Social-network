@@ -99,13 +99,7 @@
         </div>
       </div>
       <div
-        v-else-if="
-          !isYourStory &&
-          isFirstStory &&
-          isOtherStory &&
-          isNext &&
-          currentStoryStore.listId.length >= index + 2
-        "
+        v-else-if="nextStories.length > 0"
         class="flex items-center justify-between absolute top-4 w-full h-16 p-4 z-20"
         :class="selectedNextStoryTheme?.textColor"
       >
@@ -151,14 +145,7 @@
         </div>
       </div>
       <div
-        v-else-if="
-          isOtherStory &&
-          isFirstStory &&
-          !isYourStory &&
-          isPrev &&
-          currentStoryStore.listId.length <=
-            index + currentStoryStore.listId.length
-        "
+        v-else-if="prevStories.length > 0"
         class="flex items-center justify-between absolute top-4 w-full h-16 p-4 z-20"
         :class="selectedPrevStoryTheme?.textColor"
       >
@@ -262,6 +249,7 @@
         :space-between="0"
         :setWrapperSize="true"
         :simulate-touch="false"
+        :speed="0"
         :autoplay="{
           stopOnLastSlide: true,
           disableOnInteraction: false,
@@ -285,12 +273,12 @@
             v-if="story.attachments"
             class="w-full h-full flex justify-center items-center"
             :style="{ backgroundColor: story?.theme }"
-            :class="[story?.attachments[0]?.rotate]"
           >
             <img
-              :src="userStore.user.avatar"
+              :src="story?.attachments[0]?.get_image"
               :style="{ scale: story?.attachments[0]?.zoom_image }"
               class="rounded-none w-full"
+              :class="[story?.attachments[0]?.rotate]"
               alt="img-story"
             />
           </div>
@@ -326,6 +314,7 @@
         :keyboard="true"
         :watchSlidesProgress="true"
         :space-between="0"
+        :speed="0"
         :setWrapperSize="true"
         :autoplay="{
           stopOnLastSlide: true,
@@ -376,13 +365,7 @@
         />
       </Swiper>
       <Swiper
-        v-else-if="
-          isOtherStory &&
-          isFirstStory &&
-          !isYourStory &&
-          isNext &&
-          currentStoryStore.listId.length >= index + 2
-        "
+        v-else-if="nextStories.length > 0"
         @swiper="onSwiper"
         class="detail-story h-full w-full"
         :class="[selectedNextStoryTheme?.background]"
@@ -392,6 +375,7 @@
         :keyboard="true"
         :watchSlidesProgress="true"
         :space-between="0"
+        :speed="0"
         :setWrapperSize="true"
         :autoplay="{
           stopOnLastSlide: true,
@@ -445,14 +429,7 @@
         />
       </Swiper>
       <Swiper
-        v-else-if="
-          isOtherStory &&
-          isFirstStory &&
-          !isYourStory &&
-          isPrev &&
-          currentStoryStore.listId.length <=
-            index + currentStoryStore.listId.length
-        "
+        v-else-if="prevStories.length > 0"
         @swiper="onSwiper"
         class="detail-story h-full w-full"
         :class="[selectedPrevStoryTheme?.background]"
@@ -463,6 +440,7 @@
         :watchSlidesProgress="true"
         :simulate-touch="false"
         :space-between="0"
+        :speed="0"
         :setWrapperSize="true"
         :autoplay="{
           stopOnLastSlide: true,
@@ -527,6 +505,7 @@
         :watchSlidesProgress="true"
         :simulate-touch="false"
         :space-between="0"
+        :speed="0"
         :setWrapperSize="true"
         :autoplay="{
           stopOnLastSlide: true,
@@ -581,13 +560,19 @@
           :activeSlide="activeSlide"
         />
       </Swiper>
-      <div class="text-white text-xl" v-else><p>Đã xem hết tin</p></div>
+      <div
+        class="text-white text-xl"
+        v-else-if="!nextStories.length && !userStories.length"
+      >
+        <p>Đã xem hết tin</p>
+      </div>
     </div>
   </div>
 </template>
 
 <script>
 import axios from "axios";
+import { reactive } from "vue";
 
 import { Swiper, SwiperSlide } from "swiper/vue";
 import { useUserStore } from "../../../stores/user";
@@ -635,6 +620,7 @@ export default (await import("vue")).defineComponent({
     const userStore = useUserStore();
     const currentStoryStore = useCurrentStoryStore();
     const toastStore = useToastStore();
+    const story = reactive({});
     return {
       userStore,
       currentStoryStore,
@@ -661,13 +647,15 @@ export default (await import("vue")).defineComponent({
   },
 
   watch: {
-    isPause(newVal, oldVal) {
-      if (newVal) {
-        this.doProgress();
-      }
+    isNext: {
+      handler(newVal) {
+        return newVal;
+      },
     },
-    isNext(newVal, oldVal) {
-      return newVal;
+    isPause: {
+      handler(newVal) {
+        return newVal;
+      },
     },
   },
 
@@ -750,7 +738,6 @@ export default (await import("vue")).defineComponent({
       return this.userStories[this.activeSlide]?.duaration * 1000;
     },
   },
-
   beforeMount() {
     this.onSwiper();
   },
@@ -759,31 +746,40 @@ export default (await import("vue")).defineComponent({
     this.doProgress();
   },
 
+  updated() {
+    this.updatedActiveSlide();
+  },
+
   methods: {
     onSwiper(sw) {
       this.swiper = sw;
+    },
+    updatedActiveSlide() {
+      this.activeSlide = this.swiper.realIndex;
     },
     doProgress() {
       const progressbar = document.querySelectorAll(
         ".swiper-pagination-progressbar-fill"
       );
 
-      const length =
-        this.userStories.length ||
-        this.yourStory.length ||
-        this.currentStoryStore.currentStory.length ||
-        this.nextStories.length ||
-        this.prevStories.length;
+      let length = 0;
+
+      if (this.currentStoryStore.currentStory.length > 0) {
+        if (this.yourStory.length > 0) {
+          length = this.yourStory.length;
+        }
+        length = this.currentStoryStore.currentStory.length;
+      }
 
       const pagination = document.querySelectorAll(".swiper-pagination");
-      
+
       for (let i = 1; i <= length; i++) {
         const progressItem = document.createElement("span");
         pagination[0].appendChild(progressItem);
         progressItem.className = "progress-item";
       }
 
-      let interval = setInterval(() => {
+      const interval = setInterval(() => {
         if (this.percentage < 1 && !this.isPause) {
           this.activeSlide = this.swiper.realIndex;
           this.percentage += (this.duration * 2) / 1000 / 1000 / length;
@@ -798,8 +794,8 @@ export default (await import("vue")).defineComponent({
         }
       }, (this.duration * 2) / 100);
     },
-    next() {
-      if (this.yourStory.length > 0) {
+    async next() {
+      if (this.yourStory.length > 0 && !this.nextStories.length) {
         this.percentage = (this.activeSlide + 1) / this.yourStory.length;
       }
       if (this.nextStories.length > 0) {
@@ -808,75 +804,85 @@ export default (await import("vue")).defineComponent({
       if (this.prevStories.length > 0) {
         this.percentage = (this.activeSlide + 1) / this.prevStories.length;
       }
-      if (this.userStories.length > 0) {
+      if (this.userStories.length > 0 && !this.nextStories.length) {
         this.percentage = (this.activeSlide + 1) / this.userStories.length;
       }
-      if (this.currentStoryStore.currentStory.length > 0) {
+      if (
+        this.currentStoryStore.currentStory.length > 0 &&
+        !this.nextStories.length
+      ) {
         this.percentage =
           (this.activeSlide + 1) / this.currentStoryStore.currentStory.length;
       }
 
       this.$emit("next");
-      let nextIndex = this.activeSlide;
+      this.isPause = false;
+      let nextIndex = this.swiper.realIndex;
       nextIndex++;
+
       if (
-        nextIndex > this.currentStoryStore?.currentStory?.length - 1 ||
+        (!this.nextStories.length &&
+          nextIndex > this.currentStoryStore?.currentStory?.length - 1) ||
         (this.nextStories.length && nextIndex > this.nextStories?.length - 1)
       ) {
-        this.percentage = 0;
-
-        nextIndex = 0;
-        nextIndex++;
-        setTimeout(() => {
-          this.nextStories = [];
-          this.isNext = true;
-          const index = this.currentStoryStore.listId.indexOf(
-            this.currentStoryStore.currentUserId
-          );
-          this.index = index;
-
-          this.currentStoryStore.getCurrentUserId(
-            this.currentStoryStore.listId[index + 1]
-          );
-
-          if (this.currentStoryStore.listId.length - index >= 2) {
-            axios
-              .get(
-                `/api/story/get-text-stories/${
-                  this.currentStoryStore.listId[index + 1]
-                }/`
-              )
-              .then((res) => {
-                if (res.data.stories.length) {
-                  res.data.stories.forEach((story) => {
-                    this.nextStories.unshift(story);
-                  });
-                }
-              })
-              .catch((error) => {
-                console.log(error);
-              });
-          }
-          if (this.currentStoryStore.listId.length - index >= 2) {
-            axios
-              .get(
-                `/api/story/get-media-stories/${
-                  this.currentStoryStore.listId[index + 1]
-                }/`
-              )
-              .then((res) => {
-                if (res.data.stories.length) {
-                  res.data.stories.forEach((story) => {
-                    this.nextStories.unshift(story);
-                  });
-                }
-              })
-              .catch((error) => {
-                console.log(error);
-              });
-          }
-        }, 200);
+        this.isNext = true;
+      } else {
+        this.isNext = false;
       }
+
+      if (this.isNext) {
+        this.percentage = 0;
+        this.nextStories = [];
+        this.index++;
+
+        nextIndex++;
+        this.isNext = true;
+
+        await axios
+          .get(
+            `/api/story/get-text-stories/${
+              this.currentStoryStore.listId[this.index]
+            }/`
+          )
+          .then((res) => {
+            if (res.data.stories.length) {
+              res.data.stories.forEach((story) => {
+                this.nextStories.unshift(story);
+              });
+            }
+          })
+          .catch((error) => {
+            console.log(error);
+          });
+
+        await axios
+          .get(
+            `/api/story/get-media-stories/${
+              this.currentStoryStore.listId[this.index]
+            }/`
+          )
+          .then((res) => {
+            if (res.data.stories.length) {
+              res.data.stories.forEach((story) => {
+                this.nextStories.unshift(story);
+              });
+            }
+
+            this.nextStories.sort(
+              (a, b) => new Date(a.created_at) - new Date(b.created_at)
+            );
+          })
+          .catch((error) => {
+            console.log(error);
+          });
+        this.currentStoryStore.resetActiveStory();
+        this.currentStoryStore.getActiveStory(
+          this.nextStories[0]?.created_by?.id
+        );
+        console.log(this.nextStories);
+      }
+
+      console.log(this.isNext);
     },
     prev() {
       if (this.yourStory.length > 0) {
@@ -895,7 +901,6 @@ export default (await import("vue")).defineComponent({
         this.percentage =
           (this.activeSlide - 1) / this.currentStoryStore.currentStory.length;
       }
-      console.log(this.percentage)
       // this.$emit("prev");
       // if (this.activeSlide === 0) {
       //   this.prevStories = [];
@@ -955,6 +960,7 @@ export default (await import("vue")).defineComponent({
 
     pause() {
       this.isPause = !this.isPause;
+      console.log(this.isPause);
       if (this.isPause) {
         this.swiper.autoplay.pause();
       } else {

@@ -48,7 +48,7 @@
           <div
             class="flex gap-3 items-center p-4 hover:bg-slate-700 rounded-lg cursor-pointer"
             :class="
-              !isOtherStory && isYourStory && !isFirstStory
+              currentStoryStore.activeStory === yourLastStory[0]?.created_by.id
                 ? 'bg-slate-700'
                 : ''
             "
@@ -61,7 +61,9 @@
             <div class="flex flex-col space-y-2">
               <h3 class="text-lg font-semibold">{{ userStore.user.name }}</h3>
               <p class="flex gap-2">
-                <span class="dark:text-neutral-400">{{ yourLastStory[0]?.created_at_formatted }}</span>
+                <span class="dark:text-neutral-400">{{
+                  yourLastStory[0]?.created_at_formatted
+                }}</span>
               </p>
             </div>
           </div>
@@ -80,7 +82,7 @@
                 yourLastStory[0]?.created_by.id
               "
               class="flex gap-3 items-center py-4 px-8 hover:bg-slate-700 rounded-lg cursor-pointer"
-              :class="isOtherStory && isFirstStory ? 'bg-slate-700' : ''"
+              :class="currentStoryStore?.currentStory[0]?.created_by.id === currentStoryStore.activeStory ? 'bg-slate-700' : ''"
             >
               <img
                 :src="
@@ -124,13 +126,16 @@
     </div>
     <div class="col-span-4 bg-slate-900 flex flex-col relative">
       <div class="py-4 h-full">
-        <StoryDetail
-          :userStories="userStories"
-          :isOtherStory="isOtherStory"
-          :isYourStory="isYourStory"
-          :yourStory="yourLastStory"
-          :isFirstStory="isFirstStory"
-        />
+        <Suspense>
+          <StoryDetail
+            :userStories="userStories"
+            :isOtherStory="isOtherStory"
+            :isYourStory="isYourStory"
+            :yourStory="yourLastStory"
+            :isFirstStory="isFirstStory"
+          />
+          <template #fallback> Loading... </template>
+        </Suspense>
       </div>
       <div
         class="flex justify-center items-center gap-2"
@@ -169,16 +174,18 @@ import { useCurrentStoryStore } from "../stores/currentStory";
 import { RouterLink } from "vue-router";
 import { XMarkIcon, PlusIcon } from "@heroicons/vue/24/solid";
 import StoryBox from "../components/items/story/StoryBox.vue";
-import StoryDetail from "../components/items/story/StoryDetail.vue";
 import CreateStoryModal from "../components/modals/story/CreateStoryModal.vue";
 import emojiStory from "../data/emoji";
+import { defineAsyncComponent } from "vue";
 
 export default {
   name: "StoryView",
   components: {
     RouterLink,
     StoryBox,
-    StoryDetail,
+    StoryDetail: defineAsyncComponent(() =>
+      import("../components/items/story/StoryDetail.vue")
+    ),
     CreateStoryModal,
     XMarkIcon,
     PlusIcon,
@@ -323,7 +330,8 @@ export default {
     firstStory() {
       this.isFirstStory = true;
     },
-    otherStory(userId) {
+    async otherStory(userId) {
+      this.currentStoryStore.getActiveStory(userId)
       this.userId = userId;
       this.$emit("otherStory");
       if (this.currentStoryStore.userId !== userId) {
@@ -348,7 +356,7 @@ export default {
 
       this.userStories = [];
 
-      axios
+      await axios
         .get(`api/story/get-text-stories/${userId}/`)
         .then((res) => {
           if (this.userStories) {
@@ -361,7 +369,7 @@ export default {
           console.log(error);
         });
 
-      axios
+      await axios
         .get(`api/story/get-media-stories/${userId}/`)
         .then((res) => {
           res.data.stories.forEach((mediaStory) => {

@@ -7,6 +7,7 @@ export const useCurrentStoryStore = defineStore({
     currentStory: [],
     userId: null,
     currentUserId: null,
+    activeStory: null,
     listId: [],
   }),
 
@@ -18,10 +19,15 @@ export const useCurrentStoryStore = defineStore({
       data.forEach((story) => {
         if (!this.currentStory.map((s) => s.id).includes(story.id)) {
           this.currentStory.unshift(story);
-          this.currentStory.reverse();
+          this.currentStory.sort(
+            (a, b) => new Date(a.created_at) - new Date(b.created_at)
+          );
         }
       });
       this.userId = data[0]?.created_by?.id;
+    },
+    getActiveStory(data){
+      this.activeStory = data
     },
     getUserIdList(data) {
       data.forEach((id) => {
@@ -48,5 +54,8 @@ export const useCurrentStoryStore = defineStore({
     resetListId() {
       this.listId = [];
     },
+    resetActiveStory(){
+      this.activeStory = null
+    }
   },
 });

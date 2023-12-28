@@ -3,7 +3,7 @@
     @click="$emit('otherStory')"
     class="flex gap-3 items-center py-4 px-8 hover:bg-slate-700 rounded-lg cursor-pointer"
     :class="
-      currentStoryStore.currentUserId === story[0].created_by.id
+      currentStoryStore.activeStory === story[0].created_by.id
         ? 'bg-slate-700'
         : ''
     "

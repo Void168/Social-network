@@ -31,7 +31,7 @@
     @apply !flex !items-center !justify-center;
   }
   .swiper-pagination {
-    @apply !flex !gap-1 !top-2 !px-2 !bg-inherit !rounded-3xl before:content-[''] before:w-[98%] before:h-[6px] before:absolute before:left-0 before:z-10 before:rounded-3xl;
+    @apply !flex !gap-1 !top-2 !px-2 !rounded-3xl !bg-transparent mix-blend-difference;
   }
 
   .swiper-pagination-progressbar {
@@ -39,7 +39,7 @@
   }
 
   .swiper-pagination-progressbar-fill {
-    @apply flex !opacity-70 !inset-x-2 rounded-3xl !h-[6px] !bg-emerald-700 z-20 !w-[97%] !scale-x-0;
+    @apply flex !inset-x-2 rounded-3xl !bg-black !h-[6px] z-20 !w-[97%] scale-x-0
   }
 
   .progress {
@@ -47,7 +47,7 @@
   }
 
   .progress-item {
-    @apply w-full bg-white/30 h-[6px] z-30 rounded-3xl
+    @apply w-full bg-white/70 h-[6px] z-30 rounded-3xl
   }
 
   .progress-main {

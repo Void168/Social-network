@@ -24,12 +24,12 @@
       <SwiperSlide v-if="yourLastStory"
         ><div
           class="relative cursor-pointer rounded-lg group"
-          @click="getUserStories"
+          @click="getUserStories(yourLastStory?.created_by?.id)"
         >
           <img
             :src="userStore.user.avatar"
             alt=""
-            class="absolute top-4 left-4 w-10 h-10 rounded-full ring-4 ring-emerald-400 z-20"
+            class="absolute top-4 left-4 w-10 h-10 rounded-full ring-4 ring-emerald-300 z-20"
           />
           <div
             class="relative h-[213px] flex items-center justify-center overflow-hidden shadow-sm rounded-lg cursor-pointer"
@@ -61,7 +61,7 @@
           </div>
         </div>
       </SwiperSlide>
-      <SwiperSlide v-for="story in setStory" :key="story.id">
+      <SwiperSlide v-for="story in setStory" :key="story.id" @click="getUserStories(story[0]?.created_by?.id)">
         <Story
           :story="
             story.sort(
@@ -151,43 +151,40 @@ export default {
 
   mounted() {
     this.getStories();
+    this.currentStoryStore.resetActiveStory();
   },
 
   methods: {
-    getStories() {
+    async getStories() {
       this.currentStoryStore.getCurrentUserId(this.userStore.user.id);
-      setTimeout(() => {
-        axios
-          .get("/api/story/text-stories/")
-          .then((res) => {
-            this.textStories = res.data;
-            // console.log(this.textStories);
+      await axios
+        .get("/api/story/text-stories/")
+        .then((res) => {
+          this.textStories = res.data;
+          // console.log(this.textStories);
 
-            this.textStories.forEach((textStory) => {
-              this.yourStories.unshift(textStory);
-            });
-          })
-          .catch((error) => {
-            console.log(error);
+          this.textStories.forEach((textStory) => {
+            this.yourStories.unshift(textStory);
           });
-      }, 100);
+        })
+        .catch((error) => {
+          console.log(error);
+        });
 
-      setTimeout(() => {
-        axios
-          .get("/api/story/media-stories/")
-          .then((res) => {
-            this.mediaStories = res.data;
-            // console.log(this.mediaStories);
-            this.mediaStories.forEach((mediaStory) => {
-              this.yourStories.unshift(mediaStory);
-            });
-
-            this.getSetStories();
-          })
-          .catch((error) => {
-            console.log(error);
+      await axios
+        .get("/api/story/media-stories/")
+        .then((res) => {
+          this.mediaStories = res.data;
+          // console.log(this.mediaStories);
+          this.mediaStories.forEach((mediaStory) => {
+            this.yourStories.unshift(mediaStory);
           });
-      }, 200);
+
+          this.getSetStories();
+        })
+        .catch((error) => {
+          console.log(error);
+        });
 
       this.getSetStories();
       this.yourStories = this.yourStories.sort(
@@ -211,26 +208,29 @@ export default {
       this.currentStoryStore.resetListId();
       this.currentStoryStore.getUserIdList(removeDuplicate);
     },
-    getUserStories() {
-      axios
-        .get(`/api/story/get-text-stories/${this.userStore.user.id}`)
+    async getUserStories(userId) {
+      this.currentStoryStore.resetCurrentStory();
+      this.currentStoryStore.resetActiveStory();
+      await axios
+        .get(`/api/story/get-text-stories/${userId}`)
         .then((res) => {
-          this.currentStoryStore.resetCurrentStory();
           this.currentStoryStore.getCurrentUserStory(res.data.stories);
         })
         .catch((error) => {
           console.log("error", error);
         });
-      setTimeout(() => {
-        axios
-          .get(`/api/story/get-media-stories/${this.userStore.user.id}`)
-          .then((res) => {
-            this.currentStoryStore.getCurrentUserStory(res.data.stories);
-          })
-          .catch((error) => {
-            console.log("error", error);
-          });
-      }, 100);
+      await axios
+        .get(`/api/story/get-media-stories/${userId}`)
+        .then((res) => {
+          this.currentStoryStore.getCurrentUserStory(res.data.stories);
+        })
+        .catch((error) => {
+          console.log("error", error);
+        });
+      this.currentStoryStore.getActiveStory(
+        this.currentStoryStore.currentStory[0]?.created_by?.id
+      );
+
       setTimeout(() => {
         this.$router.push("/stories");
       }, 500);

@@ -355,13 +355,12 @@ export default (await import("vue")).defineComponent({
     chooseTheme(theme) {
       this.selectedTheme = theme;
     },
-    chooseMedia(e) {
+    async chooseMedia(e) {
       this.raw = this.$refs.story.files[0];
       const file = e.target.files[0];
       this.url = URL.createObjectURL(file);
-      setTimeout(() => {
-        this.getColor();
-      }, 10);
+      await new Promise((resolve) => setTimeout(resolve, 200));
+      this.getColor();
     },
     getColor() {
       const colorThief = new ColorThief();
@@ -416,8 +415,8 @@ export default (await import("vue")).defineComponent({
         formData.append("body", this.body);
         formData.append("is_private", this.is_private);
         formData.append("only_me", this.only_me);
-        formData.append("theme", this.selectedTheme.name || 'Cổ điển');
-        formData.append("font", this.selectedFont.name || 'Đơn giản');
+        formData.append("theme", this.selectedTheme.name || "Cổ điển");
+        formData.append("font", this.selectedFont.name || "Đơn giản");
 
         axios
           .post("/api/story/create-text-story/", formData, {
@@ -451,8 +450,8 @@ export default (await import("vue")).defineComponent({
         let formData = new FormData();
         if (this.raw.name.includes(".png") || this.raw.name.includes(".jpg")) {
           formData.append("image", this.raw);
-          formData.append("zoom_image", `${this.zoom + this.value / 50}`)
-          formData.append("rotate", this.deg)
+          formData.append("zoom_image", `${this.zoom + this.value / 50}`);
+          formData.append("rotate", this.deg);
         } else {
           formData.append("video", this.raw);
         }
@@ -463,15 +462,11 @@ export default (await import("vue")).defineComponent({
         formData.append("caption", this.caption);
 
         axios
-          .post(
-            "/api/story/create-media-story/",
-            formData,
-            {
-              headers: {
-                "Content-Type": "multipart/form-data",
-              },
-            }
-          )
+          .post("/api/story/create-media-story/", formData, {
+            headers: {
+              "Content-Type": "multipart/form-data",
+            },
+          })
           .then((res) => {
             this.textStories.unshift(res.data);
             this.caption = "";

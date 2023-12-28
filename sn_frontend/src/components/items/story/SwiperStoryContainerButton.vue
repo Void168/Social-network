@@ -1,7 +1,7 @@
 <template>
   <div class="px-4">
     <button
-      @click="swiper.slidePrev()"
+      @click="swiper.slidePrev(0, false)"
       class="absolute inset-y-0 z-10 left-4"
       v-if="
         (activeSlide > 0 &&
@@ -17,7 +17,7 @@
       </div>
     </button>
     <button
-      @click="swiper.slideNext()"
+      @click="swiper.slideNext(0, false)"
       class="absolute inset-y-0 z-10 right-4"
       v-if="
         (activeSlide > 0 &&

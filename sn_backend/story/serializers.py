@@ -33,7 +33,7 @@ class TextStoryDetailSerializer(serializers.ModelSerializer):
     reacted_by = UserSerializer(read_only=True, many=True)
     class Meta:
         model = TextStory
-        fields = ('id', 'body', 'font', 'is_private', 'only_me', 'theme', 'seen_count', 'seen_by', 'created_by', 'created_at_formatted','duaration', 'reacted_by',)  
+        fields = ('id', 'body', 'font', 'is_private', 'only_me', 'theme', 'seen_count', 'seen_by', 'created_by', 'created_at_formatted','duaration', 'reacted_by', 'created_at',)  
 
 class MediaStoryDetailSerializer(serializers.ModelSerializer):
     created_by = UserSerializer(read_only=True)
@@ -42,4 +42,4 @@ class MediaStoryDetailSerializer(serializers.ModelSerializer):
     seen_by = UserSerializer(read_only=True, many=True)
     class Meta:
         model = MediaStory
-        fields = ('id', 'caption', 'attachments', 'font', 'theme', 'created_by', 'created_at_formatted', 'duaration', 'is_private', 'only_me', 'reacted_by', 'seen_by', 'seen_count')
+        fields = ('id', 'caption', 'attachments', 'font', 'theme', 'created_by', 'created_at_formatted', 'duaration', 'is_private', 'only_me', 'reacted_by', 'seen_by', 'seen_count', 'created_at')

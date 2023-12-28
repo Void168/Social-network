@@ -7,7 +7,7 @@
         (activeSlide > 0 &&
           currentStoryStore.listId.indexOf(currentStoryStore.currentUserId) ===
             0) ||
-        currentStoryStore.listId.indexOf(currentStoryStore.currentUserId) > 0
+        currentStoryStore.listId.indexOf(currentStoryStore.activeStory) > 0
       "
     >
       <div @click="$emit('prev')">

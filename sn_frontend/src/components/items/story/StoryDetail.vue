@@ -50,7 +50,15 @@
         </div>
       </div>
       <div
-        v-else-if="!isYourStory && isFirstStory && isOtherStory && !nextStories.length && !isNext"
+        v-else-if="
+          isOtherStory &&
+          isFirstStory &&
+          !isYourStory &&
+          !nextStories.length &&
+          !prevStories.length &&
+          !isNext &&
+          currentStoryStore.activeStory
+        "
         class="flex items-center justify-between absolute top-4 w-full h-16 p-4 z-20"
         :class="selectedTheme?.textColor"
       >
@@ -302,7 +310,13 @@
       </Swiper>
       <Swiper
         v-else-if="
-          isOtherStory && isFirstStory && !isYourStory && !nextStories.length && !isNext
+          isOtherStory &&
+          isFirstStory &&
+          !isYourStory &&
+          !nextStories.length &&
+          !prevStories.length &&
+          !isNext &&
+          currentStoryStore.activeStory
         "
         @swiper="onSwiper"
         class="detail-story h-full w-full"
@@ -365,7 +379,7 @@
         />
       </Swiper>
       <Swiper
-        v-else-if="nextStories.length > 0"
+        v-else-if="nextStories.length && !prevStories.length"
         @swiper="onSwiper"
         class="detail-story h-full w-full"
         :class="[selectedNextStoryTheme?.background]"
@@ -429,7 +443,7 @@
         />
       </Swiper>
       <Swiper
-        v-else-if="prevStories.length > 0"
+        v-else-if="prevStories.length && !nextStories.length"
         @swiper="onSwiper"
         class="detail-story h-full w-full"
         :class="[selectedPrevStoryTheme?.background]"
@@ -621,7 +635,8 @@ export default (await import("vue")).defineComponent({
     const currentStoryStore = useCurrentStoryStore();
     const toastStore = useToastStore();
     const story = reactive({
-      nextIndex: 0
+      nextIndex: 0,
+      prevIndex: 0,
     });
     return {
       story,
@@ -761,39 +776,59 @@ export default (await import("vue")).defineComponent({
       this.activeSlide = this.swiper.realIndex;
     },
     doProgress() {
+      let length = 0;
+
+      if (
+        this.currentStoryStore.currentStory.length &&
+        !this.isNext &&
+        !this.isPrev
+      ) {
+        length = this.currentStoryStore.currentStory.length;
+      } else if (this.yourStory.length && !this.isNext && !this.isPrev) {
+        length = this.yourStory.length;
+      } else if (this.nextStories.length && this.isNext) {
+        length = this.nextStories.length;
+      } else if (this.prevStories.length && this.isPrev) {
+        length = this.prevStories.length;
+      } else if (this.userStories.length && !this.isNext && !this.isPrev) {
+        length = this.userStories.length;
+      }
+
       const progressbar = document.querySelectorAll(
         ".swiper-pagination-progressbar-fill"
       );
 
-      let length = 0;
-
-      if (this.currentStoryStore.currentStory.length > 0) {
-        if (this.yourStory.length > 0) {
-          length = this.yourStory.length;
-        }
-        length = this.currentStoryStore.currentStory.length;
-      }
-
       const pagination = document.querySelectorAll(".swiper-pagination");
-
       for (let i = 1; i <= length; i++) {
         const progressItem = document.createElement("span");
-        pagination[0].appendChild(progressItem);
+        pagination[0]?.appendChild(progressItem);
         progressItem.className = "progress-item";
       }
 
       const interval = setInterval(() => {
-        if (this.percentage < 1 && !this.isPause) {
-          this.activeSlide = this.swiper.realIndex;
+        if (
+          this.percentage < 1 &&
+          !this.isPause &&
+          this.currentStoryStore.activeStory
+        ) {
+          this.activeSlide = this.swiper?.realIndex;
           this.percentage += (this.duration * 2) / 1000 / 1000 / length;
 
-          progressbar[0].style.setProperty(
+          progressbar[0]?.style?.setProperty(
             "transform",
-            `scaleX(${this.percentage})`,
-            "important"
+            `scaleX(${this.percentage})`
           );
+
+          // console.log(length)
         } else {
-          clearInterval(interval);
+          this.percentage = 0;
+
+          setTimeout(() => {
+            this.next();
+            if (!this.currentStoryStore.activeStory) {
+              clearInterval(interval);
+            }
+          }, (this.duration + 100) * this.swiper.realIndex);
         }
       }, (this.duration * 2) / 100);
     },
@@ -824,25 +859,25 @@ export default (await import("vue")).defineComponent({
 
       if (
         (!this.nextStories.length &&
-        this.story.nextIndex > this.currentStoryStore?.currentStory?.length - 1) ||
-        (this.nextStories.length && this.story.nextIndex > this.nextStories?.length - 1)
+          this.story.nextIndex >
+            this.currentStoryStore?.currentStory?.length - 1) ||
+        (this.nextStories.length &&
+          this.story.nextIndex > this.nextStories?.length - 1)
       ) {
         this.isNext = true;
       } else {
         this.isNext = false;
       }
 
-      console.log(this.story.nextIndex)
-      console.log(this.swiper.realIndex)
-      console.log(this.nextStories)
-
       if (this.isNext) {
+        this.isPrev = false;
         this.percentage = 0;
         this.nextStories = [];
+        this.prevStories = [];
         this.index++;
 
         this.isNext = true;
-        console.log(this.nextStories);
+        // console.log(this.nextStories);
         await axios
           .get(
             `/api/story/get-text-stories/${
@@ -896,7 +931,7 @@ export default (await import("vue")).defineComponent({
         );
       }
     },
-    prev() {
+    async prev() {
       if (this.yourStory.length > 0) {
         this.percentage = (this.activeSlide - 1) / this.yourStory.length;
       }
@@ -913,61 +948,58 @@ export default (await import("vue")).defineComponent({
         this.percentage =
           (this.activeSlide - 1) / this.currentStoryStore.currentStory.length;
       }
-      // this.$emit("prev");
-      // if (this.activeSlide === 0) {
-      //   this.prevStories = [];
-      //   this.isPrev = true;
-      //   const index = this.currentStoryStore.listId.indexOf(
-      //     this.currentStoryStore.currentUserId
-      //   );
-      //   this.index = index;
-      //   this.currentStoryStore.getCurrentUserId(
-      //     this.currentStoryStore.listId[index - 1]
-      //   );
-      //   if (
-      //     this.currentStoryStore.listId.length - index <=
-      //     this.currentStoryStore.listId.length
-      //   ) {
-      //     axios
-      //       .get(
-      //         `/api/story/get-text-stories/${
-      //           this.currentStoryStore.listId[index - 1]
-      //         }/`
-      //       )
-      //       .then((res) => {
-      //         if (res.data.stories.length) {
-      //           res.data.stories.forEach((story) => {
-      //             this.prevStories.unshift(story);
-      //           });
-      //         }
-      //       })
-      //       .catch((error) => {
-      //         console.log(error);
-      //       });
-      //   }
-      //   if (
-      //     this.currentStoryStore.listId.length - index <=
-      //     this.currentStoryStore.listId.length
-      //   ) {
-      //     axios
-      //       .get(
-      //         `/api/story/get-media-stories/${
-      //           this.currentStoryStore.listId[index - 1]
-      //         }/`
-      //       )
-      //       .then((res) => {
-      //         if (res.data.stories.length) {
-      //           res.data.stories.forEach((story) => {
-      //             this.prevStories.unshift(story);
-      //           });
-      //         }
-      //       })
-      //       .catch((error) => {
-      //         console.log(error);
-      //       });
-      //   }
-      //   console.log(this.prevStories);
-      // }
+      this.$emit("prev");
+      this.isPause = false;
+      this.story.prevIndex = this.swiper.realIndex;
+      this.story.prevIndex--;
+
+      if (this.story.prevIndex < 0) {
+        this.isPrev = true;
+      } else {
+        this.isPrev = false;
+      }
+      console.log(this.story.prevIndex);
+
+      if (this.isPrev) {
+        this.isNext = false;
+        this.prevStories = [];
+        this.nextStories = [];
+        console.log(this.index);
+        await axios
+          .get(
+            `/api/story/get-text-stories/${
+              this.currentStoryStore.listId[this.index - 1]
+            }/`
+          )
+          .then((res) => {
+            if (res.data.stories.length) {
+              res.data.stories.forEach((story) => {
+                this.prevStories.unshift(story);
+              });
+            }
+          })
+          .catch((error) => {
+            console.log(error);
+          });
+
+        await axios
+          .get(
+            `/api/story/get-media-stories/${
+              this.currentStoryStore.listId[this.index - 1]
+            }/`
+          )
+          .then((res) => {
+            if (res.data.stories.length) {
+              res.data.stories.forEach((story) => {
+                this.prevStories.unshift(story);
+              });
+            }
+          })
+          .catch((error) => {
+            console.log(error);
+          });
+      }
+      console.log(this.prevStories);
     },
 
     pause() {

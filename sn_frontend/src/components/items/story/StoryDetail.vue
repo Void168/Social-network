@@ -50,7 +50,7 @@
         </div>
       </div>
       <div
-        v-else-if="!isYourStory && isFirstStory && isOtherStory && !isNext"
+        v-else-if="!isYourStory && isFirstStory && isOtherStory && !nextStories.length && !isNext"
         class="flex items-center justify-between absolute top-4 w-full h-16 p-4 z-20"
         :class="selectedTheme?.textColor"
       >
@@ -302,7 +302,7 @@
       </Swiper>
       <Swiper
         v-else-if="
-          isOtherStory && isFirstStory && !isYourStory && !isNext && !isPrev
+          isOtherStory && isFirstStory && !isYourStory && !nextStories.length && !isNext
         "
         @swiper="onSwiper"
         class="detail-story h-full w-full"
@@ -620,8 +620,11 @@ export default (await import("vue")).defineComponent({
     const userStore = useUserStore();
     const currentStoryStore = useCurrentStoryStore();
     const toastStore = useToastStore();
-    const story = reactive({});
+    const story = reactive({
+      nextIndex: 0
+    });
     return {
+      story,
       userStore,
       currentStoryStore,
       toastStore,
@@ -817,31 +820,38 @@ export default (await import("vue")).defineComponent({
 
       this.$emit("next");
       this.isPause = false;
-      let nextIndex = this.swiper.realIndex;
-      nextIndex++;
+      this.story.nextIndex = this.swiper.realIndex + 1;
 
       if (
         (!this.nextStories.length &&
-          nextIndex > this.currentStoryStore?.currentStory?.length - 1) ||
-        (this.nextStories.length && nextIndex > this.nextStories?.length - 1)
+        this.story.nextIndex > this.currentStoryStore?.currentStory?.length - 1) ||
+        (this.nextStories.length && this.story.nextIndex > this.nextStories?.length - 1)
       ) {
         this.isNext = true;
       } else {
         this.isNext = false;
       }
 
+      console.log(this.story.nextIndex)
+      console.log(this.swiper.realIndex)
+      console.log(this.nextStories)
+
       if (this.isNext) {
         this.percentage = 0;
         this.nextStories = [];
         this.index++;
 
-        nextIndex++;
         this.isNext = true;
-
+        console.log(this.nextStories);
         await axios
           .get(
             `/api/story/get-text-stories/${
-              this.currentStoryStore.listId[this.index]
+              this.currentStoryStore.listId[
+                this.currentStoryStore.currentStory[0].created_by.id ===
+                this.userStore.user.id
+                  ? this.index
+                  : this.index + 1
+              ]
             }/`
           )
           .then((res) => {
@@ -858,7 +868,12 @@ export default (await import("vue")).defineComponent({
         await axios
           .get(
             `/api/story/get-media-stories/${
-              this.currentStoryStore.listId[this.index]
+              this.currentStoryStore.listId[
+                this.currentStoryStore.currentStory[0].created_by.id ===
+                this.userStore.user.id
+                  ? this.index
+                  : this.index + 1
+              ]
             }/`
           )
           .then((res) => {
@@ -879,10 +894,7 @@ export default (await import("vue")).defineComponent({
         this.currentStoryStore.getActiveStory(
           this.nextStories[0]?.created_by?.id
         );
-        console.log(this.nextStories);
       }
-
-      console.log(this.isNext);
     },
     prev() {
       if (this.yourStory.length > 0) {

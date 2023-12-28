@@ -139,7 +139,7 @@
       </div>
       <div
         class="flex justify-center items-center gap-2"
-        v-if="currentStoryStore.currentUserId"
+        v-if="currentStoryStore.activeStory"
       >
         <input
           ref="replyStory"

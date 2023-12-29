@@ -1,5 +1,5 @@
 <template>
-  <div class="grid grid-cols-6 gap-4" id="feed-frame">
+  <div class="grid grid-cols-6 gap-4 min-h-screen" id="feed-frame">
     <div class="col-span-1"></div>
     <div class="mx-auto w-[70%] main-center col-span-4 space-y-4">
       <div class="p-4 bg-white border border-gray-200 dark:bg-slate-600 dark:border-slate-700 dark:text-neutral-200 rounded-lg">
@@ -29,7 +29,7 @@
       </div>
     </div>
     <div
-      class="main-right col-span-1 space-y-4 sticky top-[155px] h-[750px] z-9"
+      class="main-right col-span-1 space-y-4 sticky top-[16%] h-[700px] z-10"
     >
       <PeopleYouMayKnow />
       <Trends />

@@ -1,6 +1,6 @@
 <template>
   <div
-    class="mr-5 scrollbar-corner-slate-200 scrollbar-none hover:scrollbar-thin scrollbar-thumb-slate-400 scrollbar-track-slate-800 h-[500px] bg-white border border-gray-200 dark:bg-slate-600 dark:border-slate-700 dark:text-neutral-200 rounded-lg overflow-y-auto"
+    class="mr-5 scrollbar-corner-slate-200 scrollbar-none hover:scrollbar-thin scrollbar-thumb-slate-400 scrollbar-track-slate-800 min-h-[400px] bg-white border border-gray-200 dark:bg-slate-600 dark:border-slate-700 dark:text-neutral-200 rounded-lg overflow-y-scroll"
   >
     <h3 class="text-xl p-4">Người liên hệ</h3>
     <div class="flex flex-col ">

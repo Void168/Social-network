@@ -19,7 +19,7 @@
 <script>
 import { RouterLink } from "vue-router";
 import { useUserStore } from "../../../stores/user";
-import ImagePostModal from "../../modals/chat/ImagePostModal.vue";
+import ImagePostModal from "../../modals/post/ImagePostModal.vue";
 import { useRoute } from "vue-router";
 
 export default (await import("vue")).defineComponent({

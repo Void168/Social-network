@@ -2,7 +2,7 @@
   <div class="relative">
     <nav
       v-if="path !== '/stories'"
-      class="py-10 px-8 border-b border-gray-200 bg-gray-100 dark:bg-slate-700 dark:border-slate-800 dark:text-neutral-200 shadow-lg sticky w-full z-10 top-0"
+      class="py-10 px-8 border-b border-gray-200 bg-gray-100 dark:bg-slate-700 dark:border-slate-500 dark:text-neutral-200 sticky w-full z-10 top-0"
     >
       <div class="max-w-7xl mx-auto">
         <div class="flex items-center justify-between">
@@ -105,7 +105,7 @@
     </nav>
 
     <main
-      class="bg-gray-100 dark:bg-slate-700"
+      class="bg-gray-100 dark:bg-slate-700 relative"
       :class="path === '/stories' ? 'h-screen p-0' : 'min-h-screen px-8 py-6'"
     >
       <RouterView />

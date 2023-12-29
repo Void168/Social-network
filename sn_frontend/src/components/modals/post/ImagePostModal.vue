@@ -166,22 +166,25 @@
                         <CommentItem v-bind:comment="comment" />
                       </div>
                     </div>
-                    
+
                     <div class="flex justify-end">
                       <button
-                      class="hover:underline transition"
-                      @click="loadMore"
-                      v-if="lastComment < post?.comments?.length"
+                        class="hover:underline transition"
+                        @click="loadMore"
+                        v-if="lastComment < post?.comments?.length"
                       >
-                      Tải thêm bình luận
-                    </button>
-                  </div>
-                  <div v-if="lastComment > 6" class="h-24"></div>
+                        Tải thêm bình luận
+                      </button>
+                    </div>
+                    <div v-if="lastComment > 6" class="h-24"></div>
                   </div>
                   <div
                     class="bg-white border-t dark:bg-slate-600 dark:text-neutral-200 sticky z-60 bottom-0 px-4"
                   >
-                    <form v-on:submit.prevent="submitForm" class="flex justify-center items-center">
+                    <form
+                      v-on:submit.prevent="submitForm"
+                      class="flex justify-center items-center"
+                    >
                       <div class="py-4 flex items-center gap-2">
                         <img
                           :src="post?.created_by.get_avatar"
@@ -196,11 +199,15 @@
                         ></textarea>
                       </div>
 
-                        <div
-                          class="px-4 py-2 flex justify-end dark:border-slate-400"
-                        >
-                          <button><PaperAirplaneIcon class="w-6 h-6 text-slate-700 dark:text-slate-300 dark:hover:text-slate-400 transition"/></button>
-                        </div>
+                      <div
+                        class="px-4 py-2 flex justify-end dark:border-slate-400"
+                      >
+                        <button>
+                          <PaperAirplaneIcon
+                            class="w-6 h-6 text-slate-700 dark:text-slate-300 dark:hover:text-slate-400 transition"
+                          />
+                        </button>
+                      </div>
                     </form>
                   </div>
                 </div>
@@ -228,7 +235,11 @@ import {
   UserGroupIcon,
   LockClosedIcon,
 } from "@heroicons/vue/24/outline";
-import { HeartIcon as HeartLike, XMarkIcon, PaperAirplaneIcon } from "@heroicons/vue/24/solid";
+import {
+  HeartIcon as HeartLike,
+  XMarkIcon,
+  PaperAirplaneIcon,
+} from "@heroicons/vue/24/solid";
 import {
   ArrowLeftCircleIcon,
   ArrowRightCircleIcon,
@@ -330,5 +341,3 @@ export default (await import("vue")).defineComponent({
   },
 });
 </script>
-
-

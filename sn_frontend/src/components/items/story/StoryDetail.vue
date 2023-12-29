@@ -822,17 +822,17 @@ export default (await import("vue")).defineComponent({
           // console.log(length)
         } else {
           this.percentage = 0;
-
           setTimeout(() => {
             this.next();
             if (!this.currentStoryStore.activeStory) {
               clearInterval(interval);
             }
-          }, (this.duration + 100) * this.swiper.realIndex);
+          }, 100);
         }
       }, (this.duration * 2) / 100);
     },
     async next() {
+      this.activeSlide = this.swiper?.realIndex;
       if (this.yourStory.length > 0 && !this.nextStories.length) {
         this.percentage = (this.activeSlide + 1) / this.yourStory.length;
       }
@@ -932,6 +932,13 @@ export default (await import("vue")).defineComponent({
       }
     },
     async prev() {
+      this.activeSlide = this.swiper?.realIndex;
+
+      this.index = this.currentStoryStore.listId.indexOf(
+        this.currentStoryStore.activeStory
+      );
+      console.log(this.currentStoryStore.listId[this.index - 1]);
+
       if (this.yourStory.length > 0) {
         this.percentage = (this.activeSlide - 1) / this.yourStory.length;
       }
@@ -958,17 +965,16 @@ export default (await import("vue")).defineComponent({
       } else {
         this.isPrev = false;
       }
-      console.log(this.story.prevIndex);
 
       if (this.isPrev) {
         this.isNext = false;
         this.prevStories = [];
         this.nextStories = [];
-        console.log(this.index);
+        this.index--;
         await axios
           .get(
             `/api/story/get-text-stories/${
-              this.currentStoryStore.listId[this.index - 1]
+              this.currentStoryStore.listId[this.index]
             }/`
           )
           .then((res) => {
@@ -985,7 +991,7 @@ export default (await import("vue")).defineComponent({
         await axios
           .get(
             `/api/story/get-media-stories/${
-              this.currentStoryStore.listId[this.index - 1]
+              this.currentStoryStore.listId[this.index]
             }/`
           )
           .then((res) => {
@@ -998,8 +1004,12 @@ export default (await import("vue")).defineComponent({
           .catch((error) => {
             console.log(error);
           });
+
+        this.currentStoryStore.resetActiveStory();
+        this.currentStoryStore.getActiveStory(
+          this.prevStories[0]?.created_by?.id
+        );
       }
-      console.log(this.prevStories);
     },
 
     pause() {

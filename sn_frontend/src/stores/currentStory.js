@@ -9,6 +9,7 @@ export const useCurrentStoryStore = defineStore({
     currentUserId: null,
     activeStory: null,
     listId: [],
+    activeSlide: 0
   }),
 
   actions: {
@@ -25,6 +26,9 @@ export const useCurrentStoryStore = defineStore({
         }
       });
       this.userId = data[0]?.created_by?.id;
+    },
+    getActiveSlide(data){
+      this.activeSlide = data
     },
     getActiveStory(data){
       this.activeStory = data

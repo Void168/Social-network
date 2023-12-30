@@ -38,7 +38,7 @@
           :style="{ backgroundColor: story.theme }"
         >
           <img
-            :src="story?.attachments[0].get_image"
+            :src="story?.attachments[0]?.get_image"
             class="rounded-none"
             :class="[story?.attachments[0]?.rotate]"
             ref="image"

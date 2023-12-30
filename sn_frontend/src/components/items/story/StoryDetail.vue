@@ -10,7 +10,7 @@
         :isMute="isMute"
       />
       <SwiperStoryHeader
-      v-else-if="
+        v-else-if="
           isOtherStory &&
           isFirstStory &&
           !isYourStory &&
@@ -24,19 +24,19 @@
         :isMute="isMute"
       />
       <SwiperStoryHeader
-      v-else-if="nextStories.length > 0"
+        v-else-if="nextStories.length > 0"
         :stories="nextStories"
         :isPause="isPause"
         :isMute="isMute"
       />
       <SwiperStoryHeader
-      v-else-if="prevStories.length > 0"
+        v-else-if="prevStories.length > 0"
         :stories="prevStories"
         :isPause="isPause"
         :isMute="isMute"
       />
       <SwiperStoryHeader
-      v-else-if="!isYourStory && !isFirstStory && isOtherStory"
+        v-else-if="!isYourStory && !isFirstStory && isOtherStory"
         :stories="userStories"
         :isPause="isPause"
         :isMute="isMute"
@@ -58,7 +58,7 @@
           !prevStories.length &&
           !isNext &&
           currentStoryStore.activeStory
-          "
+        "
         :nextFunction="next"
         :stories="currentStoryStore?.currentStory"
         :isPause="isPause"
@@ -144,7 +144,6 @@ export default (await import("vue")).defineComponent({
       isMute: false,
       isNext: false,
       isPrev: false,
-      percentage: 0,
       isOpen: false,
       nextStories: [],
       prevStories: [],
@@ -152,25 +151,10 @@ export default (await import("vue")).defineComponent({
     };
   },
 
-  watch: {
-    isNext: {
-      handler(newVal) {
-        return newVal;
-      },
-    },
-    isPause: {
-      handler(newVal) {
-        return newVal;
-      },
-    },
-  },
-
   methods: {
     async next() {
-      this.$emit("next");
       this.isPause = false;
       this.story.nextIndex = this.currentStoryStore.activeSlide + 1;
-
       if (
         (!this.nextStories.length &&
           this.story.nextIndex >
@@ -185,13 +169,10 @@ export default (await import("vue")).defineComponent({
 
       if (this.isNext) {
         this.isPrev = false;
-        this.percentage = 0;
         this.nextStories = [];
         this.prevStories = [];
         this.index++;
 
-        this.isNext = true;
-        // console.log(this.nextStories);
         await axios
           .get(
             `/api/story/get-text-stories/${
@@ -239,6 +220,7 @@ export default (await import("vue")).defineComponent({
           .catch((error) => {
             console.log(error);
           });
+
         this.currentStoryStore.resetActiveStory();
         this.currentStoryStore.getActiveStory(
           this.nextStories[0]?.created_by?.id
@@ -251,24 +233,7 @@ export default (await import("vue")).defineComponent({
       this.index = this.currentStoryStore.listId.indexOf(
         this.currentStoryStore.activeStory
       );
-      console.log(this.currentStoryStore.listId[this.index - 1]);
 
-      if (this.yourStory.length > 0) {
-        this.percentage = (this.currentStoryStore.activeSlide - 1) / this.yourStory.length;
-      }
-      if (this.nextStories.length > 0) {
-        this.percentage = (this.currentStoryStore.activeSlide - 1) / this.nextStories.length;
-      }
-      if (this.prevStories.length > 0) {
-        this.percentage = (this.currentStoryStore.activeSlide - 1) / this.prevStories.length;
-      }
-      if (this.userStories.length > 0) {
-        this.percentage = (this.currentStoryStore.activeSlide - 1) / this.userStories.length;
-      }
-      if (this.currentStoryStore.currentStory.length > 0) {
-        this.percentage =
-          (this.currentStoryStore.activeSlide - 1) / this.currentStoryStore.currentStory.length;
-      }
       this.$emit("prev");
       this.isPause = false;
       this.story.prevIndex = this.currentStoryStore.activeSlide;

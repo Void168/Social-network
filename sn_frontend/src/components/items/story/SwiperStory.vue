@@ -54,7 +54,10 @@
       </div>
     </SwiperSlide>
     <SwiperStoryContainerButton
-      @prev="$emit('prev')"
+      @prev="
+        $emit('prev');
+        prev();
+      "
       @next="
         $emit('next');
         next();
@@ -66,7 +69,7 @@
 
 <script>
 import axios from "axios";
-
+import { reactive } from "vue";
 import { Swiper, SwiperSlide } from "swiper/vue";
 import { useUserStore } from "../../../stores/user";
 import { useCurrentStoryStore } from "../../../stores/currentStory";
@@ -88,7 +91,11 @@ export default (await import("vue")).defineComponent({
   setup() {
     const userStore = useUserStore();
     const currentStoryStore = useCurrentStoryStore();
+    const story = reactive({
+        nextIndex: 0
+    })
     return {
+        story,
       userStore,
       currentStoryStore,
       modules: [Autoplay, Mousewheel, Keyboard, Pagination],
@@ -106,6 +113,7 @@ export default (await import("vue")).defineComponent({
       activeSlide: 0,
       themes: themes,
       fonts: fonts,
+      isNext: false,
     };
   },
 
@@ -176,16 +184,36 @@ export default (await import("vue")).defineComponent({
         } else {
           this.percentage = 0;
           clearInterval(interval);
-          setTimeout(() => {
-            this.nextFunction();
-          }, 500);
+          if (this.isNext === false) {
+            setTimeout(() => {
+              this.nextFunction();
+            }, 500);
+          }
         }
+        console.log(this.isNext);
       }, INTERVAL_TIME);
     },
     next() {
+    this.story.nextIndex = this.currentStoryStore.activeSlide + 1;
+
       if (this.stories.length > 0) {
         this.percentage =
           (this.currentStoryStore.activeSlide + 1) / this.stories.length;
+      }
+      if (
+        (!this.stories.length &&
+          this.story.nextIndex > this.currentStoryStore?.currentStory?.length - 1) ||
+        (this.stories.length && this.story.nextIndex > this.stories?.length - 1)
+      ) {
+        this.isNext = true;
+      } else {
+        this.isNext = false;
+      }
+    },
+    prev() {
+      if (this.stories.length > 0) {
+        this.percentage =
+          (this.currentStoryStore.activeSlide - 1) / this.stories.length;
       }
     },
   },

@@ -45,6 +45,7 @@
         v-if="isYourStory && !isFirstStory && !isOtherStory"
         :stories="yourStory"
         :isPause="isPause"
+        :nextFunction="next"
         @next="next"
         @prev="prev"
       />
@@ -57,7 +58,8 @@
           !prevStories.length &&
           !isNext &&
           currentStoryStore.activeStory
-        "
+          "
+        :nextFunction="next"
         :stories="currentStoryStore?.currentStory"
         :isPause="isPause"
         @next="next"
@@ -67,6 +69,7 @@
         v-else-if="nextStories.length && !prevStories.length"
         :stories="nextStories"
         :isPause="isPause"
+        :nextFunction="next"
         @next="next"
         @prev="prev"
       />
@@ -74,6 +77,7 @@
         v-else-if="prevStories.length && !nextStories.length"
         :stories="prevStories"
         :isPause="isPause"
+        :nextFunction="next"
         @next="next"
         @prev="prev"
       />
@@ -81,6 +85,7 @@
         v-else-if="isOtherStory && !isFirstStory && !isYourStory"
         :stories="prevStories"
         :isPause="isPause"
+        :nextFunction="next"
         @next="next"
         @prev="prev"
       />

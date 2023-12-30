@@ -97,6 +97,7 @@ export default (await import("vue")).defineComponent({
   props: {
     stories: Array,
     isPause: Boolean,
+    nextFunction: Function,
   },
 
   data() {
@@ -175,9 +176,9 @@ export default (await import("vue")).defineComponent({
         } else {
           this.percentage = 0;
           clearInterval(interval);
-            // setTimeout(() => {
-            //   this.$emit('next');
-            // }, 100);
+          setTimeout(() => {
+            this.nextFunction();
+          }, 500);
         }
       }, INTERVAL_TIME);
     },

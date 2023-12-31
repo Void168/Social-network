@@ -1,7 +1,7 @@
 <template>
   <div
     class="flex items-center justify-between absolute top-4 w-full h-16 p-4 z-20"
-    :class="selectedTheme?.textColor"
+    :class="[selectedTheme?.textColor]"
   >
     <div class="flex gap-4 items-center">
       <img
@@ -13,7 +13,7 @@
         <span class="font-semibold text-lg">{{
           stories[0]?.created_by?.name
         }}</span>
-        <span class="font-medium">{{ stories[0]?.created_at_formatted }}</span>
+        <span class="font-medium">{{ stories[this.currentStoryStore?.activeSlide]?.created_at_formatted }}</span>
         <GlobeAsiaAustraliaIcon class="w-5 h-5" />
       </div>
     </div>

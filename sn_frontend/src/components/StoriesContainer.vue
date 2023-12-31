@@ -61,7 +61,11 @@
           </div>
         </div>
       </SwiperSlide>
-      <SwiperSlide v-for="story in setStory" :key="story.id" @click="getUserStories(story[0]?.created_by?.id)">
+      <SwiperSlide
+        v-for="story in setStory"
+        :key="story.id"
+        @click="getUserStories(story[0]?.created_by?.id)"
+      >
         <Story
           :story="
             story.sort(
@@ -126,6 +130,7 @@ export default {
       mediaStories: [],
       yourStories: [],
       setStory: [],
+      firstStories: [],
       themes: themes,
       fonts: fonts,
     };
@@ -195,26 +200,30 @@ export default {
       const resultAll = Object.groupBy(
         this.yourStories
           .filter((story) => story?.created_by?.id !== this.userStore.user.id)
-          .sort((a, b) => new Date(b.created_at) - new Date(a.created_at)),
+          .sort((a, b) => new Date(a.created_at) - new Date(b.created_at)),
         ({ created_by }) => created_by?.id
       );
 
       this.setStory = resultAll;
       const listId = this.yourStories
         .filter((story) => story?.created_by?.id !== this.userStore.user.id)
-        .sort((a, b) => new Date(a.created_at) - new Date(b.created_at))
+        .sort((a, b) => new Date(b.created_at) - new Date(a.created_at))
         .map((story) => story.created_by.id);
       const removeDuplicate = [...new Set(listId)];
+      
       this.currentStoryStore.resetListId();
       this.currentStoryStore.getUserIdList(removeDuplicate);
     },
     async getUserStories(userId) {
       this.currentStoryStore.resetCurrentStory();
       this.currentStoryStore.resetActiveStory();
+
       await axios
         .get(`/api/story/get-text-stories/${userId}`)
         .then((res) => {
-          this.currentStoryStore.getCurrentUserStory(res.data.stories);
+          res.data.stories.forEach((story) => {
+            this.firstStories.unshift(story);
+          })
         })
         .catch((error) => {
           console.log("error", error);
@@ -222,11 +231,15 @@ export default {
       await axios
         .get(`/api/story/get-media-stories/${userId}`)
         .then((res) => {
-          this.currentStoryStore.getCurrentUserStory(res.data.stories);
+          res.data.stories.forEach((story) => {
+            this.firstStories.unshift(story);
+          })
         })
         .catch((error) => {
           console.log("error", error);
         });
+
+      this.currentStoryStore.getCurrentUserStory(this.firstStories);
       this.currentStoryStore.getActiveStory(
         this.currentStoryStore.currentStory[0]?.created_by?.id
       );

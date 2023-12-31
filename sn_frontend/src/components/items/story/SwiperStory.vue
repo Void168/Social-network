@@ -69,6 +69,7 @@
 
 <script>
 import axios from "axios";
+import { useRoute } from "vue-router";
 import { reactive } from "vue";
 import { Swiper, SwiperSlide } from "swiper/vue";
 import { useUserStore } from "../../../stores/user";
@@ -92,10 +93,14 @@ export default (await import("vue")).defineComponent({
     const userStore = useUserStore();
     const currentStoryStore = useCurrentStoryStore();
     const story = reactive({
-        nextIndex: 0
-    })
+      nextIndex: 0,
+    });
+
+    const route = useRoute();
+
     return {
-        story,
+      route,
+      story,
       userStore,
       currentStoryStore,
       modules: [Autoplay, Mousewheel, Keyboard, Pagination],
@@ -114,6 +119,7 @@ export default (await import("vue")).defineComponent({
       themes: themes,
       fonts: fonts,
       isNext: false,
+      interval: null,
     };
   },
 
@@ -133,12 +139,16 @@ export default (await import("vue")).defineComponent({
     },
   },
 
-  beforeMount() {
+  created() {
     this.onSwiper();
   },
 
   mounted() {
     this.doProgress();
+  },
+
+  unmounted() {
+    clearInterval(this.interval);
   },
 
   updated() {
@@ -168,10 +178,11 @@ export default (await import("vue")).defineComponent({
         progressItem.className = "progress-item";
       }
 
-      const interval = setInterval(() => {
-        if (this.percentage < 1 && this.currentStoryStore.activeStory) {
+      this.interval = setInterval(() => {
+        if (this.percentage <= 1) {
           this.activeSlide = this.swiper.realIndex;
           this.currentStoryStore.getActiveSlide(this.swiper.realIndex);
+          console.log(this.percentage);
           this.percentage +=
             (this.duration * 2) / 1000 / 1000 / this.stories.length;
           progressbar[0]?.style?.setProperty(
@@ -183,18 +194,20 @@ export default (await import("vue")).defineComponent({
           // console.log(length)
         } else {
           this.percentage = 0;
-          clearInterval(interval);
+          clearInterval(this.interval);
           if (this.isNext === false) {
             setTimeout(() => {
               this.nextFunction();
             }, 500);
           }
         }
-        console.log(this.isNext);
       }, INTERVAL_TIME);
+      if (this.isNext) {
+        clearInterval(this.interval);
+      }
     },
     next() {
-    this.story.nextIndex = this.currentStoryStore.activeSlide + 1;
+      this.story.nextIndex = this.currentStoryStore.activeSlide + 1;
 
       if (this.stories.length > 0) {
         this.percentage =
@@ -202,7 +215,8 @@ export default (await import("vue")).defineComponent({
       }
       if (
         (!this.stories.length &&
-          this.story.nextIndex > this.currentStoryStore?.currentStory?.length - 1) ||
+          this.story.nextIndex >
+            this.currentStoryStore?.currentStory?.length - 1) ||
         (this.stories.length && this.story.nextIndex > this.stories?.length - 1)
       ) {
         this.isNext = true;

@@ -121,6 +121,7 @@ import { useUserStore } from "./stores/user";
 import { useNotificationStore } from "./stores/notification";
 import { useUnseenConversationsStore } from "./stores/conversations";
 import { useConnectionStore } from "./stores/connection";
+import { useCurrentStoryStore } from "./stores/currentStory";
 import { socket } from "./socket";
 import { useRoute } from "vue-router";
 import { computed } from "vue";
@@ -135,6 +136,7 @@ import ProfileDropdown from "./components/dropdown/ProfileDropdown.vue";
 export default {
   setup() {
     const connectionStore = useConnectionStore();
+    const currentStoryStore = useCurrentStoryStore()
     const userStore = useUserStore();
     const userNotificationStore = useNotificationStore();
     const userUnseenConversationsStore = useUnseenConversationsStore();
@@ -147,6 +149,7 @@ export default {
 
     return {
       connectionStore,
+      currentStoryStore,
       userStore,
       userNotificationStore,
       userUnseenConversationsStore,
@@ -183,6 +186,7 @@ export default {
     } else {
       axios.defaults.headers.common["Authorization"] = "";
     }
+
   },
 };
 </script>

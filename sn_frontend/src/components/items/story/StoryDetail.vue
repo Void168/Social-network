@@ -3,98 +3,104 @@
     <div
       class="relative border-2 w-[35%] h-full rounded-lg flex items-center justify-center"
     >
-      <SwiperStoryHeader
-        v-if="isYourStory && !isFirstStory && !isOtherStory"
-        :stories="yourStory"
-        :isPause="isPause"
-        :isMute="isMute"
-      />
-      <SwiperStoryHeader
-        v-else-if="
-          isOtherStory &&
-          isFirstStory &&
-          !isYourStory &&
-          !nextStories.length &&
-          !prevStories.length &&
-          !isNext &&
-          currentStoryStore.activeStory
-        "
-        :stories="currentStoryStore.currentStory"
-        :isPause="isPause"
-        :isMute="isMute"
-      />
-      <SwiperStoryHeader
-        v-else-if="nextStories.length > 0"
-        :stories="nextStories"
-        :isPause="isPause"
-        :isMute="isMute"
-      />
-      <SwiperStoryHeader
-        v-else-if="prevStories.length > 0"
-        :stories="prevStories"
-        :isPause="isPause"
-        :isMute="isMute"
-      />
-      <SwiperStoryHeader
-        v-else-if="!isYourStory && !isFirstStory && isOtherStory"
-        :stories="userStories"
-        :isPause="isPause"
-        :isMute="isMute"
-      />
-      <SwiperStory
-        v-if="isYourStory && !isFirstStory && !isOtherStory"
-        :stories="yourStory"
-        :isPause="isPause"
-        :nextFunction="next"
-        @next="next"
-        @prev="prev"
-      />
-      <SwiperStory
-        v-else-if="
-          isOtherStory &&
-          isFirstStory &&
-          !isYourStory &&
-          !nextStories.length &&
-          !prevStories.length &&
-          !isNext &&
-          currentStoryStore.activeStory
-        "
-        :nextFunction="next"
-        :stories="currentStoryStore?.currentStory"
-        :isPause="isPause"
-        @next="next"
-        @prev="prev"
-      />
-      <SwiperStory
-        v-else-if="nextStories.length && !prevStories.length"
-        :stories="nextStories"
-        :isPause="isPause"
-        :nextFunction="next"
-        @next="next"
-        @prev="prev"
-      />
-      <SwiperStory
-        v-else-if="prevStories.length && !nextStories.length"
-        :stories="prevStories"
-        :isPause="isPause"
-        :nextFunction="next"
-        @next="next"
-        @prev="prev"
-      />
-      <SwiperStory
-        v-else-if="isOtherStory && !isFirstStory && !isYourStory"
-        :stories="prevStories"
-        :isPause="isPause"
-        :nextFunction="next"
-        @next="next"
-        @prev="prev"
-      />
-      <div
-        class="text-white text-xl"
-        v-else-if="!nextStories.length && !userStories.length"
-      >
-        <p>Đã xem hết tin</p>
-      </div>
+      <Suspense>
+        <SwiperStoryHeader
+          v-if="isYourStory && !isFirstStory && !isOtherStory"
+          :stories="yourStory"
+          :isPause="isPause"
+          :isMute="isMute"
+        />
+        <SwiperStoryHeader
+          v-else-if="
+            isOtherStory &&
+            isFirstStory &&
+            !isYourStory &&
+            !nextStories.length &&
+            !prevStories.length &&
+            !isNext &&
+            currentStoryStore.activeStory
+          "
+          :stories="currentStoryStore.currentStory"
+          :isPause="isPause"
+          :isMute="isMute"
+        />
+        <SwiperStoryHeader
+          v-else-if="nextStories.length && !prevStories.length"
+          :stories="nextStories"
+          :isPause="isPause"
+          :isMute="isMute"
+        />
+        <SwiperStoryHeader
+          v-else-if="prevStories.length && !nextStories.length"
+          :stories="prevStories"
+          :isPause="isPause"
+          :isMute="isMute"
+        />
+        <SwiperStoryHeader
+          v-else-if="!isYourStory && !isFirstStory && isOtherStory"
+          :stories="userStories"
+          :isPause="isPause"
+          :isMute="isMute"
+        />
+        <template #fallback> Loading... </template>
+      </Suspense>
+      <Suspense>
+        <SwiperStory
+          v-if="isYourStory && !isFirstStory && !isOtherStory"
+          :stories="yourStory"
+          :isPause="isPause"
+          :nextFunction="next"
+          @next="next"
+          @prev="prev"
+        />
+        <SwiperStory
+          v-else-if="
+            isOtherStory &&
+            isFirstStory &&
+            !isYourStory &&
+            !nextStories.length &&
+            !prevStories.length &&
+            !isNext &&
+            currentStoryStore.activeStory
+          "
+          :nextFunction="next"
+          :stories="currentStoryStore?.currentStory"
+          :isPause="isPause"
+          @next="next"
+          @prev="prev"
+        />
+        <SwiperStory
+          v-else-if="nextStories.length && !prevStories.length"
+          :stories="nextStories"
+          :isPause="isPause"
+          :nextFunction="next"
+          @next="next"
+          @prev="prev"
+        />
+        <SwiperStory
+          v-else-if="prevStories.length && !nextStories.length"
+          :stories="prevStories"
+          :isPause="isPause"
+          :nextFunction="next"
+          @next="next"
+          @prev="prev"
+        />
+        <SwiperStory
+          v-else-if="isOtherStory && !isFirstStory && !isYourStory"
+          :stories="userStories"
+          :isPause="isPause"
+          :nextFunction="next"
+          @next="next"
+          @prev="prev"
+        />
+        <div
+          class="text-white text-xl"
+          v-else-if="!nextStories.length && !userStories.length"
+        >
+          <p>Đã xem hết tin</p>
+        </div>
+        <template #fallback> Loading... </template>
+      </Suspense>
     </div>
   </div>
 </template>
@@ -106,14 +112,14 @@ import { reactive } from "vue";
 import { useUserStore } from "../../../stores/user";
 import { useCurrentStoryStore } from "../../../stores/currentStory";
 import { useToastStore } from "../../../stores/toast";
-
-import SwiperStory from "./SwiperStory.vue";
-import SwiperStoryHeader from "./SwiperStoryHeader.vue";
+import { defineAsyncComponent } from "vue";
 
 export default (await import("vue")).defineComponent({
   components: {
-    SwiperStory,
-    SwiperStoryHeader,
+    SwiperStory: defineAsyncComponent(() => import("./SwiperStory.vue")),
+    SwiperStoryHeader: defineAsyncComponent(() =>
+      import("./SwiperStoryHeader.vue")
+    ),
   },
   props: {
     isOtherStory: Boolean,
@@ -147,7 +153,6 @@ export default (await import("vue")).defineComponent({
       isOpen: false,
       nextStories: [],
       prevStories: [],
-      index: 0,
     };
   },
 
@@ -167,21 +172,19 @@ export default (await import("vue")).defineComponent({
         this.isNext = false;
       }
 
+      const index = this.currentStoryStore.listId.indexOf(
+        this.currentStoryStore?.activeStory
+      );
+
       if (this.isNext) {
         this.isPrev = false;
         this.nextStories = [];
         this.prevStories = [];
-        this.index++;
 
         await axios
           .get(
             `/api/story/get-text-stories/${
-              this.currentStoryStore.listId[
-                this.currentStoryStore.currentStory[0].created_by.id ===
-                this.userStore.user.id
-                  ? this.index
-                  : this.index + 1
-              ]
+              this.currentStoryStore.listId[index + 1]
             }/`
           )
           .then((res) => {
@@ -192,18 +195,13 @@ export default (await import("vue")).defineComponent({
             }
           })
           .catch((error) => {
-            console.log(error);
+            console.log('Đã xem hết tin');
           });
 
         await axios
           .get(
             `/api/story/get-media-stories/${
-              this.currentStoryStore.listId[
-                this.currentStoryStore.currentStory[0].created_by.id ===
-                this.userStore.user.id
-                  ? this.index
-                  : this.index + 1
-              ]
+              this.currentStoryStore.listId[index + 1]
             }/`
           )
           .then((res) => {
@@ -218,7 +216,7 @@ export default (await import("vue")).defineComponent({
             );
           })
           .catch((error) => {
-            console.log(error);
+            console.log('Đã xem hết tin');
           });
 
         this.currentStoryStore.resetActiveStory();

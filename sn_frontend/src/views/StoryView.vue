@@ -62,7 +62,7 @@
               <h3 class="text-lg font-semibold">{{ userStore.user.name }}</h3>
               <p class="flex gap-2">
                 <span class="dark:text-neutral-400">{{
-                  yourLastStory[0]?.created_at_formatted
+                  yourLastStory[yourLastStory.length - 1]?.created_at_formatted
                 }}</span>
               </p>
             </div>
@@ -78,11 +78,11 @@
                 otherStory(currentStoryStore?.currentStory[0]?.created_by.id)
               "
               v-if="
-                currentStoryStore?.currentStory[0]?.created_by.id !==
-                yourLastStory[0]?.created_by.id
+                currentStoryStore?.currentStory[0]?.created_by?.id !==
+                yourLastStory[0]?.created_by?.id
               "
               class="flex gap-3 items-center py-4 px-8 hover:bg-slate-700 rounded-lg cursor-pointer"
-              :class="currentStoryStore?.currentStory[0]?.created_by.id === currentStoryStore.activeStory ? 'bg-slate-700' : ''"
+              :class="currentStoryStore?.currentStory[0]?.created_by?.id === currentStoryStore.activeStory ? 'bg-slate-700' : ''"
             >
               <img
                 :src="

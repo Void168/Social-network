@@ -9,7 +9,7 @@ export const useCurrentStoryStore = defineStore({
     currentUserId: null,
     activeStory: null,
     listId: [],
-    activeSlide: 0
+    activeSlide: 0,
   }),
 
   actions: {
@@ -26,6 +26,15 @@ export const useCurrentStoryStore = defineStore({
         }
       });
       this.userId = data[0]?.created_by?.id;
+      if(this.listId.includes(this.userId)){
+        this.listId.filter((id) => id === this.userId)
+        if(this.listId.includes(this.currentUserId)){
+          this.listId.splice(1, 0, this.userId)
+        } else {
+          this.listId.unshift(this.listId)
+        }
+      }
+      this.listId = [... new Set(this.listId)]
     },
     getActiveSlide(data){
       this.activeSlide = data
@@ -36,21 +45,11 @@ export const useCurrentStoryStore = defineStore({
     getUserIdList(data) {
       data.forEach((id) => {
         this.listId.unshift(id);
+        this.listId.reverse()
       });
-
       if(!this.listId.includes(this.currentUserId)){
         this.listId.unshift(this.currentUserId)
       }
-
-      if(this.listId.includes(this.userId)){
-        this.listId.filter((id) => id === this.userId)
-        if(this.listId.includes(this.currentUserId)){
-          this.listId.splice(1, 0, this.userId)
-        } else {
-          this.listId.unshift(this.listId)
-        }
-      }
-      this.listId = [... new Set(this.listId)]
     },
     resetCurrentStory() {
       this.currentStory = [];

@@ -39,7 +39,7 @@
   }
 
   .swiper-pagination-progressbar-fill {
-    @apply flex !inset-x-2 rounded-3xl !h-[6px] z-20 !w-[97%] !scale-x-0
+    @apply flex !inset-x-2 rounded-3xl !bg-emerald-400 !h-[6px] z-20 !w-[97%] !scale-x-0
   }
 
   .progress {
@@ -47,7 +47,7 @@
   }
 
   .progress-item {
-    @apply w-full bg-white/70 h-[6px] z-30 rounded-3xl
+    @apply w-full bg-white/60 h-[6px] z-30 rounded-3xl
   }
 
   .progress-main {

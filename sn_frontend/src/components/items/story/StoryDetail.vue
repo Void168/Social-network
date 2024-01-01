@@ -37,7 +37,14 @@
           :isMute="isMute"
         />
         <SwiperStoryHeader
-          v-else-if="!isYourStory && !isFirstStory && isOtherStory"
+          v-else-if="
+            userStories.length &&
+            !prevStories.length &&
+            !nextStories.length &&
+            currentStoryStore.listId.indexOf(
+              this.currentStoryStore?.activeStory
+            ) > 0
+          "
           :stories="userStories"
           :isPause="isPause"
           :isMute="isMute"
@@ -86,7 +93,14 @@
           @prev="prev"
         />
         <SwiperStory
-          v-else-if="isOtherStory && !isFirstStory && !isYourStory"
+          v-else-if="
+            userStories.length &&
+            !prevStories.length &&
+            !nextStories.length &&
+            currentStoryStore.listId.indexOf(
+              this.currentStoryStore?.activeStory
+            ) > 0
+          "
           :stories="userStories"
           :isPause="isPause"
           :nextFunction="next"
@@ -95,7 +109,13 @@
         />
         <div
           class="text-white text-xl"
-          v-else-if="!nextStories.length && !userStories.length"
+          v-else-if="
+            !nextStories.length &&
+            !prevStories.length &&
+            currentStoryStore.listId.indexOf(
+              this.currentStoryStore?.activeStory
+            ) < 0
+          "
         >
           <p>Đã xem hết tin</p>
         </div>
@@ -195,7 +215,7 @@ export default (await import("vue")).defineComponent({
             }
           })
           .catch((error) => {
-            console.log('Đã xem hết tin');
+            console.log("Đã xem hết tin");
           });
 
         await axios
@@ -216,7 +236,7 @@ export default (await import("vue")).defineComponent({
             );
           })
           .catch((error) => {
-            console.log('Đã xem hết tin');
+            console.log("Đã xem hết tin");
           });
 
         this.currentStoryStore.resetActiveStory();

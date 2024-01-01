@@ -94,6 +94,7 @@ export default (await import("vue")).defineComponent({
     const currentStoryStore = useCurrentStoryStore();
     const story = reactive({
       nextIndex: 0,
+      prevIndex: 0
     });
 
     const route = useRoute();
@@ -119,6 +120,7 @@ export default (await import("vue")).defineComponent({
       themes: themes,
       fonts: fonts,
       isNext: false,
+      isPrev: false,
       interval: null,
     };
   },
@@ -182,16 +184,15 @@ export default (await import("vue")).defineComponent({
         if (this.percentage <= 1) {
           this.activeSlide = this.swiper.realIndex;
           this.currentStoryStore.getActiveSlide(this.swiper.realIndex);
-          console.log(this.percentage);
+
           this.percentage +=
             (this.duration * 2) / 1000 / 1000 / this.stories.length;
           progressbar[0]?.style?.setProperty(
             "transform",
             `scaleX(${this.percentage})`,
-            "important"
+            'important'
           );
 
-          // console.log(length)
         } else {
           this.percentage = 0;
           clearInterval(this.interval);
@@ -202,7 +203,7 @@ export default (await import("vue")).defineComponent({
           }
         }
       }, INTERVAL_TIME);
-      if (this.isNext) {
+      if (this.isNext || this.isPrev) {
         clearInterval(this.interval);
       }
     },
@@ -225,9 +226,17 @@ export default (await import("vue")).defineComponent({
       }
     },
     prev() {
+      this.story.prevIndex = this.currentStoryStore.activeSlide;
+
       if (this.stories.length > 0) {
         this.percentage =
           (this.currentStoryStore.activeSlide - 1) / this.stories.length;
+      }
+
+      if (this.story.prevIndex < 0) {
+        this.isPrev = true;
+      } else {
+        this.isPrev = false;
       }
     },
   },

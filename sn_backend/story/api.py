@@ -100,6 +100,22 @@ def user_media_story_list(request, id):
         'stories': media_stories_serializer.data,
     }, safe=False)
 
+@api_view(['GET'])
+def get_detail_text_story(request, pk):
+    text_story = TextStory.objects.get(pk=pk)
+    
+    serializer = PostDetailSerializer(text_story)
+    
+    return JsonResponse(serializer.data)
+
+@api_view(['GET'])
+def get_detail_media_story(request, pk):
+    media_story = MediaStory.objects.get(pk=pk)
+    
+    serializer = MediaDetailSerializer(media_story)
+    
+    return JsonResponse(serializer.data)
+
 @api_view(['POST'])
 def create_text_story(request):
     form = TextStoryForm(request.POST)

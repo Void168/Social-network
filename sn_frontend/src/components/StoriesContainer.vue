@@ -200,7 +200,7 @@ export default {
       const resultAll = Object.groupBy(
         this.yourStories
           .filter((story) => story?.created_by?.id !== this.userStore.user.id)
-          .sort((a, b) => new Date(a.created_at) - new Date(b.created_at)),
+          .sort((a, b) => new Date(b.created_at) - new Date(a.created_at)),
         ({ created_by }) => created_by?.id
       );
 

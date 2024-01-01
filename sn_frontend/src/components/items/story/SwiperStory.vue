@@ -140,7 +140,7 @@ export default (await import("vue")).defineComponent({
       return this.stories[this.activeSlide]?.duaration * 1000;
     },
     currentStoryId() {
-      return this.stories[this.activeSlide]?.id;
+      return this.stories[this.currentStoryStore.activeSlide]?.id;
     },
   },
 
@@ -173,7 +173,7 @@ export default (await import("vue")).defineComponent({
       this.currentStoryStore.getActiveStoryId(this.currentStoryId);
     },
 
-    doProgress() {
+    async doProgress() {
       const INTERVAL_TIME = (this.duration * 2) / 100;
 
       const progressbar = document.querySelectorAll(
@@ -212,15 +212,30 @@ export default (await import("vue")).defineComponent({
       if (this.isNext || this.isPrev) {
         clearInterval(this.interval);
       }
+        if(this.stories[this.currentStoryStore.activeSlide].body){
+          await axios
+            .post(`/api/story/seen-text-story/${this.currentStoryId}/`)
+            .then((res) => {
+              if(res.data){
+                console.log(res.data)
+              }
+            })
+            .catch((error) => {
+              console.log(error);
+            });
+        } else if(this.stories[this.currentStoryStore.activeSlide].attachments){
+          await axios
+            .post(`/api/story/seen-media-story/${this.currentStoryId}/`)
+            .then((res) => {
+              if(res.data){
+                console.log(res.data)
+              }
+            })
+            .catch((error) => {
+              console.log(error);
+            });
+        }
 
-      axios
-        .post(`/api/story/seen-text-story/${this.currentStoryId}/`)
-        .then((res) => {
-          console.log(res.data);
-        })
-        .catch((error) => {
-          console.log(error);
-        });
     },
     next() {
       this.story.nextIndex = this.currentStoryStore.activeSlide + 1;

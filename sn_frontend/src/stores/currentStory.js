@@ -45,6 +45,7 @@ export const useCurrentStoryStore = defineStore({
     },
     getActiveStoryId(data){
       this.activeStoryId = data
+      console.log(this.activeStoryId)
     },
     getUserIdList(data) {
       data.forEach((id) => {

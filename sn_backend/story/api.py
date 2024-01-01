@@ -145,15 +145,30 @@ def seen_text_story(request, pk):
     text_story = TextStory.objects.get(pk=pk)
     seenUser = request.user
     
-    if not text_story.seen_by.all().filter(created_by=request.user) and text_story.created_by == seenUser:
+    if not text_story.seen_by.all().filter(id=request.user.id) and text_story.created_by != seenUser:
         text_story.seen_by.add(seenUser)
         text_story.save()
     
         serializer = TextStoryDetailSerializer(text_story)
             
-        return JsonResponse({'message': serializer.data})
+        return JsonResponse(serializer.data)
     else:
-        return JsonResponse({'message': 'conversation not exists'})
+        return JsonResponse({'message': 'seen'})
+    
+@api_view(['POST'])
+def seen_media_story(request, pk):
+    media_story = MediaStory.objects.get(pk=pk)
+    seenUser = request.user
+    
+    if not media_story.seen_by.all().filter(id=request.user.id) and media_story.created_by != seenUser:
+        media_story.seen_by.add(seenUser)
+        media_story.save()
+    
+        serializer = MediaStoryDetailSerializer(media_story)
+            
+        return JsonResponse(serializer.data)
+    else:
+        return JsonResponse({'message': 'seen'})
 
 @api_view(['DELETE'])
 def text_story_delete(request, pk):

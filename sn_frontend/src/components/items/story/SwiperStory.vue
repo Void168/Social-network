@@ -94,7 +94,7 @@ export default (await import("vue")).defineComponent({
     const currentStoryStore = useCurrentStoryStore();
     const story = reactive({
       nextIndex: 0,
-      prevIndex: 0
+      prevIndex: 0,
     });
 
     const route = useRoute();
@@ -139,6 +139,9 @@ export default (await import("vue")).defineComponent({
     duration() {
       return this.stories[this.activeSlide]?.duaration * 1000;
     },
+    currentStoryId() {
+      return this.stories[this.activeSlide]?.id;
+    },
   },
 
   created() {
@@ -166,6 +169,10 @@ export default (await import("vue")).defineComponent({
       this.activeSlide = this.swiper.realIndex;
     },
 
+    getCurrentStoryId() {
+      this.currentStoryStore.getActiveStoryId(this.currentStoryId);
+    },
+
     doProgress() {
       const INTERVAL_TIME = (this.duration * 2) / 100;
 
@@ -190,9 +197,8 @@ export default (await import("vue")).defineComponent({
           progressbar[0]?.style?.setProperty(
             "transform",
             `scaleX(${this.percentage})`,
-            'important'
+            "important"
           );
-
         } else {
           this.percentage = 0;
           clearInterval(this.interval);
@@ -206,6 +212,15 @@ export default (await import("vue")).defineComponent({
       if (this.isNext || this.isPrev) {
         clearInterval(this.interval);
       }
+
+      axios
+        .post(`/api/story/seen-text-story/${this.currentStoryId}/`)
+        .then((res) => {
+          console.log(res.data);
+        })
+        .catch((error) => {
+          console.log(error);
+        });
     },
     next() {
       this.story.nextIndex = this.currentStoryStore.activeSlide + 1;

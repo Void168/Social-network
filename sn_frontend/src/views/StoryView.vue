@@ -82,7 +82,12 @@
                 yourLastStory[0]?.created_by?.id
               "
               class="flex gap-3 items-center py-4 px-8 hover:bg-slate-700 rounded-lg cursor-pointer"
-              :class="currentStoryStore?.currentStory[0]?.created_by?.id === currentStoryStore.activeStory ? 'bg-slate-700' : ''"
+              :class="
+                currentStoryStore?.currentStory[0]?.created_by?.id ===
+                currentStoryStore.activeStory
+                  ? 'bg-slate-700'
+                  : ''
+              "
             >
               <img
                 :src="
@@ -133,32 +138,46 @@
             :isYourStory="isYourStory"
             :yourStory="yourLastStory"
             :isFirstStory="isFirstStory"
+            :isListSeenOpen="isListSeenOpen"
           />
           <template #fallback> Loading... </template>
         </Suspense>
       </div>
-      <div
-        class="flex justify-center items-center gap-2"
-        v-if="currentStoryStore.activeStory"
-      >
-        <input
-          ref="replyStory"
-          type="text"
-          placeholder="Trả lời..."
-          class="my-2 py-2 px-8 border text-lg border-gray-200 dark:bg-slate-700 dark:text-neutral-200 rounded-2xl"
-        />
-        <div class="flex gap-3" v-for="emoji in emojiList" :key="emoji.unicode">
-          <div
-            class="group p-2 rounded-full w-12 h-12 bg-gradient-to-t from-white via-emerald-500 to-green-500 flex justify-center items-center cursor-pointer"
-          >
-            <span
-              :class="
-                emoji.name === 'Like'
-                  ? 'text-3xl mb-2 group-hover:scale-105'
-                  : 'text-3xl group-hover:scale-105 mb-1'
-              "
-              >{{ emoji.unicode }}</span
+      <div v-if="!isListSeenOpen" @click="openListSeen">
+        <div
+          class="flex justify-center items-center gap-2"
+          v-if="currentStoryStore.activeStory !== userStore.user.id"
+        >
+          <input
+            ref="replyStory"
+            type="text"
+            placeholder="Trả lời..."
+            class="my-2 py-2 px-8 border text-lg border-gray-200 dark:bg-slate-700 dark:text-neutral-200 rounded-2xl"
+          />
+          <div class="flex gap-3" v-for="emoji in emojiList" :key="emoji.unicode">
+            <div
+              class="group p-2 rounded-full w-12 h-12 bg-gradient-to-t from-white via-emerald-500 to-green-500 flex justify-center items-center cursor-pointer"
             >
+              <span
+                :class="
+                  emoji.name === 'Like'
+                    ? 'text-3xl mb-2 group-hover:scale-105'
+                    : 'text-3xl group-hover:scale-105 mb-1'
+                "
+                >{{ emoji.unicode }}</span
+              >
+            </div>
+          </div>
+        </div>
+        <div v-else class="flex justify-center items-center  flex-col cursor-pointer">
+          <ChevronUpIcon class="w-8"/>
+          <p class="font-bold text-lg border-b pb-1">
+            {{ yourLastStory[currentStoryStore.activeSlide]?.seen_by.length }} người xem
+          </p>
+          <div class="flex my-2 gap-1">
+            <div v-for="user in yourLastStory[currentStoryStore.activeSlide]?.seen_by.slice(0, 4)" :key="user.id">
+              <img :src="user.get_avatar" class="w-8 h-8 rounded-full">
+            </div>
           </div>
         </div>
       </div>
@@ -172,7 +191,7 @@ import axios from "axios";
 import { useUserStore } from "../stores/user";
 import { useCurrentStoryStore } from "../stores/currentStory";
 import { RouterLink } from "vue-router";
-import { XMarkIcon, PlusIcon } from "@heroicons/vue/24/solid";
+import { XMarkIcon, PlusIcon, ChevronUpIcon } from "@heroicons/vue/24/solid";
 import StoryBox from "../components/items/story/StoryBox.vue";
 import CreateStoryModal from "../components/modals/story/CreateStoryModal.vue";
 import emojiStory from "../data/emoji";
@@ -189,6 +208,7 @@ export default {
     CreateStoryModal,
     XMarkIcon,
     PlusIcon,
+    ChevronUpIcon
   },
   setup() {
     const currentStoryStore = useCurrentStoryStore();
@@ -212,6 +232,7 @@ export default {
       isFirstStory: false,
       isYourStory: false,
       userIdList: [],
+      isListSeenOpen: false
     };
   },
 
@@ -331,7 +352,7 @@ export default {
       this.isFirstStory = true;
     },
     async otherStory(userId) {
-      this.currentStoryStore.getActiveStory(userId)
+      this.currentStoryStore.getActiveStory(userId);
       this.userId = userId;
       this.$emit("otherStory");
       if (this.currentStoryStore.userId !== userId) {
@@ -380,6 +401,9 @@ export default {
           console.log(error);
         });
     },
+    openListSeen(){
+      this.isListSeenOpen = true
+    }
   },
 };
 </script>

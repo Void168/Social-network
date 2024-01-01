@@ -17,6 +17,7 @@ class ReactStorySerializer(serializers.ModelSerializer):
 
 class TextStorySerializer(serializers.ModelSerializer):
     created_by = UserSerializer(read_only=True)
+    seen_by = UserSerializer(read_only=True, many=True)
     class Meta:
         model = TextStory
         fields = ('id', 'body', 'is_private', 'only_me', 'seen_by', 'font', 'theme', 'created_by', 'created_at_formatted', 'created_at',)
@@ -24,6 +25,7 @@ class TextStorySerializer(serializers.ModelSerializer):
 class MediaStorySerializer(serializers.ModelSerializer):
     created_by = UserSerializer(read_only=True)
     attachments = StoryAttachmentSerializer(read_only=True, many=True)
+    seen_by = UserSerializer(read_only=True, many=True)
     class Meta:
         model = MediaStory
         fields = ('id', 'is_private', 'caption', 'attachments', 'only_me', 'theme', 'seen_by', 'created_by', 'created_at_formatted', 'created_at',)

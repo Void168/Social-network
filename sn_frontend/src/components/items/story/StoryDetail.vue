@@ -1,8 +1,6 @@
 <template>
   <div class="flex items-center justify-center h-full">
-    <div
-      class="relative border-2 w-[35%] h-full rounded-lg flex items-center justify-center"
-    >
+    <div class="relative border-2 w-[35%] h-full rounded-lg flex items-center">
       <Suspense>
         <SwiperStoryHeader
           v-if="isYourStory && !isFirstStory && !isOtherStory"
@@ -121,6 +119,15 @@
         </div>
         <template #fallback> Loading... </template>
       </Suspense>
+      <Suspense>
+        <ListSeenUserStory
+          :stories="yourStory"
+          v-if="
+            isListSeenOpen &&
+            currentStoryStore.activeStory === userStore.user.id
+          "
+        />
+      </Suspense>
     </div>
   </div>
 </template>
@@ -140,6 +147,9 @@ export default (await import("vue")).defineComponent({
     SwiperStoryHeader: defineAsyncComponent(() =>
       import("./SwiperStoryHeader.vue")
     ),
+    ListSeenUserStory: defineAsyncComponent(() =>
+      import("./ListSeenUserStory.vue")
+    ),
   },
   props: {
     isOtherStory: Boolean,
@@ -147,6 +157,7 @@ export default (await import("vue")).defineComponent({
     isYourStory: Boolean,
     yourStory: Object,
     isFirstStory: Boolean,
+    isListSeenOpen: Boolean,
   },
   setup() {
     const userStore = useUserStore();

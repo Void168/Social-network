@@ -139,11 +139,12 @@
             :yourStory="yourLastStory"
             :isFirstStory="isFirstStory"
             :isListSeenOpen="isListSeenOpen"
+            @closeListSeen="closeListSeen"
           />
           <template #fallback> Loading... </template>
         </Suspense>
       </div>
-      <div v-if="!isListSeenOpen" @click="openListSeen">
+      <div v-if="!isListSeenOpen &&  currentStoryStore.activeStory" @click="openListSeen">
         <div
           class="flex justify-center items-center gap-2"
           v-if="currentStoryStore.activeStory !== userStore.user.id"
@@ -154,7 +155,7 @@
             placeholder="Trả lời..."
             class="my-2 py-2 px-8 border text-lg border-gray-200 dark:bg-slate-700 dark:text-neutral-200 rounded-2xl"
           />
-          <div class="flex gap-3" v-for="emoji in emojiList" :key="emoji.unicode">
+          <div class="flex gap-3" v-for="emoji in emojiList.slice(1, emojiList.length)" :key="emoji.unicode">
             <div
               class="group p-2 rounded-full w-12 h-12 bg-gradient-to-t from-white via-emerald-500 to-green-500 flex justify-center items-center cursor-pointer"
             >
@@ -403,6 +404,9 @@ export default {
     },
     openListSeen(){
       this.isListSeenOpen = true
+    },
+    closeListSeen(){
+      this.isListSeenOpen = false
     }
   },
 };

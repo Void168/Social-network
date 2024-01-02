@@ -188,7 +188,7 @@ export default (await import("vue")).defineComponent({
       }
 
       this.interval = setInterval(() => {
-        if (this.percentage <= 1) {
+        if (this.percentage <= 1 && !this.isPause) {
           this.activeSlide = this.swiper.realIndex;
           this.currentStoryStore.getActiveSlide(this.swiper.realIndex);
 

@@ -7,6 +7,7 @@
           :stories="yourStory"
           :isPause="isPause"
           :isMute="isMute"
+          @pause="pause"
         />
         <SwiperStoryHeader
           v-else-if="
@@ -21,18 +22,21 @@
           :stories="currentStoryStore.currentStory"
           :isPause="isPause"
           :isMute="isMute"
+          @pause="pause"
         />
         <SwiperStoryHeader
           v-else-if="nextStories.length && !prevStories.length"
           :stories="nextStories"
           :isPause="isPause"
           :isMute="isMute"
+          @pause="pause"
         />
         <SwiperStoryHeader
           v-else-if="prevStories.length && !nextStories.length"
           :stories="prevStories"
           :isPause="isPause"
           :isMute="isMute"
+          @pause="pause"
         />
         <SwiperStoryHeader
           v-else-if="
@@ -46,6 +50,7 @@
           :stories="userStories"
           :isPause="isPause"
           :isMute="isMute"
+          @pause="pause"
         />
         <template #fallback> Loading... </template>
       </Suspense>
@@ -106,7 +111,7 @@
           @prev="prev"
         />
         <div
-          class="text-white text-xl"
+          class="text-white text-xl flex justify-center items-center w-full"
           v-else-if="
             !nextStories.length &&
             !prevStories.length &&
@@ -115,12 +120,13 @@
             ) < 0
           "
         >
-          <p>Đã xem hết tin</p>
+          <p class="text-center">Đã xem hết tin</p>
         </div>
         <template #fallback> Loading... </template>
       </Suspense>
       <Suspense>
         <ListSeenUserStory
+          @closeListSeen="$emit('closeListSeen')"
           :stories="yourStory"
           v-if="
             isListSeenOpen &&
@@ -320,15 +326,14 @@ export default (await import("vue")).defineComponent({
       }
     },
 
-    // pause() {
-    //   this.isPause = !this.isPause;
-    //   console.log(this.isPause);
-    //   if (this.isPause) {
-    //     this.swiper.autoplay.pause();
-    //   } else {
-    //     this.swiper.autoplay.resume();
-    //   }
-    // },
+    pause() {
+      this.isPause = !this.isPause;
+      if (this.isPause) {
+        this.swiper.autoplay.pause();
+      } else {
+        this.swiper.autoplay.resume();
+      }
+    },
     mute() {
       this.isMute = !this.isMute;
       console.log(this.isMute);

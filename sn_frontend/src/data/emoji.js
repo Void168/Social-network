@@ -1,5 +1,9 @@
 const emojiStory = [
   {
+    name: "Tất cả",
+    unicode: "",
+  },
+  {
     name: "Like",
     unicode: "👍",
   },

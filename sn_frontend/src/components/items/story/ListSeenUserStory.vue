@@ -63,18 +63,35 @@
                   <EllipsisHorizontalIcon
                     class="w-10 p-1 hover:bg-slate-600 rounded-full cursor-pointer"
                   />
-                  
-  
-                  <!-- 
-                <ul
-                  class="mt-1 flex space-x-1 text-xs font-normal leading-4 text-gray-500"
+                </li>
+              </ul>
+              <div class="flex items-center justify-center my-4">
+                <p class="text-sm">Thông tin chi tiết về những người xem tin của bạn sẽ hiển thị ở đây.</p>
+              </div>
+            </TabPanel>
+            <TabPanel
+            v-else
+              :class="['rounded-none p-3', 'ring-white/60 ring-offset-2']"
+            >
+              <ul>
+                <li
+                  v-for="user in stories[currentStoryStore.activeSlide]?.seen_by"
+                  :key="user.id"
+                  class="relative rounded-md p-3 flex items-center justify-between"
                 >
-                  <li>{{ post.date }}</li>
-                  <li>&middot;</li>
-                  <li>{{ post.commentCount }} comments</li>
-                  <li>&middot;</li>
-                  <li>{{ post.shareCount }} shares</li>
-                </ul> -->
+                  <div class="flex items-center gap-3">
+                    <img
+                      :src="user.get_avatar"
+                      alt="avatar"
+                      class="w-12 h-12 rounded-full"
+                    />
+                    <h3 class="text-sm font-medium leading-5">
+                      {{ user.name }}
+                    </h3>
+                  </div>
+                  <EllipsisHorizontalIcon
+                    class="w-10 p-1 hover:bg-slate-600 rounded-full cursor-pointer"
+                  />
                 </li>
               </ul>
               <div class="flex items-center justify-center my-4">

@@ -222,6 +222,34 @@ def react_text_story(request, pk, status):
         return JsonResponse({'message': 'story already reacted'})
 
 @api_view(['POST'])
+def react_media_story(request, pk, status):
+    media_story = MediaStory.objects.get(pk=pk)
+    react_story = ReactStory.objects.create(created_by=request.user)
+    react_story.type_of_react = status
+    react_story.save()
+
+    received_user = media_story.created_by
+    
+    if not media_story.reacted_by.filter(created_by=request.user):
+        media_story.reacted_by.add(react_story)
+        media_story.save()
+        
+        notification = Notification.objects.create(
+            body=f'{received_user.name} đã thả {react_story.type_of_react} vào tin của bạn',
+            type_of_notification='react_story',
+            created_by=request.user,
+            created_for=received_user
+        )
+        
+        serializer_notification = NotificationSerializer(notification)
+        
+        serializer = ReactStorySerializer(react_story)
+        
+        return JsonResponse(serializer.data, safe=False)
+    else:
+        return JsonResponse({'message': 'story already reacted'})
+
+@api_view(['POST'])
 def react_media_story(request, pk):
     print(request)
     

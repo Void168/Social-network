@@ -260,6 +260,9 @@ export default (await import("vue")).defineComponent({
         this.currentStoryStore.getActiveStory(
           this.nextStories[0]?.created_by?.id
         );
+        this.currentStoryStore.getActiveStoryId(
+          this.nextStories[0]?.id
+        );
       }
     },
     async prev() {

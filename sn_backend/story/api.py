@@ -223,6 +223,7 @@ def react_text_story(request, pk, status):
 
 @api_view(['POST'])
 def react_media_story(request, pk, status):
+    print(status)
     media_story = MediaStory.objects.get(pk=pk)
     react_story = ReactStory.objects.create(created_by=request.user)
     react_story.type_of_react = status

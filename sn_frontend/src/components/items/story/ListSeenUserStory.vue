@@ -68,7 +68,7 @@
                     <span>{{
                       stories[currentStoryStore.activeSlide].reacted_by.filter(
                         (reactedUser) => reactedUser.created_by.id === user.id
-                      )[0].type_of_react
+                      )[0]?.type_of_react
                     }}</span>
                   </div>
                   <EllipsisHorizontalIcon

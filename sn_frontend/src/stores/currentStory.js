@@ -63,6 +63,6 @@ export const useCurrentStoryStore = defineStore({
     },
     resetActiveStory(){
       this.activeStory = null
-    }
+    },
   },
 });

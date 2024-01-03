@@ -140,7 +140,7 @@ export default (await import("vue")).defineComponent({
       return this.stories[this.activeSlide]?.duaration * 1000;
     },
     currentStoryId() {
-      return this.stories[this.currentStoryStore.activeSlide]?.id;
+      return this.stories[this.currentStoryStore?.activeSlide]?.id;
     },
   },
 
@@ -150,15 +150,15 @@ export default (await import("vue")).defineComponent({
 
   mounted() {
     this.doProgress();
-    this.getCurrentStoryId();
   },
-
+  
   unmounted() {
     clearInterval(this.interval);
   },
-
-  updated() {
+  
+  beforeUpdate() {
     this.updatedActiveSlide();
+    this.currentStoryStore.getActiveStoryId(this.currentStoryId);
   },
 
   methods: {
@@ -174,13 +174,9 @@ export default (await import("vue")).defineComponent({
         this.swiper.autoplay.resume();
       }
     },
-
-    getCurrentStoryId() {
-      this.currentStoryStore.getActiveStoryId(this.currentStoryId);
-    },
-
     async doProgress() {
       const INTERVAL_TIME = (this.duration * 2) / 100;
+      this.currentStoryStore.getActiveStoryId(this.currentStoryId);
 
       const progressbar = document.querySelectorAll(
         ".swiper-pagination-progressbar-fill"
@@ -197,15 +193,14 @@ export default (await import("vue")).defineComponent({
         if (this.percentage <= 1) {
           this.activeSlide = this.swiper.realIndex;
           this.currentStoryStore.getActiveSlide(this.swiper.realIndex);
-
           this.percentage +=
-            (this.duration * 2) / 1000 / 1000 / this.stories.length;
+          (this.duration * 2) / 1000 / 1000 / this.stories.length;
           progressbar[0]?.style?.setProperty(
             "transform",
             `scaleX(${this.percentage})`,
             "important"
-          );
-        } else {
+            );
+          } else {
           this.percentage = 0;
           clearInterval(this.interval);
           if (this.isNext === false && !this.isPause) {
@@ -229,9 +224,7 @@ export default (await import("vue")).defineComponent({
           .catch((error) => {
             console.log(error);
           });
-      } else if (
-        this.stories[this.currentStoryStore.activeSlide]?.attachments
-      ) {
+      } else {
         await axios
           .post(`/api/story/seen-media-story/${this.currentStoryId}/`)
           .then((res) => {
@@ -245,8 +238,8 @@ export default (await import("vue")).defineComponent({
       }
     },
     next() {
+      this.currentStoryStore.getActiveStoryId(this.currentStoryId);
       this.story.nextIndex = this.currentStoryStore.activeSlide + 1;
-
       if (this.stories.length > 0) {
         this.percentage =
           (this.currentStoryStore.activeSlide + 1) / this.stories.length;
@@ -263,6 +256,7 @@ export default (await import("vue")).defineComponent({
       }
     },
     prev() {
+      this.currentStoryStore.getActiveStoryId(this.currentStoryId);
       this.story.prevIndex = this.currentStoryStore.activeSlide;
 
       if (this.stories.length > 0) {

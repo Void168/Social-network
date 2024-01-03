@@ -26,22 +26,14 @@ class StoryAttachment(models.Model):
             return ''
 
 class ReactStory(models.Model):
-    LIKE = '👍'
-    HEART = '❤️'
-    LOVE = '😍'
-    LAUGH = '😆'
-    SUPRISE = '😲'
-    SAD = '😥'
-    ANGRY = '😡'
-    
     CHOICES_TYPE_OF_REACT = (
-        (LIKE, 'Like react'),
-        (HEART, 'Heart react'),
-        (LOVE, 'Love react'),
-        (LAUGH, 'Laugh react'),
-        (SUPRISE, 'Suprise react'),
-        (SAD, 'Sad react'),
-        (ANGRY, 'Angry react'),
+        ("LIKE", '👍'),
+        ("HEART", '❤️'),
+        ("LOVE", '😍'),
+        ("LAUGH", '😆'),
+        ("SUPRISE", '😲'),
+        ("SAD", '😥'),
+        ("ANGRY", '😡'),
     )
     
     id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)

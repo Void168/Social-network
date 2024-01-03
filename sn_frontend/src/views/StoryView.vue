@@ -144,10 +144,7 @@
           <template #fallback> Loading... </template>
         </Suspense>
       </div>
-      <div
-        v-if="!isListSeenOpen && currentStoryStore.activeStory"
-        @click="openListSeen"
-      >
+      <div v-if="!isListSeenOpen && currentStoryStore.activeStoryId">
         <div
           class="flex justify-center items-center gap-2"
           v-if="currentStoryStore.activeStory !== userStore.user.id"
@@ -167,7 +164,9 @@
               class="group p-2 rounded-full w-12 h-12 bg-gradient-to-t from-white via-emerald-500 to-green-500 flex justify-center items-center cursor-pointer"
             >
               <span
-                @click="sendReact(emoji.unicode, currentStoryStore.activeStoryId)"
+                @click="
+                  sendReact(emoji.unicode, currentStoryStore.activeStoryId)
+                "
                 :class="
                   emoji.name === 'like'
                     ? 'text-3xl mb-2 group-hover:scale-105'
@@ -179,6 +178,7 @@
           </div>
         </div>
         <div
+          @click="openListSeen"
           v-else
           class="flex justify-center items-center flex-col cursor-pointer"
         >
@@ -265,10 +265,15 @@ export default {
 
   beforeMount() {
     this.settingActiveStory();
+    this.getActiveStory();
   },
 
   mounted() {
     this.getStories();
+  },
+
+  beforeUpdate(){
+    this.getActiveStory();
   },
 
   methods: {
@@ -286,52 +291,43 @@ export default {
     closeTextStory() {
       this.isTextStory = false;
     },
-    getStories() {
-      setTimeout(() => {
-        axios
-          .get("/api/story/text-stories/")
-          .then((res) => {
-            this.textStories = res.data.sort(
-              (a, b) => new Date(b.created_at) - new Date(a.created_at)
-            );
-            // console.log(this.textStories);
-
-            this.textStories.forEach((textStory) => {
-              this.yourStories.unshift(textStory);
-            });
-          })
-          .catch((error) => {
-            console.log(error);
+    async getStories() {
+      await axios
+        .get("/api/story/text-stories/")
+        .then((res) => {
+          this.textStories = res.data.sort(
+            (a, b) => new Date(b.created_at) - new Date(a.created_at)
+          );
+          this.textStories.forEach((textStory) => {
+            this.yourStories.unshift(textStory);
           });
-      }, 100);
+        })
+        .catch((error) => {
+          console.log(error);
+        });
 
-      setTimeout(() => {
-        axios
-          .get("/api/story/media-stories/")
-          .then((res) => {
-            this.mediaStories = res.data.sort(
-              (a, b) => new Date(b.created_at) - new Date(a.created_at)
-            );
-            // console.log(this.mediaStories);
-            this.mediaStories.forEach((mediaStory) => {
-              this.yourStories.unshift(mediaStory);
-            });
-
-            this.getSetStories();
-          })
-          .catch((error) => {
-            console.log(error);
+      await axios
+        .get("/api/story/media-stories/")
+        .then((res) => {
+          this.mediaStories = res.data.sort(
+            (a, b) => new Date(b.created_at) - new Date(a.created_at)
+          );
+          this.mediaStories.forEach((mediaStory) => {
+            this.yourStories.unshift(mediaStory);
           });
-      }, 200);
+
+          this.getSetStories();
+        })
+        .catch((error) => {
+          console.log(error);
+        });
 
       setTimeout(() => {
         this.getSetStories();
         this.yourStories = this.yourStories.sort(
           (a, b) => new Date(b.created_at) - new Date(a.created_at)
         );
-        // console.log(this.yourStories);
       }, 300);
-      this.getActiveStory()
     },
     getSetStories() {
       const result = Object.groupBy(
@@ -346,7 +342,6 @@ export default {
         ({ created_by }) => created_by.id
       );
       this.setStory = result;
-      // console.log(this.setStory);
     },
     settingActiveStory() {
       if (
@@ -427,10 +422,10 @@ export default {
           `/api/story/get-detail-text-story/${this.currentStoryStore.activeStoryId}`
         )
         .then((res) => {
-          if(res.data.message){
-            console.log('Text story not found')
+          if (res.data.message) {
+            console.log("Text story not found");
           } else {
-            this.activeStory = res.data
+            this.activeStory = res.data;
           }
         })
         .catch((error) => console.log(error));
@@ -440,25 +435,34 @@ export default {
           `/api/story/get-detail-media-story/${this.currentStoryStore.activeStoryId}`
         )
         .then((res) => {
-          if(res.data.message){
-            console.log('Media story not found')
+          if (res.data.message) {
+            console.log("Media story not found");
           } else {
-            this.activeStory = res.data
+            this.activeStory = res.data;
           }
         })
         .catch((error) => console.log(error));
-
-        console.log(this.activeStory)
     },
     sendReact(typeOfReact, pk) {
-      axios
-        .post(`/api/story/react-text-story/${pk}/${typeOfReact}/`)
-        .then((res) => {
-          // console.log("data", res.data);
-        })
-        .catch((error) => {
-          console.log("error", error);
-        });
+      if (this.activeStory?.body) {
+        axios
+          .post(`/api/story/react-text-story/${pk}/${typeOfReact}/`)
+          .then((res) => {
+            console.log(res.data);
+          })
+          .catch((error) => {
+            console.log("error", error);
+          });
+      } else {
+        axios
+          .post(`/api/story/react-media-story/${pk}/${typeOfReact}/`)
+          .then((res) => {
+            console.log(res.data);
+          })
+          .catch((error) => {
+            console.log("error", error);
+          });
+      }
     },
     openListSeen() {
       this.isListSeenOpen = true;

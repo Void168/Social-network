@@ -150,7 +150,7 @@ export default (await import("vue")).defineComponent({
 
   mounted() {
     this.doProgress();
-    this.getCurrentStoryId()
+    this.getCurrentStoryId();
   },
 
   unmounted() {
@@ -168,6 +168,11 @@ export default (await import("vue")).defineComponent({
 
     updatedActiveSlide() {
       this.activeSlide = this.swiper.realIndex;
+      if (this.isPause) {
+        this.swiper.autoplay.pause();
+      } else {
+        this.swiper.autoplay.resume();
+      }
     },
 
     getCurrentStoryId() {
@@ -189,7 +194,7 @@ export default (await import("vue")).defineComponent({
       }
 
       this.interval = setInterval(() => {
-        if (this.percentage <= 1 && !this.isPause) {
+        if (this.percentage <= 1) {
           this.activeSlide = this.swiper.realIndex;
           this.currentStoryStore.getActiveSlide(this.swiper.realIndex);
 
@@ -203,40 +208,41 @@ export default (await import("vue")).defineComponent({
         } else {
           this.percentage = 0;
           clearInterval(this.interval);
-          if (this.isNext === false) {
+          if (this.isNext === false && !this.isPause) {
             setTimeout(() => {
               this.nextFunction();
             }, 500);
           }
         }
       }, INTERVAL_TIME);
-      if (this.isNext || this.isPrev) {
+      if (this.isNext || this.isPrev || this.isPause) {
         clearInterval(this.interval);
       }
-        if(this.stories[this.currentStoryStore.activeSlide]?.body){
-          await axios
-            .post(`/api/story/seen-text-story/${this.currentStoryId}/`)
-            .then((res) => {
-              if(res.data){
-                console.log(res.data)
-              }
-            })
-            .catch((error) => {
-              console.log(error);
-            });
-        } else if(this.stories[this.currentStoryStore.activeSlide]?.attachments){
-          await axios
-            .post(`/api/story/seen-media-story/${this.currentStoryId}/`)
-            .then((res) => {
-              if(res.data){
-                console.log(res.data)
-              }
-            })
-            .catch((error) => {
-              console.log(error);
-            });
-        }
-
+      if (this.stories[this.currentStoryStore.activeSlide]?.body) {
+        await axios
+          .post(`/api/story/seen-text-story/${this.currentStoryId}/`)
+          .then((res) => {
+            if (res.data) {
+              console.log(res.data);
+            }
+          })
+          .catch((error) => {
+            console.log(error);
+          });
+      } else if (
+        this.stories[this.currentStoryStore.activeSlide]?.attachments
+      ) {
+        await axios
+          .post(`/api/story/seen-media-story/${this.currentStoryId}/`)
+          .then((res) => {
+            if (res.data) {
+              console.log(res.data);
+            }
+          })
+          .catch((error) => {
+            console.log(error);
+          });
+      }
     },
     next() {
       this.story.nextIndex = this.currentStoryStore.activeSlide + 1;

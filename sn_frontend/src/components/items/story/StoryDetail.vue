@@ -328,15 +328,9 @@ export default (await import("vue")).defineComponent({
 
     pause() {
       this.isPause = !this.isPause;
-      if (this.isPause) {
-        this.swiper.autoplay.pause();
-      } else {
-        this.swiper.autoplay.resume();
-      }
     },
     mute() {
       this.isMute = !this.isMute;
-      console.log(this.isMute);
     },
   },
 });

@@ -37,16 +37,22 @@
         <TabPanels class="mt-2">
           <div v-for="n in emojiStory.length" :key="n">
             <TabPanel
-            v-if="n === 1"
+              v-if="n === 1"
               :class="['rounded-none p-3', 'ring-white/60 ring-offset-2']"
             >
-            <div class="flex gap-3 items-center text-neutral-300/90">
-              <EyeIcon class="w-6 h-5"/>
-              <span class="font-bold">{{ stories[currentStoryStore.activeSlide]?.seen_by.length }} người xem</span>
-            </div>
+              <div class="flex gap-3 items-center text-neutral-300/90">
+                <EyeIcon class="w-6 h-5" />
+                <span class="font-bold"
+                  >{{
+                    stories[currentStoryStore.activeSlide]?.seen_by.length
+                  }}
+                  người xem</span
+                >
+              </div>
               <ul>
                 <li
-                  v-for="user in stories[currentStoryStore.activeSlide]?.seen_by"
+                  v-for="user in stories[currentStoryStore.activeSlide]
+                    ?.seen_by"
                   :key="user.id"
                   class="relative rounded-md p-3 flex items-center justify-between"
                 >
@@ -59,6 +65,11 @@
                     <h3 class="text-sm font-medium leading-5">
                       {{ user.name }}
                     </h3>
+                    <span>{{
+                      stories[currentStoryStore.activeSlide].reacted_by.filter(
+                        (reactedUser) => reactedUser.created_by.id === user.id
+                      )[0].type_of_react
+                    }}</span>
                   </div>
                   <EllipsisHorizontalIcon
                     class="w-10 p-1 hover:bg-slate-600 rounded-full cursor-pointer"
@@ -66,36 +77,45 @@
                 </li>
               </ul>
               <div class="flex items-center justify-center my-4">
-                <p class="text-sm">Thông tin chi tiết về những người xem tin của bạn sẽ hiển thị ở đây.</p>
+                <p class="text-sm">
+                  Thông tin chi tiết về những người xem tin của bạn sẽ hiển thị
+                  ở đây.
+                </p>
               </div>
             </TabPanel>
             <TabPanel
-            v-else
+              v-else
               :class="['rounded-none p-3', 'ring-white/60 ring-offset-2']"
             >
               <ul>
                 <li
-                  v-for="user in stories[currentStoryStore.activeSlide]?.seen_by"
+                  v-for="user in reactedByList"
                   :key="user.id"
-                  class="relative rounded-md p-3 flex items-center justify-between"
+                  :class="user.type_of_react === emojiStory[n - 1]?.unicode ? 'relative rounded-md p-3 flex items-center justify-between' : ''"
                 >
-                  <div class="flex items-center gap-3">
-                    <img
-                      :src="user.get_avatar"
-                      alt="avatar"
-                      class="w-12 h-12 rounded-full"
+                  <div v-if="user.type_of_react === emojiStory[n - 1]?.unicode" class="flex items-center justify-between w-full">
+                    <div class="flex items-center gap-3">
+                      <img
+                        :src="user.created_by.get_avatar"
+                        alt="avatar"
+                        class="w-12 h-12 rounded-full"
+                      />
+                      <h3 class="text-sm font-medium leading-5">
+                        {{ user.created_by.name }}
+                      </h3>
+                      <span>{{ user.type_of_react }}</span>
+                    </div>
+                    <EllipsisHorizontalIcon
+                      class="w-10 p-1 hover:bg-slate-600 rounded-full cursor-pointer"
                     />
-                    <h3 class="text-sm font-medium leading-5">
-                      {{ user.name }}
-                    </h3>
                   </div>
-                  <EllipsisHorizontalIcon
-                    class="w-10 p-1 hover:bg-slate-600 rounded-full cursor-pointer"
-                  />
                 </li>
               </ul>
               <div class="flex items-center justify-center my-4">
-                <p class="text-sm">Thông tin chi tiết về những người xem tin của bạn sẽ hiển thị ở đây.</p>
+                <p class="text-sm">
+                  Thông tin chi tiết về những người xem tin của bạn sẽ hiển thị
+                  ở đây.
+                </p>
               </div>
             </TabPanel>
           </div>
@@ -108,7 +128,11 @@
 <script>
 import { useUserStore } from "../../../stores/user";
 import { useCurrentStoryStore } from "../../../stores/currentStory";
-import { XMarkIcon, EllipsisHorizontalIcon, EyeIcon } from "@heroicons/vue/24/solid";
+import {
+  XMarkIcon,
+  EllipsisHorizontalIcon,
+  EyeIcon,
+} from "@heroicons/vue/24/solid";
 import { TabGroup, TabList, Tab, TabPanels, TabPanel } from "@headlessui/vue";
 import emojiStory from "../../../data/emoji";
 
@@ -142,6 +166,12 @@ export default (await import("vue")).defineComponent({
       emojiStory: emojiStory,
       emoji: null,
     };
+  },
+
+  computed: {
+    reactedByList() {
+      return this.stories[this.currentStoryStore.activeSlide].reacted_by;
+    },
   },
 });
 </script>

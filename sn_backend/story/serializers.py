@@ -32,7 +32,7 @@ class MediaStorySerializer(serializers.ModelSerializer):
 
 class TextStoryDetailSerializer(serializers.ModelSerializer):
     created_by = UserSerializer(read_only=True)
-    reacted_by = UserSerializer(read_only=True, many=True)
+    reacted_by = ReactStorySerializer(read_only=True, many=True)
     seen_by = UserSerializer(read_only=True, many=True)
     class Meta:
         model = TextStory
@@ -41,7 +41,7 @@ class TextStoryDetailSerializer(serializers.ModelSerializer):
 class MediaStoryDetailSerializer(serializers.ModelSerializer):
     created_by = UserSerializer(read_only=True)
     attachments = StoryAttachmentSerializer(read_only=True, many=True)
-    reacted_by = UserSerializer(read_only=True, many=True)
+    reacted_by = ReactStorySerializer(read_only=True, many=True)
     seen_by = UserSerializer(read_only=True, many=True)
     class Meta:
         model = MediaStory

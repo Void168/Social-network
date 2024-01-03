@@ -3,6 +3,7 @@ from django.db import models
 
 from account.models import User
 from post.models import Post
+
 # Create your models here.
 class Notification(models.Model):
     NEWFRIENDREQUEST = 'new_friend_request'
@@ -14,6 +15,7 @@ class Notification(models.Model):
     POST_LIKE = 'post_like'
     POST_COMMENT = 'post_comment'
     TAG_COMMENT = 'tag_comment'
+    REACT_STORY = 'react_story'
     
     CHOICES_TYPE_OF_NOTIFICATION = (
         (NEWFRIENDREQUEST, 'New friendrequest'),
@@ -23,6 +25,7 @@ class Notification(models.Model):
         (POST_COMMENT, 'Post comment'),
         (TAG_COMMENT, 'Tag comment'),
         (NEWRELATIONSHIPREQUEST, 'Relationship request'),
+        ( REACT_STORY, 'React story')
     )
     
     id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)

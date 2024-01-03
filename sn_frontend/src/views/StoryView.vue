@@ -144,7 +144,10 @@
           <template #fallback> Loading... </template>
         </Suspense>
       </div>
-      <div v-if="!isListSeenOpen &&  currentStoryStore.activeStory" @click="openListSeen">
+      <div
+        v-if="!isListSeenOpen && currentStoryStore.activeStory"
+        @click="openListSeen"
+      >
         <div
           class="flex justify-center items-center gap-2"
           v-if="currentStoryStore.activeStory !== userStore.user.id"
@@ -155,13 +158,18 @@
             placeholder="Trả lời..."
             class="my-2 py-2 px-8 border text-lg border-gray-200 dark:bg-slate-700 dark:text-neutral-200 rounded-2xl"
           />
-          <div class="flex gap-3" v-for="emoji in emojiList.slice(1, emojiList.length)" :key="emoji.unicode">
+          <div
+            class="flex gap-3"
+            v-for="emoji in emojiList.slice(1, emojiList.length)"
+            :key="emoji.unicode"
+          >
             <div
               class="group p-2 rounded-full w-12 h-12 bg-gradient-to-t from-white via-emerald-500 to-green-500 flex justify-center items-center cursor-pointer"
             >
               <span
+                @click="sendReact(emoji.unicode, currentStoryStore.activeStoryId)"
                 :class="
-                  emoji.name === 'Like'
+                  emoji.name === 'like'
                     ? 'text-3xl mb-2 group-hover:scale-105'
                     : 'text-3xl group-hover:scale-105 mb-1'
                 "
@@ -170,14 +178,23 @@
             </div>
           </div>
         </div>
-        <div v-else class="flex justify-center items-center  flex-col cursor-pointer">
-          <ChevronUpIcon class="w-8"/>
+        <div
+          v-else
+          class="flex justify-center items-center flex-col cursor-pointer"
+        >
+          <ChevronUpIcon class="w-8" />
           <p class="font-bold text-lg border-b pb-1">
-            {{ yourLastStory[currentStoryStore.activeSlide]?.seen_by.length }} người xem
+            {{ yourLastStory[currentStoryStore.activeSlide]?.seen_by.length }}
+            người xem
           </p>
           <div class="flex my-2 gap-1">
-            <div v-for="user in yourLastStory[currentStoryStore.activeSlide]?.seen_by.slice(0, 4)" :key="user.id">
-              <img :src="user.get_avatar" class="w-8 h-8 rounded-full">
+            <div
+              v-for="user in yourLastStory[
+                currentStoryStore.activeSlide
+              ]?.seen_by.slice(0, 4)"
+              :key="user.id"
+            >
+              <img :src="user.get_avatar" class="w-8 h-8 rounded-full" />
             </div>
           </div>
         </div>
@@ -209,7 +226,7 @@ export default {
     CreateStoryModal,
     XMarkIcon,
     PlusIcon,
-    ChevronUpIcon
+    ChevronUpIcon,
   },
   setup() {
     const currentStoryStore = useCurrentStoryStore();
@@ -233,7 +250,8 @@ export default {
       isFirstStory: false,
       isYourStory: false,
       userIdList: [],
-      isListSeenOpen: false
+      isListSeenOpen: false,
+      activeStory: null,
     };
   },
 
@@ -313,6 +331,7 @@ export default {
         );
         // console.log(this.yourStories);
       }, 300);
+      this.getActiveStory()
     },
     getSetStories() {
       const result = Object.groupBy(
@@ -402,12 +421,51 @@ export default {
           console.log(error);
         });
     },
-    openListSeen(){
-      this.isListSeenOpen = true
+    async getActiveStory() {
+      await axios
+        .get(
+          `/api/story/get-detail-text-story/${this.currentStoryStore.activeStoryId}`
+        )
+        .then((res) => {
+          if(res.data.message){
+            console.log('Text story not found')
+          } else {
+            this.activeStory = res.data
+          }
+        })
+        .catch((error) => console.log(error));
+
+      await axios
+        .get(
+          `/api/story/get-detail-media-story/${this.currentStoryStore.activeStoryId}`
+        )
+        .then((res) => {
+          if(res.data.message){
+            console.log('Media story not found')
+          } else {
+            this.activeStory = res.data
+          }
+        })
+        .catch((error) => console.log(error));
+
+        console.log(this.activeStory)
     },
-    closeListSeen(){
-      this.isListSeenOpen = false
-    }
+    sendReact(typeOfReact, pk) {
+      axios
+        .post(`/api/story/react-text-story/${pk}/${typeOfReact}/`)
+        .then((res) => {
+          // console.log("data", res.data);
+        })
+        .catch((error) => {
+          console.log("error", error);
+        });
+    },
+    openListSeen() {
+      this.isListSeenOpen = true;
+    },
+    closeListSeen() {
+      this.isListSeenOpen = false;
+    },
   },
 };
 </script>

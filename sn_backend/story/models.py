@@ -26,13 +26,13 @@ class StoryAttachment(models.Model):
             return ''
 
 class ReactStory(models.Model):
-    LIKE = 'like'
-    HEART = 'heart'
-    LOVE = 'love'
-    LAUGH = 'laugh'
-    SUPRISE = 'suprise'
-    SAD = 'sad'
-    ANGRY = 'angry'
+    LIKE = '👍'
+    HEART = '❤️'
+    LOVE = '😍'
+    LAUGH = '😆'
+    SUPRISE = '😲'
+    SAD = '😥'
+    ANGRY = '😡'
     
     CHOICES_TYPE_OF_REACT = (
         (LIKE, 'Like react'),

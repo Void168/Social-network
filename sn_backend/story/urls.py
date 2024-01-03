@@ -11,6 +11,7 @@ urlpatterns = [
     path('get-detail-media-story/<uuid:pk>/',api.get_detail_media_story, name='get_detail_media_story'),
     path('seen-text-story/<uuid:pk>/', api.seen_text_story, name='seen_text_story'),
     path('seen-media-story/<uuid:pk>/', api.seen_media_story, name='seen_media_story'),
+    path('react-text-story/<uuid:pk>/<str:status>/', api.react_text_story, name='react_text_story'),
     path('text-story/<uuid:pk>/delete/',api.text_story_delete, name='text_story_delete'),
     path('media-story/<uuid:pk>/delete/',api.text_media_delete, name='text_media_delete'),
     path('get-text-stories/<uuid:id>/', api.user_text_story_list, name='user_text_story_list'),

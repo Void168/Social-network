@@ -10,6 +10,7 @@ from .forms import TextStoryForm, MediaStoryForm, StoryAttachmentForm
 
 from notification.utils import create_notification
 
+from notification.models import Notification
 from .models import TextStory, MediaStory, ReactStory, StoryAttachment
 from .serializers import StoryAttachmentSerializer, ReactStorySerializer, TextStorySerializer, MediaStorySerializer, TextStoryDetailSerializer, MediaStoryDetailSerializer
 
@@ -102,19 +103,25 @@ def user_media_story_list(request, id):
 
 @api_view(['GET'])
 def get_detail_text_story(request, pk):
-    text_story = TextStory.objects.get(pk=pk)
+    if pk in list(TextStory.objects.all().values_list('id', flat=True)):
+        text_story = TextStory.objects.get(pk=pk)
+        
+        serializer = TextStoryDetailSerializer(text_story)
     
-    serializer = PostDetailSerializer(text_story)
-    
-    return JsonResponse(serializer.data)
+        return JsonResponse(serializer.data)
+    else:
+        return JsonResponse({'message': 'No text story found'})
 
 @api_view(['GET'])
 def get_detail_media_story(request, pk):
-    media_story = MediaStory.objects.get(pk=pk)
+    if pk in list(MediaStory.objects.all().values_list('id', flat=True)):
+        media_story = MediaStory.objects.get(pk=pk)
     
-    serializer = MediaDetailSerializer(media_story)
+        serializer = MediaStoryDetailSerializer(media_story)
     
-    return JsonResponse(serializer.data)
+        return JsonResponse(serializer.data)
+    else:
+        return JsonResponse({'message': 'No media story found'})
 
 @api_view(['POST'])
 def create_text_story(request):
@@ -185,7 +192,39 @@ def seen_media_story(request, pk):
         return JsonResponse(serializer.data)
     else:
         return JsonResponse({'message': 'seen'})
+    
+@api_view(['POST'])
+def react_text_story(request, pk, status):
+    text_story = TextStory.objects.get(pk=pk)
+    react_story = ReactStory.objects.create(created_by=request.user)
+    react_story.type_of_react = status
+    react_story.save()
 
+    received_user = text_story.created_by
+    
+    if not text_story.reacted_by.filter(created_by=request.user):
+        text_story.reacted_by.add(react_story)
+        text_story.save()
+        
+        notification = Notification.objects.create(
+            body=f'{received_user.name} đã thả {react_story.type_of_react} vào tin của bạn',
+            type_of_notification='react_story',
+            created_by=request.user,
+            created_for=received_user
+        )
+        
+        serializer_notification = NotificationSerializer(notification)
+        
+        serializer = ReactStorySerializer(react_story)
+        
+        return JsonResponse(serializer.data, safe=False)
+    else:
+        return JsonResponse({'message': 'story already reacted'})
+
+@api_view(['POST'])
+def react_media_story(request, pk):
+    print(request)
+    
 @api_view(['DELETE'])
 def text_story_delete(request, pk):
     text_story = TextStory.objects.filter(created_by=request.user).get(pk=pk)

@@ -4,31 +4,31 @@ const emojiStory = [
     unicode: "",
   },
   {
-    name: "Like",
+    name: "like",
     unicode: "👍",
   },
   {
-    name: "Heart",
+    name: "heart",
     unicode: "❤️",
   },
   {
-    name: "Love",
+    name: "love",
     unicode: "😍",
   },
   {
-    name: "Laugh",
+    name: "laugh",
     unicode: "😆",
   },
   {
-    name: "Suprise",
+    name: "suprise",
     unicode: "😲",
   },
   {
-    name: "Sad",
+    name: "sad",
     unicode: "😥",
   },
   {
-    name: "Angry",
+    name: "angry",
     unicode: "😡",
   },
 ];

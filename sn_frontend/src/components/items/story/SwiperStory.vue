@@ -150,6 +150,7 @@ export default (await import("vue")).defineComponent({
 
   mounted() {
     this.doProgress();
+    this.getCurrentStoryId()
   },
 
   unmounted() {

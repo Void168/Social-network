@@ -2,8 +2,9 @@ from .models import Notification
 
 from post.models import Post, Comment
 from account.models import FriendshipRequest, RelationshipRequest, User
+from story.models import ReactStory
 
-def create_notification(request, type_of_notification, post_id=None, friendrequest_id=None, relationship_request_id=None, comment_id=None):
+def create_notification(request, type_of_notification, post_id=None, friendrequest_id=None, relationship_request_id=None, comment_id=None, story_request_id=None):
     created_for = None
     
     if type_of_notification == 'post_like':

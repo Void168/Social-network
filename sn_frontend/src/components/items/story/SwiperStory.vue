@@ -150,6 +150,7 @@ export default (await import("vue")).defineComponent({
 
   mounted() {
     this.doProgress();
+    this.setSeenStory()
   },
   
   unmounted() {
@@ -159,6 +160,7 @@ export default (await import("vue")).defineComponent({
   beforeUpdate() {
     this.updatedActiveSlide();
     this.currentStoryStore.getActiveStoryId(this.currentStoryId);
+    this.setSeenStory()
   },
 
   methods: {
@@ -213,6 +215,9 @@ export default (await import("vue")).defineComponent({
       if (this.isNext || this.isPrev || this.isPause) {
         clearInterval(this.interval);
       }
+    },
+    async setSeenStory(){
+      console.log('hello')
       if (this.stories[this.currentStoryStore.activeSlide]?.body) {
         await axios
           .post(`/api/story/seen-text-story/${this.currentStoryId}/`)

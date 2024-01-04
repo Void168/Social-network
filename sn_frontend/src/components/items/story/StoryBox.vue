@@ -11,7 +11,8 @@
     <img
       :src="story[0].created_by.get_avatar"
       alt="story-owner"
-      class="w-16 h-16 rounded-full ring-4 ring-emerald-400"
+      class="w-16 h-16 rounded-full ring-4"
+      :class="haveSeen ? 'ring-slate-500' : 'ring-emerald-400'"
     />
     <div class="flex flex-col space-y-2">
       <h3 class="text-lg font-semibold">{{ story[0]?.created_by.name }}</h3>
@@ -42,5 +43,11 @@ export default (await import("vue")).defineComponent({
     story: Object,
     isOtherStory: Boolean,
   },
+
+  computed: {
+    haveSeen(){
+      return this.story[0]?.seen_by?.map((user) => user.id === this.userStore.user.id)
+    }
+  }
 });
 </script>

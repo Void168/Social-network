@@ -66,11 +66,16 @@
         :key="story.id"
         @click="getUserStories(story[0]?.created_by?.id)"
       >
+      <!-- {{ story.filter((st) => st?.seen_by.map((user) => user.id).filter((listId) => listId.includes(userStore.user.id))) }} -->
         <Story
           :story="
-            story.sort(
-              (a, b) => new Date(a.created_at) - new Date(b.created_at)
-            )[0]
+            story.filter((st) =>
+              st?.seen_by?.filter((user) => user.id !== userStore.user.id)
+            ).length
+              ? story.filter((st) => st?.seen_by?.map((user) => !user.id.includes(userStore.user.id)))[0]
+              : story.sort(
+                  (a, b) => new Date(a.created_at) - new Date(b.created_at)
+                )[0]
           "
         />
       </SwiperSlide>
@@ -205,12 +210,14 @@ export default {
       );
 
       this.setStory = resultAll;
+
+      // console.log(this.setStory)
       const listId = this.yourStories
         .filter((story) => story?.created_by?.id !== this.userStore.user.id)
         .sort((a, b) => new Date(b.created_at) - new Date(a.created_at))
         .map((story) => story.created_by.id);
       const removeDuplicate = [...new Set(listId)];
-      
+
       this.currentStoryStore.resetListId();
       this.currentStoryStore.getUserIdList(removeDuplicate);
     },
@@ -223,7 +230,7 @@ export default {
         .then((res) => {
           res.data.stories.forEach((story) => {
             this.firstStories.unshift(story);
-          })
+          });
         })
         .catch((error) => {
           console.log("error", error);
@@ -233,7 +240,7 @@ export default {
         .then((res) => {
           res.data.stories.forEach((story) => {
             this.firstStories.unshift(story);
-          })
+          });
         })
         .catch((error) => {
           console.log("error", error);

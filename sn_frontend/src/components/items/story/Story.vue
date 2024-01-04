@@ -7,7 +7,8 @@
       <img
         :src="story?.created_by?.get_avatar"
         alt=""
-        class="absolute top-4 left-4 w-10 h-10 rounded-full ring-4 ring-emerald-300 z-20"
+        class="absolute top-4 left-4 w-10 h-10 rounded-full ring-4 z-20"
+        :class="haveSeen.length ? 'ring-slate-500' : 'ring-emerald-300'"
       />
       <div
         class="relative h-[213px] flex items-center justify-center overflow-hidden shadow-sm rounded-lg cursor-pointer"
@@ -27,7 +28,8 @@
       <img
         :src="story?.created_by?.get_avatar"
         alt=""
-        class="absolute top-4 left-4 w-10 h-10 rounded-full ring-4 ring-emerald-300 z-20"
+        class="absolute top-4 left-4 w-10 h-10 rounded-full ring-4 z-20"
+        :class="haveSeen ? 'ring-slate-500' : 'ring-emerald-300'"
       />
       <div
         class="relative h-[213px] flex items-center justify-center overflow-hidden shadow-sm rounded-lg cursor-pointer"
@@ -93,6 +95,9 @@ export default (await import("vue")).defineComponent({
     selectedFont() {
       return this.fonts?.filter((font) => font.name === this.story?.font)[0];
     },
+    haveSeen(){
+      return this.story?.seen_by?.filter((user) => user.id === this.userStore.user.id)
+    }
   },
 
   mounted() {

@@ -94,7 +94,14 @@
                   currentStoryStore?.currentStory[0]?.created_by?.get_avatar
                 "
                 alt="story-owner"
-                class="w-16 h-16 rounded-full ring-4 ring-emerald-400"
+                class="w-16 h-16 rounded-full ring-4"
+                :class="
+                  currentStoryStore?.currentStory[0]?.seen_by?.map(
+                    (user) => user.id === userStore.user.id
+                  )
+                    ? 'ring-slate-500'
+                    : 'ring-emerald-400'
+                "
               />
               <div class="flex flex-col space-y-2">
                 <h3 class="text-lg font-semibold">
@@ -164,9 +171,7 @@
               class="group p-2 rounded-full w-12 h-12 bg-gradient-to-t from-white via-emerald-500 to-green-500 flex justify-center items-center cursor-pointer"
             >
               <span
-                @click="
-                  sendReact(emoji.name, currentStoryStore.activeStoryId)
-                "
+                @click="sendReact(emoji.name, currentStoryStore.activeStoryId)"
                 :class="
                   emoji.name === 'like'
                     ? 'text-3xl mb-2 group-hover:scale-105'
@@ -272,7 +277,7 @@ export default {
     this.getStories();
   },
 
-  beforeUpdate(){
+  beforeUpdate() {
     this.getActiveStory();
   },
 

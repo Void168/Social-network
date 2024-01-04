@@ -217,7 +217,6 @@ export default (await import("vue")).defineComponent({
       }
     },
     async setSeenStory(){
-      console.log('hello')
       if (this.stories[this.currentStoryStore.activeSlide]?.body) {
         await axios
           .post(`/api/story/seen-text-story/${this.currentStoryId}/`)

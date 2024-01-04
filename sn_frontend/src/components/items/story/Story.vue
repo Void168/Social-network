@@ -3,7 +3,7 @@
     class="relative cursor-pointer rounded-lg group"
     @click="getUserStories(story.created_by.id)"
   >
-    <div v-if="story.body">
+    <div v-if="story?.body">
       <img
         :src="story?.created_by?.get_avatar"
         alt=""

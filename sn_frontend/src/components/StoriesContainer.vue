@@ -66,13 +66,23 @@
         :key="story.id"
         @click="getUserStories(story[0]?.created_by?.id)"
       >
-      <!-- {{ story.filter((st) => st?.seen_by.map((user) => user.id).filter((listId) => listId.includes(userStore.user.id))) }} -->
+        <!-- {{ story.filter((st) => !st?.seen_by?.map((user) => user.id).includes(userStore.user.id)) }} -->
         <Story
           :story="
-            story.filter((st) =>
-              st?.seen_by?.filter((user) => user.id !== userStore.user.id)
+            story.filter(
+              (st) =>
+                !st?.seen_by?.map((user) => user.id).includes(userStore.user.id)
             ).length
-              ? story.filter((st) => st?.seen_by?.map((user) => !user.id.includes(userStore.user.id)))[0]
+              ? story
+                  .filter(
+                    (st) =>
+                      !st?.seen_by
+                        ?.map((user) => user.id)
+                        .includes(userStore.user.id)
+                  )
+                  .sort(
+                    (a, b) => new Date(a.created_at) - new Date(b.created_at)
+                  )[0]
               : story.sort(
                   (a, b) => new Date(a.created_at) - new Date(b.created_at)
                 )[0]

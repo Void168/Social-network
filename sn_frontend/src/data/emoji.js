@@ -2,33 +2,34 @@ const emojiStory = [
   {
     name: "Tất cả",
     unicode: "",
+    utf:"",
   },
   {
-    name: "LIKE",
+    name: "like",
     unicode: "👍",
   },
   {
-    name: "HEART",
+    name: "heart",
     unicode: "❤️",
   },
   {
-    name: "LOVE",
+    name: "love",
     unicode: "😍",
   },
   {
-    name: "LAUGH",
+    name: "laugh",
     unicode: "😆",
   },
   {
-    name: "SUPRISE",
+    name: "suprise",
     unicode: "😲",
   },
   {
-    name: "SAD",
+    name: "sad",
     unicode: "😥",
   },
   {
-    name: "ANGRY",
+    name: "angry",
     unicode: "😡",
   },
 ];

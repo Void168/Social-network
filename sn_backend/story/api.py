@@ -197,7 +197,22 @@ def seen_media_story(request, pk):
 def react_text_story(request, pk, status):
     text_story = TextStory.objects.get(pk=pk)
     react_story = ReactStory.objects.create(created_by=request.user)
-    react_story.type_of_react = status
+    
+    if(status == 'like'):
+        react_story.type_of_react = "👍"
+    elif(status == 'heart'):
+        react_story.type_of_react = "❤️"
+    elif(status == 'love'):
+        react_story.type_of_react = "😍"
+    elif(status == 'laugh'):
+        react_story.type_of_react = "😆"
+    elif(status == 'suprise'):
+        react_story.type_of_react = "😲"
+    elif(status == 'sad'):
+        react_story.type_of_react = "😥"
+    elif(status == 'angry'):
+        react_story.type_of_react = "😡"
+        
     react_story.save()
 
     received_user = text_story.created_by
@@ -223,10 +238,24 @@ def react_text_story(request, pk, status):
 
 @api_view(['POST'])
 def react_media_story(request, pk, status):
-    print(status)
     media_story = MediaStory.objects.get(pk=pk)
     react_story = ReactStory.objects.create(created_by=request.user)
-    react_story.type_of_react = status
+    
+    if(status == 'like'):
+        react_story.type_of_react = "👍"
+    elif(status == 'heart'):
+        react_story.type_of_react = "❤️"
+    elif(status == 'love'):
+        react_story.type_of_react = "😍"
+    elif(status == 'laugh'):
+        react_story.type_of_react = "😆"
+    elif(status == 'suprise'):
+        react_story.type_of_react = "😲"
+    elif(status == 'sad'):
+        react_story.type_of_react = "😥"
+    elif(status == 'angry'):
+        react_story.type_of_react = "😡"
+        
     react_story.save()
 
     received_user = media_story.created_by
@@ -249,10 +278,6 @@ def react_media_story(request, pk, status):
         return JsonResponse(serializer.data, safe=False)
     else:
         return JsonResponse({'message': 'story already reacted'})
-
-@api_view(['POST'])
-def react_media_story(request, pk):
-    print(request)
     
 @api_view(['DELETE'])
 def text_story_delete(request, pk):

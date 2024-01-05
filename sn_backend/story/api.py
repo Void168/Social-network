@@ -143,12 +143,12 @@ def create_media_story(request):
     form = MediaStoryForm(request.POST)
     attachment = None
     story_attachment_form = StoryAttachmentForm(request.POST, request.FILES)
-
+    print(form)
     if story_attachment_form.is_valid():
         attachment = story_attachment_form.save(commit=False)
         attachment.created_by = request.user
         attachment.save()
-        
+
     if form.is_valid():
         media_story = form.save(commit=False)
         media_story.created_by = request.user

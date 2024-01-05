@@ -152,12 +152,12 @@
                   <div
                     class="w-full h-full bg-white top-[-8px] bg-opacity-25 absolute hidden group-hover:block rounded-lg"
                   >
-                    <label for="story-image">
+                    <label for="story-media">
                       <input
                         type="file"
                         ref="story"
-                        id="story-image"
-                        name="story-image"
+                        id="story-media"
+                        name="story-media"
                         @change="chooseMedia"
                         class="w-full h-full opacity-0 cursor-pointer"
                       />
@@ -212,7 +212,7 @@
                       </p>
                     </div>
                     <div
-                      v-else
+                      v-else-if="url && isImage"
                       class="h-full w-[50%] flex justify-center items-center text-2xl font-semibold text-neutral-200/50"
                       :style="{
                         backgroundColor: color,
@@ -231,6 +231,21 @@
                       />
                     </div>
                     <div
+                      v-else
+                      class="h-full w-[50%] flex justify-center items-center text-2xl font-semibold text-neutral-200/50 bg-black"
+                    >
+                      <video
+                        autoplay
+                        class="rounded-none w-full shadow-none"
+                        :class="deg"
+                        :style="{ scale: zoom + value / 50 }"
+                        ref="myVideo"
+                      >
+                        <source :src="url" type="video/mp4" />
+                      </video>
+                    </div>
+                    <div
+                      v-if="isImage"
                       class="text-neutral-200 text-lg mt-4 flex items-center gap-3"
                     >
                       <h3 v-if="!isRotate && url" class="px-2 py-1">
@@ -338,6 +353,7 @@ export default (await import("vue")).defineComponent({
       value: 25,
       zoom: 0.5,
       raw: null,
+      isImage: false,
     };
   },
 
@@ -358,25 +374,47 @@ export default (await import("vue")).defineComponent({
     async chooseMedia(e) {
       this.raw = this.$refs.story.files[0];
       const file = e.target.files[0];
-      this.url = URL.createObjectURL(file);
-      await new Promise((resolve) => setTimeout(resolve, 200));
-      this.getColor();
+      if (
+        this.raw.name.includes(".png") ||
+        this.raw.name.includes(".jpg") ||
+        this.raw.name.includes(".jpeg")
+      ) {
+        this.url = URL.createObjectURL(file);
+        await new Promise((resolve) => setTimeout(resolve, 200));
+        setTimeout(() => {
+          this.getColor();
+        }, 300);
+        this.isImage = true;
+      } else {
+        this.url = URL.createObjectURL(file);
+        this.isImage = false;
+        setTimeout(() => {
+          this.$refs.myVideo.volume = 0.1;
+          console.log(typeof this.$refs.myVideo.duration);
+        }, 50);
+      }
     },
-    getColor() {
-      const colorThief = new ColorThief();
-      this.$nextTick(() => {
-        let self = this;
-        const img = self.$refs.myImage;
+    async getColor() {
+      if (
+        this.raw.name.includes(".png") ||
+        this.raw.name.includes(".jpg") ||
+        this.raw.name.includes(".jpeg")
+      ) {
+        const colorThief = new ColorThief();
+        this.$nextTick(() => {
+          let self = this;
+          const img = self.$refs.myImage;
 
-        if (img.complete) {
-          const rgb = colorThief.getColor(img);
-          this.color = `rgba(${rgb.toString()},1)`;
-        } else {
-          img.addEventListener("load", function () {
-            colorThief.getColor(img);
-          });
-        }
-      });
+          if (img.complete) {
+            const rgb = colorThief.getColor(img);
+            this.color = `rgba(${rgb.toString()},1)`;
+          } else {
+            img.addEventListener("load", function () {
+              colorThief.getColor(img);
+            });
+          }
+        });
+      }
     },
     editImage() {
       this.isRotate = true;
@@ -448,12 +486,21 @@ export default (await import("vue")).defineComponent({
 
       if (this.url) {
         let formData = new FormData();
-        if (this.raw.name.includes(".png") || this.raw.name.includes(".jpg")) {
+        if (
+          this.raw.name.includes(".png") ||
+          this.raw.name.includes(".jpg") ||
+          this.raw.name.includes(".jpeg")
+        ) {
           formData.append("image", this.raw);
+          formData.append("video", "");
           formData.append("zoom_image", `${this.zoom + this.value / 50}`);
           formData.append("rotate", this.deg);
         } else {
+          formData.append("image", "");
+          formData.append("zoom_image", `${this.zoom + this.value / 50}`);
+          formData.append("rotate", this.deg);
           formData.append("video", this.raw);
+          formData.append("duaration", this.$refs.myVideo.duration);
         }
 
         formData.append("is_private", this.is_private);
@@ -461,33 +508,41 @@ export default (await import("vue")).defineComponent({
         formData.append("theme", this.color);
         formData.append("caption", this.caption);
 
-        axios
-          .post("/api/story/create-media-story/", formData, {
-            headers: {
-              "Content-Type": "multipart/form-data",
-            },
-          })
-          .then((res) => {
-            this.textStories.unshift(res.data);
-            this.caption = "";
-            this.is_private = false;
-            this.only_me = false;
-            this.color = null;
-            this.url = null;
-            this.raw = null;
+        if (this.$refs.myVideo.duration <= 20) {
+          axios
+            .post("/api/story/create-media-story/", formData, {
+              headers: {
+                "Content-Type": "multipart/form-data",
+              },
+            })
+            .then((res) => {
+              this.textStories.unshift(res.data);
+              this.caption = "";
+              this.is_private = false;
+              this.only_me = false;
+              this.color = null;
+              this.url = null;
+              this.raw = null;
 
-            this.toastStore.showToast(
-              2000,
-              "Đã tạo tin",
-              "bg-emerald-500 text-white"
-            );
-            setTimeout(() => {
-              this.$router.go(0);
-            }, 2500);
-          })
-          .catch((error) => {
-            console.log("error", error);
-          });
+              this.toastStore.showToast(
+                2000,
+                "Đã tạo tin",
+                "bg-emerald-500 text-white"
+              );
+              setTimeout(() => {
+                this.$router.go(0);
+              }, 2500);
+            })
+            .catch((error) => {
+              console.log("error", error);
+            });
+        } else {
+          this.toastStore.showToast(
+            2000,
+            "Video không được dài quá 20 giây",
+            "bg-rose-500 text-white"
+          );
+        }
       }
     },
   },

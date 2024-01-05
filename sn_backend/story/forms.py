@@ -10,9 +10,9 @@ class TextStoryForm(ModelForm):
 class MediaStoryForm(ModelForm):
     class Meta:
         model = MediaStory
-        fields = ('caption','is_private','only_me','theme',)
+        fields = ('caption','is_private','only_me','theme','duaration',)
 
 class StoryAttachmentForm(ModelForm):
     class Meta:
         model = StoryAttachment
-        fields = ('image', 'zoom_image', 'rotate')
+        fields = ('image', 'zoom_image', 'rotate', 'video',)

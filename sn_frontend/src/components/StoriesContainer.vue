@@ -49,14 +49,27 @@
               alt="story-image"
               class="h-full w-full group-hover:scale-105 group-hover:rounded-lg absolute z-10 bg-cover transition flex items-center justify-center"
               :style="{ backgroundColor: yourLastStory?.theme }"
+              :class="yourLastStory?.attachments[0]?.get_video ? 'bg-black' : ''"
             >
               <img
+                v-if="yourLastStory?.attachments[0]?.get_image"
                 :src="yourLastStory?.attachments[0]?.get_image"
                 :class="[yourLastStory?.attachments[0]?.rotate]"
                 :style="{ scale: yourLastStory?.attachments[0]?.zoom_image }"
                 class="rounded-none"
                 ref="image"
               />
+              <video
+                v-else
+                muted
+                class="rounded-none w-full shadow-none"
+                ref="myVideo"
+              >
+                <source
+                  :src="yourLastStory?.attachments[0]?.get_video"
+                  type="video/mp4"
+                />
+              </video>
             </div>
           </div>
         </div>
@@ -221,7 +234,7 @@ export default {
 
       this.setStory = resultAll;
 
-      // console.log(this.setStory)
+      console.log(this.yourLastStory);
       const listId = this.yourStories
         .filter((story) => story?.created_by?.id !== this.userStore.user.id)
         .sort((a, b) => new Date(b.created_at) - new Date(a.created_at))

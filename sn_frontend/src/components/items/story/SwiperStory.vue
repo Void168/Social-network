@@ -37,12 +37,21 @@
         :style="{ backgroundColor: story?.theme }"
       >
         <img
+          v-if="story.attachments.get_image"
           :src="story?.attachments[0]?.get_image"
           :style="{ scale: story?.attachments[0]?.zoom_image }"
           class="rounded-none w-full"
           :class="[story?.attachments[0]?.rotate]"
           alt="img-story"
         />
+        <video
+          v-else
+          autoplay
+          class="rounded-none w-full shadow-none"
+          ref="myVideo"
+        >
+          <source :src="story?.attachments[0]?.get_video" type="video/mp4" />
+        </video>
       </div>
       <div v-else class="w-full flex justify-center items-center">
         <span
@@ -142,6 +151,9 @@ export default (await import("vue")).defineComponent({
     currentStoryId() {
       return this.stories[this.currentStoryStore?.activeSlide]?.id;
     },
+    totalDuration(){
+      return this.stories.map((story) => story.duaration).reduce((a, c) => a + c, 0)
+    }
   },
 
   created() {
@@ -150,17 +162,17 @@ export default (await import("vue")).defineComponent({
 
   mounted() {
     this.doProgress();
-    this.setSeenStory()
+    this.setSeenStory();
   },
-  
+
   unmounted() {
     clearInterval(this.interval);
   },
-  
+
   beforeUpdate() {
     this.updatedActiveSlide();
     this.currentStoryStore.getActiveStoryId(this.currentStoryId);
-    this.setSeenStory()
+    this.setSeenStory();
   },
 
   methods: {
@@ -177,7 +189,10 @@ export default (await import("vue")).defineComponent({
       }
     },
     async doProgress() {
-      const INTERVAL_TIME = (this.duration * 2) / 100;
+      if(this.stories[this.activeSlide]?.attachments){
+        this.$refs.myVideo[0].volume = 0.4
+      }
+      const INTERVAL_TIME = this.duration / 1000;
       this.currentStoryStore.getActiveStoryId(this.currentStoryId);
 
       const progressbar = document.querySelectorAll(
@@ -195,14 +210,13 @@ export default (await import("vue")).defineComponent({
         if (this.percentage <= 1) {
           this.activeSlide = this.swiper.realIndex;
           this.currentStoryStore.getActiveSlide(this.swiper.realIndex);
-          this.percentage +=
-          (this.duration * 2) / 1000 / 1000 / this.stories.length;
+          this.percentage += 1/this.stories.length/this.duration
           progressbar[0]?.style?.setProperty(
             "transform",
             `scaleX(${this.percentage})`,
             "important"
-            );
-          } else {
+          );
+        } else {
           this.percentage = 0;
           clearInterval(this.interval);
           if (this.isNext === false && !this.isPause) {
@@ -215,8 +229,12 @@ export default (await import("vue")).defineComponent({
       if (this.isNext || this.isPrev || this.isPause) {
         clearInterval(this.interval);
       }
+
+      // setTimeout(() => {
+      //   this.$refs.myVideo.volume = 0.1;
+      // }, 50);
     },
-    async setSeenStory(){
+    async setSeenStory() {
       if (this.stories[this.currentStoryStore.activeSlide]?.body) {
         await axios
           .post(`/api/story/seen-text-story/${this.currentStoryId}/`)

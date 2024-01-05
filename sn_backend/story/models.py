@@ -8,10 +8,10 @@ from django.utils.timesince import timesince
 # Create your models here.
 class StoryAttachment(models.Model):
     id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
-    image = models.ImageField(upload_to='story_attachments_image', null=True)
+    image = models.ImageField(upload_to='story_attachments_image', null=True, default="", blank=True)
     zoom_image = models.CharField(default='1', max_length=50)
     rotate = models.CharField(default='rotate-0', max_length=50)
-    video = models.FileField(upload_to='story_attachments_video', null=True)
+    video = models.FileField(upload_to='story_attachments_video', null=True, default="", blank=True)
     created_by = models.ForeignKey(User, related_name='story_attachments', on_delete=models.CASCADE)
     
     def get_image(self):
@@ -80,7 +80,7 @@ class MediaStory(models.Model):
     created_by = models.ForeignKey(User, related_name='media_story', on_delete=models.CASCADE)
     created_at = models.DateTimeField(auto_now_add=True)
     
-    duaration = models.IntegerField(MaxValueValidator(20), default=10)
+    duaration = models.FloatField(MaxValueValidator(20), default=10)
     
     is_private = models.BooleanField(default=False)
     only_me = models.BooleanField(default=False)

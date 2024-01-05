@@ -192,7 +192,7 @@ export default (await import("vue")).defineComponent({
       if(this.stories[this.activeSlide]?.attachments){
         this.$refs.myVideo[0].volume = 0.4
       }
-      const INTERVAL_TIME = this.duration / 1000;
+      const INTERVAL_TIME = 100
       this.currentStoryStore.getActiveStoryId(this.currentStoryId);
 
       const progressbar = document.querySelectorAll(
@@ -210,7 +210,8 @@ export default (await import("vue")).defineComponent({
         if (this.percentage <= 1) {
           this.activeSlide = this.swiper.realIndex;
           this.currentStoryStore.getActiveSlide(this.swiper.realIndex);
-          this.percentage += 1/this.stories.length/this.duration
+          console.log(this.percentage)
+          this.percentage += 1/this.stories.length/this.duration * INTERVAL_TIME
           progressbar[0]?.style?.setProperty(
             "transform",
             `scaleX(${this.percentage})`,

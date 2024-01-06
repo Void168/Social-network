@@ -401,11 +401,25 @@ def handle_request(request, pk, status):
 
     return JsonResponse({'message': 'friendship request updated'})
 
-@api_view(['DELETE'])
+@api_view(['POST'])
 def delete_friend(request, pk):
     current_user = request.user
     deleted_friend = User.objects.get(pk=pk)
-    # current_user.friends.remove(deleted_friend)
-    print(current_user.friends)
     
-    return JsonResponse({'message': 'friendship deleted'})
+    current_user_friends = current_user.friends.all()
+    deleted_friend_friends = deleted_friend.friends.all()
+    
+    if deleted_friend in current_user_friends and current_user in deleted_friend_friends:
+    
+        current_user_friends.remove(deleted_friend)
+        
+        deleted_friend_friends.remove(current_user)
+    
+        current_user.save()
+        
+        deleted_friend.save()
+    
+        return JsonResponse({'message': 'friendship deleted'})
+    
+    else:
+        return JsonResponse({'message': "Don't have friend with each other"})

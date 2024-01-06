@@ -32,8 +32,16 @@
         </div>
         <div class="flex items-center gap-3">
           <div v-if="userStore.user.id !== user.id">
-            <DeleteFriendModal :show="isDeleteFriendOpen" @closeDeleteFriendModal="closeDeleteFriendModal" @deleteFriend="deleteFriend"/>
-            <UnfollowedModal :show="isUnfollowedOpen" @closeDeleteFriendModal="closeUnfollowedModal" @unfollowed="unfollowed"/>
+            <DeleteFriendModal
+              :show="isDeleteFriendOpen"
+              @closeDeleteFriendModal="closeDeleteFriendModal"
+              @deleteFriend="deleteFriend"
+            />
+            <UnfollowedModal
+              :show="isUnfollowedOpen"
+              @closeDeleteFriendModal="closeUnfollowedModal"
+              @unfollowed="unfollowed"
+            />
             <div v-if="can_send_friendship_request === false">
               <div v-for="(value, index) in filtered" :key="index">
                 <FriendOptionsDropdown
@@ -572,29 +580,37 @@ export default {
     },
 
     openDeleteFriendModal() {
-      this.isDeleteFriendOpen = true
+      this.isDeleteFriendOpen = true;
     },
 
     closeDeleteFriendModal() {
-      this.isDeleteFriendOpen = false
+      this.isDeleteFriendOpen = false;
     },
 
-    deleteFriend(){
-      console.log('hello')
-      this.isDeleteFriendOpen = false
+    deleteFriend() {
+      this.isDeleteFriendOpen = false;
+
+      axios
+        .post(`/api/delete-friend/${this.$route.params.id}/`)
+        .then((res) => {
+          console.log(res.data);
+        })
+        .catch((error) => {
+          console.log(error);
+        });
     },
 
     openUnfollowedModal() {
-      this.isUnfollowedOpen = true
+      this.isUnfollowedOpen = true;
     },
 
     closeUnfollowedModal() {
-      this.isUnfollowedOpen = false
+      this.isUnfollowedOpen = false;
     },
 
-    unfollowed(){
-      console.log('hello')
-      this.isUnfollowedOpen = false
+    unfollowed() {
+      console.log("hello");
+      this.isUnfollowedOpen = false;
     },
 
     handleRequest(status, pk) {

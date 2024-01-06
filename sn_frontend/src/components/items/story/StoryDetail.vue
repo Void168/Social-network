@@ -1,6 +1,6 @@
 <template>
   <div class="flex items-center justify-center h-full">
-    <div class="relative border-2 w-[35%] h-full rounded-lg flex items-center">
+    <div class="relative border-2 w-[35%] h-[800px] rounded-lg flex items-center">
       <Suspense>
         <SwiperStoryHeader
           v-if="isYourStory && !isFirstStory && !isOtherStory"
@@ -8,6 +8,7 @@
           :isPause="isPause"
           :isMute="isMute"
           @pause="pause"
+          @mute="mute"
         />
         <SwiperStoryHeader
           v-else-if="
@@ -23,6 +24,7 @@
           :isPause="isPause"
           :isMute="isMute"
           @pause="pause"
+          @mute="mute"
         />
         <SwiperStoryHeader
           v-else-if="nextStories.length && !prevStories.length"
@@ -30,6 +32,7 @@
           :isPause="isPause"
           :isMute="isMute"
           @pause="pause"
+          @mute="mute"
         />
         <SwiperStoryHeader
           v-else-if="prevStories.length && !nextStories.length"
@@ -37,6 +40,7 @@
           :isPause="isPause"
           :isMute="isMute"
           @pause="pause"
+          @mute="mute"
         />
         <SwiperStoryHeader
           v-else-if="
@@ -51,6 +55,7 @@
           :isPause="isPause"
           :isMute="isMute"
           @pause="pause"
+          @mute="mute"
         />
         <template #fallback> Loading... </template>
       </Suspense>
@@ -59,6 +64,7 @@
           v-if="isYourStory && !isFirstStory && !isOtherStory"
           :stories="yourStory"
           :isPause="isPause"
+          :isMute="isMute"
           :nextFunction="next"
           @next="next"
           @prev="prev"
@@ -76,6 +82,7 @@
           :nextFunction="next"
           :stories="currentStoryStore?.currentStory"
           :isPause="isPause"
+          :isMute="isMute"
           @next="next"
           @prev="prev"
         />
@@ -83,6 +90,7 @@
           v-else-if="nextStories.length && !prevStories.length"
           :stories="nextStories"
           :isPause="isPause"
+          :isMute="isMute"
           :nextFunction="next"
           @next="next"
           @prev="prev"
@@ -91,6 +99,7 @@
           v-else-if="prevStories.length && !nextStories.length"
           :stories="prevStories"
           :isPause="isPause"
+          :isMute="isMute"
           :nextFunction="next"
           @next="next"
           @prev="prev"
@@ -106,6 +115,7 @@
           "
           :stories="userStories"
           :isPause="isPause"
+          :isMute="isMute"
           :nextFunction="next"
           @next="next"
           @prev="prev"
@@ -122,6 +132,29 @@
         >
           <p class="text-center">Đã xem hết tin</p>
         </div>
+        <template #fallback> Loading... </template>
+      </Suspense>
+      <Suspense>
+        <MediaStoryTitle :stories="yourStory" v-if="isYourStory && !isFirstStory && !isOtherStory"/>
+        <MediaStoryTitle :stories="currentStoryStore?.currentStory" v-else-if="
+            isOtherStory &&
+            isFirstStory &&
+            !isYourStory &&
+            !nextStories.length &&
+            !prevStories.length &&
+            !isNext &&
+            currentStoryStore.activeStory
+          "/>
+        <MediaStoryTitle :stories="nextStories" v-else-if="nextStories.length && !prevStories.length"/>
+        <MediaStoryTitle :stories="prevStories" v-else-if="prevStories.length && !nextStories.length"/>
+        <MediaStoryTitle :stories="userStories"  v-else-if="
+            userStories.length &&
+            !prevStories.length &&
+            !nextStories.length &&
+            currentStoryStore.listId.indexOf(
+              this.currentStoryStore?.activeStory
+            ) > 0
+          "/>
         <template #fallback> Loading... </template>
       </Suspense>
       <Suspense>
@@ -156,6 +189,7 @@ export default (await import("vue")).defineComponent({
     ListSeenUserStory: defineAsyncComponent(() =>
       import("./ListSeenUserStory.vue")
     ),
+    MediaStoryTitle: defineAsyncComponent(() => import("./MediaStoryTitle.vue"))
   },
   props: {
     isOtherStory: Boolean,
@@ -266,13 +300,10 @@ export default (await import("vue")).defineComponent({
       }
     },
     async prev() {
-      this.$emit("prev");
-
       this.index = this.currentStoryStore.listId.indexOf(
         this.currentStoryStore.activeStory
       );
 
-      this.$emit("prev");
       this.isPause = false;
       this.story.prevIndex = this.currentStoryStore.activeSlide;
       this.story.prevIndex--;

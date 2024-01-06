@@ -538,7 +538,7 @@ export default (await import("vue")).defineComponent({
             });
         } else {
           this.toastStore.showToast(
-            2000,
+            3000,
             "Video không được dài quá 20 giây",
             "bg-rose-500 text-white"
           );

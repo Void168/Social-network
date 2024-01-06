@@ -38,14 +38,24 @@
           alt="story-image"
           class="flex justify-center items-center h-full w-full group-hover:scale-105 group-hover:rounded-lg absolute z-10 bg-cover transition"
           :style="{ backgroundColor: story.theme }"
+          :class="story?.attachments[0]?.get_video ? 'bg-black' : ''"
         >
           <img
+            v-if="story?.attachments[0]?.get_image"
             :src="story?.attachments[0]?.get_image"
             class="rounded-none"
             :class="[story?.attachments[0]?.rotate]"
             ref="image"
             :style="{ scale: story?.attachments[0]?.zoom_image }"
           />
+          <video
+            v-else
+            muted
+            class="rounded-none w-full shadow-none"
+            ref="myVideo"
+          >
+            <source :src="story?.attachments[0]?.get_video" type="video/mp4" />
+          </video>
         </div>
       </div>
     </div>
@@ -95,9 +105,11 @@ export default (await import("vue")).defineComponent({
     selectedFont() {
       return this.fonts?.filter((font) => font.name === this.story?.font)[0];
     },
-    haveSeen(){
-      return this.story?.seen_by?.filter((user) => user.id === this.userStore.user.id)
-    }
+    haveSeen() {
+      return this.story?.seen_by?.filter(
+        (user) => user.id === this.userStore.user.id
+      );
+    },
   },
 
   mounted() {
@@ -111,7 +123,7 @@ export default (await import("vue")).defineComponent({
     },
     getUserStories(userId) {
       this.currentStoryStore.resetCurrentStory();
-      
+
       axios
         .get(`/api/story/get-text-stories/${userId}`)
         .then((res) => {

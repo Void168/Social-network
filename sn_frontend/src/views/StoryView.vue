@@ -165,7 +165,7 @@
           <div
             class="flex gap-3"
             v-for="emoji in emojiList.slice(1, emojiList.length)"
-            :key="emoji.utf8"
+            :key="emoji.utf"
           >
             <div
               class="group p-2 rounded-full w-12 h-12 bg-gradient-to-t from-white via-emerald-500 to-green-500 flex justify-center items-center cursor-pointer"

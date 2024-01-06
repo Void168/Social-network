@@ -37,7 +37,7 @@
         :style="{ backgroundColor: story?.theme }"
       >
         <img
-          v-if="story.attachments.get_image"
+          v-if="story.attachments[0].get_image"
           :src="story?.attachments[0]?.get_image"
           :style="{ scale: story?.attachments[0]?.zoom_image }"
           class="rounded-none w-full"
@@ -45,7 +45,7 @@
           alt="img-story"
         />
         <video
-          v-else
+          v-if="story.attachments[0].get_video"
           autoplay
           class="rounded-none w-full shadow-none"
           ref="myVideo"
@@ -119,6 +119,7 @@ export default (await import("vue")).defineComponent({
   props: {
     stories: Array,
     isPause: Boolean,
+    isMute: Boolean,
     nextFunction: Function,
   },
 
@@ -151,9 +152,11 @@ export default (await import("vue")).defineComponent({
     currentStoryId() {
       return this.stories[this.currentStoryStore?.activeSlide]?.id;
     },
-    totalDuration(){
-      return this.stories.map((story) => story.duaration).reduce((a, c) => a + c, 0)
-    }
+    totalDuration() {
+      return this.stories
+        .map((story) => story.duaration)
+        .reduce((a, c) => a + c, 0);
+    },
   },
 
   created() {
@@ -182,17 +185,41 @@ export default (await import("vue")).defineComponent({
 
     updatedActiveSlide() {
       this.activeSlide = this.swiper.realIndex;
+
+      if (this.$refs.myVideo) {
+        if (this.isPause) {
+          this.swiper.autoplay.pause();
+          this.$refs.myVideo[0].pause();
+        } else {
+          this.swiper.autoplay.resume();
+          this.$refs.myVideo[0].play();
+        }
+
+        if (this.isMute) {
+          this.$refs.myVideo[0].muted = true;
+        } else {
+          this.$refs.myVideo[0].muted = false;
+        }
+
+        if (this.stories[this.activeSlide]?.attachments) {
+          this.$refs.myVideo[0].volume = 0.4;
+        }
+      }
+
       if (this.isPause) {
         this.swiper.autoplay.pause();
       } else {
         this.swiper.autoplay.resume();
       }
     },
+
     async doProgress() {
-      if(this.stories[this.activeSlide]?.attachments){
-        this.$refs.myVideo[0].volume = 0.4
+      const INTERVAL_TIME = 100;
+      
+      if (this.stories[this.activeSlide]?.attachments) {
+        this.$refs.myVideo[0].volume = 0.4;
       }
-      const INTERVAL_TIME = 100
+
       this.currentStoryStore.getActiveStoryId(this.currentStoryId);
 
       const progressbar = document.querySelectorAll(
@@ -207,11 +234,11 @@ export default (await import("vue")).defineComponent({
       }
 
       this.interval = setInterval(() => {
-        if (this.percentage <= 1) {
+        if (this.percentage <= 1 && !this.isPause) {
           this.activeSlide = this.swiper.realIndex;
           this.currentStoryStore.getActiveSlide(this.swiper.realIndex);
-          console.log(this.percentage)
-          this.percentage += 1/this.stories.length/this.duration * INTERVAL_TIME
+          this.percentage +=
+            (1 / this.stories.length / this.duration) * INTERVAL_TIME;
           progressbar[0]?.style?.setProperty(
             "transform",
             `scaleX(${this.percentage})`,
@@ -230,10 +257,6 @@ export default (await import("vue")).defineComponent({
       if (this.isNext || this.isPrev || this.isPause) {
         clearInterval(this.interval);
       }
-
-      // setTimeout(() => {
-      //   this.$refs.myVideo.volume = 0.1;
-      // }, 50);
     },
     async setSeenStory() {
       if (this.stories[this.currentStoryStore.activeSlide]?.body) {
@@ -263,6 +286,7 @@ export default (await import("vue")).defineComponent({
     next() {
       this.currentStoryStore.getActiveStoryId(this.currentStoryId);
       this.story.nextIndex = this.currentStoryStore.activeSlide + 1;
+
       if (this.stories.length > 0) {
         this.percentage =
           (this.currentStoryStore.activeSlide + 1) / this.stories.length;
@@ -276,6 +300,8 @@ export default (await import("vue")).defineComponent({
         this.isNext = true;
       } else {
         this.isNext = false;
+        // this.$refs.myVideo.pause()
+        // this.$refs.myVideo.currentTime = 0
       }
     },
     prev() {

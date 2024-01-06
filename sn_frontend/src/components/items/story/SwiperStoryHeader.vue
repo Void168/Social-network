@@ -34,11 +34,11 @@
         @click="$emit('mute')"
         v-else
       />
-      <StoryDropdown @openModal="openModal" :yourStory="stories[0]" />
+      <StoryDropdown @openModal="openModal" :yourStory="stories[currentStoryStore.activeSlide]" />
       <DeleteStoryModalVue
         :show="isOpen"
         @closeModal="closeModal"
-        @deleteStory="deleteStory(stories)"
+        @deleteStory="deleteStory(stories[currentStoryStore.activeSlide])"
       />
     </div>
   </div>
@@ -111,18 +111,16 @@ export default (await import("vue")).defineComponent({
     openModal() {
       this.$emit("openModal", this.isOpen);
       this.isOpen = true;
-
-      this.pause();
     },
     closeModal() {
       this.isOpen = false;
     },
     deleteStory(yourStory) {
-      if (this.stories[0].body) {
+      if (yourStory?.body) {
         axios
           .delete(
             `/api/story/text-story/${
-              yourStory[this.currentStoryStore.activeSlide].id
+              yourStory?.id
             }/delete/`
           )
           .then((res) => {
@@ -153,7 +151,7 @@ export default (await import("vue")).defineComponent({
         axios
           .delete(
             `/api/story/media-story/${
-              yourStory[this.currentStoryStore.activeSlide].id
+              yourStory?.id
             }/delete/`
           )
           .then((res) => {

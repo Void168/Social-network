@@ -400,3 +400,12 @@ def handle_request(request, pk, status):
 
 
     return JsonResponse({'message': 'friendship request updated'})
+
+@api_view(['DELETE'])
+def delete_friend(request, pk):
+    current_user = request.user
+    deleted_friend = User.objects.get(pk=pk)
+    # current_user.friends.remove(deleted_friend)
+    print(current_user.friends)
+    
+    return JsonResponse({'message': 'friendship deleted'})

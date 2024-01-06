@@ -64,6 +64,9 @@ class User(AbstractBaseUser, PermissionsMixin):
     friends = models.ManyToManyField('self')
     friends_count = models.IntegerField(default=0)
     
+    followers = models.ManyToManyField('self')
+    followers_count = models.IntegerField(default=0)
+    
     relationship_status = models.CharField(blank=True, default='', max_length=255)
     partner = models.CharField(blank=True, default='', max_length=255)
     

@@ -3,8 +3,9 @@
     <CoverImage class="col-span-3" v-bind:user="user" />
     <div class="col-span-3 grid grid-cols-3 gap-4 relative">
       <div class="col-span-1"></div>
+
       <div
-        class="col-span-2 flex justify-between px-4 py-2 gap-4 text-lg font-semibold dark:text-neutral-200"
+        class="col-span-2 flex justify-between items-center px-4 py-2 gap-4 text-lg font-semibold dark:text-neutral-200"
       >
         <div class="flex gap-4">
           <RouterLink :to="{ name: 'profile', params: { id: user.id } }"
@@ -29,7 +30,27 @@
             </div>
           </div>
         </div>
-        <div>
+        <div class="flex items-center gap-3">
+          <div v-if="userStore.user.id !== user.id">
+            <DeleteFriendModal :show="isDeleteFriendOpen" @closeDeleteFriendModal="closeDeleteFriendModal" @deleteFriend="deleteFriend"/>
+            <UnfollowedModal :show="isUnfollowedOpen" @closeDeleteFriendModal="closeUnfollowedModal" @unfollowed="unfollowed"/>
+            <div v-if="can_send_friendship_request === false">
+              <div v-for="(value, index) in filtered" :key="index">
+                <FriendOptionsDropdown
+                  :isOpen="friendIsOpen"
+                  v-if="value === userStore.user.id"
+                  @openDeleteFriendModal="openDeleteFriendModal"
+                  @openUnfollowedModal="openUnfollowedModal"
+                />
+                <button class="btn" v-else>Đã gửi lời mời kết bạn</button>
+              </div>
+            </div>
+            <div v-else>
+              <button class="btn" @click="sendFriendshipRequest">
+                Thêm bạn bè
+              </button>
+            </div>
+          </div>
           <button
             @click="openContactModal"
             class="dark:text-neutral-200 bg-slate-200 dark:bg-slate-800 px-4 py-2 shadow-md rounded-md hover:bg-slate-300 dark:hover:bg-slate-900 transition"
@@ -55,7 +76,9 @@
               @click="openAvatarModal"
               class="mb-6 rounded-full w-8 h-8 shadow-xl absolute flex justify-center items-center top-16 right-6 z-10 bg-neutral-200 dark:bg-slate-700 hover:ring-2 hover:ring-slate-300 dark:hover:ring-slate-500 transition cursor-pointer"
             >
-              <CameraIcon class="dark:text-neutral-200 w-5 h-5 dark:hover:text-neutral-300 hover:text-slate-700 transition" />
+              <CameraIcon
+                class="dark:text-neutral-200 w-5 h-5 dark:hover:text-neutral-300 hover:text-slate-700 transition"
+              />
             </span>
           </div>
           <img
@@ -129,24 +152,6 @@
           <RouterLink v-if="user.id === userStore.user.id" to="/profile/edit">
             <button class="mt-4 btn">Chỉnh sửa chi tiết</button>
           </RouterLink>
-          <div class="flex flex-col mt-4">
-            <div v-if="userStore.user.id !== user.id" class="mt-6">
-              <div v-if="can_send_friendship_request === false">
-                <div v-for="(value, index) in filtered" :key="index">
-                  <button class="btn" v-if="value === userStore.user.id">
-                    Bạn bè
-                  </button>
-                  <button class="btn" v-else>Đã gửi lời mời kết bạn</button>
-                </div>
-              </div>
-              <div v-else>
-                <button class="btn" @click="sendFriendshipRequest">
-                  Thêm bạn bè
-                </button>
-              </div>
-            </div>
-          </div>
-
           <button
             v-if="userStore.user.id !== user.id"
             @click="sendDirectMessage"
@@ -258,7 +263,7 @@
         <p class="font-semibold text-2xl">Bài viết của {{ user.name }}</p>
         <div v-if="posts?.length">
           <div
-            class=" bg-white border border-gray-200 rounded-lg mt-4 dark:bg-slate-700 dark:border-slate-800 dark:text-neutral-200"
+            class="bg-white border border-gray-200 rounded-lg mt-4 dark:bg-slate-700 dark:border-slate-800 dark:text-neutral-200"
             v-for="post in posts"
             v-bind:key="post.id"
           >
@@ -290,6 +295,9 @@ import SkeletonLoadingPostVue from "../components/loadings/SkeletonLoadingPost.v
 
 import ContactModal from "../components/modals/profile/ContactModal.vue";
 import AvatarModal from "../components/modals/profile/AvatarModal.vue";
+import FriendOptionsDropdown from "../components/dropdown/FriendOptionsDropdown.vue";
+import DeleteFriendModal from "../components/modals/profile/DeleteFriendModal.vue";
+import UnfollowedModal from "../components/modals/profile/UnfollowedModal.vue";
 
 import {
   ClockIcon,
@@ -300,7 +308,6 @@ import {
   HomeIcon,
   CameraIcon,
 } from "@heroicons/vue/24/solid";
-
 
 import { RouterLink } from "vue-router";
 
@@ -328,6 +335,9 @@ export default {
     SkeletonLoadingPostVue,
     PostToForm,
     ImageShowcase,
+    FriendOptionsDropdown,
+    DeleteFriendModal,
+    UnfollowedModal,
     ClockIcon,
     HeartIcon,
     ClipboardDocumentListIcon,
@@ -360,6 +370,9 @@ export default {
       images: [],
       contactIsOpen: false,
       avatarIsOpen: false,
+      friendIsOpen: false,
+      isDeleteFriendOpen: false,
+      isUnfollowedOpen: false,
     };
   },
 
@@ -552,6 +565,36 @@ export default {
     },
     closeAvatarModal() {
       this.avatarIsOpen = false;
+    },
+
+    openDropdown() {
+      this.friendIsOpen = !this.friendIsOpen;
+    },
+
+    openDeleteFriendModal() {
+      this.isDeleteFriendOpen = true
+    },
+
+    closeDeleteFriendModal() {
+      this.isDeleteFriendOpen = false
+    },
+
+    deleteFriend(){
+      console.log('hello')
+      this.isDeleteFriendOpen = false
+    },
+
+    openUnfollowedModal() {
+      this.isUnfollowedOpen = true
+    },
+
+    closeUnfollowedModal() {
+      this.isUnfollowedOpen = false
+    },
+
+    unfollowed(){
+      console.log('hello')
+      this.isUnfollowedOpen = false
     },
 
     handleRequest(status, pk) {

@@ -411,10 +411,12 @@ def delete_friend(request, pk):
     
     if deleted_friend in current_user_friends and current_user in deleted_friend_friends:
     
-        current_user_friends.remove(deleted_friend)
+        current_user.remove(deleted_friend)
+        current_user.friends_count = current_user.friends_count - 1
         
         deleted_friend_friends.remove(current_user)
-    
+        deleted_friend.friends_count = deleted_friend.friends_count - 1
+        
         current_user.save()
         
         deleted_friend.save()

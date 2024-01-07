@@ -344,6 +344,7 @@ def edit_password(request):
 @api_view(['POST'])
 def send_friendship_request(request, pk):
     sent_user = User.objects.get(pk=pk)
+    current_user = request.user
     
     check1 = FriendshipRequest.objects.filter(created_for=request.user).filter(created_by=sent_user)
     check2 = FriendshipRequest.objects.filter(created_for=sent_user).filter(created_by=request.user)
@@ -353,6 +354,7 @@ def send_friendship_request(request, pk):
 
     if not check1 and not check2:
         sent_user.followers.add(request.user)
+        current_user.following.add(sent_user)
         sent_user.followers_count = sent_user.followers_count + 1
         sent_user.save()
         
@@ -446,11 +448,14 @@ def follow(request, pk):
     current_user = request.user
     user_wanna_follow = User.objects.get(pk=pk)
     
+    current_user_following_list = current_user.following.all()
     user_follow_list = user_wanna_follow.followers.all()
     
-    if not current_user in user_follow_list:
+    if not current_user in user_follow_list and not user_wanna_follow in current_user_following_list:
     
         user_wanna_follow.followers.add(current_user)
+        current_user.following.add(user_wanna_follow)
+        
         user_wanna_follow.followers_count = user_wanna_follow.followers_count + 1
         
         user_wanna_follow.save()
@@ -466,9 +471,11 @@ def unfollowed(request, pk):
     user_wanna_unfollow = User.objects.get(pk=pk)
     
     user_follow_list = user_wanna_unfollow.followers.all()
+    current_user_following_list = current_user.following.all()
 
-    if current_user in user_follow_list:
+    if current_user in user_follow_list and user_wanna_unfollow in current_user_following_list:
         user_wanna_unfollow.followers.remove(current_user)
+        current_user.following.remove(user_wanna_unfollow)
         
         user_wanna_unfollow.followers_count = user_wanna_unfollow.followers_count - 1
         

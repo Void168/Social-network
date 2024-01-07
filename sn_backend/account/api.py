@@ -70,6 +70,8 @@ def friends(request, pk):
     
     request_by = FriendshipRequest.objects.filter(created_by=request.user, status=FriendshipRequest.SENT)
     serializer = FriendshipRequestSerializer(request_by, many=True)
+    
+    user_followers = user.followers.all()
        
     friends = user.friends.all()
      
@@ -77,7 +79,8 @@ def friends(request, pk):
         'user': UserSerializer(user).data,
         'friends': UserSerializer(friends, many=True).data,
         'requests': requests,
-        'request_by': serializer.data
+        'request_by': serializer.data,
+        'followers':UserSerializer(user_followers, many=True).data,
     }, safe=False)
     
 @api_view(['GET'])
@@ -349,6 +352,10 @@ def send_friendship_request(request, pk):
     check4 = FriendshipRequest.objects.filter(created_for=sent_user).filter(created_by=request.user).filter(status=FriendshipRequest.REJECTED)
 
     if not check1 and not check2:
+        sent_user.followers.add(request.user)
+        sent_user.followers_count = sent_user.followers_count + 1
+        sent_user.save()
+        
         friendrequest = FriendshipRequest.objects.create(created_for=sent_user, created_by=request.user)
         
         notification = create_notification(request, 'new_friend_request', friendrequest_id=friendrequest.id)
@@ -407,24 +414,62 @@ def handle_request(request, pk, status):
 @api_view(['POST'])
 def delete_friend(request, pk):
     current_user = request.user
-    deleted_friend = User.objects.get(pk=pk)
+    friend_wanna_delete = User.objects.get(pk=pk)
     
     current_user_friends = current_user.friends.all()
-    deleted_friend_friends = deleted_friend.friends.all()
+    friend_wanna_delete_friends = friend_wanna_delete.friends.all()
     
-    if deleted_friend in current_user_friends and current_user in deleted_friend_friends:
+    if friend_wanna_delete in current_user_friends and current_user in friend_wanna_delete_friends:
     
-        current_user.remove(deleted_friend)
+        current_user_friends.remove(friend_wanna_delete)
         current_user.friends_count = current_user.friends_count - 1
         
-        deleted_friend_friends.remove(current_user)
-        deleted_friend.friends_count = deleted_friend.friends_count - 1
+        friend_wanna_delete_friends.remove(current_user)
+        friend_wanna_delete.friends_count = friend_wanna_delete.friends_count - 1
         
         current_user.save()
         
-        deleted_friend.save()
+        friend_wanna_delete.save()
     
         return JsonResponse({'message': 'friendship deleted'})
     
     else:
         return JsonResponse({'message': "Don't have friend with each other"})
+    
+@api_view(['POST'])
+def follow(request, pk):
+    current_user = request.user
+    user_wanna_follow = User.objects.get(pk=pk)
+    
+    user_follow_list = user_wanna_follow.followers.all()
+    
+    if current_user in user_follow_list:
+    
+        user_follow_list.add(current_user)
+        user_wanna_follow.followers_count = user_wanna_follow.followers_count + 1
+        
+        user_wanna_follow.save()
+    
+        return JsonResponse({'message': 'Followed'})
+    
+    else:
+        return JsonResponse({'message': "Failed"})
+    
+@api_view(['POST'])
+def unfollowed(request, pk):
+    current_user = request.user
+    user_wanna_follow = User.objects.get(pk=pk)
+    
+    user_follow_list = user_wanna_follow.followers.all()
+    
+    if current_user in user_follow_list:
+    
+        user_follow_list.remove(current_user)
+        user_wanna_follow.followers_count = user_wanna_follow.followers_count - 1
+        
+        user_wanna_follow.save()
+    
+        return JsonResponse({'message': 'UnFollowed'})
+    
+    else:
+        return JsonResponse({'message': "Failed"})

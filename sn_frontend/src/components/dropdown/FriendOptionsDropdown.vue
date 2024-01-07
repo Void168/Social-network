@@ -19,7 +19,7 @@
         class="absolute left-0 z-[10000] mt-2 w-56 origin-top-right divide-y divide-gray-100 rounded-md bg-white shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none"
       >
         <div class="py-1">
-          <MenuItem v-slot="{ active }" @click="$emit('openUnfollowedModal')">
+          <MenuItem v-slot="{ active }" @click="$emit('openUnfollowedModal')" v-if="checkFollowers">
             <div
               :class="[
                 active ? 'bg-gray-100 text-gray-900' : 'text-gray-700',
@@ -28,6 +28,18 @@
             >
               <span class="flex items-center gap-3"
                 ><EyeSlashIcon class="w-5 h-5" />Hủy theo dõi</span
+              >
+            </div>
+          </MenuItem>
+          <MenuItem v-slot="{ active }" @click="$emit('followUser')" v-else>
+            <div
+              :class="[
+                active ? 'bg-gray-100 text-gray-900' : 'text-gray-700',
+                'block px-4 py-2 text-sm cursor-pointer',
+              ]"
+            >
+              <span class="flex items-center gap-3"
+                ><EyeSlashIcon class="w-5 h-5" />Theo dõi</span
               >
             </div>
           </MenuItem>
@@ -87,6 +99,13 @@ export default {
 
   props: {
     isOpen: Boolean,
+    followers: Array,
   },
+
+  computed: {
+    checkFollowers(){
+      return this.followers.map((fl) => fl.id).includes(this.userStore.user.id)
+    }
+  }
 };
 </script>

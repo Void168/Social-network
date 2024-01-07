@@ -38,6 +38,7 @@
               @deleteFriend="deleteFriend"
             />
             <UnfollowedModal
+              :followers="followers"
               :show="isUnfollowedOpen"
               @closeDeleteFriendModal="closeUnfollowedModal"
               @unfollowed="unfollowed"
@@ -45,14 +46,18 @@
             <div v-if="filtered.includes(userStore.user.id)">
               <div v-for="(value, index) in filtered" :key="index">
                 <FriendOptionsDropdown
+                  :followers="followers"
                   :isOpen="friendIsOpen"
                   v-if="value === userStore.user.id"
                   @openDeleteFriendModal="openDeleteFriendModal"
                   @openUnfollowedModal="openUnfollowedModal"
+                  @followUser="followUser"
                 />
               </div>
             </div>
-            <button class="btn" v-else-if="checkRequest">Đã gửi lời mời kết bạn</button>
+            <button class="btn" v-else-if="checkRequest">
+              Đã gửi lời mời kết bạn
+            </button>
             <div v-else>
               <button class="btn" @click="sendFriendshipRequest">
                 Thêm bạn bè
@@ -367,6 +372,7 @@ export default {
       can_send_friendship_request: null,
       friendshipRequest: [],
       yourRequest: [],
+      followers: [],
       status: "",
       friends: [],
       PostToShow: 5,
@@ -391,9 +397,9 @@ export default {
         .map((friend) => friend.id)
         .filter((id) => id === this.userStore.user.id);
     },
-    checkRequest(){
-      return this.yourRequest[0].created_by.id === this.userStore.user.id
-    }
+    checkRequest() {
+      return this.yourRequest[0]?.created_by?.id === this.userStore.user.id;
+    },
   },
 
   beforeMount() {
@@ -558,7 +564,8 @@ export default {
           this.friendshipRequest = res.data.requests;
           this.user = res.data.user;
           this.friends = res.data.friends;
-          this.yourRequest = res.data.request_by
+          this.yourRequest = res.data.request_by;
+          this.followers = res.data.followers;
         })
         .catch((error) => {
           console.log(error);
@@ -609,6 +616,11 @@ export default {
     },
 
     closeUnfollowedModal() {
+      this.isUnfollowedOpen = false;
+    },
+
+    followUser(){
+      console.log("hello");
       this.isUnfollowedOpen = false;
     },
 

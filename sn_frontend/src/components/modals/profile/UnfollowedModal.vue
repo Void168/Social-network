@@ -37,7 +37,7 @@
                 </DialogTitle>
                 <div class="mt-2">
                   <p class="text-sm text-gray-500">
-                    Bạn muốn hủy kết bạn với người này
+                    Bạn muốn hủy theo dõi người này
                   </p>
                 </div>
   
@@ -83,7 +83,8 @@
       DialogTitle,
     },
     props: {
-      isUnFollowedOpen: Boolean
+      isUnFollowedOpen: Boolean,
+      followers: Array,
     }
   });
   </script>

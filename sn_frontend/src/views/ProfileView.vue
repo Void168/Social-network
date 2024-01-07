@@ -435,6 +435,7 @@ export default {
       axios
         .get(`/api/user-info/${this.$route.params.id}`)
         .then((res) => {
+          console.log(res.data)
           this.partnerId = res.data.user.partner;
           this.getPartnerInfo();
         })
@@ -619,13 +620,27 @@ export default {
       this.isUnfollowedOpen = false;
     },
 
-    followUser(){
-      console.log("hello");
-      this.isUnfollowedOpen = false;
+    followUser() {
+      axios
+        .post(`/api/follow/${this.$route.params.id}/`)
+        .then((res) => {
+          console.log(res.data);
+        })
+        .catch((error) => {
+          console.log(error);
+        });
     },
 
     unfollowed() {
-      console.log("hello");
+      axios
+        .post(`/api/unfollowed/${this.$route.params.id}/`)
+        .then((res) => {
+          console.log(res.data);
+        })
+        .catch((error) => {
+          console.log(error);
+        });
+
       this.isUnfollowedOpen = false;
     },
 

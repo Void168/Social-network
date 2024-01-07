@@ -418,14 +418,19 @@ def delete_friend(request, pk):
     
     current_user_friends = current_user.friends.all()
     friend_wanna_delete_friends = friend_wanna_delete.friends.all()
+    friend_wanna_delete_followers = friend_wanna_delete.followers.all()
     
     if friend_wanna_delete in current_user_friends and current_user in friend_wanna_delete_friends:
     
-        current_user_friends.remove(friend_wanna_delete)
+        current_user.friends.remove(friend_wanna_delete)
         current_user.friends_count = current_user.friends_count - 1
         
-        friend_wanna_delete_friends.remove(current_user)
+        friend_wanna_delete.friends.remove(current_user)
         friend_wanna_delete.friends_count = friend_wanna_delete.friends_count - 1
+        
+        if current_user in friend_wanna_delete_followers:
+            friend_wanna_delete.followers.remove(current_user)
+            friend_wanna_delete.followers_count = friend_wanna_delete.followers_count - 1
         
         current_user.save()
         
@@ -443,9 +448,9 @@ def follow(request, pk):
     
     user_follow_list = user_wanna_follow.followers.all()
     
-    if current_user in user_follow_list:
+    if not current_user in user_follow_list:
     
-        user_follow_list.add(current_user)
+        user_wanna_follow.followers.add(current_user)
         user_wanna_follow.followers_count = user_wanna_follow.followers_count + 1
         
         user_wanna_follow.save()
@@ -458,16 +463,16 @@ def follow(request, pk):
 @api_view(['POST'])
 def unfollowed(request, pk):
     current_user = request.user
-    user_wanna_follow = User.objects.get(pk=pk)
+    user_wanna_unfollow = User.objects.get(pk=pk)
     
-    user_follow_list = user_wanna_follow.followers.all()
-    
+    user_follow_list = user_wanna_unfollow.followers.all()
+
     if current_user in user_follow_list:
-    
-        user_follow_list.remove(current_user)
-        user_wanna_follow.followers_count = user_wanna_follow.followers_count - 1
+        user_wanna_unfollow.followers.remove(current_user)
         
-        user_wanna_follow.save()
+        user_wanna_unfollow.followers_count = user_wanna_unfollow.followers_count - 1
+        
+        user_wanna_unfollow.save()
     
         return JsonResponse({'message': 'UnFollowed'})
     

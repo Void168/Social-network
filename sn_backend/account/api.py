@@ -64,17 +64,20 @@ def friends(request, pk):
     user = User.objects.get(pk=pk)
     requests = []
     
-    if user == request.user:
-        requests = FriendshipRequest.objects.filter(created_for=request.user, status=FriendshipRequest.SENT)
-        requests = FriendshipRequestSerializer(requests, many=True)
-        requests = requests.data
+    requests = FriendshipRequest.objects.filter(created_for=request.user, status=FriendshipRequest.SENT)
+    requests = FriendshipRequestSerializer(requests, many=True)
+    requests = requests.data
+    
+    request_by = FriendshipRequest.objects.filter(created_by=request.user, status=FriendshipRequest.SENT)
+    serializer = FriendshipRequestSerializer(request_by, many=True)
        
-    friends = user.friends.all()   
+    friends = user.friends.all()
      
     return JsonResponse({
         'user': UserSerializer(user).data,
         'friends': UserSerializer(friends, many=True).data,
-        'requests': requests
+        'requests': requests,
+        'request_by': serializer.data
     }, safe=False)
     
 @api_view(['GET'])
@@ -344,7 +347,7 @@ def send_friendship_request(request, pk):
     
     check3 = FriendshipRequest.objects.filter(created_for=request.user).filter(created_by=sent_user).filter(status=FriendshipRequest.REJECTED)
     check4 = FriendshipRequest.objects.filter(created_for=sent_user).filter(created_by=request.user).filter(status=FriendshipRequest.REJECTED)
-    
+
     if not check1 and not check2:
         friendrequest = FriendshipRequest.objects.create(created_for=sent_user, created_by=request.user)
         
@@ -386,7 +389,7 @@ def handle_request(request, pk, status):
             created_for=sent_user
         )
         
-        print(notification)
+        FriendshipRequest.objects.filter(status='accepted').delete()
         
         serializer_notification = NotificationSerializer(notification)
         

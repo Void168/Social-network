@@ -42,7 +42,7 @@
               @closeDeleteFriendModal="closeUnfollowedModal"
               @unfollowed="unfollowed"
             />
-            <div v-if="can_send_friendship_request === false">
+            <div v-if="filtered.includes(userStore.user.id)">
               <div v-for="(value, index) in filtered" :key="index">
                 <FriendOptionsDropdown
                   :isOpen="friendIsOpen"
@@ -50,9 +50,9 @@
                   @openDeleteFriendModal="openDeleteFriendModal"
                   @openUnfollowedModal="openUnfollowedModal"
                 />
-                <button class="btn" v-else>Đã gửi lời mời kết bạn</button>
               </div>
             </div>
+            <button class="btn" v-else-if="checkRequest">Đã gửi lời mời kết bạn</button>
             <div v-else>
               <button class="btn" @click="sendFriendshipRequest">
                 Thêm bạn bè
@@ -366,6 +366,7 @@ export default {
       },
       can_send_friendship_request: null,
       friendshipRequest: [],
+      yourRequest: [],
       status: "",
       friends: [],
       PostToShow: 5,
@@ -390,6 +391,9 @@ export default {
         .map((friend) => friend.id)
         .filter((id) => id === this.userStore.user.id);
     },
+    checkRequest(){
+      return this.yourRequest[0].created_by.id === this.userStore.user.id
+    }
   },
 
   beforeMount() {
@@ -554,7 +558,7 @@ export default {
           this.friendshipRequest = res.data.requests;
           this.user = res.data.user;
           this.friends = res.data.friends;
-          // console.log(res.data.friends);
+          this.yourRequest = res.data.request_by
         })
         .catch((error) => {
           console.log(error);

@@ -18,9 +18,10 @@ class UserSerializer(serializers.ModelSerializer):
         fields = ('id', 'name', 'get_displayed_name', 'email', 'nickname', 'gender', 'friends_count','posts_count','get_avatar','get_cover_image', 'date_joined','relationship_status','partner', 'biography','hometown', 'living_city')
 class FriendshipRequestSerializer(serializers.ModelSerializer):
     created_by = UserSerializer(read_only=True)
+    created_for = UserSerializer(read_only=True)
     class Meta:
         model = FriendshipRequest
-        fields = ('id', 'created_by',)
+        fields = ('id', 'created_by', 'created_for',)
 
 class RelationshipRequestSerializer(serializers.ModelSerializer):
     created_by = UserSerializer(read_only=True)

@@ -23,7 +23,7 @@
           class="flex justify-between border-none bg-gray-200 dark:bg-slate-700 dark:border-slate-800 dark:text-neutral-200 rounded-2xl w-full p-4"
         >
           <div>
-            <p>
+            <div class="flex items-center gap-1 group">
               <strong class="group">
                 <RouterLink
                   :to="{
@@ -37,7 +37,11 @@
                   class="hidden group-hover:block"
                 />
               </strong>
-            </p>
+              <CommentDropDownVue
+                v-if="comment.created_by.id === userStore.user.id"
+                @deleteComment="deleteComment"
+              />
+            </div>
             <div class="flex gap-1">
               <p
                 v-for="word in words"
@@ -69,9 +73,22 @@
 </template>
 
 <script>
+import axios from "axios";
 import { RouterLink } from "vue-router";
 import TooltipProfile from "../profile/TooltipProfile.vue";
+import CommentDropDownVue from "../../dropdown/CommentDropDown.vue";
+import { useUserStore } from "../../../stores/user";
+import { useToastStore } from "../../../stores/toast";
 export default (await import("vue")).defineComponent({
+  setup() {
+    const userStore = useUserStore();
+    const toastStore = useToastStore();
+
+    return {
+      userStore,
+      toastStore,
+    };
+  },
   props: {
     comment: Object,
   },
@@ -100,7 +117,27 @@ export default (await import("vue")).defineComponent({
         this.filteredTags.push(...filter);
       });
     },
+    deleteComment() {
+      axios
+        .delete(`/api/posts/comment/${this.comment.id}/delete/`)
+        .then((res) => {
+          console.log(res.data)
+          if (res.data.message === "comment deleted") {
+            this.toastStore.showToast(
+              2000,
+              "Đã xóa bình luận",
+              "bg-emerald-500 text-white"
+            );
+            setTimeout(() => {
+              this.$router.go(0);
+            }, 2500);
+          }
+        })
+        .catch((error) => {
+          console.log(error);
+        });
+    },
   },
-  components: { RouterLink, TooltipProfile },
+  components: { RouterLink, TooltipProfile, CommentDropDownVue },
 });
 </script>

@@ -244,6 +244,13 @@ def post_create_comment(request, pk):
     return JsonResponse(serializer.data, safe=False)
 
 @api_view(['DELETE'])
+def comment_delete(request, pk):
+    comment = Comment.objects.filter(created_by=request.user).get(pk=pk)
+    comment.delete()
+    
+    return JsonResponse({'message': 'comment deleted'})
+
+@api_view(['DELETE'])
 def post_delete(request, pk):
     post = Post.objects.filter(created_by=request.user).get(pk=pk)
     post.delete()

@@ -2,14 +2,17 @@
   <div class="grid grid-cols-6 gap-4 min-h-screen" id="feed-frame">
     <div class="col-span-1"></div>
     <div class="mx-auto w-[70%] main-center col-span-4 space-y-4">
-      <div class="p-4 bg-white border border-gray-200 dark:bg-slate-600 dark:border-slate-700 dark:text-neutral-200 rounded-lg">
+      <div
+        class="p-4 bg-white border border-gray-200 dark:bg-slate-600 dark:border-slate-700 dark:text-neutral-200 rounded-lg"
+      >
         <StoriesContainer />
       </div>
       <div
         class="p-4 bg-white border border-gray-200 dark:bg-slate-600 dark:border-slate-700 dark:text-neutral-200 rounded-lg"
       >
         <PostForm v-bind:user="null" v-bind:posts="posts" />
-        <div>
+        <SkeletonLoadingPostVue v-if="isLoading" />
+        <div v-else>
           <div
             class="bg-white border border-gray-200 dark:bg-slate-700 dark:border-slate-800 dark:text-neutral-200 rounded-lg mt-4 shadow-sm"
             v-for="post in posts"
@@ -40,6 +43,7 @@
 
 <script>
 import axios from "axios";
+import { defineAsyncComponent } from "vue";
 import PeopleYouMayKnow from "../components/PeopleYouMayKnow.vue";
 import Trends from "../components/Trends.vue";
 import ChatContainer from "../components/ChatContainer.vue";
@@ -68,6 +72,7 @@ export default {
       body: "",
       PostToShow: 5,
       loadMore: false,
+      isLoading: false,
     };
   },
 
@@ -81,13 +86,15 @@ export default {
   },
 
   methods: {
-    getFeed() {
-      axios
+    async getFeed() {
+      this.isLoading = true;
+      await axios
         .get("/api/posts/")
         .then((res) => {
           // console.log(res.data);
           this.postsList = res.data;
           this.posts = res.data.slice(0, this.PostToShow);
+          this.isLoading = false;
         })
         .catch((error) => {
           console.log(error);

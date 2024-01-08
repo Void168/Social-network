@@ -1,7 +1,8 @@
 <template>
   <div class="mr-5 max-h-[200px] p-4 bg-white border border-gray-200 dark:bg-slate-600 dark:border-slate-700 dark:text-neutral-200 rounded-lg overflow-y-auto">
     <h3 class="mb-6 text-xl">Người bạn có thể biết</h3>
-    <div class="space-y-4">
+    <SkeletionLoadingChatBox v-if="isLoading"/>
+    <div class="space-y-4" v-else>
       <div
         v-for="user in users"
         v-bind:key="user.id"
@@ -25,11 +26,17 @@
 
 <script>
 import axios from "axios";
+import SkeletionLoadingChatBox from "./loadings/SkeletionLoadingChatbox.vue"
 
 export default (await import("vue")).defineComponent({
+  components: {
+    SkeletionLoadingChatBox,
+  },
+
   data() {
     return {
       users: [],
+      isLoading: false
     };
   },
 
@@ -38,11 +45,13 @@ export default (await import("vue")).defineComponent({
   },
 
   methods: {
-    getFriendSuggestions() {
-      axios
+    async getFriendSuggestions() {
+      this.isLoading = true
+      await axios
         .get("/api/friends/suggested/")
         .then((res) => {
           this.users = res.data;
+          this.isLoading = false
         })
         .catch((error) => {
           console.log(error);

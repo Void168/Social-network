@@ -1,5 +1,6 @@
 <template>
-  <div class="max-w-7xl mx-auto flex justify-center items-center gap-4">
+  <SkeletonLoadingPost v-if="isLoading"/>
+  <div class="max-w-7xl mx-auto flex justify-center items-center gap-4" v-else>
     <div class="space-y-4 w-6/12">
       <div
         v-if="post.id"
@@ -106,6 +107,7 @@ import axios from "axios";
 import PeopleYouMayKnow from "../components/PeopleYouMayKnow.vue";
 import Trends from "../components/Trends.vue";
 import FeedItem from "../components/items/post/FeedItem.vue";
+import SkeletonLoadingPost from "../components/loadings/SkeletonLoadingPost.vue";
 import CommentItem from "../components/items/post/CommentItem.vue";
 import { useUserStore } from "../stores/user";
 
@@ -116,6 +118,7 @@ export default {
     Trends,
     FeedItem,
     CommentItem,
+    SkeletonLoadingPost,
   },
 
   setup() {
@@ -140,6 +143,7 @@ export default {
       queries: [],
       tagInfo: {},
       tags: [],
+      isLoading: false
     };
   },
 
@@ -170,20 +174,22 @@ export default {
   },
 
   methods: {
-    getPost() {
-      axios
+    async getPost() {
+      this.isLoading = true
+      await axios
         .get(`/api/posts/${this.$route.params.id}`)
         .then((res) => {
           // console.log("data", res.data);
 
           this.post = res.data.post;
+          this.isLoading = false
         })
         .catch((error) => {
           console.log(error);
         });
     },
-    getFriends() {
-      axios
+    async getFriends() {
+      await axios
         .get(`/api/friends/${this.userStore.user.id}/`)
         .then((res) => {
           this.friends = res.data.friends;

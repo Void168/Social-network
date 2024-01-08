@@ -3,7 +3,8 @@
     class="mr-5 scrollbar-corner-slate-200 scrollbar-none hover:scrollbar-thin scrollbar-thumb-slate-400 scrollbar-track-slate-800 min-h-[400px] bg-white border border-gray-200 dark:bg-slate-600 dark:border-slate-700 dark:text-neutral-200 rounded-lg overflow-y-scroll"
   >
     <h3 class="text-xl p-4">Người liên hệ</h3>
-    <div class="flex flex-col ">
+    <SkeletionLoadingChatBoxVue v-if="isLoading" />
+    <div class="flex flex-col" v-else>
       <div v-for="friend in friends" :key="friend.id">
         <div
           @click="getFriendId(friend)"
@@ -97,6 +98,7 @@ import {
 import "emoji-picker-element";
 
 import { Popover, PopoverButton, PopoverPanel } from "@headlessui/vue";
+import SkeletionLoadingChatBoxVue from "./loadings/SkeletionLoadingChatBox.vue";
 
 export default (await import("vue")).defineComponent({
   name: "chat",
@@ -108,6 +110,7 @@ export default (await import("vue")).defineComponent({
     ChatWindow,
     ChatBubble,
     GroupConversationBox,
+    SkeletionLoadingChatBoxVue,
     XMarkIcon,
     MinusIcon,
     PhoneIcon,
@@ -139,6 +142,7 @@ export default (await import("vue")).defineComponent({
       friends: [],
       isMini: false,
       conversation: {},
+      isLoading: false,
     };
   },
 
@@ -155,41 +159,39 @@ export default (await import("vue")).defineComponent({
   },
 
   methods: {
-    getFriends() {
-      axios
+    async getFriends() {
+      this.isLoading = true;
+      await axios
         .get(`/api/friends/${this.userStore.user.id}/`)
         .then((res) => {
           this.friendshipRequests = res.data.requests;
           this.friends = res.data.friends;
+          this.isLoading = false;
         })
         .catch((error) => {
           console.log(error);
         });
     },
-    getConversations() {
-      setTimeout(() => {
-        axios
-          .get("/api/chat/")
-          .then((res) => {
-            this.conversations = res.data;
-          })
-          .catch((error) => {
-            console.log(error);
-          });
-      }, 1500);
+    async getConversations() {
+      await axios
+        .get("/api/chat/")
+        .then((res) => {
+          this.conversations = res.data;
+        })
+        .catch((error) => {
+          console.log(error);
+        });
     },
-    getGroupConversations() {
-      setTimeout(() => {
-        axios
-          .get("/api/chat/group/")
-          .then((res) => {
-            this.groupConversations = res.data;
-            // console.log(this.groupConversations);
-          })
-          .catch((error) => {
-            console.log(error);
-          });
-      }, 1000);
+    async getGroupConversations() {
+      await axios
+        .get("/api/chat/group/")
+        .then((res) => {
+          this.groupConversations = res.data;
+          // console.log(this.groupConversations);
+        })
+        .catch((error) => {
+          console.log(error);
+        });
     },
     miniatureChat(friend) {
       this.friendsChat = this.friendsChat?.filter((fc) => fc !== friend);

@@ -21,8 +21,10 @@
           </div>
         </div></SwiperSlide
       >
-      <SwiperSlide v-if="yourLastStory"
-        ><div
+      <SwiperSlide v-if="yourLastStory">
+        <SkeletonLoadingStoryVue v-if="isLoading"/>
+        <div
+          v-else
           class="relative cursor-pointer rounded-lg group"
           @click="getUserStories(yourLastStory?.created_by?.id)"
         >
@@ -74,13 +76,17 @@
           </div>
         </div>
       </SwiperSlide>
+      <!-- <SwiperSlide>
+        <SkeletonLoadingStoryVue />
+      </SwiperSlide> -->
       <SwiperSlide
         v-for="story in setStory"
         :key="story.id"
         @click="getUserStories(story[0]?.created_by?.id)"
       >
-        <!-- {{ story.filter((st) => !st?.seen_by?.map((user) => user.id).includes(userStore.user.id)) }} -->
+        <SkeletonLoadingStoryVue v-if="isLoading"/>
         <Story
+          v-else
           :story="
             story.filter(
               (st) =>
@@ -130,6 +136,8 @@ import "swiper/css";
 
 import SwiperStoryContainerButton from "./items/story/SwiperStoryContainerButton.vue";
 import CreateStoryModal from "./modals/story/CreateStoryModal.vue";
+import SkeletonLoadingStoryVue from "../components/loadings/SkeletionLoadingStory.vue";
+
 
 export default {
   components: {
@@ -139,6 +147,7 @@ export default {
     SwiperSlide,
     SwiperStoryContainerButton,
     CreateStoryModal,
+    SkeletonLoadingStoryVue,
   },
   setup() {
     const userStore = useUserStore();
@@ -161,6 +170,7 @@ export default {
       firstStories: [],
       themes: themes,
       fonts: fonts,
+      isLoading: false,
     };
   },
 
@@ -190,11 +200,13 @@ export default {
   methods: {
     async getStories() {
       this.currentStoryStore.getCurrentUserId(this.userStore.user.id);
+      this.isLoading = true
+
       await axios
         .get("/api/story/text-stories/")
         .then((res) => {
           this.textStories = res.data;
-          console.log(this.textStories);
+          // console.log(this.textStories);
 
           this.textStories.forEach((textStory) => {
             this.yourStories.unshift(textStory);
@@ -212,7 +224,7 @@ export default {
           this.mediaStories.forEach((mediaStory) => {
             this.yourStories.unshift(mediaStory);
           });
-
+          this.isLoading = false
           this.getSetStories();
         })
         .catch((error) => {

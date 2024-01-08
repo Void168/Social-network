@@ -1,17 +1,30 @@
 <template>
   <div>
     <div class="mb-6 flex items-center justify-between">
-      <div class="flex items-start space-x-6 w-full">
-        <img
-          :src="comment.created_by.get_avatar"
-          class="w-10 h-10 rounded-full"
-        />
+      <div class="flex items-start gap-3 w-full relative">
+        <div class="group">
+          <RouterLink
+            :to="{
+              name: 'profile',
+              params: { id: comment.created_by.id },
+            }"
+          >
+            <img
+              :src="comment.created_by.get_avatar"
+              class="w-10 h-10 rounded-full"
+            />
+          </RouterLink>
+          <TooltipProfile
+            :user="comment.created_by"
+            class="hidden group-hover:block"
+          />
+        </div>
         <div
           class="flex justify-between border-none bg-gray-200 dark:bg-slate-700 dark:border-slate-800 dark:text-neutral-200 rounded-2xl w-full p-4"
         >
           <div>
             <p>
-              <strong>
+              <strong class="group">
                 <RouterLink
                   :to="{
                     name: 'profile',
@@ -19,6 +32,10 @@
                   }"
                   >{{ comment.created_by.name }}</RouterLink
                 >
+                <TooltipProfile
+                  :user="comment.created_by"
+                  class="hidden group-hover:block"
+                />
               </strong>
             </p>
             <div class="flex gap-1">
@@ -27,10 +44,15 @@
                 :key="word"
                 :class="filteredTags.includes(word) ? 'text-emerald-400' : ''"
               >
-                <RouterLink v-if="filteredTags.includes(word)" :to="{
+                <RouterLink
+                  v-if="filteredTags.includes(word)"
+                  :to="{
                     name: 'profile',
-                    params: { id: tags.filter((tag) => word.includes(tag.name))[0].id },
-                  }">
+                    params: {
+                      id: tags.filter((tag) => word.includes(tag.name))[0].id,
+                    },
+                  }"
+                >
                   {{ word }}
                 </RouterLink>
                 <span v-else>{{ word }}</span>
@@ -48,7 +70,7 @@
 
 <script>
 import { RouterLink } from "vue-router";
-
+import TooltipProfile from "../profile/TooltipProfile.vue";
 export default (await import("vue")).defineComponent({
   props: {
     comment: Object,
@@ -57,6 +79,7 @@ export default (await import("vue")).defineComponent({
     return {
       tags: this.comment.tags,
       filteredTags: [],
+      onHover: false,
     };
   },
   computed: {
@@ -78,6 +101,6 @@ export default (await import("vue")).defineComponent({
       });
     },
   },
-  components: { RouterLink },
+  components: { RouterLink, TooltipProfile },
 });
 </script>

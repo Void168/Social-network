@@ -1,8 +1,8 @@
 <template>
   <div class="mr-5 p-4 bg-white border border-gray-200 dark:bg-slate-600 dark:border-slate-700 dark:text-neutral-200 rounded-lg">
     <h3 class="mb-6 text-xl">Xu hướng</h3>
-
-    <div class="space-y-4">
+    <SkeletionLoadingChatBox v-if="isLoading"/>
+    <div class="space-y-4" v-else>
       <div
         v-for="trend in trends"
         v-bind:key="trend.id"
@@ -26,19 +26,21 @@
 <script>
 import axios from "axios";
 import { RouterLink } from "vue-router";
+import SkeletionLoadingChatBox from "./loadings/SkeletionLoadingChatbox.vue"
 
 export default (await import("vue")).defineComponent({
   data() {
     return {
       trends: [],
+      isLoading: false
     };
   },
   mounted() {
     this.getTrends();
   },
   methods: {
-    getTrends() {
-      axios
+    async getTrends() {
+      await axios
         .get(`/api/posts/trends/`)
         .then((res) => {
           this.trends = res.data;
@@ -46,6 +48,6 @@ export default (await import("vue")).defineComponent({
         .catch((error) => console.log(error));
     },
   },
-  components: { RouterLink },
+  components: { RouterLink, SkeletionLoadingChatBox },
 });
 </script>

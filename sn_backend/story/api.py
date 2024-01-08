@@ -21,11 +21,13 @@ def text_story_list(request):
     user_ids = [request.user.id]
     current_user = request.user
     friends = User.objects.get(Q(email=current_user)).friends.all()
+    following = User.objects.get(Q(email=current_user)).following.all()
     
     for user in request.user.friends.all():
         user_ids.append(user.id)
     
-    text_stories = TextStory.objects.filter(Q(created_by__in=list(user_ids), only_me=False))
+    text_stories = TextStory.objects.filter(Q(created_by__in=list(user_ids), only_me=False) | Q(created_by__in=list(following), only_me=False, is_private=False))
+    
     now = datetime.now()
     
     for text_story in text_stories:
@@ -63,11 +65,12 @@ def media_story_list(request):
     user_ids = [request.user.id]
     current_user = request.user
     friends = User.objects.get(Q(email=current_user)).friends.all()
+    following = User.objects.get(Q(email=current_user)).following.all()
     
     for user in request.user.friends.all():
         user_ids.append(user.id)
             
-    media_stories = MediaStory.objects.filter(Q(created_by__in=list(user_ids), only_me=False))
+    media_stories = MediaStory.objects.filter(Q(created_by__in=list(user_ids), only_me=False) | Q(created_by__in=list(following), only_me=False, is_private=False))
     
     now = datetime.now()
     
@@ -143,7 +146,6 @@ def create_media_story(request):
     form = MediaStoryForm(request.POST)
     attachment = None
     story_attachment_form = StoryAttachmentForm(request.POST, request.FILES)
-    print(form)
     if story_attachment_form.is_valid():
         attachment = story_attachment_form.save(commit=False)
         attachment.created_by = request.user

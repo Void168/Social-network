@@ -13,8 +13,30 @@
         <span class="font-semibold text-lg">{{
           stories[0]?.created_by?.name
         }}</span>
-        <span class="font-medium">{{ stories[this.currentStoryStore?.activeSlide]?.created_at_formatted }}</span>
-        <GlobeAsiaAustraliaIcon class="w-5 h-5" />
+        <span class="font-medium">{{
+          stories[this.currentStoryStore?.activeSlide]?.created_at_formatted
+        }}</span>
+        <GlobeAsiaAustraliaIcon
+          class="w-5 h-5"
+          v-if="
+            !stories[this.currentStoryStore?.activeSlide]?.is_private &&
+            !stories[this.currentStoryStore?.activeSlide]?.only_me
+          "
+        />
+        <UserGroupIcon
+          class="w-5 h-5"
+          v-else-if="
+            stories[this.currentStoryStore?.activeSlide]?.is_private &&
+            !stories[this.currentStoryStore?.activeSlide]?.only_me
+          "
+        />
+        <LockClosedIcon
+          class="w-5 h-5"
+          v-else-if="
+            !stories[this.currentStoryStore?.activeSlide]?.is_private &&
+            stories[this.currentStoryStore?.activeSlide]?.only_me
+          "
+        />
       </div>
     </div>
     <div class="flex gap-2 items-center">
@@ -34,7 +56,10 @@
         @click="$emit('mute')"
         v-else
       />
-      <StoryDropdown @openModal="openModal" :yourStory="stories[currentStoryStore.activeSlide]" />
+      <StoryDropdown
+        @openModal="openModal"
+        :yourStory="stories[currentStoryStore.activeSlide]"
+      />
       <DeleteStoryModalVue
         :show="isOpen"
         @closeModal="closeModal"
@@ -48,6 +73,8 @@
 import axios from "axios";
 import {
   GlobeAsiaAustraliaIcon,
+  UserGroupIcon,
+  LockClosedIcon,
   PlayIcon,
   PauseIcon,
   SpeakerXMarkIcon,
@@ -67,6 +94,8 @@ export default (await import("vue")).defineComponent({
     StoryDropdown,
     DeleteStoryModalVue,
     GlobeAsiaAustraliaIcon,
+    UserGroupIcon,
+    LockClosedIcon,
     PlayIcon,
     PauseIcon,
     SpeakerXMarkIcon,
@@ -118,11 +147,7 @@ export default (await import("vue")).defineComponent({
     deleteStory(yourStory) {
       if (yourStory?.body) {
         axios
-          .delete(
-            `/api/story/text-story/${
-              yourStory?.id
-            }/delete/`
-          )
+          .delete(`/api/story/text-story/${yourStory?.id}/delete/`)
           .then((res) => {
             if (res.data.message === "text story deleted") {
               setTimeout(() => {
@@ -149,11 +174,7 @@ export default (await import("vue")).defineComponent({
           });
       } else {
         axios
-          .delete(
-            `/api/story/media-story/${
-              yourStory?.id
-            }/delete/`
-          )
+          .delete(`/api/story/media-story/${yourStory?.id}/delete/`)
           .then((res) => {
             if (res.data.message === "text media deleted") {
               setTimeout(() => {

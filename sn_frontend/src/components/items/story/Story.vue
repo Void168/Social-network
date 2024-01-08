@@ -29,7 +29,7 @@
         :src="story?.created_by?.get_avatar"
         alt=""
         class="absolute top-4 left-4 w-10 h-10 rounded-full ring-4 z-20"
-        :class="haveSeen ? 'ring-slate-500' : 'ring-emerald-300'"
+        :class="haveSeen.length ? 'ring-slate-500' : 'ring-emerald-300'"
       />
       <div
         class="relative h-[213px] flex items-center justify-center overflow-hidden shadow-sm rounded-lg cursor-pointer"

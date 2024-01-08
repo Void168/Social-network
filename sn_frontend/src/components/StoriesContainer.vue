@@ -194,7 +194,7 @@ export default {
         .get("/api/story/text-stories/")
         .then((res) => {
           this.textStories = res.data;
-          // console.log(this.textStories);
+          console.log(this.textStories);
 
           this.textStories.forEach((textStory) => {
             this.yourStories.unshift(textStory);
@@ -234,7 +234,7 @@ export default {
 
       this.setStory = resultAll;
 
-      console.log(this.yourLastStory);
+      // console.log(this.yourLastStory);
       const listId = this.yourStories
         .filter((story) => story?.created_by?.id !== this.userStore.user.id)
         .sort((a, b) => new Date(b.created_at) - new Date(a.created_at))

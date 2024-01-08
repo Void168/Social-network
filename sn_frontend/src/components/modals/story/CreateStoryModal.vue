@@ -41,9 +41,12 @@
                     />
                   </button>
                   <div class="flex justify-between items-center px-4">
-                    <h2 class="text-2xl font-bold">Tin của bạn</h2>
-                    <Cog8ToothIcon
-                      class="text-neutral-200 h-10 w-10 cursor-pointer p-1 bg-slate-600 rounded-full hover:bg-slate-600 transition duration-100"
+                    <h2 class="text-2xl font-bold w-full">Tin của bạn</h2>
+                    <StoryPrivacySelector
+                      @getOption="getOption"
+                      :privacies="privacies"
+                      v-model="privacy"
+                      class="w-full"
                     />
                   </div>
                   <div
@@ -301,6 +304,7 @@ import {
   ArrowPathIcon,
 } from "@heroicons/vue/24/solid";
 import ChooseFontStory from "../../dropdown/ChooseFontStory.vue";
+import StoryPrivacySelector from "../../dropdown/StoryPrivacySelector.vue";
 import themes from "../../../data/themes";
 import fonts from "../../../data/fonts";
 import ColorThief from "../../../../node_modules/colorthief/dist/color-thief.mjs";
@@ -315,6 +319,7 @@ export default (await import("vue")).defineComponent({
     DialogTitle,
     Slider,
     ChooseFontStory,
+    StoryPrivacySelector,
     XMarkIcon,
     Cog8ToothIcon,
     PhotoIcon,
@@ -354,6 +359,12 @@ export default (await import("vue")).defineComponent({
       zoom: 0.5,
       raw: null,
       isImage: false,
+      privacies: [
+        { name: "Công khai" },
+        { name: "Bạn bè" },
+        { name: "Chỉ mình tôi" },
+      ],
+      privacy: {},
     };
   },
 
@@ -445,6 +456,20 @@ export default (await import("vue")).defineComponent({
       this.deg = "rotate-0";
       this.isRotate = false;
       this.zoom = 0.5;
+    },
+    getOption() {
+      if (this.privacy.name === "Công khai") {
+        this.is_private = false;
+        this.only_me = false;
+      }
+      if (this.privacy.name === "Bạn bè") {
+        this.is_private = true;
+        this.only_me = false;
+      }
+      if (this.privacy.name === "Chỉ mình tôi") {
+        this.is_private = true;
+        this.only_me = true;
+      }
     },
     submitForm() {
       if (this.isTextStory) {

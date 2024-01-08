@@ -106,7 +106,7 @@
 
     <main
       class="bg-gray-100 dark:bg-slate-700 relative"
-      :class="path === '/stories' ? 'h-screen p-0' : 'min-h-screen px-8 py-6'"
+      :class="path === '/stories' ? 'h-screen p-0' : 'min-h-screen'"
     >
       <RouterView />
     </main>

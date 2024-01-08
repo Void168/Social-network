@@ -1,7 +1,78 @@
 <template>
   <div class="grid grid-cols-6 gap-4 min-h-screen" id="feed-frame">
-    <div class="col-span-1"></div>
-    <div class="mx-auto w-[70%] main-center col-span-4 space-y-4">
+    <div class="col-span-1">
+      <div class="overflow-y-scroll h-[800px] sticky top-[16%] z-10 scrollbar-corner-slate-200 scrollbar-none hover:scrollbar-thin scrollbar-thumb-slate-400 scrollbar-track-slate-800">
+        <ul
+          class="w-full"
+        >
+          <li
+            class="flex gap-3 w-full items-center dark:hover:bg-slate-600 cursor-pointer px-4 py-2 rounded-xl"
+          >
+            <img
+              :src="userStore.user.avatar"
+              alt=""
+              class="w-12 h-12 rounded-full"
+            />
+            <h3 class="dark:text-white font-semibold">
+              {{ userStore.user.name }}
+            </h3>
+          </li>
+          <li
+            v-for="nav in navigation.slice(0, navigationsShow)"
+            :key="nav.icon"
+            class="flex gap-3 w-full items-center dark:hover:bg-slate-600 cursor-pointer px-4 py-2 rounded-xl"
+          >
+            <img :src="nav.icon" alt="" class="w-10 h-10 rounded-full" />
+            <h3 class="dark:text-white font-semibold">{{ nav.name }}</h3>
+          </li>
+          <li
+            @click="clickLoadMoreNavigation"
+            v-if="!loadMoreNavigation"
+            class="flex gap-3 w-full dark:text-slate-200 items-center dark:hover:bg-slate-600 cursor-pointer px-4 py-2 rounded-xl"
+          >
+            <ChevronDownIcon class="w-10  rounded-full p-1 bg-slate-500" />
+            <span class="font-semibold">Xem thêm</span>
+          </li>
+          <li
+            @click="clickLoadMoreNavigation"
+            v-else
+            class="flex gap-3 w-full dark:text-slate-200 items-center dark:hover:bg-slate-600 cursor-pointer px-4 py-2 rounded-xl"
+          >
+            <ChevronUpIcon class="w-10 rounded-full p-1 bg-slate-500" />
+            <span class="font-semibold">Ẩn bớt</span>
+          </li>
+        </ul>
+        <hr class="mx-4 my-2"/>
+        <ul class="">
+          <h2 class="mx-4 dark:text-slate-400 font-semibold text-lg">Lối tắt của bạn</h2>
+          <li
+            v-for="group in listGroups.slice(0, groupsShow)"
+            :key="group.icon"
+            class="flex gap-3 w-full items-center dark:hover:bg-slate-600 cursor-pointer px-4 py-2 rounded-xl"
+          >
+            <img :src="group.icon" alt="" class="w-10 h-10 rounded-full" />
+            <h3 class="dark:text-white font-semibold">{{ group.name }}</h3>
+          </li>
+          <li
+            @click="clickLoadMoreGroups"
+            v-if="!loadMoreListGroups"
+            class="flex gap-3 w-full dark:text-slate-200 items-center dark:hover:bg-slate-600 cursor-pointer px-4 py-2 rounded-xl"
+          >
+            <ChevronDownIcon class="w-10  rounded-full p-1 bg-slate-500" />
+            <span class="font-semibold">Xem thêm</span>
+          </li>
+          <li
+            @click="clickLoadMoreGroups"
+            v-else
+            class="flex gap-3 w-full dark:text-slate-200 items-center dark:hover:bg-slate-600 cursor-pointer px-4 py-2 rounded-xl"
+          >
+            <ChevronUpIcon class="w-10 rounded-full p-1 bg-slate-500" />
+            <span class="font-semibold">Ẩn bớt</span>
+          </li>
+        </ul>
+      </div>
+    </div>
+    <div class="mx-auto w-[70%] main-center col-span-4 space-y-4 py-6">
       <div
         class="p-4 bg-white border border-gray-200 dark:bg-slate-600 dark:border-slate-700 dark:text-neutral-200 rounded-lg"
       >
@@ -49,9 +120,14 @@ import Trends from "../components/Trends.vue";
 import ChatContainer from "../components/ChatContainer.vue";
 import StoriesContainer from "../components/StoriesContainer.vue";
 
+import { ChevronUpIcon, ChevronDownIcon } from "@heroicons/vue/24/solid";
+
 import PostForm from "../components/forms/PostForm.vue";
 import FeedItem from "../components/items/post/FeedItem.vue";
 import SkeletonLoadingPostVue from "../components/loadings/SkeletonLoadingPost.vue";
+import { useUserStore } from "../stores/user";
+import navigation from "../data/navigationBar";
+import listGroups from '../data/listGroups'
 
 export default {
   name: "FeedView",
@@ -63,6 +139,16 @@ export default {
     SkeletonLoadingPostVue,
     ChatContainer,
     StoriesContainer,
+    ChevronUpIcon,
+    ChevronDownIcon,
+  },
+
+  setup() {
+    const userStore = useUserStore();
+
+    return {
+      userStore,
+    };
   },
 
   data() {
@@ -73,6 +159,12 @@ export default {
       PostToShow: 5,
       loadMore: false,
       isLoading: false,
+      navigation: navigation,
+      listGroups: listGroups,
+      loadMoreNavigation: false,
+      loadMoreListGroups: false,
+      navigationsShow: 7,
+      groupsShow: 5,
     };
   },
 
@@ -120,6 +212,22 @@ export default {
         }
       } else {
         this.loadMore = false;
+      }
+    },
+    clickLoadMoreNavigation() {
+      this.loadMoreNavigation = !this.loadMoreNavigation;
+      if (this.loadMoreNavigation) {
+        this.navigationsShow = this.navigation.length;
+      } else {
+        this.navigationsShow = 7;
+      }
+    },
+    clickLoadMoreGroups() {
+      this.loadMoreListGroups = !this.loadMoreListGroups;
+      if (this.loadMoreListGroups) {
+        this.groupsShow = this.listGroups.length;
+      } else {
+        this.groupsShow = 5;
       }
     },
   },

@@ -1,6 +1,6 @@
 <template>
-  <div class="mr-5 p-4 bg-white border border-gray-200 dark:bg-slate-600 dark:border-slate-700 dark:text-neutral-200 rounded-lg">
-    <h3 class="mb-6 text-xl">Xu hướng</h3>
+  <div class="mx-2 p-4 bg-white border border-gray-200 dark:bg-slate-600 dark:border-slate-700 dark:text-neutral-200 rounded-lg">
+    <h3 class="mb-6 xl:text-xl text-center">Xu hướng</h3>
     <SkeletionLoadingChatBox v-if="isLoading"/>
     <div class="space-y-4" v-else>
       <div
@@ -16,7 +16,7 @@
           </p>
         </div>
         <RouterLink :to="{ name: 'trendview', params: { id: trend.hashtag } }"
-          ><button type="button" class="btn btn-sm">Khám phá</button></RouterLink
+          ><button type="button" class="btn lg:py-1 lg:px-2 xl:py-2 xl:px-4">Khám phá</button></RouterLink
         >
       </div>
     </div>

@@ -2,16 +2,16 @@
   <div class="relative">
     <nav
       v-if="path !== '/stories'"
-      class="py-10 px-8 border-b border-gray-200 bg-gray-100 dark:bg-slate-700 dark:border-slate-500 dark:text-neutral-200 sticky w-full z-10 top-0"
+      class="xl:py-10 xl:px-8 p-4 border-b border-gray-200 bg-gray-100 dark:bg-slate-700 dark:border-slate-500 dark:text-neutral-200 sticky w-full z-10 top-0"
     >
       <div class="max-w-7xl mx-auto">
-        <div class="flex items-center justify-between">
-          <div class="menu-left lg:block hidden">
+        <div class="flex items-center sm:justify-between justify-center">
+          <div class="menu-left sm:block hidden">
             <a href="/" class="text-xl">SN</a>
           </div>
 
           <div
-            class="menu-center flex space-x-12"
+            class="menu-center flex sm:space-x-12 xs:space-x-5"
             v-if="userStore.user.isAuthenticated"
           >
             <RouterLink to="/" class="group">

@@ -1,7 +1,7 @@
 <template>
-  <div class="grid grid-cols-6 gap-4 min-h-screen" id="feed-frame">
-    <div class="col-span-1">
-      <div class="overflow-y-scroll h-[800px] sticky top-[16%] z-10 scrollbar-corner-slate-200 scrollbar-none hover:scrollbar-thin scrollbar-thumb-slate-400 scrollbar-track-slate-800">
+  <div class="grid lg:grid-cols-8 xs:grid-cols-3 gap-4 min-h-screen" id="feed-frame">
+    <div class="col-span-2 lg:block hidden">
+      <div class="overflow-y-scroll h-[800px] sticky xl:top-[16%] md:top-[10%] z-10 scrollbar-corner-slate-200 scrollbar-none hover:scrollbar-thin scrollbar-thumb-slate-400 scrollbar-track-slate-800">
         <ul
           class="w-full"
         >
@@ -22,7 +22,7 @@
             :key="nav.icon"
             class="flex gap-3 w-full items-center dark:hover:bg-slate-600 cursor-pointer px-4 py-2 rounded-xl"
           >
-            <img :src="nav.icon" alt="" class="w-10 h-10 rounded-full" />
+            <img :src="nav.icon" alt="" class="2xl:w-10 2xl:h-10 w-8 h-8 rounded-full" />
             <h3 class="dark:text-white font-semibold">{{ nav.name }}</h3>
           </li>
           <li
@@ -50,7 +50,7 @@
             :key="group.icon"
             class="flex gap-3 w-full items-center dark:hover:bg-slate-600 cursor-pointer px-4 py-2 rounded-xl"
           >
-            <img :src="group.icon" alt="" class="w-10 h-10 rounded-full" />
+            <img :src="group.icon" alt="" class="2xl:w-10 2xl:h-10 w-8 h-8 rounded-full" />
             <h3 class="dark:text-white font-semibold">{{ group.name }}</h3>
           </li>
           <li
@@ -72,7 +72,7 @@
         </ul>
       </div>
     </div>
-    <div class="mx-auto w-[70%] main-center col-span-4 space-y-4 py-6">
+    <div class="lg:mx-auto sm:ml-5 mx-5 main-center lg:col-span-4 sm:col-span-2 col-span-3 space-y-4 py-6">
       <div
         class="p-4 bg-white border border-gray-200 dark:bg-slate-600 dark:border-slate-700 dark:text-neutral-200 rounded-lg"
       >
@@ -103,7 +103,7 @@
       </div>
     </div>
     <div
-      class="main-right col-span-1 space-y-4 sticky top-[16%] h-[700px] z-10"
+      class="main-right lg:col-span-2 2xl:w-[70%] sm:col-span-1 sm:block xs:hidden space-y-4 sticky xl:top-[16%] sm:top-[10%] h-[800px] z-10 w-full"
     >
       <PeopleYouMayKnow />
       <Trends />

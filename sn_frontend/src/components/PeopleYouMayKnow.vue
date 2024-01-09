@@ -1,6 +1,6 @@
 <template>
-  <div class="mr-5 max-h-[200px] p-4 bg-white border border-gray-200 dark:bg-slate-600 dark:border-slate-700 dark:text-neutral-200 rounded-lg overflow-y-auto">
-    <h3 class="mb-6 text-xl">Người bạn có thể biết</h3>
+  <div class="mx-2 max-h-[200px] p-4 bg-white border border-gray-200 dark:bg-slate-600 dark:border-slate-700 dark:text-neutral-200 rounded-lg overflow-y-auto">
+    <h3 class="mb-6 xl:text-xl text-center">Người bạn có thể biết</h3>
     <SkeletionLoadingChatBox v-if="isLoading"/>
     <div class="space-y-4" v-else>
       <div

@@ -4,7 +4,7 @@
       <div class="flex flex-row items-center gap-3">
         <img
           :src="userStore.user.avatar"
-          class="rounded-full w-12 h-12"
+          class="rounded-full w-12 h-12 xs:hidden sm:block"
           alt="avatar"
         />
         <Popover v-slot="{ open }" class="relative">
@@ -12,9 +12,15 @@
             :class="open ? 'text-white' : 'text-white/90'"
             class="group inline-flex items-center rounded-md px-3 py-2 text-base font-medium hover:text-white focus:outline-none focus-visible:ring-2 focus-visible:ring-white/75"
           >
-            <span class="text-slate-700 dark:text-neutral-200">{{
-              userStore.user.name
-            }}</span>
+            <span
+              class="text-slate-700 dark:text-neutral-200 xs:hidden sm:block"
+              >{{ userStore.user.name }}</span
+            >
+            <img
+              :src="userStore.user.avatar"
+              class="rounded-full w-8 h-8 sm:hidden xs:block"
+              alt="avatar"
+            />
             <ChevronDownIcon
               :class="
                 open
@@ -79,11 +85,7 @@
 
                         <span
                           aria-hidden="true"
-                          :class="
-                            isDark
-                              ? 'translate-x-0'
-                              : 'translate-x-6'
-                          "
+                          :class="isDark ? 'translate-x-0' : 'translate-x-6'"
                           class="absolute top-0 left-[2px] z-10 pointer-events-none inline-block h-[20px] w-[20px] transform rounded-full bg-white shadow-lg ring-0 transition duration-200 ease-in-out"
                         />
                       </Switch>

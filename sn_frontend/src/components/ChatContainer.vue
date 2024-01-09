@@ -1,8 +1,8 @@
 <template>
   <div
-    class="mr-5 scrollbar-corner-slate-200 scrollbar-none hover:scrollbar-thin scrollbar-thumb-slate-400 scrollbar-track-slate-800 min-h-[400px] bg-white border border-gray-200 dark:bg-slate-600 dark:border-slate-700 dark:text-neutral-200 rounded-lg overflow-y-scroll"
+    class="mx-2 scrollbar-corner-slate-200 scrollbar-none hover:scrollbar-thin scrollbar-thumb-slate-400 scrollbar-track-slate-800 min-h-[400px] bg-white border border-gray-200 dark:bg-slate-600 dark:border-slate-700 dark:text-neutral-200 rounded-lg overflow-y-scroll"
   >
-    <h3 class="text-xl p-4">Người liên hệ</h3>
+    <h3 class="xl:text-xl p-4 text-center">Người liên hệ</h3>
     <SkeletionLoadingChatBoxVue v-if="isLoading" />
     <div class="flex flex-col" v-else>
       <div v-for="friend in friends" :key="friend.id">
@@ -19,13 +19,13 @@
                   class="w-3 h-3 bg-emerald-400 shadow-md absolute top-0 right-0 ring-4 dark:ring-slate-600 rounded-full"
                 ></span>
               </div>
-              <span class="font-semibold">{{ friend.name }}</span>
+              <span class="font-semibold lg:text-sm sm:text-base">{{ friend.name }}</span>
             </div>
           </div>
         </div>
       </div>
     </div>
-    <h3 class="text-xl p-4">Đoạn chat nhóm</h3>
+    <h3 class="xl:text-xl p-4 text-center">Đoạn chat nhóm</h3>
     <div
       v-for="groupConversation in groupConversations"
       v-bind:key="groupConversation.id"

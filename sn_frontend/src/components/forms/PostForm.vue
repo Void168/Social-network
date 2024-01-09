@@ -19,11 +19,11 @@
         />
         <LockClosedIcon class="w-6 h-6" v-else />
         <Listbox v-model="selectedPrivacy" class="w-[20%]">
-          <div class="relative mt-1 flex justify-end w-2/12">
+          <div class="relative mt-1 flex justify-end min-w-max">
             <ListboxButton
               class="relative flex justify-center w-full cursor-default rounded-lg font-semibold bg-gray-200 dark:bg-slate-800 dark:border-slate-700 dark:text-neutral-200 py-2 pl-3 pr-10 text-left shadow-md focus:outline-none focus-visible:border-indigo-500 focus-visible:ring-2 focus-visible:ring-white/75 focus-visible:ring-offset-2 focus-visible:ring-offset-orange-300 sm:text-sm"
             >
-              <span class="block truncate">{{ selectedPrivacy.name }}</span>
+              <span class="block">{{ selectedPrivacy.name }}</span>
               <span
                 class="pointer-events-none absolute inset-y-0 right-0 flex items-center pr-2"
               >
@@ -83,7 +83,7 @@
       <div
         id="preview"
         v-if="urlPost"
-        class="flex relative justify-center items-center w-full p-4 border-[1px] rounded-lg"
+        class="flex relative justify-center items-center w-full p-4 border-[1px] border-slate-400 rounded-lg my-2"
       >
         <img :src="urlPost" class="w-full rounded-lg" />
         <span class="absolute top-5 right-5 cursor-pointer" @click="removeImage"

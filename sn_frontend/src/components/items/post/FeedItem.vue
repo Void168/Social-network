@@ -4,7 +4,7 @@
       <div class="flex items-center space-x-6 p-4">
         <img :src="post.created_by.get_avatar" class="w-12 h-12 rounded-full" />
 
-        <div class="flex gap-1 items-center">
+        <div class="flex gap-1 items-center flex-wrap">
           <strong>
             <RouterLink
               :to="{ name: 'profile', params: { id: post.created_by.id } }"
@@ -21,12 +21,29 @@
             </strong>
           </div>
 
-          <span v-if="post.is_avatar_post === true"
+          <span v-if="post.is_avatar_post === true" class="sm:text-base xs:text-sm"
             >đã thay đổi ảnh đại diện</span
           >
+          <div class="md:hidden items-center gap-2 flex">
+            <GlobeAsiaAustraliaIcon
+              class="w-5 h-5"
+              v-if="post.is_private === false && post.only_me === false"
+            />
+            <UserGroupIcon
+              class="w-5 h-5"
+              v-else-if="post.is_private === true && post.only_me === false"
+            />
+            <LockClosedIcon
+              class="w-5 h-5"
+              v-else-if="post.is_private === true && post.only_me === true"
+            />
+            <p class="text-gray-600 dark:text-neutral-200 md:hidden sm:text-base xs:text-sm">
+              {{ post.created_at_formatted }} trước
+            </p>
+          </div>
         </div>
       </div>
-      <div class="p-4 flex items-center gap-2">
+      <div class="p-4 md:flex items-center gap-2 hidden">
         <GlobeAsiaAustraliaIcon
           class="w-5 h-5"
           v-if="post.is_private === false && post.only_me === false"
@@ -39,7 +56,7 @@
           class="w-5 h-5"
           v-else-if="post.is_private === true && post.only_me === true"
         />
-        <p class="text-gray-600 dark:text-neutral-200">
+        <p class="text-gray-600 dark:text-neutral-200 md:block hidden">
           {{ post.created_at_formatted }} trước
         </p>
       </div>
@@ -47,16 +64,23 @@
 
     <p class="px-4 text-lg">{{ post.body }}</p>
 
-    <div v-if="post.attachments?.length && post.is_avatar_post" class="mt-4 flex justify-center relative h-[400px]">
+    <div
+      v-if="post.attachments?.length && post.is_avatar_post"
+      class="mt-4 flex justify-center relative sm:h-[400px] xm:h-[350px] xs:h-[300px]"
+    >
       <div class="w-full">
-        <img :src="post.created_by.get_cover_image" alt="cover_image" class="max-h-[300px] w-full rounded-none">
+        <img
+          :src="post.created_by.get_cover_image"
+          alt="cover_image"
+          class="max-h-[300px] w-full rounded-none"
+        />
       </div>
 
       <img
         v-for="image in post.attachments"
         v-bind:key="image.id"
         :src="image.get_image"
-        class="absolute top-5 mb-4 rounded-full w-96 h-96 shadow-md ring-8 ring-white dark:ring-slate-700"
+        class="absolute top-5 mb-4 rounded-full md:w-96 md:h-96 xm:w-80 xm:h-80 xs:w-64 xs:h-64 shadow-md ring-8 ring-white dark:ring-slate-700"
         alt="avatar"
       />
     </div>
@@ -111,12 +135,12 @@
         </div>
       </div>
       <div
-        class="absolute bg-emerald-400 right-4 shadow-lg rounded-lg ease-in duration-300"
+        class="absolute  right-4 shadow-lg rounded-lg ease-in duration-300"
       >
         <Menu as="div" class="relative inline-block text-left">
           <div>
             <MenuButton
-              class="btn inline-flex w-full justify-center rounded-md bg-white px-3 py-2 text-gray-900 dark:bg-slate-600 dark:border-slate-700 dark:text-neutral-200 ring-1 ring-inset ring-gray-300 hover:bg-gray-50 hover:text-gray-900"
+              class="inline-flex w-full justify-center rounded-md bg-white md:px-3 md:py-2 px-2 py-1 text-gray-900 dark:bg-slate-600 dark:border-slate-700 dark:text-neutral-200 ring-1 ring-inset ring-gray-300 hover:bg-gray-50 hover:text-gray-900"
             >
               <svg
                 xmlns="http://www.w3.org/2000/svg"

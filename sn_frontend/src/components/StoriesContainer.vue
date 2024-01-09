@@ -3,7 +3,7 @@
     <Swiper :slides-per-view="5" :space-between="20">
       <SwiperSlide
         ><div
-          class="relative cursor-pointer bg-slate-700 rounded-lg h-[213px]"
+          class="relative cursor-pointer bg-slate-700 rounded-lg h-[213px] w-40"
           @click="openModal"
         >
           <img
@@ -34,7 +34,7 @@
             class="absolute top-4 left-4 w-10 h-10 rounded-full ring-4 ring-emerald-300 z-20"
           />
           <div
-            class="relative h-[213px] flex items-center justify-center overflow-hidden shadow-sm rounded-lg cursor-pointer"
+            class="relative h-[213px] w-48 flex items-center justify-center overflow-hidden shadow-sm rounded-lg cursor-pointer"
           >
             <div
               alt="story-image"

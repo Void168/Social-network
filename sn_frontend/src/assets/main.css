@@ -6,7 +6,7 @@
 
 @layer components {
   .btn {
-    @apply py-2 px-4 text-black bg-emerald-400 font-semibold rounded-lg transition-colors hover:bg-emerald-600 hover:text-white;
+    @apply py-2 px-4 text-black sm:text-xs lg:text-sm bg-emerald-400 font-semibold rounded-lg transition-colors hover:bg-emerald-600 hover:text-white;
   }
   .btn-sm {
     @apply text-sm py-2 px-4;

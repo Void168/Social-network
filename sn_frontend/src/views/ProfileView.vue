@@ -1,11 +1,11 @@
 <template>
-  <div class="max-w-7xl grid grid-cols-3 mx-auto gap-4">
-    <CoverImage class="col-span-3" v-bind:user="user" />
+  <div class="max-w-7xl grid grid-cols-3 xl:mx-auto md:mx-8 mx-2 gap-4">
+    <CoverImage class="col-span-3 md:max-h-[400px] sm:max-h-[300px] xs:max-h-[200px] lg:max-h-max" v-bind:user="user" />
     <div class="col-span-3 grid grid-cols-3 gap-4 relative">
-      <div class="col-span-1"></div>
+      <div class="col-span-1 lg:block hidden"></div>
 
       <div
-        class="col-span-2 flex justify-between items-center px-4 py-2 gap-4 text-lg font-semibold dark:text-neutral-200"
+        class="lg:col-span-2 col-span-3 flex lg:justify-between justify-center items-center px-4 py-2 gap-4 lg:text-lg md:text-base xm:text-sm xs:text-xs font-semibold dark:text-neutral-200"
       >
         <div class="flex gap-4">
           <RouterLink :to="{ name: 'profile', params: { id: user.id } }"
@@ -24,7 +24,7 @@
             </RouterLink>
             <div class="flex gap-2" v-if="user.id === userStore.user.id">
               <span
-                class="bg-rose-400 h-6 w-6 text-sm text-center rounded-full font-semibold flex justify-center items-center"
+                class="bg-rose-400 md:h-6 md:w-6 xs:h-4 xs:w-4 md:text-sm xs:text-xs text-center rounded-full font-semibold flex justify-center items-center"
                 >{{ friendshipRequest.length }}
               </span>
             </div>
@@ -66,9 +66,10 @@
           </div>
           <button
             @click="openContactModal"
-            class="dark:text-neutral-200 bg-slate-200 dark:bg-slate-800 px-4 py-2 shadow-md rounded-md hover:bg-slate-300 dark:hover:bg-slate-900 transition"
+            class="dark:text-neutral-200 bg-slate-200 dark:bg-slate-800 md:px-4 md:py-2 p-1 shadow-md rounded-md hover:bg-slate-300 dark:hover:bg-slate-900 transition"
           >
-            Thông tin liên lạc
+            <span class="md:block hidden">Thông tin liên lạc</span>
+            <PencilSquareIcon class="w-6 md:hidden"/>
           </button>
           <ContactModal
             :show="contactIsOpen"
@@ -77,10 +78,10 @@
         </div>
       </div>
       <hr class="col-span-3" />
-      <div class="main-left sticky top-0 lg:col-span-1 col-span-4">
+      <div class="main-left top-0 lg:col-span-1 col-span-4">
         <div class="h-20 frame"></div>
         <div
-          class="px-4 pb-4 bg-white dark:bg-slate-600 dark:border-slate-700 dark:text-neutral-200 flex flex-col justify-center items-center rounded-lg shadow-md overflow-hidden"
+          class="px-4 pb-4 bg-white dark:bg-slate-600 dark:border-slate-700 dark:text-neutral-200 flex flex-col justify-center items-center rounded-lg shadow-md overflow-hidden lg:w-full w-[90%] mx-auto"
         >
           <div
             class="icon relative w-[200px] h-[100px] bg-gray-100 dark:bg-slate-700 rounded-bl-[100px] rounded-br-[100px] before:content-[''] after:content-[''] before:absolute after:absolute before:top-0 after:top-0 before:left-[-50px] before:w-[55px] before:h-[35px] before:bg-transparent before:rounded-tr-[50px] before:shadow-[20px_-20px_0_20px_rgba(243,244,246,1)] after:right-[-50px] after:w-[55px] after:h-[35px] after:bg-transparent after:rounded-tl-[50px] after:shadow-[-20px_-20px_0_20px_rgba(243,244,246,1)] before:dark:shadow-[20px_-20px_0_20px_rgba(51,65,85,1)] after:dark:shadow-[-20px_-20px_0_20px_rgba(51,65,85,1)]"
@@ -97,7 +98,7 @@
           <img
             :src="user.get_avatar"
             alt=""
-            class="mb-6 rounded-full w-44 h-44 shadow-xl absolute top-0 z-5"
+            class="mb-6 rounded-full w-44 h-44 shadow-xl absolute top-[90px]"
           />
           <AvatarModal
             :show="avatarIsOpen"
@@ -162,8 +163,8 @@
               </li>
             </ul>
           </div>
-          <RouterLink v-if="user.id === userStore.user.id" to="/profile/edit">
-            <button class="mt-4 btn">Chỉnh sửa chi tiết</button>
+          <RouterLink v-if="user.id === userStore.user.id" to="/profile/edit" class="md:max-w-max xs:w-full">
+            <button class="mt-4 btn w-full">Chỉnh sửa chi tiết</button>
           </RouterLink>
           <button
             v-if="userStore.user.id !== user.id"
@@ -320,6 +321,7 @@ import {
   MapPinIcon,
   HomeIcon,
   CameraIcon,
+  PencilSquareIcon
 } from "@heroicons/vue/24/solid";
 
 import { RouterLink } from "vue-router";
@@ -358,6 +360,7 @@ export default {
     UserGroupIcon,
     HomeIcon,
     CameraIcon,
+    PencilSquareIcon,
     ContactModal,
     AvatarModal,
   },

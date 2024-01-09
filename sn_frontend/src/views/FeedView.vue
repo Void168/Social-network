@@ -103,7 +103,7 @@
       </div>
     </div>
     <div
-      class="main-right lg:col-span-2 2xl:w-[70%] sm:col-span-1 sm:block xs:hidden space-y-4 sticky xl:top-[16%] sm:top-[10%] h-[800px] z-10 w-full"
+      class="main-right ml-auto lg:col-span-2 2xl:w-[80%] sm:col-span-1 sm:block xs:hidden space-y-4 sticky xl:top-[16%] sm:top-[10%] h-[800px] w-full"
     >
       <PeopleYouMayKnow />
       <Trends />

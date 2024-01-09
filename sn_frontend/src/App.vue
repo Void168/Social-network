@@ -2,7 +2,7 @@
   <div class="relative">
     <nav
       v-if="path !== '/stories'"
-      class="xl:py-10 xl:px-8 p-4 border-b border-gray-200 bg-gray-100 dark:bg-slate-700 dark:border-slate-500 dark:text-neutral-200 sticky w-full z-10 top-0"
+      class="xl:py-10 xl:px-8 p-4 border-b border-gray-200 bg-gray-100 dark:bg-slate-700 dark:border-slate-500 dark:text-neutral-200 sticky w-full z-50 top-0"
     >
       <div class="max-w-7xl mx-auto">
         <div class="flex items-center sm:justify-between justify-center">

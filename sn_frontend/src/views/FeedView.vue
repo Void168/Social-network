@@ -1,10 +1,17 @@
 <template>
-  <div class="grid lg:grid-cols-8 xs:grid-cols-3 gap-4 min-h-screen" id="feed-frame">
+  <div
+    class="grid lg:grid-cols-8 xs:grid-cols-3 gap-4 min-h-screen"
+    id="feed-frame"
+  >
     <div class="col-span-2 lg:block hidden">
-      <div class="overflow-y-scroll h-[800px] sticky xl:top-[16%] md:top-[10%] z-10 scrollbar-corner-slate-200 scrollbar-none hover:scrollbar-thin scrollbar-thumb-slate-400 scrollbar-track-slate-800">
-        <ul
-          class="w-full"
-        >
+      <div
+        class="overflow-y-scroll sticky z-10 scrollbar-corner-slate-200 scrollbar-none hover:scrollbar-thin scrollbar-thumb-slate-400 scrollbar-track-slate-800"
+        :style="{
+          height: `${toastStore.height}px`,
+          top: `${toastStore.navbarHeight}px`,
+        }"
+      >
+        <ul class="w-full">
           <li
             class="flex gap-3 w-full items-center dark:hover:bg-slate-600 cursor-pointer px-4 py-2 rounded-xl"
           >
@@ -22,7 +29,11 @@
             :key="nav.icon"
             class="flex gap-3 w-full items-center dark:hover:bg-slate-600 cursor-pointer px-4 py-2 rounded-xl"
           >
-            <img :src="nav.icon" alt="" class="2xl:w-10 2xl:h-10 w-8 h-8 rounded-full" />
+            <img
+              :src="nav.icon"
+              alt=""
+              class="2xl:w-10 2xl:h-10 w-8 h-8 rounded-full"
+            />
             <h3 class="dark:text-white font-semibold">{{ nav.name }}</h3>
           </li>
           <li
@@ -30,7 +41,7 @@
             v-if="!loadMoreNavigation"
             class="flex gap-3 w-full dark:text-slate-200 items-center dark:hover:bg-slate-600 cursor-pointer px-4 py-2 rounded-xl"
           >
-            <ChevronDownIcon class="w-10  rounded-full p-1 bg-slate-500" />
+            <ChevronDownIcon class="w-10 rounded-full p-1 bg-slate-500" />
             <span class="font-semibold">Xem thêm</span>
           </li>
           <li
@@ -42,15 +53,21 @@
             <span class="font-semibold">Ẩn bớt</span>
           </li>
         </ul>
-        <hr class="mx-4 my-2"/>
+        <hr class="mx-4 my-2" />
         <ul class="">
-          <h2 class="mx-4 dark:text-slate-400 font-semibold text-lg">Lối tắt của bạn</h2>
+          <h2 class="mx-4 dark:text-slate-400 font-semibold text-lg">
+            Lối tắt của bạn
+          </h2>
           <li
             v-for="group in listGroups.slice(0, groupsShow)"
             :key="group.icon"
             class="flex gap-3 w-full items-center dark:hover:bg-slate-600 cursor-pointer px-4 py-2 rounded-xl"
           >
-            <img :src="group.icon" alt="" class="2xl:w-10 2xl:h-10 w-8 h-8 rounded-full" />
+            <img
+              :src="group.icon"
+              alt=""
+              class="2xl:w-10 2xl:h-10 w-8 h-8 rounded-full"
+            />
             <h3 class="dark:text-white font-semibold">{{ group.name }}</h3>
           </li>
           <li
@@ -58,7 +75,7 @@
             v-if="!loadMoreListGroups"
             class="flex gap-3 w-full dark:text-slate-200 items-center dark:hover:bg-slate-600 cursor-pointer px-4 py-2 rounded-xl"
           >
-            <ChevronDownIcon class="w-10  rounded-full p-1 bg-slate-500" />
+            <ChevronDownIcon class="w-10 rounded-full p-1 bg-slate-500" />
             <span class="font-semibold">Xem thêm</span>
           </li>
           <li
@@ -72,7 +89,9 @@
         </ul>
       </div>
     </div>
-    <div class="lg:mx-auto sm:ml-5 mx-5 main-center lg:col-span-4 sm:col-span-2 col-span-3 space-y-4 py-6">
+    <div
+      class="sm:ml-5 mx-5 main-center lg:col-span-4 sm:col-span-2 col-span-3 space-y-4 py-6"
+    >
       <div
         class="p-4 bg-white border border-gray-200 dark:bg-slate-600 dark:border-slate-700 dark:text-neutral-200 rounded-lg"
       >
@@ -103,7 +122,11 @@
       </div>
     </div>
     <div
-      class="main-right ml-auto lg:col-span-2 2xl:w-[80%] sm:col-span-1 sm:block xs:hidden space-y-4 sticky xl:top-[16%] sm:top-[10%] h-[800px] w-full"
+      :style="{
+        height: `${toastStore.height}px`,
+        top: `${toastStore.navbarHeight}px`,
+      }"
+      class="main-right ml-auto lg:col-span-2 2xl:w-[80%] sm:col-span-1 sm:block xs:hidden space-y-4 sticky w-full"
     >
       <PeopleYouMayKnow />
       <Trends />
@@ -126,8 +149,9 @@ import PostForm from "../components/forms/PostForm.vue";
 import FeedItem from "../components/items/post/FeedItem.vue";
 import SkeletonLoadingPostVue from "../components/loadings/SkeletonLoadingPost.vue";
 import { useUserStore } from "../stores/user";
+import { useToastStore } from "../stores/toast";
 import navigation from "../data/navigationBar";
-import listGroups from '../data/listGroups'
+import listGroups from "../data/listGroups";
 
 export default {
   name: "FeedView",
@@ -145,9 +169,11 @@ export default {
 
   setup() {
     const userStore = useUserStore();
+    const toastStore = useToastStore();
 
     return {
       userStore,
+      toastStore,
     };
   },
 

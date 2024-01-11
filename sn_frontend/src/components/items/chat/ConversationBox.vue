@@ -78,15 +78,15 @@
             @deleteConversation="deleteConversation"
           />
         </div>
-        <div class="flex justify-between items-center">
+        <div class="flex sm:justify-between justify-center items-center">
           <div class="flex justify-center items-center gap-3">
             <img
               :src="friend?.get_avatar"
               alt="avatar"
-              class="w-14 h-14 rounded-full shadow-lg"
+              class="xm:w-14 xm:h-14 h-10 w-10 rounded-full shadow-lg"
             />
             <p
-              class="text-xs font-bold dark:text-neutral-300"
+              class="text-xs font-bold dark:text-neutral-300 sm:block hidden"
               v-if="
                 lastMessage?.seen_by
                   .map((obj) => obj.created_by.email)
@@ -97,7 +97,7 @@
             </p>
             <p
               v-else-if="friend?.id !== userStore.user.id"
-              class="text-sm dark:text-neutral-300 font-semibold"
+              class="text-sm dark:text-neutral-300 font-semibold sm:block hidden"
             >
               {{ friend?.name }}
             </p>
@@ -105,12 +105,12 @@
 
           <span
             v-if="conversation?.messages?.length"
-            class="text-xs text-gray-600 dark:text-neutral-300"
+            class="text-xs text-gray-600 dark:text-neutral-300 sm:block hidden"
             >{{ lastMessage.created_at_formatted }} trước</span
           >
         </div>
 
-        <div class="text-sm">
+        <div class="text-sm sm:block hidden">
           <div
             v-if="conversation?.messages?.length"
             class="flex gap-1 justify-between"

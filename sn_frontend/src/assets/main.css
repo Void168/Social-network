@@ -17,7 +17,7 @@
   .main-center,
   .main-right > div,
   .main-under {
-    @apply shadow-md rounded-lg;
+    @apply shadow-md;
   }
 
   textarea {

@@ -1,5 +1,5 @@
 <template>
-  <div class="mx-2 p-4 bg-white border border-gray-200 dark:bg-slate-600 dark:border-slate-700 dark:text-neutral-200 rounded-lg">
+  <div class="p-4 bg-white border border-gray-200 dark:bg-slate-600 dark:border-slate-700 dark:text-neutral-200 rounded-l-lg">
     <h3 class="mb-6 xl:text-xl text-center">Xu hướng</h3>
     <SkeletionLoadingChatBox v-if="isLoading"/>
     <div class="space-y-4" v-else>

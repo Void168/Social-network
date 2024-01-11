@@ -1,6 +1,7 @@
 <template>
   <div class="relative">
     <nav
+      ref="navbar"
       v-if="path !== '/stories'"
       class="xl:py-10 xl:px-8 p-4 border-b border-gray-200 bg-gray-100 dark:bg-slate-700 dark:border-slate-500 dark:text-neutral-200 sticky w-full z-50 top-0"
     >
@@ -9,7 +10,6 @@
           <div class="menu-left sm:block hidden">
             <a href="/" class="text-xl">SN</a>
           </div>
-
           <div
             class="menu-center flex sm:space-x-12 xs:space-x-5"
             v-if="userStore.user.isAuthenticated"
@@ -122,6 +122,7 @@ import { useNotificationStore } from "./stores/notification";
 import { useUnseenConversationsStore } from "./stores/conversations";
 import { useConnectionStore } from "./stores/connection";
 import { useCurrentStoryStore } from "./stores/currentStory";
+import { useToastStore } from "./stores/toast";
 import { socket } from "./socket";
 import { useRoute } from "vue-router";
 import { computed } from "vue";
@@ -136,8 +137,9 @@ import ProfileDropdown from "./components/dropdown/ProfileDropdown.vue";
 export default {
   setup() {
     const connectionStore = useConnectionStore();
-    const currentStoryStore = useCurrentStoryStore()
+    const currentStoryStore = useCurrentStoryStore();
     const userStore = useUserStore();
+    const toastStore = useToastStore();
     const userNotificationStore = useNotificationStore();
     const userUnseenConversationsStore = useUnseenConversationsStore();
     const isDark = useDark();
@@ -151,6 +153,7 @@ export default {
       connectionStore,
       currentStoryStore,
       userStore,
+      toastStore,
       userNotificationStore,
       userUnseenConversationsStore,
       toggleDark,
@@ -160,18 +163,17 @@ export default {
     };
   },
 
+  data(){
+    return {
+      height: document.documentElement.clientHeight
+    }
+  },
+
   components: {
     toast: Toast,
     RouterLink,
     NavBarDropdownVue,
     ProfileDropdown,
-  },
-
-  data() {
-    return {
-      navbarHeight: null,
-      screenHeight: null,
-    };
   },
 
   beforeCreate() {
@@ -186,7 +188,24 @@ export default {
     } else {
       axios.defaults.headers.common["Authorization"] = "";
     }
+  },
 
+  mounted() {
+    window.addEventListener('resize', this.getDimensions);
+  },
+
+  unmounted() {
+    window.removeEventListener('resize', this.getDimensions);
+  },
+
+  methods: {
+    getDimensions() {
+      this.height = document.documentElement.clientHeight;
+      this.toastStore.setHeight(
+        this.height - this.$refs.navbar.clientHeight - 1
+      );
+      this.toastStore.setNavbarHeight(this.$refs.navbar.clientHeight + 1);
+    }
   },
 };
 </script>

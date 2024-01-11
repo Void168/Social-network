@@ -7,7 +7,9 @@ export const useToastStore = defineStore({
         ms: 0,
         message: '',
         classes: '',
-        isVisible: false
+        isVisible: false,
+        height: null,
+        navbarHeight: null,
     }),
 
     actions: {
@@ -28,6 +30,13 @@ export const useToastStore = defineStore({
             setTimeout(() => {
                 this.isVisible = false
             }, this.ms)
+        },
+        setHeight(data){
+            this.height = data
+        },
+        setNavbarHeight(data){
+            this.navbarHeight = data
+            console.log(this.navbarHeight)
         }
     }
 })

@@ -89,15 +89,15 @@
               v-else
               :src="groupConversation.get_avatar"
               alt="avatar-group"
-              class="w-14 h-14 rounded-full"
+              class="xm:w-14 xm:h-14 h-10 w-10 rounded-full"
             />
-            <p class="text-sm font-bold dark:text-neutral-300 w-full truncate">
+            <p class="text-sm font-bold dark:text-neutral-300 w-full truncate sm:block hidden">
               {{ groupConversation.group_name }}
             </p>
           </div>
         </div>
 
-        <div class="text-sm flex gap-2 items-center">
+        <div class="text-sm gap-2 items-center sm:flex hidden">
           <div
             v-if="groupConversation?.group_messages?.length"
             class="flex gap-1 justify-between items-center w-full"

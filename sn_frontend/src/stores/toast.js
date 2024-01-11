@@ -36,7 +36,6 @@ export const useToastStore = defineStore({
         },
         setNavbarHeight(data){
             this.navbarHeight = data
-            console.log(this.navbarHeight)
         }
     }
 })

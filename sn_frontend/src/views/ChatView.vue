@@ -4,7 +4,7 @@
       class="main-left xl:col-span-1 sm:col-span-2 xs:col-span-1 sticky bottom-0"
     >
       <div
-        :style="{ minHeight: `${toastStore.height}px` }"
+        :style="{ height: `${toastStore.height}px` }"
         class="bg-white border overflow-y-scroll scrollbar-corner-slate-200 scrollbar-thin scrollbar-thumb-slate-400 scrollbar-track-slate-800 border-b border-gray-200 dark:bg-slate-600 dark:border-slate-700 dark:text-neutral-200 rounded-lg px-2"
       >
         <h3 class="sm:text-xl p-3 xm:block hidden sm:text-left text-center">

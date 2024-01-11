@@ -1,5 +1,5 @@
 <template>
-  <div class="grid sm:grid-cols-4 grid-cols-3 gap-4 max-h-screen">
+  <div class="grid sm:grid-cols-4 grid-cols-3 gap-4">
     <div
       class="main-left xl:col-span-1 sm:col-span-2 xs:col-span-1 sticky bottom-0"
     >

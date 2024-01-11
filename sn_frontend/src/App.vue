@@ -192,6 +192,7 @@ export default {
 
   mounted() {
     window.addEventListener('resize', this.getDimensions);
+    this.getDimensions()
   },
 
   unmounted() {

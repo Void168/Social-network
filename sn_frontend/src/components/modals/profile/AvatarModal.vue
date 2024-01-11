@@ -1,6 +1,6 @@
 <template>
   <TransitionRoot @click="$emit('closeAvatarModal')" appear as="template">
-    <Dialog as="div" class="relative z-10">
+    <Dialog as="div" class="relative z-50">
       <TransitionChild
         as="template"
         enter="duration-300 ease-out"
@@ -13,8 +13,8 @@
         <div class="fixed inset-0 bg-black bg-opacity-25" />
       </TransitionChild>
 
-      <div class="fixed inset-0 top-36 overflow-y-auto">
-        <div class="flex min-h-[80%] justify-center p-4">
+      <div class="fixed inset-0 top-36 overflow-y-auto ">
+        <div class="flex max-h-[90%] justify-center p-4">
           <TransitionChild
             as="template"
             enter="duration-300 ease-out"
@@ -25,7 +25,7 @@
             leave-to="opacity-0 scale-95"
           >
             <DialogPanel
-              class="w-[50%] relative overflow-y-auto transform overflow-hidden rounded-2xl bg-white dark:bg-slate-700 dark:text-neutral-200 p-6 text-left align-middle shadow-xl transition-all"
+              class="lg:w-[50%] relative overflow-y-auto transform overflow-hidden scrollbar-corner-slate-200 hover:scrollbar-thin scrollbar-thumb-slate-400 scrollbar-track-slate-800 rounded-2xl bg-white dark:bg-slate-700 dark:text-neutral-200 p-6 text-left align-middle shadow-xl transition-all"
             >
               <DialogTitle
                 as="h3"
@@ -56,7 +56,7 @@
                 class="relative flex flex-col justify-center items-center my-4"
               >
                 <div
-                  class="h-96 w-96 border-4 border-dashed px-2 py-1 rounded-full"
+                  class="xm:h-96 xm:w-96 xs:h-72 xs:w-72 border-4 border-dashed px-2 py-1 rounded-full"
                 >
                   <div v-if="url" class="relative mt-1">
                     <img
@@ -107,7 +107,7 @@
                   </div>
                   <textarea
                     v-model="body"
-                    class="p-4 w-[50%] bg-gray-100 rounded-lg resize-none"
+                    class="p-4 lg:w-[50%] bg-gray-100 rounded-lg resize-none"
                     cols="30"
                     rows="3"
                     placeholder="Mô tả về ảnh đại diện..."

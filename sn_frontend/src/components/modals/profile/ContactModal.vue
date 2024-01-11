@@ -39,7 +39,7 @@
                 <p class="text-xl dark:text-gray-200 mb-2">Liên kết</p>
                 <hr />
                 <ul v-for="website in websites" v-bind:key="website.id">
-                  <li class="text-center my-2">{{ website.url }}</li>
+                  <li class="text-center my-2 break-all">{{ website.url }}</li>
                 </ul>
               </div>
               <div class="my-4">

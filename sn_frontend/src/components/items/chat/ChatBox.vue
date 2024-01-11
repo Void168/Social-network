@@ -1,10 +1,11 @@
 <template>
-  <div>
+  <div class="h-full">
     <div class="rounded-lg relative">
       <div>
         <div
-          class="p-4 flex justify-between items-center rounded-t-lg"
+          class="p-4 flex justify-between items-center"
           :class="[selectedTheme?.background, selectedTheme?.textColor]"
+          ref="header"
         >
           <div class="flex items-center gap-2">
             <img
@@ -14,15 +15,22 @@
             />
             <span class="font-bold">{{ receivedUser.name }}</span>
           </div>
-
-          <span class="font-semibold">Đang hoạt động</span>
+          <span class="font-semibold md:text-base xm:text-sm xs:text-xs"
+            >Đang hoạt động</span
+          >
         </div>
       </div>
+
       <div
         id="chatview-container"
-        class="overflow-y-scroll scrollbar-corner-slate-200 scrollbar-thin scrollbar-thumb-slate-400 scrollbar-track-slate-800 border border-gray-200 shadow-md dark:bg-slate-600 dark:border-slate-700 dark:text-neutral-200 h-[589px]"
+        class="overflow-y-scroll overflow-x-hidden scrollbar-corner-slate-200 scrollbar-thin scrollbar-thumb-slate-400 scrollbar-track-slate-800 border border-gray-200 shadow-md dark:bg-slate-600 dark:border-slate-700 dark:text-neutral-200"
+        :style="{
+          height: `${toastStore.height - formHeight - headerHeight - 2}px`,
+        }"
       >
-        <div class="flex flex-col flex-grow p-4 overflow-y-auto">
+        <div
+          class="flex flex-col flex-grow p-4 overflow-y-auto overflow-x-hidden"
+        >
           <div v-if="listMessages?.length > 0">
             <div
               v-for="message in listMessages"
@@ -47,7 +55,9 @@
                         selectedTheme.textColor,
                       ]"
                     >
-                      <span class="break-words block whitespace-normal">
+                      <span
+                        class="md:break-words block whitespace-normal break-all"
+                      >
                         {{ message.body }}
                       </span>
                     </p>
@@ -126,7 +136,7 @@
                     class="flex flex-col w-full space-x-3 items-start max-w-md ml-auto justify-end gap-2"
                   >
                     <p
-                      class="bg-gray-200 p-3 rounded-r-lg rounded-bl-lg dark:bg-slate-500 dark:border-slate-600 dark:text-neutral-200 max-w-[500px] text-sm font-semibold"
+                      class="bg-gray-200 p-3 rounded-r-lg rounded-bl-lg mt-1 dark:bg-slate-500 dark:border-slate-600 dark:text-neutral-200 max-w-[500px] text-sm font-semibold"
                       v-if="message?.created_by !== chats[0]?.users[0].name"
                     >
                       <span class="block break-words whitespace-normal">
@@ -189,6 +199,7 @@
       </div>
     </div>
     <div
+      ref="formInput"
       class="bg-white border border-gray-200 dark:bg-slate-600 dark:border-slate-700 dark:text-neutral-200 rounded-lg relative"
     >
       <form
@@ -196,7 +207,7 @@
         @keyup.enter="submitForm"
         class="flex items-center px-4"
       >
-        <div class="flex gap-1">
+        <div class="gap-1 xm:flex hidden">
           <PlusCircleIcon
             class="w-8 h-8 cursor-pointer rounded-full hover:bg-slate-300 dark:hover:bg-slate-700 transition p-1"
             :class="[selectedTheme?.iconColor]"
@@ -223,10 +234,44 @@
             :class="[selectedTheme?.iconColor]"
           />
         </div>
+        <div class="xm:hidden block relative">
+          <PlusIcon
+            @click="expandOptions"
+            class="w-8 p-1 rounded-full bg-slate-700 dark:hover:bg-slate-800"
+            :class="expand ? '-rotate-90 transition duration-100' : '-rotate-0 transition duration-100'"
+          />
+          <div class="flex flex-col absolute top-[-100px] bg-slate-800 rounded-2xl" v-if="expand">
+            <PlusCircleIcon
+              class="w-8 h-8 cursor-pointer rounded-full hover:bg-slate-300 dark:hover:bg-slate-700 transition p-1"
+              :class="[selectedTheme?.iconColor]"
+            />
+            <div class="relative cursor-pointer">
+              <label for="doc">
+                <PhotoIcon
+                  class="w-8 h-8 cursor-pointer rounded-full hover:bg-slate-300 dark:hover:bg-slate-700 transition p-1"
+                  :class="[selectedTheme?.iconColor]"
+                />
+
+                <input
+                  type="file"
+                  ref="file"
+                  id="doc"
+                  name="doc"
+                  hidden
+                  @change="onFileChange"
+                />
+              </label>
+            </div>
+            <GifIcon
+              class="w-8 h-8 cursor-pointer rounded-full hover:bg-slate-300 dark:hover:bg-slate-700 transition p-1"
+              :class="[selectedTheme?.iconColor]"
+            />
+          </div>
+        </div>
         <div class="p-4 relative w-full flex items-center">
           <textarea
             v-model="body"
-            class="p-4 w-full bg-gray-100 rounded-lg resize-none"
+            class="p-4 w-full bg-gray-100 rounded-lg resize-none truncate"
             name=""
             id=""
             cols="30"
@@ -243,7 +288,7 @@
                 leave-from-class="translate-y-0 opacity-100"
                 leave-to-class="translate-y-1 opacity-0"
                 ><PopoverPanel
-                  class="absolute z-10 bottom-10 right-0 shadow-2xl rounded-lg"
+                  class="absolute z-10 bottom-10 xm:right-0 xs:right-[-75px] shadow-2xl rounded-lg"
                   @click="Pick"
                 >
                   <emoji-picker></emoji-picker>
@@ -281,6 +326,7 @@ import Pusher from "pusher-js";
 import ConversationBox from "./ConversationBox.vue";
 import { useUserStore } from "../../../stores/user";
 import { useConnectionStore } from "../../../stores/connection";
+import { useToastStore } from "../../../stores/toast";
 import { RouterLink } from "vue-router";
 
 import { Popover, PopoverButton, PopoverPanel } from "@headlessui/vue";
@@ -292,6 +338,7 @@ import {
   PhotoIcon,
   GifIcon,
 } from "@heroicons/vue/24/outline";
+import { PlusIcon } from "@heroicons/vue/24/solid";
 
 import themes from "../../../data/themes";
 
@@ -302,9 +349,11 @@ export default (await import("vue")).defineComponent({
   setup() {
     const userStore = useUserStore();
     const connectionStore = useConnectionStore();
+    const toastStore = useToastStore();
     return {
       userStore,
       connectionStore,
+      toastStore,
     };
   },
 
@@ -316,7 +365,9 @@ export default (await import("vue")).defineComponent({
       isOpen: false,
       url: null,
       themes: themes,
-      // lastMessage: {},
+      formHeight: null,
+      headerHeight: null,
+      expand: false
     };
   },
   computed: {
@@ -346,8 +397,10 @@ export default (await import("vue")).defineComponent({
   mounted() {
     this.getMessages();
     this.getPusher();
+    this.formHeight = this.$refs.formInput.clientHeight;
+    this.headerHeight = this.$refs.header.clientHeight;
   },
-  updated(){
+  updated() {
     this.scrollToBottom();
   },
   methods: {
@@ -408,7 +461,7 @@ export default (await import("vue")).defineComponent({
           .catch((error) => {
             console.log(error);
           });
-      }, 1000)
+      }, 1000);
     },
 
     Pick() {
@@ -419,6 +472,10 @@ export default (await import("vue")).defineComponent({
 
           return this.body;
         });
+    },
+
+    expandOptions(){
+      this.expand = !this.expand
     },
 
     onFileChange(e) {
@@ -465,6 +522,7 @@ export default (await import("vue")).defineComponent({
     PhotoIcon,
     GifIcon,
     PaperAirplaneIcon,
+    PlusIcon,
   },
 });
 </script>

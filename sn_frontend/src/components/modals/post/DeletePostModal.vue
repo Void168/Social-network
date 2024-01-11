@@ -27,16 +27,16 @@
             leave-to="opacity-0 scale-95"
           >
             <DialogPanel
-              class="w-full max-w-md transform overflow-hidden rounded-2xl bg-white p-6 text-left align-middle shadow-xl transition-all"
+              class="w-full max-w-md transform overflow-hidden rounded-2xl bg-white dark:bg-slate-700 p-6 text-left align-middle shadow-xl transition-all"
             >
               <DialogTitle
                 as="h3"
-                class="text-2xl font-medium leading-6 text-gray-900 text-center"
+                class="text-2xl font-medium leading-6 text-gray-900 dark:text-slate-200 text-center"
               >
                 Xóa bài viết?
               </DialogTitle>
               <div class="mt-2">
-                <p class="text-sm text-gray-500">
+                <p class="text-sm text-gray-500 dark:text-slate-200">
                   Bài viết của bạn sẽ bị xóa vĩnh viễn và không thể khôi phục
                   lại.
                 </p>

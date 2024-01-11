@@ -27,16 +27,16 @@
             leave-to="opacity-0 scale-95"
           >
             <DialogPanel
-              class="w-full max-w-md transform overflow-hidden rounded-2xl bg-white p-6 text-left align-middle shadow-xl transition-all"
+              class="w-full max-w-md transform overflow-hidden rounded-2xl bg-white dark:bg-slate-700 p-6 text-left align-middle shadow-xl transition-all"
             >
               <DialogTitle
                 as="h3"
-                class="text-2xl font-medium leading-6 text-gray-900 text-center"
+                class="text-2xl font-medium leading-6 text-gray-900 dark:text-slate-200 text-center"
               >
                 Chọn ảnh bìa
               </DialogTitle>
               <div class="flex flex-col justify-center items-center my-4">
-                <div class="h-64 w-96 border-4 border-dashed p-2">
+                <div class="h-64 w-full border-4 border-dashed p-2">
                   <div v-if="url" class="relative mt-1">
                     <img :src="url" class="w-full h-56 rounded-lg" />
                     <span

@@ -1,10 +1,18 @@
 <template>
-  <div class="grid grid-cols-4 gap-4 h-screen">
-    <div class="main-left col-span-1">
+  <div class="grid sm:grid-cols-4 grid-cols-3 max-h-screen">
+    <div
+      class="main-left xl:col-span-1 sm:col-span-2 xs:col-span-1 sticky bottom-0"
+    >
       <div
-        class="bg-white border border-gray-200 dark:bg-slate-600 dark:border-slate-700 dark:text-neutral-200 rounded-lg h-screen px-2"
+        :style="{ height: `${toastStore.height}px` }"
+        class="bg-white overflow-y-scroll scrollbar-corner-slate-200 scrollbar-thin scrollbar-thumb-slate-400 scrollbar-track-slate-800 border border-gray-200 dark:bg-slate-600 dark:border-slate-700 dark:text-neutral-200 rounded-lg h-screen px-2"
       >
-        <h3 class="text-xl p-3">Đoạn hội thoại ({{ conversations.length }})</h3>
+        <h3 class="sm:text-xl p-3 xm:block hidden sm:text-left text-center">
+          Đoạn hội thoại ({{ conversations.length }})
+        </h3>
+        <div class="flex justify-center items-center xm:hidden p-3">
+          <UserIcon class="w-6" /> ({{ conversations.length }})
+        </div>
         <div v-for="conversation in conversations" :key="conversation.id">
           <ConversationBox
             v-bind:conversations="conversations"
@@ -15,25 +23,46 @@
         <div
           class="flex flex-col bg-white dark:bg-slate-600 dark:text-neutral-200 rounded-lg px-2"
         >
-          <h3 class="text-xl p-3">Đoạn hội thoại nhóm ({{ groupConversations.length }})</h3>
+          <h3 class="text-xl p-3 sm:block hidden">
+            Đoạn hội thoại nhóm ({{ groupConversations.length }})
+          </h3>
+          <h3 class="p-3 sm:hidden text-center xs:hidden xm:block">
+            Chat nhóm ({{ groupConversations.length }})
+          </h3>
+          <div class="flex justify-center items-center xm:hidden p-3">
+            <UserGroupIcon class="w-6" /> ({{ conversations.length }})
+          </div>
           <div
             @click="openModal"
             class="flex gap-2 items-center justify-center px-4 py-2 bg-neutral-200 hover:bg-neutral-300 dark:bg-slate-700 dark:hover:bg-slate-800 transition duration-100 rounded-md shadow-md cursor-pointer"
           >
             <PlusCircleIcon class="w-8 h-8" />
-            <span>Tạo đoạn chat nhóm</span>
+            <span @click="getFriends" class="sm:block hidden"
+              >Tạo đoạn chat nhóm</span
+            >
+            <span
+              @click="getFriends"
+              class="sm:hidden block sm:text-base xs:hidden"
+              >Tạo nhóm</span
+            >
           </div>
           <div
             v-for="groupConversation in groupConversations"
             v-bind:key="groupConversation.id"
           >
-            <GroupConversationBox v-bind:groupConversation="groupConversation" @seenGroupMessage="seenGroupMessage"/>
+            <GroupConversationBox
+              v-bind:groupConversation="groupConversation"
+              @seenGroupMessage="seenGroupMessage"
+            />
           </div>
         </div>
       </div>
     </div>
 
-    <div class="main-center col-span-3 space-y-4">
+    <div
+      :style="{ minHeight: `${toastStore.height}px` }"
+      class="main-center xl:col-span-3 sm:col-span-2 xs:col-span-2 space-y-4"
+    >
       <ChatBox v-bind:chats="conversations" />
     </div>
   </div>
@@ -46,7 +75,10 @@ import GroupConversationBox from "../components/items/chat/GroupConversationBox.
 import ChatBox from "../components/items/chat/ChatBox.vue";
 
 import { useUserStore } from "../stores/user";
+import { useToastStore } from "../stores/toast";
+
 import { PlusCircleIcon } from "@heroicons/vue/24/outline";
+import { UserIcon, UserGroupIcon } from "@heroicons/vue/24/solid";
 
 import { RouterLink } from "vue-router";
 
@@ -54,8 +86,11 @@ export default (await import("vue")).defineComponent({
   name: "chat",
   setup() {
     const userStore = useUserStore();
+    const toastStore = useToastStore();
+
     return {
       userStore,
+      toastStore,
     };
   },
   data() {
@@ -92,31 +127,31 @@ export default (await import("vue")).defineComponent({
           .catch((error) => {
             console.log(error);
           });
-      }, 500)
+      }, 500);
     },
     async getGroupConversations() {
-        await axios
-          .get("/api/chat/group/")
-          .then((res) => {
-            this.groupConversations = res.data
-            // console.log(this.groupConversations);
-          })
-          .catch((error) => {
-            console.log(error);
-          });
+      await axios
+        .get("/api/chat/group/")
+        .then((res) => {
+          this.groupConversations = res.data;
+          // console.log(this.groupConversations);
+        })
+        .catch((error) => {
+          console.log(error);
+        });
     },
     async getMessages() {
-        await axios
-          .get(`/api/chat/${this.$route.params.id}/`)
-          .then((res) => {
-            this.activeConversation = res.data;
-            this.seenMessage();
-            // console.log(this.activeConversation)
-            this.listMessages = this.activeConversation.messages;
-          })
-          .catch((error) => {
-            console.log(error);
-          });
+      await axios
+        .get(`/api/chat/${this.$route.params.id}/`)
+        .then((res) => {
+          this.activeConversation = res.data;
+          this.seenMessage();
+          // console.log(this.activeConversation)
+          this.listMessages = this.activeConversation.messages;
+        })
+        .catch((error) => {
+          console.log(error);
+        });
     },
     async seenMessage() {
       this.$emit("seenMessage", this.activeConversation.id);
@@ -152,6 +187,14 @@ export default (await import("vue")).defineComponent({
         });
     },
   },
-  components: { RouterLink, ConversationBox, ChatBox, PlusCircleIcon, GroupConversationBox },
+  components: {
+    RouterLink,
+    ConversationBox,
+    ChatBox,
+    PlusCircleIcon,
+    GroupConversationBox,
+    UserIcon,
+    UserGroupIcon,
+  },
 });
 </script>

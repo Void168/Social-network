@@ -72,6 +72,7 @@ def friends(request, pk):
     serializer = FriendshipRequestSerializer(request_by, many=True)
     
     user_followers = user.followers.all()
+    user_following = user.following.all()
        
     friends = user.friends.all()
      
@@ -81,6 +82,7 @@ def friends(request, pk):
         'requests': requests,
         'request_by': serializer.data,
         'followers':UserSerializer(user_followers, many=True).data,
+        'following':UserSerializer(user_following, many=True).data,
     }, safe=False)
     
 @api_view(['GET'])

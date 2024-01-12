@@ -17,21 +17,21 @@
         v-else
         :src="activeConversation.get_avatar"
         alt="avatar-group"
-        class="w-20 h-20 rounded-full shadow-md"
+        class="2xl:w-20 2xl:h-20 w-16 h-16 rounded-full shadow-md"
       />
       <p class="text-center font-semibold my-4 p-2">
         {{ activeConversation?.group_name }}
       </p>
       <div class="flex gap-3">
-        <div class="flex flex-col items-center mb-4">
+        <div class="flex flex-col items-center mb-4 2xl:text-base text-sm">
           <BellIcon
-            class="w-8 h-8 p-1 shadow-md bg-neutral-100 dark:bg-slate-700 hover:bg-neutral-200 dark:hover:bg-slate-500 transition rounded-full cursor-pointer"
+            class="2xl:w-8 2xl:h-8 w-6 h-6 p-1 shadow-md bg-neutral-100 dark:bg-slate-700 hover:bg-neutral-200 dark:hover:bg-slate-500 transition rounded-full cursor-pointer"
           />
           <span>Tắt thông báo</span>
         </div>
-        <div class="flex flex-col items-center">
+        <div class="flex flex-col items-center 2xl:text-base text-sm">
           <MagnifyingGlassIcon
-            class="w-8 h-8 p-1 shadow-md bg-neutral-100 dark:bg-slate-700 hover:bg-neutral-200 dark:hover:bg-slate-500 transition rounded-full cursor-pointer"
+            class="2xl:w-8 2xl:h-8 w-6 h-6 p-1 shadow-md bg-neutral-100 dark:bg-slate-700 hover:bg-neutral-200 dark:hover:bg-slate-500 transition rounded-full cursor-pointer"
           />
           <span>Tìm kiếm</span>
         </div>
@@ -42,7 +42,7 @@
             <DisclosureButton
               class="flex w-full justify-between rounded-lg dark:bg-slate-600 px-4 py-2 text-left text-sm font-medium dark:text-neutral-200"
             >
-              <span class="text-lg">Thông tin về đoạn chat</span>
+              <span class="2xl:text-lg">Thông tin về đoạn chat</span>
               <ChevronUpIcon
                 :class="open ? 'rotate-180 transform' : ''"
                 class="h-5 w-5 dark:text-neutral-200 font-bold"
@@ -51,15 +51,15 @@
             <DisclosurePanel
               class="flex gap-2 items-center pb-2 pt-2 px-8 text-sm dark:text-neutral-200 font-semibold hover:bg-neutral-300 dark:hover:bg-slate-700 rounded-md cursor-pointer transition duration-100"
             >
-              <EyeDropperIcon class="h-8 w-8 dark:text-neutral-200 font-bold" />
-              <span class="text-lg">Xem tin nhắn đã ghim</span>
+              <EyeDropperIcon class="2xl:h-8 2xl:w-8 w-6 h-6 dark:text-neutral-200 font-bold" />
+              <span class="2xl:text-lg">Xem tin nhắn đã ghim</span>
             </DisclosurePanel>
           </Disclosure>
           <Disclosure as="div" class="mt-2" v-slot="{ open }">
             <DisclosureButton
               class="flex w-full justify-between rounded-lg dark:bg-slate-600 px-4 py-2 text-left text-sm font-medium dark:text-neutral-200"
             >
-              <span class="text-lg">Tùy chỉnh đoạn chat</span>
+              <span class="2xl:text-lg">Tùy chỉnh đoạn chat</span>
               <ChevronUpIcon
                 :class="open ? 'rotate-180 transform' : ''"
                 class="h-5 w-5 dark:text-neutral-200 font-bold"
@@ -69,8 +69,8 @@
               @click="openChangeGroupChatNameModal"
               class="flex gap-2 items-center pb-2 pt-2 px-8 text-sm dark:text-neutral-200 font-semibold hover:bg-neutral-300 dark:hover:bg-slate-700 rounded-md cursor-pointer transition duration-100"
             >
-              <PencilIcon class="w-8 h-8 p-1 dark:text-neutral-200" />
-              <span class="text-lg">Thay đổi tên nhóm</span>
+              <PencilIcon class="2xl:h-8 2xl:w-8 w-6 h-6 p-1 dark:text-neutral-200" />
+              <span class="2xl:text-lg">Thay đổi tên nhóm</span>
               <ChangeGroupChatNameModal
                 :activeConversation="activeConversation"
                 :show="isChangeNameOpen"
@@ -81,8 +81,8 @@
               @click="openChangeGroupChatAvatarModal"
               class="flex gap-2 items-center pb-2 pt-2 px-8 text-sm dark:text-neutral-200 font-semibold hover:bg-neutral-300 dark:hover:bg-slate-700 rounded-md cursor-pointer transition duration-100"
             >
-              <PhotoIcon class="w-8 h-8 p-1 dark:text-neutral-200" />
-              <span class="text-lg">Thay đổi ảnh nhóm</span>
+              <PhotoIcon class="2xl:h-8 2xl:w-8 w-6 h-6 p-1 dark:text-neutral-200" />
+              <span class="2xl:text-lg">Thay đổi ảnh nhóm</span>
               <ChangeGroupChatAvatarModal
                 :activeConversation="activeConversation"
                 :show="isChangeAvatarOpen"
@@ -94,14 +94,14 @@
               class="flex gap-2 items-center pb-2 pt-2 px-8 text-sm dark:text-neutral-200 font-semibold hover:bg-neutral-300 dark:hover:bg-slate-700 rounded-md cursor-pointer transition duration-100"
             >
               <span
-                class="h-8 w-8 rounded-full shadow-md relative"
+                class="2xl:h-8 2xl:w-8 w-6 h-6 rounded-full shadow-md relative"
                 :class="[selectedTheme.background]"
               >
                 <span
-                  class="h-4 w-4 rounded-full absolute z-20 top-2 left-2 bg-white dark:bg-slate-600"
+                  class="2xl:h-4 2xl:w-4 w-2 h-2 rounded-full absolute z-20 top-2 left-2 bg-white dark:bg-slate-600"
                 ></span>
               </span>
-              <span class="text-lg">Đổi chủ đề</span>
+              <span class="2xl:text-lg">Đổi chủ đề</span>
               <GroupConversationThemeModal
                 :currentTheme="activeConversation"
                 :show="isGroupConversationThemeModalOpen"
@@ -115,7 +115,7 @@
             <DisclosureButton
               class="flex w-full justify-between rounded-lg dark:bg-slate-600 px-4 py-2 text-left text-sm font-medium dark:text-neutral-200"
             >
-              <span class="text-lg">Thành viên trong đoạn chat</span>
+              <span class="2xl:text-lg">Thành viên trong đoạn chat</span>
               <ChevronUpIcon
                 :class="open ? 'rotate-180 transform' : ''"
                 class="h-5 w-5 dark:text-neutral-200 font-bold"
@@ -125,7 +125,7 @@
             <DisclosurePanel
               class="px-4 pb-2 pt-4 text-sm dark:text-neutral-200 font-semibold"
             >
-              <div class="flex justify-center items-center gap-4 mb-4">
+              <div class="flex justify-center flex-wrap items-center gap-4 mb-4">
                 <div
                   v-if="activeConversation.admin.id === userStore.user.id"
                   class="flex flex-col items-center"
@@ -134,7 +134,7 @@
                     @click="openAddUsersModal"
                     class="w-8 h-8 p-1 shadow-md bg-neutral-100 dark:bg-slate-700 hover:bg-neutral-200 dark:hover:bg-slate-500 transition rounded-full cursor-pointer"
                   />
-                  <span>Thêm thành viên</span>
+                  <span class="2xl:text-base text-sm">Thêm thành viên</span>
                 </div>
                 <div class="flex flex-col items-center">
                   <PlusCircleIcon
@@ -163,17 +163,19 @@
                       alt=""
                       class="w-10 h-10 rounded-full"
                     />
-                    <span class="font-bold">{{ user.name }}</span>
-                    <span
-                      class="font-bold ml-4"
-                      v-if="activeConversation.admin.name === user.name"
-                      >Trưởng nhóm</span
-                    >
-                    <span
-                      class="font-bold ml-4"
-                      v-if="getModeratorsIds.includes(user.id)"
-                      >Quản trị viên</span
-                    >
+                    <div class="flex flex-col">
+                      <span class="font-bold">{{ user.name }}</span>
+                      <span
+                        class="font-bold"
+                        v-if="activeConversation.admin.name === user.name"
+                        >Trưởng nhóm</span
+                      >
+                      <span
+                        class="font-bold"
+                        v-if="getModeratorsIds.includes(user.id)"
+                        >Quản trị viên</span
+                      >
+                    </div>
                   </div>
                   <Menu as="div" class="relative inline-block text-left">
                     <div>
@@ -193,7 +195,7 @@
                       leave-to-class="transform opacity-0 scale-95"
                     >
                       <MenuItems
-                        class="absolute right-0 z-10 mt-2 w-80 origin-top-right divide-y divide-gray-100 rounded-md bg-white dark:bg-slate-700 shadow-lg ring-1 ring-black/5 focus:outline-none"
+                        class="absolute right-[-10px] z-50 mt-2 w-64 origin-top-right divide-y divide-gray-100 rounded-md bg-white dark:bg-slate-700 shadow-lg ring-1 ring-black/5 focus:outline-none"
                       >
                         <div class="px-1 py-1">
                           <MenuItem v-slot="{ active }">
@@ -300,7 +302,7 @@
             <DisclosureButton
               class="flex w-full justify-between rounded-lg dark:bg-slate-600 px-4 py-2 text-left text-sm font-medium dark:text-neutral-200"
             >
-              <span class="text-lg">File phương tiện</span>
+              <span class="2xl:text-lg">File phương tiện</span>
               <ChevronUpIcon
                 :class="open ? 'rotate-180 transform' : ''"
                 class="h-5 w-5 dark:text-neutral-200 font-bold"
@@ -316,41 +318,41 @@
             <DisclosureButton
               class="flex w-full justify-between rounded-lg dark:bg-slate-600 px-4 py-2 text-left text-sm font-medium dark:text-neutral-200"
             >
-              <span class="text-lg">Quyền riêng tư & hỗ trợ</span>
+              <span class="2xl:text-lg">Quyền riêng tư & hỗ trợ</span>
               <ChevronUpIcon
                 :class="open ? 'rotate-180 transform' : ''"
                 class="h-5 w-5 dark:text-neutral-200 font-bold"
               />
             </DisclosureButton>
             <DisclosurePanel
-              class="px-8 pb-2 pt-2 text-lg dark:text-neutral-200 font-semibold hover:bg-neutral-300 dark:hover:bg-slate-700 rounded-md cursor-pointer transition duration-100"
+              class="px-8 pb-2 pt-2 dark:text-neutral-200 font-semibold hover:bg-neutral-300 dark:hover:bg-slate-700 rounded-md cursor-pointer transition duration-100"
             >
               <div class="flex gap-2 items-center">
                 <BellSlashIcon
-                  class="w-8 h-8 p-1 shadow-md rounded-full cursor-pointer"
+                  class="2xl:w-8 2xl:h-8 w-6 h-6 p-1 shadow-md rounded-full cursor-pointer"
                 />
-                <span class="text-lg">Tắt thông báo</span>
+                <span class="2xl:text-lg">Tắt thông báo</span>
               </div>
             </DisclosurePanel>
             <DisclosurePanel
-              class="px-8 pb-2 pt-2 text-lg dark:text-neutral-200 font-semibold hover:bg-neutral-300 dark:hover:bg-slate-700 rounded-md cursor-pointer transition duration-100"
+              class="px-8 pb-2 pt-2 dark:text-neutral-200 font-semibold hover:bg-neutral-300 dark:hover:bg-slate-700 rounded-md cursor-pointer transition duration-100"
             >
               <div class="flex gap-2 items-center">
                 <ExclamationTriangleIcon
-                  class="w-8 h-8 p-1 shadow-md rounded-full cursor-pointer"
+                  class="2xl:w-8 2xl:h-8 w-6 h-6 p-1 shadow-md rounded-full cursor-pointer"
                 />
-                <span class="text-lg">Báo cáo</span>
+                <span class="2xl:text-lg">Báo cáo</span>
               </div>
             </DisclosurePanel>
             <DisclosurePanel
               @click="leaveGroup"
-              class="px-8 pb-2 pt-2 text-lg dark:text-neutral-200 font-semibold hover:bg-neutral-300 dark:hover:bg-slate-700 rounded-md cursor-pointer transition duration-100"
+              class="px-8 pb-2 pt-2 dark:text-neutral-200 font-semibold hover:bg-neutral-300 dark:hover:bg-slate-700 rounded-md cursor-pointer transition duration-100"
             >
               <div class="flex gap-2 items-center">
                 <ArrowLeftOnRectangleIcon
-                  class="w-8 h-8 p-1 shadow-md rounded-full cursor-pointer"
+                  class="2xl:w-8 2xl:h-8 w-6 h-6 p-1 shadow-md rounded-full cursor-pointer"
                 />
-                <span class="text-lg">Rời nhóm</span>
+                <span class="2xl:text-lg">Rời nhóm</span>
               </div>
             </DisclosurePanel>
           </Disclosure>

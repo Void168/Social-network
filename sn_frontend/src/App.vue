@@ -165,7 +165,8 @@ export default {
 
   data(){
     return {
-      height: document.documentElement.clientHeight
+      height: document.documentElement.clientHeight,
+      width: document.documentElement.clientWidth
     }
   },
 
@@ -202,9 +203,11 @@ export default {
   methods: {
     getDimensions() {
       this.height = document.documentElement.clientHeight;
+      this.width = document.documentElement.clientWidth
       this.toastStore.setHeight(
         this.height - this.$refs.navbar.clientHeight - 1
       );
+      this.toastStore.setWidth(this.width)
       this.toastStore.setNavbarHeight(this.$refs.navbar.clientHeight + 1);
     }
   },

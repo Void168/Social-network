@@ -3,8 +3,9 @@
     <div class="rounded-lg relative">
       <div>
         <div
-          class="p-4 flex justify-between items-center rounded-t-lg"
+          class="p-4 flex justify-between items-center"
           :class="[selectedTheme?.background, selectedTheme?.textColor]"
+          ref="groupHeader"
         >
           <div class="flex items-center gap-2">
             <div
@@ -29,13 +30,14 @@
               alt="avatar-group"
               class="w-14 h-14 rounded-full"
             />
-            <span class="font-bold">{{ activeConversation.group_name }}</span>
+            <span class="font-bold truncate">{{ activeConversation.group_name }}</span>
           </div>
           <div
-            class="font-semibold cursor-pointer p-4 bg-transparent shadow-md rounded-lg hover:bg-white/30 transition"
+            class="font-semibold cursor-pointer lg:p-4 p-2 bg-transparent shadow-md rounded-lg hover:bg-white/30 transition"
             @click="openPollsListModal"
           >
-            <p>Cuộc thảo luận</p>
+            <p class="sm:block hidden sm:text-base text-sm">Cuộc thảo luận</p>
+            <ChatBubbleLeftRightIcon class="sm:hidden w-6" />
             <PollsListModal
               :show="isPollsListOpen"
               @closeModal="closePollsListModal"
@@ -43,12 +45,14 @@
               :activeConversation="activeConversation"
             />
           </div>
-          <span class="font-semibold">Đang hoạt động</span>
         </div>
       </div>
       <div
         id="chatview-container"
-        class="overflow-y-scroll scrollbar-corner-slate-200 scrollbar-thin scrollbar-thumb-slate-400 scrollbar-track-slate-800 border border-gray-200 shadow-md dark:bg-slate-600 dark:border-slate-700 dark:text-neutral-200 h-[750px]"
+        :style="{
+          height: `${toastStore.height - formHeight - headerHeight - 2}px`,
+        }"
+        class="overflow-y-scroll scrollbar-corner-slate-200 scrollbar-thin scrollbar-thumb-slate-400 scrollbar-track-slate-800 border border-gray-200 shadow-md dark:bg-slate-600 dark:border-slate-700 dark:text-neutral-200"
       >
         <div class="flex flex-col flex-grow p-4 overflow-y-auto">
           <div v-if="activeConversation?.group_messages?.length > 0">
@@ -75,7 +79,7 @@
                         selectedTheme.textColor,
                       ]"
                     >
-                      <span class="block whitespace-normal break-words">
+                      <span class="block whitespace-normal break-all">
                         {{ message?.body }}
                       </span>
                     </p>
@@ -88,7 +92,7 @@
                           selectedTheme.textColor,
                         ]"
                       >
-                        <span class="block whitespace-normal break-words">
+                        <span class="block whitespace-normal break-all">
                           {{ message?.body }}
                         </span>
                       </p>
@@ -214,7 +218,7 @@
                     <p
                       class="bg-gray-200 p-3 rounded-r-lg rounded-bl-lg dark:bg-slate-500 dark:border-slate-600 dark:text-neutral-200 max-w-[500px] text-sm font-semibold"
                     >
-                      <span class="break-words block whitespace-normal">
+                      <span class="break-all block whitespace-normal">
                         {{ message?.body }}
                       </span>
                     </p>
@@ -272,6 +276,7 @@
       </div>
     </div>
     <div
+      ref="formGroupInput"
       class="bg-white border border-gray-200 dark:bg-slate-600 dark:border-slate-700 dark:text-neutral-200 rounded-lg relative"
     >
       <form
@@ -279,7 +284,7 @@
         @keyup.enter="submitForm"
         class="flex items-center px-4"
       >
-        <div class="flex gap-1">
+        <div class="xm:flex hidden">
           <PlusCircleIcon
             class="w-8 h-8 cursor-pointer rounded-full hover:bg-slate-300 dark:hover:bg-slate-700 transition p-1"
             :class="[selectedTheme?.iconColor]"
@@ -306,10 +311,51 @@
             :class="[selectedTheme?.iconColor]"
           />
         </div>
+        <div class="xm:hidden block relative">
+          <PlusIcon
+            @click="expandOptions"
+            class="w-8 p-1 rounded-full bg-slate-700 dark:hover:bg-slate-800"
+            :class="
+              expand
+                ? '-rotate-90 transition duration-100'
+                : '-rotate-0 transition duration-100'
+            "
+          />
+          <div
+            class="flex flex-col absolute top-[-100px] bg-slate-800 rounded-2xl"
+            v-if="expand"
+          >
+            <PlusCircleIcon
+              class="w-8 h-8 cursor-pointer rounded-full hover:bg-slate-300 dark:hover:bg-slate-700 transition p-1"
+              :class="[selectedTheme?.iconColor]"
+            />
+            <div class="relative cursor-pointer">
+              <label for="doc">
+                <PhotoIcon
+                  class="w-8 h-8 cursor-pointer rounded-full hover:bg-slate-300 dark:hover:bg-slate-700 transition p-1"
+                  :class="[selectedTheme?.iconColor]"
+                />
+
+                <input
+                  type="file"
+                  ref="file"
+                  id="doc"
+                  name="doc"
+                  hidden
+                  @change="onFileChange"
+                />
+              </label>
+            </div>
+            <GifIcon
+              class="w-8 h-8 cursor-pointer rounded-full hover:bg-slate-300 dark:hover:bg-slate-700 transition p-1"
+              :class="[selectedTheme?.iconColor]"
+            />
+          </div>
+        </div>
         <div class="p-4 relative w-full flex items-center">
           <textarea
             v-model="body"
-            class="p-4 w-full bg-gray-100 rounded-lg resize-none"
+            class="p-4 w-full bg-gray-100 rounded-lg resize-none truncate"
             name=""
             id=""
             cols="30"
@@ -363,12 +409,16 @@ import axios from "axios";
 import Pusher from "pusher-js";
 import ConversationBox from "./ConversationBox.vue";
 import { useUserStore } from "../../../stores/user";
+import { useToastStore } from "../../../stores/toast";
+
 import { RouterLink } from "vue-router";
 
 import SeenUsersModal from "../../modals/chat/SeenUsersModal.vue";
 import PollsListModal from "../../modals/chat/PollsListModal.vue";
 
 import { Popover, PopoverButton, PopoverPanel } from "@headlessui/vue";
+import { PlusIcon, ChatBubbleLeftRightIcon } from "@heroicons/vue/24/solid";
+
 import "emoji-picker-element";
 import {
   FaceSmileIcon,
@@ -383,8 +433,10 @@ import themes from "../../../data/themes";
 export default (await import("vue")).defineComponent({
   setup() {
     const userStore = useUserStore();
+    const toastStore = useToastStore();
     return {
       userStore,
+      toastStore,
     };
   },
 
@@ -400,6 +452,9 @@ export default (await import("vue")).defineComponent({
       url: null,
       themes: themes,
       notifications: [],
+      formHeight: null,
+      headerHeight: null,
+      expand: false,
     };
   },
   computed: {
@@ -452,8 +507,10 @@ export default (await import("vue")).defineComponent({
     this.getMessages();
     this.getGroupNotifications();
     this.getPusher();
+    this.formHeight = this.$refs.formGroupInput.clientHeight;
+    this.headerHeight = this.$refs.groupHeader.clientHeight;
   },
-  updated(){
+  updated() {
     this.scrollToBottom();
   },
   methods: {
@@ -478,7 +535,7 @@ export default (await import("vue")).defineComponent({
           .catch((error) => {
             console.log(error);
           }, 1000);
-      })
+      });
     },
     scrollToBottom() {
       const objDiv = document.querySelector("#chatview-container");
@@ -504,7 +561,7 @@ export default (await import("vue")).defineComponent({
           .catch((error) => {
             console.log(error);
           }, 1000);
-      })
+      });
     },
     getMessages() {
       setTimeout(() => {
@@ -528,7 +585,7 @@ export default (await import("vue")).defineComponent({
           .catch((error) => {
             console.log(error);
           });
-      }, 1000)
+      }, 1000);
     },
     Pick() {
       document
@@ -547,6 +604,10 @@ export default (await import("vue")).defineComponent({
 
     removeImage() {
       this.url = null;
+    },
+
+    expandOptions() {
+      this.expand = !this.expand;
     },
 
     submitForm() {
@@ -586,6 +647,8 @@ export default (await import("vue")).defineComponent({
     PhotoIcon,
     GifIcon,
     PaperAirplaneIcon,
+    PlusIcon,
+    ChatBubbleLeftRightIcon,
     SeenUsersModal,
     PollsListModal,
   },

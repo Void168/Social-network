@@ -9,6 +9,7 @@ export const useToastStore = defineStore({
         classes: '',
         isVisible: false,
         height: null,
+        width: null,
         navbarHeight: null,
     }),
 
@@ -33,6 +34,9 @@ export const useToastStore = defineStore({
         },
         setHeight(data){
             this.height = data
+        },
+        setWidth(data){
+            this.width = data
         },
         setNavbarHeight(data){
             this.navbarHeight = data

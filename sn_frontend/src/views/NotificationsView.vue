@@ -1,8 +1,8 @@
 <template>
-  <div class="max-w-7xl mx-auto grid grid-cols-4 gap-4">
-    <div class="main-center col-span-3 space-y-4">
+  <div class="max-w-7xl mx-auto gap-4">
+    <div class="main-center mx-auto md:py-12 md:w-[80%] space-y-4 min-h-screen">
       <div
-        class="p-4 bg-white border border-gray-200 rounded-lg dark:bg-slate-600 dark:border-slate-700 dark:text-neutral-200"
+        class="p-4 bg-white border border-gray-200 md:rounded-lg dark:bg-slate-600 dark:border-slate-700 dark:text-neutral-200"
       >
         <div v-if="notifications?.length">
           <div

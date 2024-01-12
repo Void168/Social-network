@@ -1,8 +1,17 @@
 <template>
-  <div class="max-w-7xl mx-auto grid grid-cols-4 gap-4">
-    <div class="main-left col-span-3">
-      <div class="bg-white border border-gray-200 rounded-lg mb-4 dark:bg-slate-600 dark:border-slate-700 dark:text-neutral-200">
-        <form v-on:submit.prevent="submitForm" class="p-4 flex space-x-4 justify-between">
+  <div class="max-w-7xl mx-auto grid grid-cols-5 gap-4 min-h-screen">
+    <div class="main-left sm:col-span-3 col-span-5">
+      <div class="sm:hidden">
+        <PeopleYouMayKnow />
+        <Trends />
+      </div>
+      <div
+        class="bg-white border border-gray-200 rounded-lg mb-4 dark:bg-slate-600 dark:border-slate-700 dark:text-neutral-200"
+      >
+        <form
+          v-on:submit.prevent="submitForm"
+          class="p-4 flex space-x-4 justify-between"
+        >
           <input
             v-model="query"
             type="search"
@@ -32,25 +41,32 @@
 
       <div
         v-if="users.length"
-        class="p-4 bg-white border border-gray-200 dark:bg-slate-600 dark:border-slate-700 dark:text-neutral-200 rounded-lg grid grid-cols-4 gap-4"
+        class="p-4 bg-white border border-gray-200 dark:bg-slate-600 dark:border-slate-700 dark:text-neutral-200 rounded-lg grid xl:grid-cols-4 lg:grid-cols-3 sm:grid-cols-2 xs:grid-cols-1 gap-4"
       >
         <div
           v-for="user in users"
           v-bind:key="user.id"
-          class="p-4 bg-gray-200 dark:bg-slate-700 dark:border-slate-800 dark:text-neutral-200 text-center rounded-lg shadow-md"
+          class="p-4 bg-gray-200 dark:bg-slate-700 dark:border-slate-800 dark:text-neutral-200 text-center rounded-lg shadow-md flex flex-col justify-center items-center"
         >
-          <RouterLink :to="{ name: 'profile', params: { id: user.id } }">
+          <RouterLink
+            :to="{ name: 'profile', params: { id: user.id } }"
+            class="flex flex-col space-y-2 justify-center items-center"
+          >
             <img
               :src="user.get_avatar"
               alt=""
-              class="mb-6 rounded-full w-48 h-48"
+              class="mb-6 rounded-full w-32 h-32"
             />
             <p>
               <strong> {{ user.name }}</strong>
             </p>
-            <div class="mt-6 flex space-x-8 justify-around">
-              <p class="text-xs text-gray-500 dark:text-neutral-200">{{user.friends_count}} người bạn</p>
-              <p class="text-xs text-gray-500 dark:text-neutral-200">{{user.posts_count}} bài đăng</p>
+            <div class="mt-6 flex 2xl:gap-2 justify-between gap-4 2xl:flex-col 2xl:justify-center">
+              <p class="text-xs text-gray-500 dark:text-neutral-200">
+                {{ user.friends_count }} người bạn
+              </p>
+              <p class="text-xs text-gray-500 dark:text-neutral-200">
+                {{ user.posts_count }} bài đăng
+              </p>
             </div>
           </RouterLink>
         </div>
@@ -64,7 +80,7 @@
         <FeedItem v-bind:post="post" />
       </div>
     </div>
-    <div class="main-right col-span-1 space-y-4">
+    <div class="main-right col-span-2 space-y-4 hidden sm:block">
       <PeopleYouMayKnow />
       <Trends />
     </div>
@@ -103,7 +119,7 @@ export default {
         })
         .then((res) => {
           // console.log("response:", res.data);
-          this.$router.push(`/search/?query=${this.query}`)
+          this.$router.push(`/search/?query=${this.query}`);
           this.users = res.data.users;
           this.posts = res.data.posts;
         })

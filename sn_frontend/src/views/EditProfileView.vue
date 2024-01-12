@@ -19,7 +19,7 @@
             </p>
             <button
               @click="openBioForm"
-              class="w-[50%] px-4 py-2 bg-slate-200 dark:hover:bg-slate-800 dark:bg-slate-700 rounded-xl shadow-md font-semibold hover:bg-slate-500 hover:text-neutral-200 transition"
+              class="md:w-[50%] w-full px-4 py-2 bg-slate-200 dark:hover:bg-slate-800 dark:bg-slate-700 rounded-xl shadow-md font-semibold hover:bg-slate-500 hover:text-neutral-200 transition"
             >
               Chỉnh sửa tiểu sử
             </button>
@@ -67,7 +67,7 @@
             </p>
             <button
               @click="openHometownForm"
-              class="w-[50%] px-4 py-2 bg-slate-200 dark:bg-slate-700 dark:hover:bg-slate-800 rounded-xl shadow-md font-semibold hover:bg-slate-500 hover:text-neutral-200 transition"
+              class="md:w-[50%] w-full px-4 py-2 bg-slate-200 dark:bg-slate-700 dark:hover:bg-slate-800 rounded-xl shadow-md font-semibold hover:bg-slate-500 hover:text-neutral-200 transition"
             >
               Chỉnh sửa quê quán
             </button>
@@ -130,7 +130,7 @@
             </p>
             <button
               @click="openLivingCityForm"
-              class="w-[50%] px-4 py-2 bg-slate-200 dark:bg-slate-700 dark:hover:bg-slate-800 rounded-xl shadow-md font-semibold hover:bg-slate-500 hover:text-neutral-200 transition"
+              class="md:w-[50%] w-full px-4 py-2 bg-slate-200 dark:bg-slate-700 dark:hover:bg-slate-800 rounded-xl shadow-md font-semibold hover:bg-slate-500 hover:text-neutral-200 transition"
             >
               Chỉnh sửa nơi sinh sống
             </button>
@@ -179,7 +179,7 @@
             </div>
           </form>
         </div>
-        <div class="flex justify-between mb-4">
+        <div class="flex justify-between sm:items-center sm:flex-row flex-col mb-4">
           <h2 class="font-semibold text-lg">Mối quan hệ hiện tại:</h2>
           <div
             v-if="
@@ -187,7 +187,7 @@
               userInfo.relationship_status ||
               partnerId != ''
             "
-            class="flex gap-2"
+            class="flex gap-2 sm:mx-0 mx-auto"
           >
             <div class="flex gap-1">
               <h2>
@@ -454,7 +454,7 @@
         class="w-full p-12 bg-white border border-gray-200 rounded-lg dark:bg-slate-600 dark:border-slate-700 dark:text-neutral-200"
       >
         <h1 class="text-2xl">Liên kết/Liên lạc</h1>
-        <div class="grid grid-cols-2 gap-4 my-4">
+        <div class="grid xl:grid-cols-2 grid-cols-1 gap-4 my-4">
           <div class="col-span-1">
             <h2 class="text-lg font-semibold">Trang liên kết</h2>
             <div
@@ -497,7 +497,7 @@
               <button
                 v-if="!addWebsite"
                 @click="openAddWebsiteForm"
-                class="w-[50%] px-4 py-2 bg-slate-200 dark:bg-slate-700 dark:hover:bg-slate-800 rounded-xl shadow-md font-semibold hover:bg-slate-500 hover:text-neutral-200 transition mt-4"
+                class="md:w-[50%] w-full px-4 py-2 bg-slate-200 dark:bg-slate-700 dark:hover:bg-slate-800 rounded-xl shadow-md font-semibold hover:bg-slate-500 hover:text-neutral-200 transition mt-4"
               >
                 Thêm trang liên kết xã hội
               </button>
@@ -545,7 +545,7 @@
               <button
                 v-if="!addPhoneNumber"
                 @click="openAddPhoneNumberForm"
-                class="w-[50%] px-4 py-2 bg-slate-200 dark:bg-slate-700 rounded-xl shadow-md font-semibold hover:bg-slate-500 hover:text-neutral-200 dark:hover:bg-slate-800 transition"
+                class="md:w-[50%] w-full px-4 py-2 bg-slate-200 dark:bg-slate-700 rounded-xl shadow-md font-semibold hover:bg-slate-500 hover:text-neutral-200 dark:hover:bg-slate-800 transition"
               >
                 Thêm số điện thoại
               </button>

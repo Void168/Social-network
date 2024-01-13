@@ -2,7 +2,7 @@
   <Listbox v-model="selectedFont">
     <div class="relative mt-1 flex justify-end w-2/12">
       <ListboxButton
-        class="relative flex items-center gap-4 w-full cursor-default rounded-lg bg-gray-200 dark:bg-slate-800 border dark:border-slate-700 dark:text-neutral-200 py-4 pl-3 pr-10 text-left focus:outline-none focus-visible:border-indigo-500 focus-visible:ring-2 focus-visible:ring-white/75 focus-visible:ring-offset-2 focus-visible:ring-offset-orange-300 sm:text-sm"
+        class="relative flex items-center gap-4 w-full cursor-default rounded-lg bg-gray-200 dark:bg-slate-800 border dark:border-slate-700 dark:text-neutral-200 py-4 pl-3 lg:pr-10 text-left focus:outline-none focus-visible:border-indigo-500 focus-visible:ring-2 focus-visible:ring-white/75 focus-visible:ring-offset-2 focus-visible:ring-offset-orange-300 sm:text-sm"
       >
         <span class="text-lg">Aa</span>
         <span class="block truncate p-2 text-xl">{{

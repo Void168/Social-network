@@ -28,7 +28,7 @@
               class="w-full h-screen transform grid grid-cols-5 overflow-hidden bg-white dark:bg-slate-900 text-left align-middle shadow-xl transition-all"
             >
               <div
-                class="col-span-1 bg-slate-800 dark:text-neutral-200 border-r-[1px] border-slate-700 flex flex-col justify-between"
+                class="lg:col-span-1 hidden bg-slate-800 dark:text-neutral-200 border-r-[1px] border-slate-700 lg:flex flex-col justify-between"
               >
                 <div>
                   <button
@@ -41,7 +41,7 @@
                     />
                   </button>
                   <div class="flex justify-between items-center px-4">
-                    <h2 class="text-2xl font-bold w-full">Tin của bạn</h2>
+                    <h2 class="text-2xl font-bold min-w-max">Tin của bạn</h2>
                     <StoryPrivacySelector
                       @getOption="getOption"
                       :privacies="privacies"
@@ -85,11 +85,11 @@
                           <h3 class="dark:text-neutral-200/70 text-lg">
                             Phông nền
                           </h3>
-                          <div class="flex flex-wrap gap-2 my-4">
+                          <div class="flex flex-wrap gap-2 my-4 justify-center items-center">
                             <div v-for="theme in themes" :key="theme">
                               <div
                                 @click="chooseTheme(theme)"
-                                class="w-12 h-12 rounded-full cursor-pointer"
+                                class="2xl:w-12 2xl:h-12 xl:h-10 xl:w-10 lg:w-8 lg:h-8 rounded-full cursor-pointer"
                                 :class="[theme.background]"
                               ></div>
                             </div>
@@ -127,7 +127,7 @@
                 <div class="my-4 px-6 flex gap-2" v-if="isTextStory || url">
                   <div
                     @click="$emit('closeTextStory')"
-                    class="flex justify-center py-2 px-4 w-[40%] dark:bg-slate-700 shadow-md rounded-lg font-semibold hover:bg-slate-600 transition duration-100 cursor-pointer"
+                    class="flex justify-center 2xl:py-2 2xl:px-4 py-1 px-2 w-[40%] dark:bg-slate-700 shadow-md rounded-lg font-semibold hover:bg-slate-600 transition duration-100 cursor-pointer"
                   >
                     <button @click="removeAll" class="w-full">Bỏ</button>
                   </div>
@@ -140,14 +140,14 @@
                 </div>
               </div>
               <div
-                class="col-span-4 flex items-center gap-6 py-12"
+                class="lg:col-span-4 col-span-5 flex lg:flex-row flex-col items-center gap-6 lg:py-12 lg:pt-0 py-6"
                 :class="
                   isTextStory || url ? 'justify-evenly' : 'justify-center'
                 "
               >
                 <div
                   v-if="!isTextStory && !url"
-                  class="group relative flex flex-col space-y-2 justify-center items-center w-60 h-[360px] bg-gradient-to-r from-cyan-500 to-blue-500 rounded-lg cursor-pointer"
+                  class="group relative flex flex-col space-y-2 justify-center items-center xm:w-60 xm:h-[360px] xs:w-48 xs:h-[240px] bg-gradient-to-r from-cyan-500 to-blue-500 rounded-lg cursor-pointer"
                 >
                   <PhotoIcon
                     class="text-neutral-200 h-14 w-14 cursor-pointer p-3 bg-slate-600 shadow-transparent rounded-full hover:bg-slate-600 transition duration-100"
@@ -170,7 +170,7 @@
                 </div>
                 <div
                   v-if="!isTextStory && !url"
-                  class="group relative flex flex-col space-y-2 justify-center items-center w-60 h-[360px] bg-gradient-to-r from-indigo-500 via-purple-500 to-pink-500 rounded-lg cursor-pointer"
+                  class="group relative flex flex-col space-y-2 justify-center items-center xm:w-60 xm:h-[360px] xs:w-48 xs:h-[240px] bg-gradient-to-r from-indigo-500 via-purple-500 to-pink-500 rounded-lg cursor-pointer"
                   @click="$emit('openTextStory')"
                 >
                   <div
@@ -181,7 +181,7 @@
                   >
                     Aa</span
                   >
-                  <h4 class="font-bold text-neutral-200">
+                  <h4 class="font-bold text-neutral-200 text-center">
                     Tạo tin dạng văn bản
                   </h4>
                 </div>
@@ -193,10 +193,10 @@
                 </h3>
                 <div
                   v-if="isTextStory || url"
-                  class="bg-slate-800 h-full w-[65%] rounded-xl p-4"
+                  class="bg-slate-800 h-full lg:w-[65%] xm:w-[80%] w-full rounded-xl p-4"
                 >
                   <div
-                    class="flex justify-center flex-col items-center bg-slate-900 h-full rounded-xl p-4"
+                    class="flex justify-center flex-col items-center bg-slate-900 h-full rounded-xl p-4 w-full"
                   >
                     <div
                       v-if="!url"
@@ -205,7 +205,7 @@
                         selectedTheme.background,
                         body ? 'text-neutral-200' : 'text-neutral-200/60',
                       ]"
-                      class="h-full bg-emerald-500 w-[50%] border-4 rounded-xl flex justify-center items-center text-2xl font-semibold"
+                      class="h-full bg-emerald-500 2xl:w-[50%] xl:w-[70%] lg:w-[80%] sm:w-[60%] w-full border-4 rounded-xl flex justify-center items-center text-2xl font-semibold"
                     >
                       <p
                         class="break-words w-full text-center px-12"
@@ -216,7 +216,7 @@
                     </div>
                     <div
                       v-else-if="url && isImage"
-                      class="h-full w-[50%] flex justify-center items-center text-2xl font-semibold text-neutral-200/50"
+                      class="h-full 2xl:w-[50%] lg:w-[70%] sm:w-[60%] flex justify-center items-center text-2xl font-semibold text-neutral-200/50"
                       :style="{
                         backgroundColor: color,
                         maskImage: `url(${url})`,
@@ -249,14 +249,14 @@
                     </div>
                     <div
                       v-if="isImage"
-                      class="text-neutral-200 text-lg mt-4 flex items-center gap-3"
+                      class="text-neutral-200 text-lg mt-4 flex items-center gap-3 w-full justify-center"
                     >
                       <h3 v-if="!isRotate && url" class="px-2 py-1">
                         Chọn ảnh để cắt và xoay
                       </h3>
                       <div
                         v-if="isRotate"
-                        class="flex gap-3 justify-center items-center"
+                        class="flex gap-3 justify-center items-center w-[50%] mx-auto"
                       >
                         <span>-</span>
                         <Slider
@@ -277,6 +277,80 @@
                     </div>
                   </div>
                 </div>
+                <div
+                class="bg-slate-800 dark:text-neutral-200 border-r-[1px] w-[90%] border-slate-700 flex justify-between lg:hidden overflow-x-scroll"
+              >
+                <div class="flex">
+                  <div v-if="isTextStory">
+                    <div class="p-4">
+                      <form class="flex">
+                        <textarea
+                          v-model="body"
+                          @keyup="getContent"
+                          class="lg:w-full py-2 pl-4 pr-8 bg-gray-100 border rounded-lg resize-none overflow-auto scrollbar-corner-slate-200 scrollbar-thin scrollbar-thumb-slate-400 scrollbar-track-slate-800"
+                          name=""
+                          id=""
+                          :rows="3"
+                          cols="30"
+                          placeholder="Bắt đầu nhập"
+                        ></textarea>
+                        <ChooseFontStory
+                          class="w-full"
+                          :fonts="fonts"
+                          @getOption="getOption"
+                        />
+                        <div
+                          class="p-2 border border-slate-700 rounded-lg w-full"
+                        >
+                          <h3 class="dark:text-neutral-200/70 text-lg">
+                            Phông nền
+                          </h3>
+                          <div class="flex flex-wrap gap-2 justify-center items-center">
+                            <div v-for="theme in themes" :key="theme">
+                              <div
+                                @click="chooseTheme(theme)"
+                                class="2xl:w-12 2xl:h-12 xl:h-10 xl:w-10 lg:w-8 lg:h-8 h-4 w-4 rounded-full cursor-pointer"
+                                :class="[theme.background]"
+                              ></div>
+                            </div>
+                          </div>
+                        </div>
+                      </form>
+                    </div>
+                  </div>
+                  <div v-if="url" class="flex items-center justify-center space-y-4 p-4">
+                    <div
+                      class="p-4 flex flex-col justify-center gap-3 items-center font-semibold"
+                    >
+                      <label for="caption" class="text-xl"> Tiêu đề </label>
+                      <textarea
+                        v-model="caption"
+                        class="w-full py-2 pl-4 pr-8 bg-gray-100 border rounded-lg resize-none overflow-auto scrollbar-corner-slate-200 scrollbar-thin scrollbar-thumb-slate-400 scrollbar-track-slate-800"
+                        name="caption"
+                        id="caption"
+                        :rows="3"
+                        cols="30"
+                        placeholder="Nhập tiêu đề"
+                      ></textarea>
+                    </div>
+                  </div>
+                </div>
+                <div class="my-4 px-6 flex flex-col justify-center items-center gap-2 w-full h-full" v-if="isTextStory || url">
+                  <div
+                    @click="$emit('closeTextStory')"
+                    class="flex justify-center 2xl:py-2 2xl:px-4 py-1 px-2 w-full dark:bg-slate-700 shadow-md rounded-lg font-semibold hover:bg-slate-600 transition duration-100 cursor-pointer"
+                  >
+                    <button @click="removeAll" class="w-full">Bỏ</button>
+                  </div>
+                  <button
+                    @click="submitForm"
+                    class="w-full dark:bg-emerald-500 hover:bg-emerald-400 py-2 px-4 shadow-md rounded-lg font-semibold"
+                  >
+                    <span class="md:block hidden">Chia sẻ lên tin</span>
+                    <span class="md:hidden xs:block">Chia sẻ</span>
+                  </button>
+                </div>
+              </div>
               </div>
             </DialogPanel>
           </TransitionChild>

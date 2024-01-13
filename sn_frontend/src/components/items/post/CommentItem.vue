@@ -42,8 +42,8 @@
                 @deleteComment="deleteComment"
               />
             </div>
-            <div class="flex gap-1">
-              <p
+            <div class="flex gap-1 flex-wrap sm:text-base text-sm break-all">
+              <span
                 v-for="word in words"
                 :key="word"
                 :class="filteredTags.includes(word) ? 'text-emerald-400' : ''"
@@ -60,10 +60,10 @@
                   {{ word }}
                 </RouterLink>
                 <span v-else>{{ word }}</span>
-              </p>
+              </span>
             </div>
           </div>
-          <p class="text-gray-600 dark:text-neutral-200">
+          <p class="text-gray-600 dark:text-neutral-200 sm:text-base text-xs px-1">
             {{ comment.created_at_formatted }} trước
           </p>
         </div>

@@ -28,10 +28,10 @@
             leave-to="opacity-0 scale-95"
           >
             <DialogPanel
-              class="w-[90%] transform bg-slate-200 text-left align-middle shadow-xl transition-all"
+              class="xl:w-[90%] w-full transform bg-slate-200 text-left align-middle shadow-xl transition-all"
             >
-              <div class="grid grid-cols-4">
-                <div class="col-span-3 bg-black relative group">
+              <div class="grid 2xl:grid-cols-4 xl:grid-cols-5">
+                <div class="xl:col-span-3 bg-black relative group">
                   <div
                     class="w-full h-full flex justify-center items-center bg-black"
                   >
@@ -53,7 +53,7 @@
                   </span>
                 </div>
                 <div
-                  class="relative col-span-1 overflow-y-scroll scrollbar-none scrollbar scrollbar-corner-slate-200 hover:scrollbar-thin scrollbar-thumb-slate-400 scrollbar-track-slate-800 h-screen border border-gray-200 shadow-md dark:bg-slate-600 dark:border-slate-700 dark:text-neutral-200"
+                  class="relative 2xl:col-span-1 xl:col-span-2 overflow-y-scroll scrollbar-none scrollbar scrollbar-corner-slate-200 hover:scrollbar-thin scrollbar-thumb-slate-400 scrollbar-track-slate-800 h-screen border border-gray-200 shadow-md dark:bg-slate-600 dark:border-slate-700 dark:text-neutral-200"
                 >
                   <div class="mb-6 flex items-center justify-between p-4">
                     <div class="flex items-center space-x-4">
@@ -179,13 +179,13 @@
                     <div v-if="lastComment > 6" class="h-24"></div>
                   </div>
                   <div
-                    class="bg-white border-t dark:bg-slate-600 dark:text-neutral-200 sticky z-60 bottom-0 px-4"
+                    class="bg-white border-t dark:bg-slate-600 dark:text-neutral-200 sticky z-50 bottom-0 px-4"
                   >
                     <form
                       v-on:submit.prevent="submitForm"
-                      class="flex justify-center items-center"
+                      class="flex justify-center items-center w-full"
                     >
-                      <div class="py-4 flex items-center gap-2">
+                      <div class="py-4 flex items-center gap-2 w-full">
                         <img
                           :src="post?.created_by.get_avatar"
                           class="w-10 h-10 rounded-full shadow-md"

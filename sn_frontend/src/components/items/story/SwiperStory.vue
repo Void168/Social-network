@@ -10,8 +10,8 @@
     :watchSlidesProgress="true"
     :space-between="0"
     :setWrapperSize="true"
-    :simulate-touch="false"
     :speed="0"
+    :simulateTouch="false"
     :autoplay="{
       stopOnLastSlide: true,
       disableOnInteraction: false,
@@ -45,12 +45,12 @@
           alt="img-story"
         />
         <video
+          :autoplay="checkKey"
           v-if="story.attachments[0].get_video"
-          autoplay
           class="rounded-none w-full shadow-none"
           ref="myVideo"
         >
-          <source :src="story?.attachments[0]?.get_video" type="video/mp4" />
+          <source :src="story?.attachments[0]?.get_video" type="video/mp4" v-if="checkKey"/>
         </video>
       </div>
       <div v-else class="w-full flex justify-center items-center">
@@ -157,6 +157,9 @@ export default (await import("vue")).defineComponent({
         .map((story) => story.duaration)
         .reduce((a, c) => a + c, 0);
     },
+    checkKey() {
+      return "attachments" in this.stories[this.activeSlide];
+    },
   },
 
   created() {
@@ -215,7 +218,7 @@ export default (await import("vue")).defineComponent({
 
     async doProgress() {
       const INTERVAL_TIME = 100;
-      
+
       if (this.stories[this.activeSlide]?.attachments) {
         this.$refs.myVideo[0].volume = 0.4;
       }
@@ -262,22 +265,14 @@ export default (await import("vue")).defineComponent({
       if (this.stories[this.currentStoryStore.activeSlide]?.body) {
         await axios
           .post(`/api/story/seen-text-story/${this.currentStoryId}/`)
-          .then((res) => {
-            if (res.data) {
-              console.log(res.data);
-            }
-          })
+          .then((res) => {})
           .catch((error) => {
             console.log(error);
           });
       } else {
         await axios
           .post(`/api/story/seen-media-story/${this.currentStoryId}/`)
-          .then((res) => {
-            if (res.data) {
-              console.log(res.data);
-            }
-          })
+          .then((res) => {})
           .catch((error) => {
             console.log(error);
           });

@@ -4,7 +4,7 @@
       <MenuButton
         class="inline-flex w-full justify-center py-2"
       >
-        <EllipsisHorizontalIcon class="w-8"/>
+        <EllipsisHorizontalIcon class="xm:w-8 w-6"/>
       </MenuButton>
     </div>
 

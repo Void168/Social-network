@@ -150,7 +150,6 @@ def create_media_story(request):
         attachment = story_attachment_form.save(commit=False)
         attachment.created_by = request.user
         attachment.save()
-
     if form.is_valid():
         media_story = form.save(commit=False)
         media_story.created_by = request.user

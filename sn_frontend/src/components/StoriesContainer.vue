@@ -1,27 +1,30 @@
 <template>
   <div>
-    <Swiper :breakpoints="{
-      '320': {
-        slidesPerView: 2,
-        spaceBetween: 20,
-      },
-      '440': {
-        slidesPerView: 3,
-        spaceBetween: 20,
-      },
-      '640': {
-        slidesPerView: 3,
-        spaceBetween: 20,
-      },
-      '1280': {
-        slidesPerView: 4,
-        spaceBetween: 20,
-      },
-      '1536': {
-        slidesPerView: 5,
-        spaceBetween: 20,
-      },
-    }">
+    <Swiper
+      :simulateTouch="false"
+      :breakpoints="{
+        '320': {
+          slidesPerView: 2,
+          spaceBetween: 20,
+        },
+        '440': {
+          slidesPerView: 3,
+          spaceBetween: 20,
+        },
+        '640': {
+          slidesPerView: 3,
+          spaceBetween: 20,
+        },
+        '1280': {
+          slidesPerView: 4,
+          spaceBetween: 20,
+        },
+        '1536': {
+          slidesPerView: 5,
+          spaceBetween: 20,
+        },
+      }"
+    >
       <SwiperSlide
         ><div
           class="relative cursor-pointer bg-slate-700 rounded-lg h-[213px]"
@@ -43,7 +46,7 @@
         </div></SwiperSlide
       >
       <SwiperSlide v-if="yourLastStory">
-        <SkeletonLoadingStoryVue v-if="isLoading"/>
+        <SkeletonLoadingStoryVue v-if="isLoading" />
         <div
           v-else
           class="relative cursor-pointer rounded-lg group"
@@ -72,7 +75,9 @@
               alt="story-image"
               class="h-full w-full group-hover:scale-105 group-hover:rounded-lg absolute z-10 bg-cover transition flex items-center justify-center"
               :style="{ backgroundColor: yourLastStory?.theme }"
-              :class="yourLastStory?.attachments[0]?.get_video ? 'bg-black' : ''"
+              :class="
+                yourLastStory?.attachments[0]?.get_video ? 'bg-black' : ''
+              "
             >
               <img
                 v-if="yourLastStory?.attachments[0]?.get_image"
@@ -105,7 +110,7 @@
         :key="story.id"
         @click="getUserStories(story[0]?.created_by?.id)"
       >
-        <SkeletonLoadingStoryVue v-if="isLoading"/>
+        <SkeletonLoadingStoryVue v-if="isLoading" />
         <Story
           v-else
           :story="
@@ -158,7 +163,6 @@ import "swiper/css";
 import SwiperStoryContainerButton from "./items/story/SwiperStoryContainerButton.vue";
 import CreateStoryModal from "./modals/story/CreateStoryModal.vue";
 import SkeletonLoadingStoryVue from "../components/loadings/SkeletionLoadingStory.vue";
-
 
 export default {
   components: {
@@ -221,7 +225,7 @@ export default {
   methods: {
     async getStories() {
       this.currentStoryStore.getCurrentUserId(this.userStore.user.id);
-      this.isLoading = true
+      this.isLoading = true;
 
       await axios
         .get("/api/story/text-stories/")
@@ -245,7 +249,7 @@ export default {
           this.mediaStories.forEach((mediaStory) => {
             this.yourStories.unshift(mediaStory);
           });
-          this.isLoading = false
+          this.isLoading = false;
           this.getSetStories();
         })
         .catch((error) => {

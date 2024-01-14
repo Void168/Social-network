@@ -1,6 +1,6 @@
 <template>
   <div class="flex items-center justify-center h-full">
-    <div class="relative border-2 w-[35%] h-[800px] rounded-lg flex items-center">
+    <div class="relative border-2 md:w-[500px] h-full xs:w-[300px] xm:w-[400px] rounded-lg flex items-center">
       <Suspense>
         <SwiperStoryHeader
           v-if="isYourStory && !isFirstStory && !isOtherStory"

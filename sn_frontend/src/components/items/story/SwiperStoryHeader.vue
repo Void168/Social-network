@@ -10,28 +10,30 @@
         class="rounded-full w-12 h-12"
       />
       <div class="flex gap-1 items-center">
-        <span class="font-semibold text-lg">{{
-          stories[0]?.created_by?.name
-        }}</span>
-        <span class="font-medium">{{
-          stories[this.currentStoryStore?.activeSlide]?.created_at_formatted
-        }}</span>
+        <div class="flex gap-1 xm:items-center xm:flex-row flex-col">
+          <span class="font-semibold xm:text-lg text-xs">{{
+            stories[0]?.created_by?.name
+          }}</span>
+          <span class="font-medium xm:text-base text-xs">{{
+            stories[this.currentStoryStore?.activeSlide]?.created_at_formatted
+          }}</span>
+        </div>
         <GlobeAsiaAustraliaIcon
-          class="w-5 h-5"
+          class="xm:w-5 xm:h-5 h-3 w-3"
           v-if="
             !stories[this.currentStoryStore?.activeSlide]?.is_private &&
             !stories[this.currentStoryStore?.activeSlide]?.only_me
           "
         />
         <UserGroupIcon
-          class="w-5 h-5"
+          class="xm:w-5 xm:h-5 h-3 w-3"
           v-else-if="
             stories[this.currentStoryStore?.activeSlide]?.is_private &&
             !stories[this.currentStoryStore?.activeSlide]?.only_me
           "
         />
         <LockClosedIcon
-          class="w-5 h-5"
+          class="xm:w-5 xm:h-5 h-3 w-3"
           v-else-if="
             !stories[this.currentStoryStore?.activeSlide]?.is_private &&
             stories[this.currentStoryStore?.activeSlide]?.only_me
@@ -41,21 +43,21 @@
     </div>
     <div class="flex gap-2 items-center">
       <PauseIcon
-        class="w-6 h-6 cursor-pointer"
+        class="xm:w-6 xm:h-6 w-4 h-4 cursor-pointer"
         @click="$emit('pause')"
         v-if="!isPause"
       />
-      <PlayIcon class="w-6 h-6 cursor-pointer" @click="$emit('pause')" v-else />
+      <PlayIcon class="xm:w-6 xm:h-6 w-4 h-4 cursor-pointer" @click="$emit('pause')" v-else />
       <SpeakerWaveIcon
-        class="w-6 h-6 cursor-pointer"
+        class="xm:w-6 xm:h-6 w-4 h-4 cursor-pointer"
         @click="$emit('mute')"
         v-if="!isMute"
       />
       <SpeakerXMarkIcon
-        class="w-6 h-6 cursor-pointer"
+        class="xm:w-6 xm:h-6 w-4 h-4 cursor-pointer"
         @click="$emit('mute')"
         v-else
-      />
+    />
       <StoryDropdown
         @openModal="openModal"
         :yourStory="stories[currentStoryStore.activeSlide]"

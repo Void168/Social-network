@@ -85,7 +85,9 @@
                           <h3 class="dark:text-neutral-200/70 text-lg">
                             Phông nền
                           </h3>
-                          <div class="flex flex-wrap gap-2 my-4 justify-center items-center">
+                          <div
+                            class="flex flex-wrap gap-2 my-4 justify-center items-center"
+                          >
                             <div v-for="theme in themes" :key="theme">
                               <div
                                 @click="chooseTheme(theme)"
@@ -278,79 +280,87 @@
                   </div>
                 </div>
                 <div
-                class="bg-slate-800 dark:text-neutral-200 border-r-[1px] w-[90%] border-slate-700 flex justify-between lg:hidden overflow-x-scroll"
-              >
-                <div class="flex">
-                  <div v-if="isTextStory">
-                    <div class="p-4">
-                      <form class="flex">
-                        <textarea
-                          v-model="body"
-                          @keyup="getContent"
-                          class="lg:w-full py-2 pl-4 pr-8 bg-gray-100 border rounded-lg resize-none overflow-auto scrollbar-corner-slate-200 scrollbar-thin scrollbar-thumb-slate-400 scrollbar-track-slate-800"
-                          name=""
-                          id=""
-                          :rows="3"
-                          cols="30"
-                          placeholder="Bắt đầu nhập"
-                        ></textarea>
-                        <ChooseFontStory
-                          class="w-full"
-                          :fonts="fonts"
-                          @getOption="getOption"
-                        />
-                        <div
-                          class="p-2 border border-slate-700 rounded-lg w-full"
-                        >
-                          <h3 class="dark:text-neutral-200/70 text-lg">
-                            Phông nền
-                          </h3>
-                          <div class="flex flex-wrap gap-2 justify-center items-center">
-                            <div v-for="theme in themes" :key="theme">
-                              <div
-                                @click="chooseTheme(theme)"
-                                class="2xl:w-12 2xl:h-12 xl:h-10 xl:w-10 lg:w-8 lg:h-8 h-4 w-4 rounded-full cursor-pointer"
-                                :class="[theme.background]"
-                              ></div>
+                  class="bg-slate-800 dark:text-neutral-200 border-r-[1px] w-[90%] border-slate-700 flex justify-between lg:hidden overflow-x-scroll"
+                >
+                  <div class="flex">
+                    <div v-if="isTextStory">
+                      <div class="p-4">
+                        <form class="flex">
+                          <textarea
+                            v-model="body"
+                            @keyup="getContent"
+                            class="lg:w-full py-2 pl-4 pr-8 bg-gray-100 border rounded-lg resize-none overflow-auto scrollbar-corner-slate-200 scrollbar-thin scrollbar-thumb-slate-400 scrollbar-track-slate-800"
+                            name=""
+                            id=""
+                            :rows="3"
+                            cols="30"
+                            placeholder="Bắt đầu nhập"
+                          ></textarea>
+                          <ChooseFontStory
+                            class="w-full"
+                            :fonts="fonts"
+                            @getOption="getOption"
+                          />
+                          <div
+                            class="p-2 border border-slate-700 rounded-lg w-full"
+                          >
+                            <h3 class="dark:text-neutral-200/70 text-lg">
+                              Phông nền
+                            </h3>
+                            <div
+                              class="flex flex-wrap gap-2 justify-center items-center"
+                            >
+                              <div v-for="theme in themes" :key="theme">
+                                <div
+                                  @click="chooseTheme(theme)"
+                                  class="2xl:w-12 2xl:h-12 xl:h-10 xl:w-10 lg:w-8 lg:h-8 h-4 w-4 rounded-full cursor-pointer"
+                                  :class="[theme.background]"
+                                ></div>
+                              </div>
                             </div>
                           </div>
-                        </div>
-                      </form>
+                        </form>
+                      </div>
                     </div>
-                  </div>
-                  <div v-if="url" class="flex items-center justify-center space-y-4 p-4">
                     <div
-                      class="p-4 flex flex-col justify-center gap-3 items-center font-semibold"
+                      v-if="url"
+                      class="flex items-center justify-center space-y-4 p-4"
                     >
-                      <label for="caption" class="text-xl"> Tiêu đề </label>
-                      <textarea
-                        v-model="caption"
-                        class="w-full py-2 pl-4 pr-8 bg-gray-100 border rounded-lg resize-none overflow-auto scrollbar-corner-slate-200 scrollbar-thin scrollbar-thumb-slate-400 scrollbar-track-slate-800"
-                        name="caption"
-                        id="caption"
-                        :rows="3"
-                        cols="30"
-                        placeholder="Nhập tiêu đề"
-                      ></textarea>
+                      <div
+                        class="p-4 flex flex-col justify-center gap-3 items-center font-semibold"
+                      >
+                        <label for="caption" class="text-xl"> Tiêu đề </label>
+                        <textarea
+                          v-model="caption"
+                          class="w-full py-2 pl-4 pr-8 bg-gray-100 border rounded-lg resize-none overflow-auto scrollbar-corner-slate-200 scrollbar-thin scrollbar-thumb-slate-400 scrollbar-track-slate-800"
+                          name="caption"
+                          id="caption"
+                          :rows="3"
+                          cols="30"
+                          placeholder="Nhập tiêu đề"
+                        ></textarea>
+                      </div>
                     </div>
                   </div>
-                </div>
-                <div class="my-4 px-6 flex flex-col justify-center items-center gap-2 w-full h-full" v-if="isTextStory || url">
                   <div
-                    @click="$emit('closeTextStory')"
-                    class="flex justify-center 2xl:py-2 2xl:px-4 py-1 px-2 w-full dark:bg-slate-700 shadow-md rounded-lg font-semibold hover:bg-slate-600 transition duration-100 cursor-pointer"
+                    class="my-4 px-6 flex flex-col justify-center items-center gap-2 w-full h-full"
+                    v-if="isTextStory || url"
                   >
-                    <button @click="removeAll" class="w-full">Bỏ</button>
+                    <div
+                      @click="$emit('closeTextStory')"
+                      class="flex justify-center 2xl:py-2 2xl:px-4 py-1 px-2 w-full dark:bg-slate-700 shadow-md rounded-lg font-semibold hover:bg-slate-600 transition duration-100 cursor-pointer"
+                    >
+                      <button @click="removeAll" class="w-full">Bỏ</button>
+                    </div>
+                    <button
+                      @click="submitForm"
+                      class="w-full dark:bg-emerald-500 hover:bg-emerald-400 py-2 px-4 shadow-md rounded-lg font-semibold"
+                    >
+                      <span class="md:block hidden">Chia sẻ lên tin</span>
+                      <span class="md:hidden xs:block">Chia sẻ</span>
+                    </button>
                   </div>
-                  <button
-                    @click="submitForm"
-                    class="w-full dark:bg-emerald-500 hover:bg-emerald-400 py-2 px-4 shadow-md rounded-lg font-semibold"
-                  >
-                    <span class="md:block hidden">Chia sẻ lên tin</span>
-                    <span class="md:hidden xs:block">Chia sẻ</span>
-                  </button>
                 </div>
-              </div>
               </div>
             </DialogPanel>
           </TransitionChild>
@@ -594,6 +604,7 @@ export default (await import("vue")).defineComponent({
           formData.append("video", "");
           formData.append("zoom_image", `${this.zoom + this.value / 50}`);
           formData.append("rotate", this.deg);
+          formData.append("duaration", 10);
         } else {
           formData.append("image", "");
           formData.append("zoom_image", `${this.zoom + this.value / 50}`);
@@ -607,22 +618,39 @@ export default (await import("vue")).defineComponent({
         formData.append("theme", this.color);
         formData.append("caption", this.caption);
 
-        if (this.$refs.myVideo.duration <= 20) {
-          axios
-            .post("/api/story/create-media-story/", formData, {
-              headers: {
-                "Content-Type": "multipart/form-data",
-              },
-            })
-            .then((res) => {
-              this.textStories.unshift(res.data);
-              this.caption = "";
-              this.is_private = false;
-              this.only_me = false;
-              this.color = null;
-              this.url = null;
-              this.raw = null;
+        axios
+          .post("/api/story/create-media-story/", formData, {
+            headers: {
+              "Content-Type": "multipart/form-data",
+            },
+          })
+          .then((res) => {
+            this.textStories.unshift(res.data);
+            this.caption = "";
+            this.is_private = false;
+            this.only_me = false;
+            this.color = null;
+            this.url = null;
+            this.raw = null;
 
+            if (
+              this.raw?.name.includes(".png") ||
+              this.raw?.name.includes(".jpg") ||
+              this.raw?.name.includes(".jpeg")
+            ) {
+              this.toastStore.showToast(
+                2000,
+                "Đã tạo tin",
+                "bg-emerald-500 text-white"
+              );
+            }
+
+            if (
+              (this.$refs.myVideo?.duration <= 20 &&
+                !this.raw?.name.includes(".png")) ||
+              !this.raw?.name.includes(".jpg") ||
+              !this.raw?.name.includes(".jpeg")
+            ) {
               this.toastStore.showToast(
                 2000,
                 "Đã tạo tin",
@@ -631,17 +659,17 @@ export default (await import("vue")).defineComponent({
               setTimeout(() => {
                 this.$router.go(0);
               }, 2500);
-            })
-            .catch((error) => {
-              console.log("error", error);
-            });
-        } else {
-          this.toastStore.showToast(
-            3000,
-            "Video không được dài quá 20 giây",
-            "bg-rose-500 text-white"
-          );
-        }
+            } else {
+              this.toastStore.showToast(
+                3000,
+                "Video không được dài quá 20 giây",
+                "bg-rose-500 text-white"
+              );
+            }
+          })
+          .catch((error) => {
+            console.log("error", error);
+          });
       }
     },
   },

@@ -25,40 +25,54 @@
             >đã thay đổi ảnh đại diện</span
           >
           <div class="md:hidden items-center gap-2 flex">
-            <GlobeAsiaAustraliaIcon
-              class="w-5 h-5"
-              v-if="post.is_private === false && post.only_me === false"
-            />
-            <UserGroupIcon
-              class="w-5 h-5"
-              v-else-if="post.is_private === true && post.only_me === false"
-            />
-            <LockClosedIcon
-              class="w-5 h-5"
-              v-else-if="post.is_private === true && post.only_me === true"
-            />
-            <p class="text-gray-600 dark:text-neutral-200 md:hidden sm:text-base xs:text-sm">
-              {{ post.created_at_formatted }} trước
-            </p>
+            <div class="relative group">
+              <PrivacyTooltip :post="post"/>
+              <GlobeAsiaAustraliaIcon
+                class="w-5 h-5"
+                v-if="post.is_private === false && post.only_me === false"
+              />
+              <UserGroupIcon
+                class="w-5 h-5"
+                v-else-if="post.is_private === true && post.only_me === false"
+              />
+              <LockClosedIcon
+                class="w-5 h-5"
+                v-else-if="post.is_private === true && post.only_me === true"
+              />
+            </div>
+            <div class="relative group md:hidden">
+              <p class="text-gray-600 dark:text-neutral-200 sm:text-base xs:text-sm group-hover:underline">
+                {{ post.created_at_formatted }} trước
+              </p>
+              <CreatedAtTooltip :post="post"/>
+            </div>
           </div>
         </div>
       </div>
       <div class="p-4 md:flex items-center gap-2 hidden">
-        <GlobeAsiaAustraliaIcon
-          class="w-5 h-5"
-          v-if="post.is_private === false && post.only_me === false"
-        />
-        <UserGroupIcon
-          class="w-5 h-5"
-          v-else-if="post.is_private === true && post.only_me === false"
-        />
-        <LockClosedIcon
-          class="w-5 h-5"
-          v-else-if="post.is_private === true && post.only_me === true"
-        />
-        <p class="text-gray-600 dark:text-neutral-200 md:block hidden">
-          {{ post.created_at_formatted }} trước
-        </p>
+        <div class="relative group">
+          <PrivacyTooltip :post="post"/>
+          <GlobeAsiaAustraliaIcon
+            class="w-5 h-5"
+            v-if="post.is_private === false && post.only_me === false"
+          />
+          <UserGroupIcon
+            class="w-5 h-5"
+            v-else-if="post.is_private === true && post.only_me === false"
+          />
+          <LockClosedIcon
+            class="w-5 h-5"
+            v-else-if="post.is_private === true && post.only_me === true"
+          />
+        </div>
+        <div class="relative group">
+          <RouterLink :to="{ name: 'postview', params: { id: post.id } }">
+            <p class="text-gray-600 dark:text-neutral-200 md:block hidden group-hover:underline">
+              {{ post.created_at_formatted }} trước
+            </p>
+          </RouterLink>
+          <CreatedAtTooltip :post="post"/>
+        </div>
       </div>
     </div>
 
@@ -227,6 +241,8 @@ import { HeartIcon as HeartLike } from "@heroicons/vue/24/solid";
 import { useUserStore } from "../../../stores/user";
 import { useToastStore } from "../../../stores/toast";
 import DeletePostModal from "../../modals/post/DeletePostModal.vue";
+import CreatedAtTooltip from "./Tooltip/CreatedAtTooltip.vue";
+import PrivacyTooltip from "./Tooltip/PrivacyTooltip.vue";
 
 export default (await import("vue")).defineComponent({
   props: {
@@ -340,6 +356,8 @@ export default (await import("vue")).defineComponent({
     GlobeAsiaAustraliaIcon,
     UserGroupIcon,
     LockClosedIcon,
+    CreatedAtTooltip,
+    PrivacyTooltip
   },
 });
 </script>

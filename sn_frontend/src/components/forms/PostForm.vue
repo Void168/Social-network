@@ -110,7 +110,7 @@
         <div
           class="py-3 px-6 text-black bg-gray-400 dark:bg-slate-800 dark:border-slate-700 dark:text-neutral-200 dark:hover:bg-white dark:hover:text-slate-800 font-semibold rounded-lg transition-colors hover:bg-gray-600 hover:text-white cursor-pointer"
         >
-          <span>Chọn ảnh</span>
+          <span class="xm:text-base text-xs">Chọn ảnh</span>
         </div>
         <input
           type="file"
@@ -121,7 +121,7 @@
           @change="onFileChange"
         />
       </label>
-      <button class="btn">Đăng bài viết</button>
+      <button class="btn xm:text-base text-xs">Đăng bài viết</button>
     </div>
   </form>
 </template>

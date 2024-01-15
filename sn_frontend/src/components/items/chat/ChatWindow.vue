@@ -469,7 +469,7 @@ export default (await import("vue")).defineComponent({
         .get(`/api/chat/${this.friend?.id}/get-chat-window/`)
         .then((res) => {
           this.conversation = res.data.conversation;
-          console.log(this.conversation);
+          // console.log(this.conversation);
         })
         .catch((error) => console.log(error));
     },

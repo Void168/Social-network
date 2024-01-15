@@ -34,7 +34,7 @@
                 >
                 <TooltipProfile
                   :user="comment.created_by"
-                  class="hidden group-hover:block"
+                  class="hidden md:group-hover:block"
                 />
               </strong>
               <CommentDropDownVue

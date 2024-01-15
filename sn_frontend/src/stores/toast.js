@@ -11,6 +11,8 @@ export const useToastStore = defineStore({
         height: null,
         width: null,
         navbarHeight: null,
+        peopleYouMayKnowHeight: null,
+        trendsHeight: null,
     }),
 
     actions: {
@@ -40,6 +42,12 @@ export const useToastStore = defineStore({
         },
         setNavbarHeight(data){
             this.navbarHeight = data
+        },
+        setPeopleHeight(data){
+            this.peopleYouMayKnowHeight = data
+        },
+        setTrendsHeight(data){
+            this.trendsHeight = data
         }
     }
 })

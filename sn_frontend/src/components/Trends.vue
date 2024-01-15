@@ -1,5 +1,5 @@
 <template>
-  <div class="p-4 bg-white border border-gray-200 dark:bg-slate-600 dark:border-slate-700 dark:text-neutral-200 rounded-l-lg">
+  <div ref="container" class="p-4 bg-white border border-gray-200 dark:bg-slate-600 dark:border-slate-700 dark:text-neutral-200 rounded-l-lg">
     <h3 class="mb-6 xl:text-xl text-center">Xu hướng</h3>
     <SkeletionLoadingChatBox v-if="isLoading"/>
     <div class="space-y-4" v-else>
@@ -27,8 +27,16 @@
 import axios from "axios";
 import { RouterLink } from "vue-router";
 import SkeletionLoadingChatBox from "./loadings/SkeletionLoadingChatbox.vue"
+import { useToastStore } from "../stores/toast";
 
 export default (await import("vue")).defineComponent({
+  setup(){
+    const toastStore = useToastStore()
+    
+    return {
+      toastStore
+    }
+  },
   data() {
     return {
       trends: [],
@@ -37,16 +45,28 @@ export default (await import("vue")).defineComponent({
   },
   mounted() {
     this.getTrends();
+    window.addEventListener('setHeight', this.setHeight);
   },
+  unmounted() {
+    window.removeEventListener('setHeight', this.setHeight);
+  },
+
   methods: {
     async getTrends() {
+      this.isLoading = true;
       await axios
-        .get(`/api/posts/trends/`)
-        .then((res) => {
-          this.trends = res.data;
-        })
-        .catch((error) => console.log(error));
+      .get(`/api/posts/trends/`)
+      .then((res) => {
+        this.trends = res.data;
+        this.isLoading = false;
+        this.setHeight()
+      })
+      .catch((error) => console.log(error));
     },
+    setHeight(){
+      this.toastStore.setTrendsHeight(this.$refs.container.clientHeight)
+      console.log(this.$refs.container.clientHeight)
+    }
   },
   components: { RouterLink, SkeletionLoadingChatBox },
 });

@@ -1,7 +1,10 @@
 <template>
-  <div class="max-h-[200px] p-4 bg-white border border-gray-200 dark:bg-slate-600 dark:border-slate-700 dark:text-neutral-200 rounded-bl-lg overflow-y-auto">
+  <div
+    ref="container"
+    class="p-4 bg-white border border-gray-200 dark:bg-slate-600 dark:border-slate-700 dark:text-neutral-200 rounded-bl-lg overflow-y-auto"
+  >
     <h3 class="mb-6 xl:text-xl text-center">Người bạn có thể biết</h3>
-    <SkeletionLoadingChatBox v-if="isLoading"/>
+    <SkeletionLoadingChatBox v-if="isLoading" />
     <div class="space-y-4" v-else>
       <div
         v-for="user in users"
@@ -26,36 +29,53 @@
 
 <script>
 import axios from "axios";
-import SkeletionLoadingChatBox from "./loadings/SkeletionLoadingChatbox.vue"
-
+import SkeletionLoadingChatBox from "./loadings/SkeletionLoadingChatbox.vue";
+import { useToastStore } from "../stores/toast";
 export default (await import("vue")).defineComponent({
   components: {
     SkeletionLoadingChatBox,
   },
+  setup(){
+    const toastStore = useToastStore()
 
+    return {
+      toastStore
+    }
+  },
   data() {
     return {
       users: [],
-      isLoading: false
+      isLoading: false,
     };
   },
 
   mounted() {
     this.getFriendSuggestions();
+    window.addEventListener("setHeight", this.setHeight);
+  },
+  unmounted() {
+    window.removeEventListener("setHeight", this.setHeight);
   },
 
   methods: {
     async getFriendSuggestions() {
-      this.isLoading = true
+      this.isLoading = true;
       await axios
         .get("/api/friends/suggested/")
         .then((res) => {
           this.users = res.data;
-          this.isLoading = false
+          this.isLoading = false;
+          this.setHeight()
         })
         .catch((error) => {
           console.log(error);
         });
+    },
+    setHeight() {
+      this.toastStore.setPeopleHeight(
+        this.$refs.container.clientHeight
+      );
+      console.log(this.$refs.container.clientHeight)
     },
   },
 });

@@ -1,7 +1,9 @@
 <template>
   <div
-    class=" scrollbar-corner-slate-200 scrollbar-none hover:scrollbar-thin scrollbar-thumb-slate-400 scrollbar-track-slate-800 h-full bg-white border border-gray-200 dark:bg-slate-600 dark:border-slate-700 dark:text-neutral-200 rounded-l-lg overflow-y-scroll"
+    class=" scrollbar-corner-slate-200 scrollbar-none hover:scrollbar-thin scrollbar-thumb-slate-400 scrollbar-track-slate-800 bg-white border border-gray-200 dark:bg-slate-600 dark:border-slate-700 dark:text-neutral-200 rounded-l-lg overflow-y-scroll"
+    :style="{height: `${toastStore.height - toastStore.peopleYouMayKnowHeight - toastStore.trendsHeight - 70}px`}"
   >
+  <!-- {{toastStore.peopleYouMayKnowHeight}} -->
     <h3 class="xl:text-xl p-4 text-center">Người liên hệ</h3>
     <SkeletionLoadingChatBoxVue v-if="isLoading" />
     <div class="flex flex-col" v-else>
@@ -53,7 +55,7 @@
         <p class="font-semibold truncate">{{ groupConversation.group_name }}</p>
       </RouterLink>
     </div>
-    <div class="fixed flex gap-1 justify-end bottom-0 right-32 max-w-[1220px]">
+    <div class="fixed flex gap-1 justify-end bottom-0 right-32 max-w-[1220px] z-50">
       <div v-for="friend in friendsChat" :key="friend.id">
         <ChatWindow
           :friend="friend"
@@ -99,6 +101,7 @@ import "emoji-picker-element";
 
 import { Popover, PopoverButton, PopoverPanel } from "@headlessui/vue";
 import SkeletionLoadingChatBoxVue from "./loadings/SkeletionLoadingChatBox.vue";
+import { useToastStore } from "../stores/toast";
 
 export default (await import("vue")).defineComponent({
   name: "chat",
@@ -125,9 +128,11 @@ export default (await import("vue")).defineComponent({
   setup() {
     const userStore = useUserStore();
     const connectionStore = useConnectionStore();
+    const toastStore = useToastStore()
 
     return {
       userStore,
+      toastStore,
       connectionStore,
     };
   },
@@ -200,6 +205,9 @@ export default (await import("vue")).defineComponent({
       }
     },
     getFriendId(friend) {
+      console.log(this.friendsChat.length)
+      console.log(!this.bubbleChats?.includes(this.friendsChat[0]))
+      console.log(this.toastStore.width > 1380)
       if (!this.friendsChat?.includes(friend)) {
         this.friendsChat?.push(friend);
       }
@@ -210,7 +218,21 @@ export default (await import("vue")).defineComponent({
       }
       if (
         this.friendsChat.length > 3 &&
-        !this.bubbleChats?.includes(this.friendsChat[0])
+        !this.bubbleChats?.includes(this.friendsChat[0]) && this.toastStore.width > 1380
+      ) {
+        this.bubbleChats?.reverse().push(this.friendsChat[0]);
+        this.friendsChat?.reverse().pop();
+      }
+      if (
+        this.friendsChat.length > 2 &&
+        !this.bubbleChats?.includes(this.friendsChat[0]) && this.toastStore.width > 990 && this.toastStore.width < 1380
+      ) {
+        this.bubbleChats?.reverse().push(this.friendsChat[0]);
+        this.friendsChat?.reverse().pop();
+      }
+      if (
+        this.friendsChat.length > 1 &&
+        !this.bubbleChats?.includes(this.friendsChat[0]) && this.toastStore.width > 640 && this.toastStore.width < 990
       ) {
         this.bubbleChats?.reverse().push(this.friendsChat[0]);
         this.friendsChat?.reverse().pop();
@@ -227,7 +249,21 @@ export default (await import("vue")).defineComponent({
       }
       if (
         this.friendsChat.length > 3 &&
-        !this.bubbleChats?.includes(this.friendsChat[0])
+        !this.bubbleChats?.includes(this.friendsChat[0]) && this.toastStore.width > 1380
+      ) {
+        this.bubbleChats?.reverse().push(this.friendsChat[0]);
+        this.friendsChat?.reverse().pop();
+      }
+      if (
+        this.friendsChat.length > 2 &&
+        !this.bubbleChats?.includes(this.friendsChat[0]) && this.toastStore.width > 990 && this.toastStore.width < 1380
+      ) {
+        this.bubbleChats?.reverse().push(this.friendsChat[0]);
+        this.friendsChat?.reverse().pop();
+      }
+      if (
+        this.friendsChat.length > 1 &&
+        !this.bubbleChats?.includes(this.friendsChat[0]) && this.toastStore.width > 640 && this.toastStore.width < 990
       ) {
         this.bubbleChats?.reverse().push(this.friendsChat[0]);
         this.friendsChat?.reverse().pop();

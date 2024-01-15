@@ -5,19 +5,21 @@
         <img :src="post.created_by.get_avatar" class="w-12 h-12 rounded-full" />
 
         <div class="flex gap-1 items-center flex-wrap">
-          <strong>
+          <strong class="group">
             <RouterLink
               :to="{ name: 'profile', params: { id: post.created_by.id } }"
               >{{ post.created_by.name }}</RouterLink
             >
+            <TooltipProfileVue :user="post.created_by" class="hidden md:group-hover:block lg:left-[-150px] md:left-0"/>
           </strong>
           <div v-if="post.post_to" class="flex gap-1">
             <p>cùng với</p>
-            <strong>
+            <strong class="group">
               <RouterLink
                 :to="{ name: 'profile', params: { id: post.post_to.id } }"
                 >{{ post.post_to.name }}</RouterLink
               >
+              <TooltipProfileVue :user="post.post_to" class="hidden md:group-hover:block lg:left-[-150px] md:left-0"/>
             </strong>
           </div>
 
@@ -243,6 +245,7 @@ import { useToastStore } from "../../../stores/toast";
 import DeletePostModal from "../../modals/post/DeletePostModal.vue";
 import CreatedAtTooltip from "./Tooltip/CreatedAtTooltip.vue";
 import PrivacyTooltip from "./Tooltip/PrivacyTooltip.vue";
+import TooltipProfileVue from "../profile/TooltipProfile.vue";
 
 export default (await import("vue")).defineComponent({
   props: {
@@ -357,7 +360,8 @@ export default (await import("vue")).defineComponent({
     UserGroupIcon,
     LockClosedIcon,
     CreatedAtTooltip,
-    PrivacyTooltip
+    PrivacyTooltip,
+    TooltipProfileVue
   },
 });
 </script>

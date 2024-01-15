@@ -5,7 +5,7 @@
   >
     <div class="col-span-2 lg:block hidden">
       <div
-        class="overflow-y-scroll sticky z-10 scrollbar-corner-slate-200 scrollbar-none hover:scrollbar-thin scrollbar-thumb-slate-400 scrollbar-track-slate-800"
+        class="overflow-y-scroll sticky scrollbar-corner-slate-200 scrollbar-none hover:scrollbar-thin scrollbar-thumb-slate-400 scrollbar-track-slate-800"
         :style="{
           height: `${toastStore.height}px`,
           top: `${toastStore.navbarHeight}px`,

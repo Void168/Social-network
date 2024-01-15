@@ -77,7 +77,7 @@
                         <ChooseFontStory
                           class="w-full"
                           :fonts="fonts"
-                          @getOption="getOption"
+                          @getFont="getFont"
                         />
                         <div
                           class="p-2 border mt-8 border-slate-700 rounded-lg max-h-max"
@@ -214,6 +214,7 @@
                         :class="[selectedTheme.textColor]"
                       >
                         {{ body || "Bắt đầu nhập" }}
+
                       </p>
                     </div>
                     <div
@@ -299,7 +300,7 @@
                           <ChooseFontStory
                             class="w-full"
                             :fonts="fonts"
-                            @getOption="getOption"
+                            @getFont="getFont"
                           />
                           <div
                             class="p-2 border border-slate-700 rounded-lg w-full"
@@ -459,8 +460,8 @@ export default (await import("vue")).defineComponent({
   },
 
   methods: {
-    getOption(selectedFont) {
-      this.$emit("getOption", selectedFont);
+    getFont(selectedFont) {
+      this.$emit("getFont", selectedFont);
       this.selectedFont = selectedFont;
     },
     chooseTheme(theme) {

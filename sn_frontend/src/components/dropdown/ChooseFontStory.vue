@@ -29,7 +29,7 @@
             :key="font.name"
             :value="font"
             as="template"
-            @click="$emit('getOption', selectedFont)"
+            @click="$emit('getFont', selectedFont)"
           >
             <li
               :class="[

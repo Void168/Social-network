@@ -1,9 +1,9 @@
 <template>
-  <div class="max-w-7xl mx-auto grid md:grid-cols-2 xs:grid-cols-1 gap-4">
-    <div class="main-left md:block xs:hidden">
-      <div class="p-12 bg-white border border-gray-200 rounded-lg">
+  <div class="max-w-7xl mx-auto grid md:grid-cols-2 xs:grid-cols-1 gap-4" :style="{height: `${toastStore.height}px`}">
+    <div class="main-left md:flex xs:hidden justify-center items-center">
+      <div class="p-12 bg-white dark:bg-slate-600 border border-gray-200 dark:border-slate-500 dark:text-slate-200 rounded-lg">
         <h1 class="mb-6 text-2xl">Đăng nhập</h1>
-        <p class="mb-6 text-gray-500">
+        <p class="mb-6 text-gray-500 dark:text-slate-200">
           Lorem ipsum dolor sit amet, consectetur adipisicing elit. Eaque
           delectus voluptatum sed ipsam, omnis voluptates et tempore temporibus
           hic harum veritatis eveniet, alias pariatur, at ad architecto cumque
@@ -21,8 +21,8 @@
       </div>
     </div>
 
-    <div class="main-right flex justify-center">
-      <div class="p-12 bg-white border boder-gray-200 rounded-lg w-full">
+    <div class="main-right flex justify-center items-center">
+      <div class="p-12 bg-white dark:bg-slate-600 dark:text-slate-200 border boder-gray-200 dark:border-slate-500 md:rounded-lg w-full md:h-[540px] h-full">
         <template v-if="errors.length > 0">
           <div
             class="bg-rose-400 text-white text-center rounded-lg px-6 py-3 mb-4"

@@ -1,5 +1,5 @@
 <template>
-  <div ref="container" class="p-4 bg-white border border-gray-200 dark:bg-slate-600 dark:border-slate-700 dark:text-neutral-200 rounded-l-lg">
+  <div ref="trendsContainer" class="p-4 bg-white border border-gray-200 dark:bg-slate-600 dark:border-slate-700 dark:text-neutral-200 rounded-l-lg">
     <h3 class="mb-6 xl:text-xl text-center">Xu hướng</h3>
     <SkeletionLoadingChatBox v-if="isLoading"/>
     <div class="space-y-4" v-else>
@@ -64,8 +64,9 @@ export default (await import("vue")).defineComponent({
       .catch((error) => console.log(error));
     },
     setHeight(){
-      this.toastStore.setTrendsHeight(this.$refs.container.clientHeight)
-      console.log(this.$refs.container.clientHeight)
+      this.toastStore.resetTrendsHeight()
+      this.toastStore.setTrendsHeight(this.$refs.trendsContainer.clientHeight)
+      console.log(this.$refs.trendsContainer.clientHeight)
     }
   },
   components: { RouterLink, SkeletionLoadingChatBox },

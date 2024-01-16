@@ -1,6 +1,6 @@
 <template>
   <div
-    ref="container"
+    ref="peopleContainer"
     class="p-4 bg-white border border-gray-200 dark:bg-slate-600 dark:border-slate-700 dark:text-neutral-200 rounded-bl-lg overflow-y-auto"
   >
     <h3 class="mb-6 xl:text-xl text-center">Người bạn có thể biết</h3>
@@ -72,10 +72,11 @@ export default (await import("vue")).defineComponent({
         });
     },
     setHeight() {
+      this.toastStore.resetPeopleHeight()
       this.toastStore.setPeopleHeight(
-        this.$refs.container.clientHeight
+        this.$refs.peopleContainer.clientHeight
       );
-      console.log(this.$refs.container.clientHeight)
+      console.log(this.$refs.peopleContainer.clientHeight)
     },
   },
 });

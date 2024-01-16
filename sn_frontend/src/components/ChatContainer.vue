@@ -1,9 +1,8 @@
 <template>
   <div
     class=" scrollbar-corner-slate-200 scrollbar-none hover:scrollbar-thin scrollbar-thumb-slate-400 scrollbar-track-slate-800 bg-white border border-gray-200 dark:bg-slate-600 dark:border-slate-700 dark:text-neutral-200 rounded-l-lg overflow-y-scroll"
-    :style="{height: `${toastStore.height - toastStore.peopleYouMayKnowHeight - toastStore.trendsHeight - 70}px`}"
+    :style="{height: `${toastStore.height - toastStore.peopleYouMayKnowHeight - toastStore.trendsHeight + 35}px`}"
   >
-  <!-- {{toastStore.peopleYouMayKnowHeight}} -->
     <h3 class="xl:text-xl p-4 text-center">Người liên hệ</h3>
     <SkeletionLoadingChatBoxVue v-if="isLoading" />
     <div class="flex flex-col" v-else>
@@ -102,6 +101,7 @@ import "emoji-picker-element";
 import { Popover, PopoverButton, PopoverPanel } from "@headlessui/vue";
 import SkeletionLoadingChatBoxVue from "./loadings/SkeletionLoadingChatBox.vue";
 import { useToastStore } from "../stores/toast";
+import { th } from "date-fns/locale";
 
 export default (await import("vue")).defineComponent({
   name: "chat",
@@ -205,9 +205,6 @@ export default (await import("vue")).defineComponent({
       }
     },
     getFriendId(friend) {
-      console.log(this.friendsChat.length)
-      console.log(!this.bubbleChats?.includes(this.friendsChat[0]))
-      console.log(this.toastStore.width > 1380)
       if (!this.friendsChat?.includes(friend)) {
         this.friendsChat?.push(friend);
       }

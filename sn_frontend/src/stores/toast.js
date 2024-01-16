@@ -8,11 +8,11 @@ export const useToastStore = defineStore({
         message: '',
         classes: '',
         isVisible: false,
-        height: null,
-        width: null,
-        navbarHeight: null,
-        peopleYouMayKnowHeight: null,
-        trendsHeight: null,
+        height: 0,
+        width: 0,
+        navbarHeight: 0,
+        peopleYouMayKnowHeight: 0,
+        trendsHeight: 0,
     }),
 
     actions: {
@@ -48,6 +48,12 @@ export const useToastStore = defineStore({
         },
         setTrendsHeight(data){
             this.trendsHeight = data
+        },
+        resetPeopleHeight(){
+            this.peopleYouMayKnowHeight = 0
+        },
+        resetTrendsHeight(){
+            this.peopleYouMayKnowHeight = 0
         }
     }
 })

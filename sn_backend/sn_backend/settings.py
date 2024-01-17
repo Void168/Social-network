@@ -68,6 +68,7 @@ INSTALLED_APPS = [
     'information',
     'story',
     'page',
+    'group',
     'rest_framework',
     'rest_framework_simplejwt',
     'channels',

@@ -87,7 +87,34 @@ class PagePost(models.Model):
     reported_by_users = models.ManyToManyField(User, blank=True)
     
     created_at = models.DateTimeField(auto_now_add=True)
+    created_by = models.ForeignKey(Page, related_name='group_posts', on_delete=models.CASCADE)
+    
+    class Meta:
+        ordering = ('-created_at',)
+    
+    def created_at_formatted(self):
+        return timesince(self.created_at)
+
+class GroupPost(models.Model):
+    id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
+    body = models.TextField(blank=True, null=True)
+    
+    attachments = models.ManyToManyField(PostAttachment, blank=True)
+    
+    is_avatar_post = models.BooleanField(default=False)
+    
+    likes = models.ManyToManyField(Like, blank=True)
+    likes_count = models.IntegerField(default=0)
+    
+    comments = models.ManyToManyField(Comment, blank=True)
+    comments_count = models.IntegerField(default=0)
+    
+    reported_by_users = models.ManyToManyField(User, blank=True)
+    
+    created_at = models.DateTimeField(auto_now_add=True)
     created_by = models.ForeignKey(Page, related_name='page_posts', on_delete=models.CASCADE)
+    
+    pending = models.BooleanField(default=True)
     
     class Meta:
         ordering = ('-created_at',)

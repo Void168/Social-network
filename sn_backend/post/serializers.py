@@ -1,6 +1,7 @@
 from rest_framework import serializers
 
 from account.serializers import UserSerializer
+from page.serializers import PageSerializer
 
 from .models import Post, PostAttachment, Comment, Trend, Like
 
@@ -30,7 +31,15 @@ class PostSerializer(serializers.ModelSerializer):
     class Meta:
         model = Post
         fields = ('id', 'body','is_avatar_post', 'is_private','only_me', 'likes_count', 'comments_count', 'comments', 'created_by', 'created_at_formatted', 'created_at', 'attachments','likes', 'post_to',)   
-        
+
+class PagePostSerializer(serializers.ModelSerializer):
+    created_by = PageSerializer(read_only=True)
+    attachments = PostAttachmentSerializer(read_only=True, many=True)
+    likes = LikeSerializer(read_only=True, many=True)
+    comments = CommentSerializer(read_only=True, many=True)
+    class Meta:
+        model = Post
+        fields = ('id', 'body','is_avatar_post', 'likes_count', 'comments_count', 'comments', 'created_by', 'created_at_formatted', 'created_at', 'attachments','likes',)  
         
 class PostDetailSerializer(serializers.ModelSerializer):
     created_by = UserSerializer(read_only=True)

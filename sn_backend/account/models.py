@@ -49,7 +49,6 @@ class PhoneNumber(models.Model):
 class User(AbstractBaseUser, PermissionsMixin):
     username_validator = UnicodeUsernameValidator()
     
-    
     id= models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
     
     email = models.EmailField(blank=True, default='', unique=True)
@@ -66,6 +65,7 @@ class User(AbstractBaseUser, PermissionsMixin):
     
     following = models.ManyToManyField('self')
     followers = models.ManyToManyField('self')
+    # following_page = models.ManyToManyField(Page, related_name='page_following')
     followers_count = models.IntegerField(default=0)
     
     relationship_status = models.CharField(blank=True, default='', max_length=255)

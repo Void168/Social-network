@@ -65,6 +65,18 @@
                       </span>
                     </RouterLink>
                   </div>
+                  <hr class="my-1 border-slate-500"/>
+                  <div
+                    class="flow-root mt-4 mb-2 rounded-md px-2 py-2 transition duration-150 ease-in-out hover:bg-gray-100 dark:bg-slate-600 dark:hover:bg-slate-500 focus:outline-none focus-visible:ring focus-visible:ring-orange-500/50 cursor-pointer"
+                  >
+                      <span class="flex items-center justify-center">
+                        <span
+                          class="text-sm font-medium text-gray-900 dark:text-neutral-200"
+                        >
+                          Xem tất cả trang cá nhân
+                        </span>
+                      </span>
+                  </div>
                   <div
                     class="flow-root rounded-md px-2 py-2 transition duration-150 ease-in-out hover:bg-gray-100 dark:hover:bg-slate-700 focus:outline-none focus-visible:ring focus-visible:ring-orange-500/50"
                   >

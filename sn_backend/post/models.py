@@ -51,10 +51,10 @@ class Post(models.Model):
     
     is_avatar_post = models.BooleanField(default=False)
     
-    likes = models.ManyToManyField(Like , blank=True)
+    likes = models.ManyToManyField(Like, blank=True)
     likes_count = models.IntegerField(default=0)
     
-    comments = models.ManyToManyField(Comment , blank=True)
+    comments = models.ManyToManyField(Comment, blank=True)
     comments_count = models.IntegerField(default=0)
     
     reported_by_users = models.ManyToManyField(User, blank=True)

@@ -45,7 +45,7 @@ export const useUserStore = defineStore({
     },
 
     removeToken() {
-      console.log("remove Token");
+      // console.log("remove Token");
 
       this.user.refresh = null;
       this.user.access = null;

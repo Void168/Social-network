@@ -11,6 +11,7 @@
           <PopoverButton
             :class="open ? 'text-white' : 'text-white/90'"
             class="group inline-flex items-center rounded-md px-3 py-2 text-base font-medium hover:text-white focus:outline-none focus-visible:ring-2 focus-visible:ring-white/75"
+            @click="outListPage"
           >
             <span
               class="text-slate-700 dark:text-neutral-200 xs:hidden sm:block"
@@ -32,6 +33,10 @@
             />
           </PopoverButton>
 
+          <PopoverOverlay
+            class="fixed inset-0 opacity-30"
+            @click="outListPage"
+          />
           <transition
             enter-active-class="transition duration-200 ease-out"
             enter-from-class="translate-y-1 opacity-0"
@@ -41,13 +46,16 @@
             leave-to-class="translate-y-1 opacity-0"
           >
             <PopoverPanel
+              v-slot="{ close }"
               class="absolute z-50 left-[-70px] mt-3 w-screen max-w-xs -translate-x-1/2 transform px-4 sm:px-0"
             >
               <div
+                v-if="isBack"
                 class="overflow-hidden rounded-lg shadow-lg ring-1 ring-black/5"
               >
                 <div class="bg-gray-50 dark:bg-slate-800 p-4">
                   <div
+                    @click="accept(close)"
                     class="flow-root rounded-md px-2 py-2 transition duration-150 ease-in-out hover:bg-gray-100 dark:hover:bg-slate-600 focus:outline-none focus-visible:ring focus-visible:ring-orange-500/50 cursor-pointer"
                   >
                     <RouterLink
@@ -65,17 +73,20 @@
                       </span>
                     </RouterLink>
                   </div>
-                  <hr class="my-1 border-slate-500"/>
+                  <hr class="my-1 border-slate-500" />
                   <div
                     class="flow-root mt-4 mb-2 rounded-md px-2 py-2 transition duration-150 ease-in-out hover:bg-gray-100 dark:bg-slate-600 dark:hover:bg-slate-500 focus:outline-none focus-visible:ring focus-visible:ring-orange-500/50 cursor-pointer"
                   >
-                      <span class="flex items-center justify-center">
-                        <span
-                          class="text-sm font-medium text-gray-900 dark:text-neutral-200"
-                        >
-                          Xem tất cả trang cá nhân
-                        </span>
+                    <span
+                      class="flex items-center justify-center"
+                      @click="toPageList"
+                    >
+                      <span
+                        class="text-sm font-medium text-gray-900 dark:text-neutral-200"
+                      >
+                        Xem tất cả trang cá nhân
                       </span>
+                    </span>
                   </div>
                   <div
                     class="flow-root rounded-md px-2 py-2 transition duration-150 ease-in-out hover:bg-gray-100 dark:hover:bg-slate-700 focus:outline-none focus-visible:ring focus-visible:ring-orange-500/50"
@@ -104,6 +115,7 @@
                     </span>
                   </div>
                   <div
+                    @click="accept(close)"
                     class="flow-root rounded-md px-2 py-2 transition duration-150 ease-in-out hover:bg-gray-100 dark:hover:bg-slate-600 focus:outline-none focus-visible:ring focus-visible:ring-orange-500/50 cursor-pointer"
                   >
                     <RouterLink to="/profile/edit">
@@ -117,6 +129,7 @@
                     </RouterLink>
                   </div>
                   <div
+                    @click="accept(close)"
                     class="flow-root rounded-md px-2 py-2 transition duration-150 ease-in-out hover:bg-gray-100 dark:hover:bg-slate-600 focus:outline-none focus-visible:ring focus-visible:ring-orange-500/50 cursor-pointer"
                   >
                     <span class="flex items-center" @click="logout">
@@ -126,6 +139,69 @@
                         Đăng xuất
                       </span>
                     </span>
+                  </div>
+                </div>
+              </div>
+              <div
+                v-else
+                class="overflow-hidden rounded-lg shadow-lg ring-1 ring-black/5 dark:bg-slate-800 py-4"
+              >
+                <div class="bg-gray-50 dark:bg-slate-800 px-4 py-2">
+                  <div
+                    class="flow-root rounded-md px-2 py-2 transition duration-150 ease-in-out focus:outline-none focus-visible:ring focus-visible:ring-orange-500/50"
+                  >
+                    <div class="flex gap-3 items-center">
+                      <ArrowLeftIcon
+                        class="w-8 cursor-pointer p-1 rounded-full dark:bg-slate-700 hover:dark:bg-slate-600 transition"
+                        @click="outListPage"
+                      />
+                      <h1 class="text-2xl font-bold">Chọn trang cá nhân</h1>
+                    </div>
+                  </div>
+                  <hr class="my-1 border-slate-500" />
+                </div>
+                <div class="px-4" @click="accept(close)">
+                  <div
+                    class="flex justify-between items-center dark:hover:bg-slate-700 p-2 rounded-xl cursor-pointer transition duration-100"
+                  >
+                    <div class="flex gap-3 items-center">
+                      <img
+                        :src="userStore.user.avatar"
+                        alt="user-avatar"
+                        class="w-10 h-10 rounded-full"
+                      />
+                      <h3 class="font-semibold">{{ userStore.user.name }}</h3>
+                    </div>
+                    <span
+                      class="w-6 h-6 px-[6px] py-[6px] dark:bg-slate-500 rounded-full"
+                    >
+                      <span
+                        class="w-3 h-3 dark:bg-emerald-500 absolute rounded-full"
+                      ></span>
+                    </span>
+                  </div>
+                </div>
+                <div @click="accept(close)">
+                  <div class="px-4" @click="openCreatePageModal">
+                    <div
+                      class="flex gap-2 items-center dark:hover:bg-slate-700 p-2 rounded-xl cursor-pointer transition duration-100"
+                    >
+                      <PlusIcon
+                        class="w-8 dark:text-slate-200 dark:bg-slate-500 rounded-full p-1"
+                      />
+                      <h2 class="font-semibold">Tạo trang mới</h2>
+                    </div>
+                  </div>
+                </div>
+                <CreatePageModal
+                  :show="createPageIsOpen"
+                  @closeCreatePageModal="closeCreatePageModal"
+                />
+                <div class="px-4 my-2" @click="accept(close)">
+                  <div
+                    class="flex gap-2 items-center justify-center bg-slate-200 hover:bg-slate-300 dark:bg-slate-700 dark:hover:bg-slate-600 p-2 rounded-xl cursor-pointer transition duration-100"
+                  >
+                    <h3>Xem tất cả các trang</h3>
                   </div>
                 </div>
               </div>
@@ -150,13 +226,25 @@
 
 <script>
 import { useDark, useToggle } from "@vueuse/core";
-import { Popover, PopoverButton, PopoverPanel } from "@headlessui/vue";
+import {
+  Popover,
+  PopoverButton,
+  PopoverPanel,
+  PopoverOverlay,
+} from "@headlessui/vue";
 import { ChevronDownIcon } from "@heroicons/vue/20/solid";
-import { SunIcon, MoonIcon } from "@heroicons/vue/24/solid";
+import {
+  SunIcon,
+  MoonIcon,
+  ArrowLeftIcon,
+  PlusIcon,
+} from "@heroicons/vue/24/solid";
 import { Switch } from "@headlessui/vue";
 import { ref } from "vue";
 import { useUserStore } from "../../stores/user";
 import { RouterLink } from "vue-router";
+
+import CreatePageModal from "../modals/page/CreatePageModal.vue";
 
 export default {
   setup() {
@@ -178,13 +266,40 @@ export default {
     Switch,
     Popover,
     PopoverButton,
+    PopoverOverlay,
     PopoverPanel,
+    CreatePageModal,
     ChevronDownIcon,
     SunIcon,
     MoonIcon,
+    ArrowLeftIcon,
+    PlusIcon,
+  },
+
+  data() {
+    return {
+      isBack: false,
+      createPageIsOpen: false,
+    };
   },
 
   methods: {
+    toPageList() {
+      this.isBack = false;
+    },
+    outListPage() {
+      this.isBack = true;
+    },
+    openCreatePageModal() {
+      this.createPageIsOpen = true;
+    },
+    closeCreatePageModal() {
+      this.createPageIsOpen = false;
+    },
+    async accept(close) {
+      await fetch("/accept-terms", { method: "POST" });
+      close();
+    },
     logout() {
       this.userStore.removeToken();
 

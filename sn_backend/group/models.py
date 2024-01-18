@@ -39,3 +39,15 @@ class Group(models.Model):
     questions = models.ManyToManyField(Question, related_name='group_quiz')
     
     created_at = models.DateTimeField(default=timezone.now)
+    
+    def get_avatar(self):
+        if self.avatar:
+            return 'http://127.0.0.1:8000' + self.avatar.url
+        else: 
+            return 'https://cdn0.iconfinder.com/data/icons/avatar-1-2/512/group-512.png'
+    
+    def get_cover_image(self):
+        if self.cover_image:
+            return 'http://127.0.0.1:8000' + self.cover_image.url
+        else: 
+            return 'https://th.bing.com/th/id/OIP.o1n4kgruF-5cDCCx7jNYKQHaEo?pid=ImgDet&rs=1'

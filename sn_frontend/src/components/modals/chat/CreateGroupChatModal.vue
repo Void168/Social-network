@@ -124,7 +124,7 @@ export default (await import("vue")).defineComponent({
   methods: {
     getValue(value) {
       this.value = value;
-      console.log(this.value)
+      // console.log(this.value)
     },
     createGroupChat() {
       if (this.value.length > 1) {

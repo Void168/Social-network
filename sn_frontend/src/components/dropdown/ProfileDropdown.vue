@@ -193,10 +193,7 @@
                     </div>
                   </div>
                 </div>
-                <CreatePageModal
-                  :show="createPageIsOpen"
-                  @closeCreatePageModal="closeCreatePageModal"
-                />
+
                 <div class="px-4 my-2" @click="accept(close)">
                   <div
                     class="flex gap-2 items-center justify-center bg-slate-200 hover:bg-slate-300 dark:bg-slate-700 dark:hover:bg-slate-600 p-2 rounded-xl cursor-pointer transition duration-100"
@@ -208,6 +205,11 @@
             </PopoverPanel>
           </transition>
         </Popover>
+        <CreatePageModal
+          :show="isCreatePageOpen"
+          @closeCreatePageModal="closeCreatePageModal"
+          :isCreatePageOpen="isCreatePageOpen"
+        />
       </div>
     </template>
 
@@ -279,7 +281,7 @@ export default {
   data() {
     return {
       isBack: false,
-      createPageIsOpen: false,
+      isCreatePageOpen: false,
     };
   },
 
@@ -291,10 +293,10 @@ export default {
       this.isBack = true;
     },
     openCreatePageModal() {
-      this.createPageIsOpen = true;
+      this.isCreatePageOpen = true;
     },
     closeCreatePageModal() {
-      this.createPageIsOpen = false;
+      this.isCreatePageOpen = false;
     },
     async accept(close) {
       await fetch("/accept-terms", { method: "POST" });

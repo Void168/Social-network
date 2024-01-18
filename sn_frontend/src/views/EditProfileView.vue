@@ -179,7 +179,9 @@
             </div>
           </form>
         </div>
-        <div class="flex justify-between sm:items-center sm:flex-row flex-col mb-4">
+        <div
+          class="flex justify-between sm:items-center sm:flex-row flex-col mb-4"
+        >
           <h2 class="font-semibold text-lg">Mối quan hệ hiện tại:</h2>
           <div
             v-if="

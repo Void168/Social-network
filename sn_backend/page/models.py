@@ -11,6 +11,7 @@ class Page(models.Model):
     
     email = models.EmailField(blank=True, default='')
     name = models.CharField(blank=True, max_length=50)
+    phone_number = models.CharField(blank=True, null=True, max_length=20)
     
     avatar = models.ImageField(upload_to='avatars', blank=True, null=True)
     cover_image = models.ImageField(upload_to='cover_images', blank=True, null=True)

@@ -452,12 +452,22 @@ export default (await import("vue")).defineComponent({
             },
           })
           .then((res) => {
-            console.log(res.data);
-            this.toastStore.showToast(
-              5000,
-              "Tạo trang thành công.",
-              "bg-emerald-500 text-white"
-            );
+            if (res.data.succes) {
+              this.toastStore.showToast(
+                3000,
+                "Tạo trang thành công.",
+                "bg-emerald-500 text-white"
+              );
+              setTimeout(() => {
+                this.$router.go(0)
+              }, 3500)
+            } else {
+              this.toastStore.showToast(
+                3500,
+                "Tạo trang thất bại.",
+                "bg-rose-500 text-white"
+              );
+            }
           })
           .catch((error) => {
             console.log(error);

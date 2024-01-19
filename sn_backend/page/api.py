@@ -22,7 +22,24 @@ def page_create(request):
         
         serializer = PageSerializer(page)
 
-        return JsonResponse(serializer.data, safe=False)
-    # 'success':'create page successfully'
+        return JsonResponse({'success':'create page successfully'})
     else:
         return JsonResponse({'error': 'create page failed'})
+    
+@api_view(['GET'])
+def get_user_page(request, id):
+    user = User.objects.get(pk=id)
+    
+    pages = Page.objects.filter(Q(admin=user) | Q(moderators__in=list([request.user])))
+    
+    serializer = PageSerializer(pages, many=True)
+    
+    return JsonResponse(serializer.data, safe=False)
+
+@api_view(['GET'])
+def get_page(request, id):
+    page = Page.objects.get(pk=id)
+    
+    serializer = PageSerializer(page)
+    
+    return JsonResponse(serializer.data, safe=False)

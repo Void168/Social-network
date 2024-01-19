@@ -123,6 +123,7 @@ import { useUnseenConversationsStore } from "./stores/conversations";
 import { useConnectionStore } from "./stores/connection";
 import { useCurrentStoryStore } from "./stores/currentStory";
 import { useToastStore } from "./stores/toast";
+import { usePageStore } from "./stores/page"
 import { socket } from "./socket";
 import { useRoute } from "vue-router";
 import { computed } from "vue";
@@ -140,6 +141,7 @@ export default {
     const currentStoryStore = useCurrentStoryStore();
     const userStore = useUserStore();
     const toastStore = useToastStore();
+    const pageStore = usePageStore()
     const userNotificationStore = useNotificationStore();
     const userUnseenConversationsStore = useUnseenConversationsStore();
     const isDark = useDark();
@@ -154,6 +156,7 @@ export default {
       currentStoryStore,
       userStore,
       toastStore,
+      pageStore,
       userNotificationStore,
       userUnseenConversationsStore,
       toggleDark,

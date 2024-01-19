@@ -3,7 +3,7 @@
     <template v-if="userStore.user.isAuthenticated && userStore.user.id">
       <div class="flex flex-row items-center gap-3">
         <img
-          :src="userStore.user.avatar"
+          :src="pageStore.pageActive.id ? pageStore.pageActive.avatar : userStore.user.avatar"
           class="rounded-full w-12 h-12 xs:hidden sm:block"
           alt="avatar"
         />
@@ -15,7 +15,7 @@
           >
             <span
               class="text-slate-700 dark:text-neutral-200 xs:hidden sm:block"
-              >{{ userStore.user.name }}</span
+              >{{pageStore.pageActive.id ? pageStore.pageActive.name : userStore.user.name }}</span
             >
             <img
               :src="userStore.user.avatar"
@@ -160,7 +160,7 @@
                   </div>
                   <hr class="my-1 border-slate-500" />
                 </div>
-                <div class="px-4" @click="accept(close)">
+                <div class="px-4" @click="accept(close); outPage()">
                   <div
                     class="flex justify-between items-center dark:hover:bg-slate-700 p-2 rounded-xl cursor-pointer transition duration-100"
                   >
@@ -176,6 +176,33 @@
                       class="w-6 h-6 px-[6px] py-[6px] dark:bg-slate-500 rounded-full"
                     >
                       <span
+                        v-if="!pageStore.pageActive.id"
+                        class="w-3 h-3 dark:bg-emerald-500 absolute rounded-full"
+                      ></span>
+                    </span>
+                  </div>
+                </div>
+                <div
+                  @click="accept(close) ; goToPage(page)"
+                  v-for="page in pages"
+                  :key="page.id"
+                  class="px-4"
+                >
+                  <div
+                    class="flex justify-between items-center dark:hover:bg-slate-700 p-2 rounded-xl cursor-pointer transition duration-100"
+                  >
+                    <div class="flex gap-3 items-center">
+                      <img
+                        :src="page.get_avatar"
+                        alt="page-avatar"
+                        class="w-10 h-10 rounded-full"
+                      />
+                      <h3 class="font-semibold">{{ page.name }}</h3>
+                    </div>
+                    <span
+                      class="w-6 h-6 px-[6px] py-[6px] dark:bg-slate-500 rounded-full"
+                    >
+                      <span v-if="pageStore.pageActive.id === page.id"
                         class="w-3 h-3 dark:bg-emerald-500 absolute rounded-full"
                       ></span>
                     </span>
@@ -227,6 +254,7 @@
 </template>
 
 <script>
+import axios from "axios";
 import { useDark, useToggle } from "@vueuse/core";
 import {
   Popover,
@@ -244,6 +272,7 @@ import {
 import { Switch } from "@headlessui/vue";
 import { ref } from "vue";
 import { useUserStore } from "../../stores/user";
+import { usePageStore } from "../../stores/page"
 import { RouterLink } from "vue-router";
 
 import CreatePageModal from "../modals/page/createPage/CreatePageModal.vue";
@@ -251,6 +280,7 @@ import CreatePageModal from "../modals/page/createPage/CreatePageModal.vue";
 export default {
   setup() {
     const userStore = useUserStore();
+    const pageStore = usePageStore()
     const isDark = useDark();
     const toggleDark = useToggle(isDark);
     const enabled = ref(false);
@@ -260,6 +290,7 @@ export default {
       toggleDark,
       isDark,
       enabled,
+      pageStore,
     };
   },
 
@@ -282,12 +313,34 @@ export default {
     return {
       isBack: false,
       isCreatePageOpen: false,
+      pages: [],
     };
   },
 
   methods: {
-    toPageList() {
+    async toPageList() {
       this.isBack = false;
+
+      await axios
+        .get(`/api/page/get-pages/${this.userStore.user.id}/`)
+        .then((res) => {
+          this.pages = res.data;
+        })
+        .catch((error) => {
+          console.log(error);
+        });
+    },
+    goToPage(data){
+      if(data){
+        setTimeout(() => {
+          this.pageStore.initPageStore(data)
+          this.$router.go(0)
+        }, 3000)
+      }
+    },
+    outPage(){
+      this.pageStore.outPage()
+      console.log('out page')
     },
     outListPage() {
       this.isBack = true;

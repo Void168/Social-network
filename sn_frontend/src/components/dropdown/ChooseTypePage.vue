@@ -1,5 +1,5 @@
 <template>
-  <Combobox>
+  <Combobox v-model="type">
     <div class="relative mt-1">
       <div
         class="relative w-full cursor-default overflow-hidden rounded-lg bg-white dark:text-slate-200 dark:bg-slate-700 text-left focus:outline-none focus-visible:ring-2 focus-visible:ring-white/75 focus-visible:ring-offset-2 focus-visible:ring-offset-teal-300 sm:text-sm"
@@ -33,12 +33,12 @@
             v-slot="{ selected, active }"
           >
             <li
+              @click="$emit('getOption', type.name)"
               class="relative cursor-default select-none py-2 pl-10 pr-4"
               :class="{
                 'bg-teal-600 text-white': active,
                 'text-gray-900 dark:text-slate-200 dark:bg-slate-800': !active,
               }"
-              @click="$emit('getOption')"
             >
               <span
                 class="block truncate"
@@ -103,6 +103,14 @@ export default {
   props: {
     types: Array,
   },
+
+  data(){
+    return {
+      type: {}
+    }
+  },
+
+  emits: ["update:type", "getOption"],
 
   computed: {
     filteredTypes() {

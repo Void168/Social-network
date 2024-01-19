@@ -44,7 +44,7 @@
                   <div class="w-full px-4">
                     <div class="dark:bg-white rounded-lg h-2 relative">
                       <span
-                        :style="{ width: `${step * 100/3}%` }"
+                        :style="{ width: `${(step * 100) / 3}%` }"
                         class="bg-emerald-400 absolute z-20 h-2 rounded-lg"
                       />
                     </div>
@@ -81,9 +81,9 @@
                     </h4>
                     <h3>Hạng mục (bắt buộc)</h3>
                     <ChooseTypePage
-                      v-model="type"
                       :types="types"
                       @getOption="getOption"
+                      ref="chooseType"
                     />
                     <h4 class="text-xs">
                       Hãy nhập hạng mục mô tả chính xác nhất về bạn nhé.
@@ -501,12 +501,13 @@ export default (await import("vue")).defineComponent({
     prevStep() {
       this.step -= 1;
     },
-    getOption() {
-      this.$emit("getOption", this.type);
+    getOption(data){
+      this.type = data
+      console.log(this.type)
     },
-    createPage(){
-      console.log('create page')
-    }
+    createPage() {
+      console.log("create page");
+    },
   },
 });
 </script>

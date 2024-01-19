@@ -14,7 +14,7 @@
             <div
               :class="[
                 active
-                  ? 'ring-2 ring-white/60 ring-offset-2 ring-offset-emerald-300'
+                  ? ''
                   : '',
                 checked ? 'bg-emerald-900/75 text-white ' : 'bg-white dark:bg-slate-700',
               ]"

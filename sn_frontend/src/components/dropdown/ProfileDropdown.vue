@@ -246,7 +246,7 @@ import { ref } from "vue";
 import { useUserStore } from "../../stores/user";
 import { RouterLink } from "vue-router";
 
-import CreatePageModal from "../modals/page/CreatePageModal.vue";
+import CreatePageModal from "../modals/page/createPage/CreatePageModal.vue";
 
 export default {
   setup() {

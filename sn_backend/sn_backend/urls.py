@@ -12,6 +12,7 @@ urlpatterns = [
     path('api/search/', include('search.urls')),
     path('api/posts/', include('post.urls')),
     path('api/story/', include('story.urls')),
+    path('api/page/', include('page.urls')),
     path('api/chat/', include('chat.urls')),
     path('api/notifications/', include('notification.urls')),
     path('api/informations/', include('information.urls')),

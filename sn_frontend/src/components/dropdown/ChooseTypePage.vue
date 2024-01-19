@@ -33,7 +33,7 @@
             v-slot="{ selected, active }"
           >
             <li
-              @click="$emit('getOption', type.name)"
+              @click="$emit('getOption', type)"
               class="relative cursor-default select-none py-2 pl-10 pr-4"
               :class="{
                 'bg-teal-600 text-white': active,

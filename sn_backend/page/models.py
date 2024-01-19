@@ -9,14 +9,15 @@ from account.models import User
 class Page(models.Model):
     id= models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
     
-    email = models.EmailField(blank=True, default='')
+    email = models.EmailField(blank=True, null=True)
     name = models.CharField(blank=True, max_length=50)
     phone_number = models.CharField(blank=True, null=True, max_length=20)
+    location = models.CharField(blank=True, null=True, max_length=255)
     
     avatar = models.ImageField(upload_to='avatars', blank=True, null=True)
     cover_image = models.ImageField(upload_to='cover_images', blank=True, null=True)
     
-    biography = models.CharField(blank=True, default='', max_length=255)
+    biography = models.CharField(blank=True, null=True, max_length=255)
         
     following = models.ManyToManyField(User, related_name='page_following', blank=True)
     followers = models.ManyToManyField(User, related_name='page_followers', blank=True)
@@ -26,7 +27,10 @@ class Page(models.Model):
     likes_count = models.IntegerField(default=0)       
     posts_count = models.IntegerField(default=0)
     
-    page_type = models.CharField(blank=True, default='', max_length=50)
+    page_type = models.CharField(blank=True, max_length=50)
+    business_hours_status = models.CharField(blank=True, max_length=50)
+    start_time = models.CharField(blank=True, null=True, max_length=50)
+    close_time = models.CharField(blank=True, null=True, max_length=50)
     
     admin = models.ForeignKey(User, related_name='page_admin', on_delete=models.CASCADE)
     moderators = models.ManyToManyField(User, related_name='page_moderators')

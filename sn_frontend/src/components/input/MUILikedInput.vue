@@ -20,11 +20,22 @@
 export default {
   props: {
     placeholder: String,
-    isFocus: Boolean,
-    focusIn: Function,
-    focusOut: Function,
     modelValue: String,
   },
-  emits: ['update:modelValue']
+  emits: ['update:modelValue'],
+  data(){
+    return {
+      isFocus: false,
+    }
+  },
+
+  methods: {
+    focusIn(){
+      this.isFocus = true
+    }, 
+    focusOut(){
+      this.isFocus = false
+    }
+  },
 };
 </script>

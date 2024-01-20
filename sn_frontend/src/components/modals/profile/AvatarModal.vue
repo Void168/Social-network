@@ -165,7 +165,7 @@ import {
 import axios from "axios";
 import { useToastStore } from "@/stores/toast";
 import { useUserStore } from "@/stores/user";
-
+import { usePageStore } from "../../../stores/page";
 import {
   GlobeAsiaAustraliaIcon,
   UserGroupIcon,
@@ -178,10 +178,12 @@ export default (await import("vue")).defineComponent({
   setup() {
     const toastStore = useToastStore();
     const userStore = useUserStore();
-
+    const pageStore = usePageStore()
+    
     return {
       toastStore,
       userStore,
+      pageStore,
     };
   },
   components: {
@@ -235,14 +237,18 @@ export default (await import("vue")).defineComponent({
     },
 
     getImages() {
-      axios
-        .get(`/api/posts/profile/${this.$route.params.id}/attachments`)
-        .then((res) => {
-          this.images = res.data;
-        })
-        .catch((error) => {
-          console.log("error", error);
-        });
+      if(this.pageStore.pageActive.is_page === false){
+        axios
+          .get(`/api/posts/profile/${this.$route.params.id}/attachments`)
+          .then((res) => {
+            this.images = res.data;
+          })
+          .catch((error) => {
+            console.log("error", error);
+          });
+      } else {
+        console.log('hello')
+      }
     },
 
     chooseExistedImage(url) {
@@ -272,72 +278,75 @@ export default (await import("vue")).defineComponent({
       if (this.errors.length === 0) {
         let formData = new FormData();
         formData.append("avatar", this.$refs.avatar.files[0]);
-
-        axios
-          .post("/api/edit-avatar/", formData, {
-            headers: {
-              "Content-Type": "multipart/form-data",
-            },
-          })
-          .then((res) => {
-            
-            if (res.data.message === "avatar updated") {
-              this.toastStore.showToast(
-                5000,
-                "Thay đổi ảnh đại diện thành công.",
-                "bg-emerald-500 text-white"
-              );
-              localStorage.setItem("user.avatar", this.url);
-            } else {
-              this.toastStore.showToast(
-                5000,
-                "Thay đổi ảnh đại diện thất bại.",
-                "bg-rose-400 text-white"
-              );
-            }
-
-            if (this.share === true) {
-              let form = new FormData();
-
-              form.append("image", this.$refs.avatar.files[0]);
-              form.append("body", this.body);
-              form.append("is_private", this.is_private);
-              form.append("only_me", this.only_me);
-              form.append("is_avatar_post", this.share)
-
-              axios
-                .post("/api/posts/create/", form, {
-                  headers: {
-                    "Content-Type": "multipart/form-data",
-                  },
-                })
-                .then((res) => {
-                  // console.log("data", res.data);
-
-                  this.body = "";
-                  this.$refs.file.value = null;
-                  this.is_private = false;
-                  this.only_me = false;
-                  this.share = false;
-                  this.url = null;
-
-                  if (this.user) {
-                    this.user.posts_count += 1;
-                  }
-                })
-                .catch((error) => {
-                  console.log("error", error);
-                });
-            }
-
-            setTimeout(() => {
-                this.$router.go(0);
-              }, 1500);
-
-          })
-          .catch((error) => {
-            console.log("error", error);
-          });
+        if(this.pageStore.pageActive.is_page === false){
+          axios
+            .post("/api/edit-avatar/", formData, {
+              headers: {
+                "Content-Type": "multipart/form-data",
+              },
+            })
+            .then((res) => {
+              
+              if (res.data.message === "avatar updated") {
+                this.toastStore.showToast(
+                  5000,
+                  "Thay đổi ảnh đại diện thành công.",
+                  "bg-emerald-500 text-white"
+                );
+                localStorage.setItem("user.avatar", this.url);
+              } else {
+                this.toastStore.showToast(
+                  5000,
+                  "Thay đổi ảnh đại diện thất bại.",
+                  "bg-rose-400 text-white"
+                );
+              }
+  
+              if (this.share === true) {
+                let form = new FormData();
+  
+                form.append("image", this.$refs.avatar.files[0]);
+                form.append("body", this.body);
+                form.append("is_private", this.is_private);
+                form.append("only_me", this.only_me);
+                form.append("is_avatar_post", this.share)
+  
+                axios
+                  .post("/api/posts/create/", form, {
+                    headers: {
+                      "Content-Type": "multipart/form-data",
+                    },
+                  })
+                  .then((res) => {
+                    // console.log("data", res.data);
+  
+                    this.body = "";
+                    this.$refs.file.value = null;
+                    this.is_private = false;
+                    this.only_me = false;
+                    this.share = false;
+                    this.url = null;
+  
+                    if (this.user) {
+                      this.user.posts_count += 1;
+                    }
+                  })
+                  .catch((error) => {
+                    console.log("error", error);
+                  });
+              }
+  
+              setTimeout(() => {
+                  this.$router.go(0);
+                }, 1500);
+  
+            })
+            .catch((error) => {
+              console.log("error", error);
+            });
+        } else {
+          console.log('hello')
+        }
       }
     },
   },

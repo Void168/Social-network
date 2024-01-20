@@ -452,7 +452,7 @@ export default (await import("vue")).defineComponent({
             },
           })
           .then((res) => {
-            if (res.data.succes) {
+            if (res.data.success) {
               this.toastStore.showToast(
                 3000,
                 "Tạo trang thành công.",

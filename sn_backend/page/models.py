@@ -8,7 +8,7 @@ from account.models import User
 # Create your models here.
 class Page(models.Model):
     id= models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
-    
+    is_page = models.BooleanField(default=True)
     email = models.EmailField(blank=True, null=True)
     name = models.CharField(blank=True, max_length=50)
     phone_number = models.CharField(blank=True, null=True, max_length=20)

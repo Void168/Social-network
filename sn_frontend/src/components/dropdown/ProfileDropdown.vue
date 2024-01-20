@@ -68,8 +68,8 @@
                   >
                     <RouterLink
                       :to="{
-                        name: 'profile',
-                        params: { id: userStore.user.id },
+                        name: pageStore.pageId ? 'page' : 'profile',
+                        params: { id: pageStore.pageId ? pageStore.pageId : userStore.user.id },
                       }"
                     >
                       <span class="flex items-center">

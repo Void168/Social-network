@@ -74,6 +74,7 @@ import {
   DialogTitle,
 } from "@headlessui/vue";
 import { XMarkIcon } from "@heroicons/vue/24/solid";
+import { usePageStore } from "../../../stores/page";
 
 export default (await import("vue")).defineComponent({
   components: {
@@ -84,6 +85,15 @@ export default (await import("vue")).defineComponent({
     DialogTitle,
     XMarkIcon,
   },
+
+  setup() {
+    const pageStore = usePageStore()
+
+    return {
+      pageStore
+    }
+  },
+
   props: {
     contactIsOpen: Boolean,
   },
@@ -102,30 +112,42 @@ export default (await import("vue")).defineComponent({
 
   methods: {
     getUserInfo() {
-      axios
-        .get(`/api/user-info/${this.$route.params.id}`)
-        .then((res) => {
-          this.user = res.data.user;
-          this.getWebsitesList();
-          this.getPhoneNumbersList();
-        })
-        .catch((error) => console.log(error));
+      if(this.pageStore.pageActive.is_page === false){
+        axios
+          .get(`/api/user-info/${this.$route.params.id}`)
+          .then((res) => {
+            this.user = res.data.user;
+            this.getWebsitesList();
+            this.getPhoneNumbersList();
+          })
+          .catch((error) => console.log(error));
+      } else {
+        console.log('hello')
+      }
     },
     getWebsitesList() {
-      axios
-        .get(`/api/informations/${this.user.id}/websites/`)
-        .then((res) => {
-          this.websites = res.data.websites;
-        })
-        .catch((error) => console.log(error));
+      if(this.pageStore.pageActive.is_page === false){
+        axios
+          .get(`/api/informations/${this.user.id}/websites/`)
+          .then((res) => {
+            this.websites = res.data.websites;
+          })
+          .catch((error) => console.log(error));
+      } else {
+        console.log('hello')
+      }
     },
     getPhoneNumbersList() {
-      axios
-        .get(`/api/informations/${this.user.id}/phone-numbers/`)
-        .then((res) => {
-          this.phoneNumbers = res.data.phone_numbers;
-        })
-        .catch((error) => console.log(error));
+      if(this.pageStore.pageActive.is_page === false){
+        axios
+          .get(`/api/informations/${this.user.id}/phone-numbers/`)
+          .then((res) => {
+            this.phoneNumbers = res.data.phone_numbers;
+          })
+          .catch((error) => console.log(error));
+      } else {
+        console.log('hello')
+      }
     },
   },
 });

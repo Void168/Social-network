@@ -25,9 +25,10 @@ const pageTypes = [
   { id: 24, name: "Người của công chúng" },
   { id: 25, name: "Quán cà phê" },
   { id: 26, name: "Vận động viên" },
-  { id: 26, name: "Nhạc sỹ/Ban nhạc" },
-  { id: 26, name: "Nhà báo" },
-  { id: 26, name: "Nhà bếp/nấu ăn" },
+  { id: 27, name: "Nhạc sỹ/Ban nhạc" },
+  { id: 28, name: "Nhà báo" },
+  { id: 29, name: "Nhà bếp/nấu ăn" },
+  { id: 30, name: "Phim ảnh" },
 ];
 
 export default pageTypes;

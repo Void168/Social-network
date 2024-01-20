@@ -16,12 +16,12 @@
             class="flex gap-3 w-full items-center dark:hover:bg-slate-600 cursor-pointer px-4 py-2 rounded-xl"
           >
             <img
-              :src="userStore.user.avatar"
+              :src="pageStore.pageId ? pageStore.pageActive.get_avatar : userStore.user.avatar"
               alt=""
               class="w-12 h-12 rounded-full"
             />
             <h3 class="dark:text-white font-semibold">
-              {{ userStore.user.name }}
+              {{pageStore.pageId ? pageStore.pageActive.name : userStore.user.name }}
             </h3>
           </li>
           <li
@@ -130,7 +130,7 @@
     >
       <PeopleYouMayKnow v-if="!pageStore.pageId"/>
       <Trends />
-      <ChatContainer />
+      <ChatContainer v-if="!pageStore.pageId"/>
     </div>
   </div>
 </template>

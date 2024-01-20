@@ -197,6 +197,8 @@ export default {
   mounted() {
     window.addEventListener('resize', this.getDimensions);
     this.getDimensions()
+    this.pageStore.getPagesList(this.userStore.user.id)
+    this.pageStore.getActivePage()
   },
 
   unmounted() {

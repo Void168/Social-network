@@ -3,7 +3,11 @@
     <template v-if="userStore.user.isAuthenticated && userStore.user.id">
       <div class="flex flex-row items-center gap-3">
         <img
-          :src="pageStore.pageActive.id ? pageStore.pageActive.avatar : userStore.user.avatar"
+          :src="
+            pageStore.pageActive.id
+              ? pageStore.pageActive.get_avatar
+              : userStore.user.avatar
+          "
           class="rounded-full w-12 h-12 xs:hidden sm:block"
           alt="avatar"
         />
@@ -15,7 +19,11 @@
           >
             <span
               class="text-slate-700 dark:text-neutral-200 xs:hidden sm:block"
-              >{{pageStore.pageActive.id ? pageStore.pageActive.name : userStore.user.name }}</span
+              >{{
+                pageStore.pageActive.id
+                  ? pageStore.pageActive.name
+                  : userStore.user.name
+              }}</span
             >
             <img
               :src="userStore.user.avatar"
@@ -160,7 +168,13 @@
                   </div>
                   <hr class="my-1 border-slate-500" />
                 </div>
-                <div class="px-4" @click="accept(close); outPage()">
+                <div
+                  class="px-4"
+                  @click="
+                    accept(close);
+                    outPage();
+                  "
+                >
                   <div
                     class="flex justify-between items-center dark:hover:bg-slate-700 p-2 rounded-xl cursor-pointer transition duration-100"
                   >
@@ -183,7 +197,10 @@
                   </div>
                 </div>
                 <div
-                  @click="accept(close) ; goToPage(page)"
+                  @click="
+                    accept(close);
+                    goToPage(page);
+                  "
                   v-for="page in pages"
                   :key="page.id"
                   class="px-4"
@@ -202,7 +219,8 @@
                     <span
                       class="w-6 h-6 px-[6px] py-[6px] dark:bg-slate-500 rounded-full"
                     >
-                      <span v-if="pageStore.pageActive.id === page.id"
+                      <span
+                        v-if="pageStore.pageActive.id === page.id"
                         class="w-3 h-3 dark:bg-emerald-500 absolute rounded-full"
                       ></span>
                     </span>
@@ -272,7 +290,7 @@ import {
 import { Switch } from "@headlessui/vue";
 import { ref } from "vue";
 import { useUserStore } from "../../stores/user";
-import { usePageStore } from "../../stores/page"
+import { usePageStore } from "../../stores/page";
 import { RouterLink } from "vue-router";
 
 import CreatePageModal from "../modals/page/createPage/CreatePageModal.vue";
@@ -280,7 +298,7 @@ import CreatePageModal from "../modals/page/createPage/CreatePageModal.vue";
 export default {
   setup() {
     const userStore = useUserStore();
-    const pageStore = usePageStore()
+    const pageStore = usePageStore();
     const isDark = useDark();
     const toggleDark = useToggle(isDark);
     const enabled = ref(false);
@@ -330,17 +348,19 @@ export default {
           console.log(error);
         });
     },
-    goToPage(data){
-      if(data){
+    goToPage(data) {
+      if (data) {
         setTimeout(() => {
-          this.pageStore.initPageStore(data)
-          this.$router.go(0)
-        }, 3000)
+          this.pageStore.setActivePage(data.id);
+          this.$router.go(0);
+        }, 3000);
       }
     },
-    outPage(){
-      this.pageStore.outPage()
-      console.log('out page')
+    outPage() {
+      setTimeout(() => {
+        this.pageStore.outPage();
+        this.$router.go(0);
+      }, 3000);
     },
     outListPage() {
       this.isBack = true;
@@ -357,7 +377,7 @@ export default {
     },
     logout() {
       this.userStore.removeToken();
-
+      this.pageStore.outPage();
       this.$router.push("/login");
     },
   },

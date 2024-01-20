@@ -6,37 +6,40 @@ export const usePageStore = defineStore({
   id: "page",
 
   state: () => ({
-    pageActive: {
-      id: null,
-      name: null,
-      email: null,
-      avatar: null,
-      cover_image: null,
-    },
+    pagesList: [],
+    pageActive: {},
+    pageId: localStorage.getItem("pageId"),
   }),
 
   actions: {
-    async initPageStore(id) {
+    setActivePage(pageId) {
+      const listPageId = this.pagesList.map((page) => page.id);
+      const pagePosition = listPageId.indexOf(pageId);
+      this.pageActive = this.pagesList[pagePosition];
+      this.pageId = localStorage.setItem("pageId", this.pageActive.id);
+    },
+    async getActivePage() {
       await axios
-        .get(`/api/page/get-page/${id}/`)
+        .get(`/api/page/get-page/${this.pageId}/`)
         .then((res) => {
-          this.pageActive.id = res.data.id;
-          this.pageActive.name = res.data.name;
-          this.pageActive.email = res.data.email;
-          this.pageActive.avatar = res.data.get_avatar;
-          this.pageActive.cover_image = res.data.get_cover_image;
-          console.log(this.pageActive)
+          this.pageActive = res.data;
+        })
+        .catch((erorr) => {
+
+        });
+    },
+    async getPagesList(data) {
+      await axios
+        .get(`/api/page/get-pages/${data}/`)
+        .then((res) => {
+          this.pagesList = res.data;
         })
         .catch((error) => {
           console.log(error);
         });
     },
     outPage() {
-      this.pageActive.id = null;
-      this.pageActive.name = null;
-      this.pageActive.email = null;
-      this.pageActive.avatar = null;
-      this.pageActive.cover_image = null;
+      localStorage.setItem("pageId", "");
     },
   },
 });

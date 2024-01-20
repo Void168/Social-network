@@ -128,7 +128,7 @@
       }"
       class="main-right ml-auto lg:col-span-2 2xl:w-[80%] sm:col-span-1 sm:block xs:hidden space-y-4 sticky w-full"
     >
-      <PeopleYouMayKnow />
+      <PeopleYouMayKnow v-if="!pageStore.pageId"/>
       <Trends />
       <ChatContainer />
     </div>
@@ -150,6 +150,7 @@ import FeedItem from "../components/items/post/FeedItem.vue";
 import SkeletonLoadingPostVue from "../components/loadings/SkeletonLoadingPost.vue";
 import { useUserStore } from "../stores/user";
 import { useToastStore } from "../stores/toast";
+import { usePageStore } from "../stores/page";
 import navigation from "../data/navigationBar";
 import listGroups from "../data/listGroups";
 
@@ -170,10 +171,11 @@ export default {
   setup() {
     const userStore = useUserStore();
     const toastStore = useToastStore();
-
+    const pageStore = usePageStore()
     return {
       userStore,
       toastStore,
+      pageStore
     };
   },
 
@@ -206,17 +208,31 @@ export default {
   methods: {
     async getFeed() {
       this.isLoading = true;
-      await axios
-        .get("/api/posts/")
-        .then((res) => {
-          // console.log(res.data);
-          this.postsList = res.data;
-          this.posts = res.data.slice(0, this.PostToShow);
-          this.isLoading = false;
-        })
-        .catch((error) => {
-          console.log(error);
-        });
+      if(!this.pageStore.pageId){
+        await axios
+          .get("/api/posts/")
+          .then((res) => {
+            // console.log(res.data);
+            this.postsList = res.data;
+            this.posts = res.data.slice(0, this.PostToShow);
+            this.isLoading = false;
+          })
+          .catch((error) => {
+            console.log(error);
+          });
+      } else {
+        await axios
+          .get(`/api/posts/page/${this.pageStore.pageId}`)
+          .then((res) => {
+            // console.log(res.data);
+            this.postsList = res.data;
+            this.posts = res.data.slice(0, this.PostToShow);
+            this.isLoading = false;
+          })
+          .catch((error) => {
+            console.log(error);
+          });
+      }
     },
     deletePost(id) {
       this.posts = this.posts.filter((post) => post.id !== id);

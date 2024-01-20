@@ -31,7 +31,7 @@
           @click="openModal"
         >
           <img
-            :src="userStore.user.avatar"
+            :src="pageStore.pageId ? pageStore.pageActive.get_avatar : userStore.user.avatar"
             class="rounded-b-none h-[70%] w-full"
             alt="create-story"
           />
@@ -151,6 +151,7 @@
 import axios from "axios";
 import { useUserStore } from "../stores/user";
 import { useCurrentStoryStore } from "../stores/currentStory";
+import { usePageStore } from "../stores/page";
 import { Swiper, SwiperSlide } from "swiper/vue";
 import { defineAsyncComponent } from "vue";
 
@@ -177,10 +178,12 @@ export default {
   setup() {
     const userStore = useUserStore();
     const currentStoryStore = useCurrentStoryStore();
+    const pageStore = usePageStore()
 
     return {
       userStore,
       currentStoryStore,
+      pageStore
     };
   },
 

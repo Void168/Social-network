@@ -7,13 +7,13 @@ import json
 from rest_framework.decorators import api_view, authentication_classes, permission_classes
 
 from account.models import User
-from post.models import Trend
+from page.models import Page
 from account.serializers import UserSerializer, FriendshipRequest
 
 from notification.utils import create_notification
 
 from .forms import PostForm, AttachmentForm
-from .models import Post, Comment, Like
+from .models import Post, Comment, Like, Trend
 from .serializers import PostSerializer, PostDetailSerializer, CommentSerializer, TrendSerializer, LikeSerializer
 from notification.serializers import NotificationSerializer
 
@@ -31,6 +31,18 @@ def post_list(request):
     posts = Post.objects.filter(Q(created_by__in=list(user_ids), only_me=False) | Q(created_by__in=list(following), only_me=False) | Q(post_to__in=list(friends), only_me=False))
     
     serializer = PostSerializer(posts, many=True)
+    
+    return JsonResponse(serializer.data, safe=False)
+
+@api_view(['GET'])
+def page_post_list(request, pk):
+    current_page = Page.objects.get(pk=pk)
+    following = User.objects.get(Q(id=request.user.id)).following.all()
+    following_page = current_page.following.all()
+            
+    page_posts = Post.objects.filter(Q(created_by__in=list(following), only_me=False, is_private=False) | Q(created_by__in=list(following_page), only_me=False, is_private=False))
+    
+    serializer = PostSerializer(page_posts, many=True)
     
     return JsonResponse(serializer.data, safe=False)
 
@@ -147,6 +159,35 @@ def post_create(request):
         user.save()
 
         serializer = PostSerializer(post)
+
+        return JsonResponse(serializer.data, safe=False)
+    else:
+        return JsonResponse({'error': 'add something here later!...'})
+
+@api_view(['POST'])
+def page_post_create(request, pk):
+    page = Page.objects.get(pk=pk)
+    form = PostForm(request.POST)
+    attachment = None
+    attachment_form = AttachmentForm(request.POST, request.FILES)
+
+    if attachment_form.is_valid():
+        attachment = attachment_form.save(commit=False)
+        attachment.created_by = page
+        attachment.save()
+
+    if form.is_valid():
+        page_post = form.save(commit=False)
+        page_post.created_by = page
+        page_post.save()
+
+        if attachment:
+            post.attachments.add(attachment)
+
+        page.posts_count = page.posts_count + 1
+        page.save()
+
+        serializer = PostSerializer(page_post)
 
         return JsonResponse(serializer.data, safe=False)
     else:

@@ -31,7 +31,7 @@
               <PrivacyTooltip :post="post"/>
               <GlobeAsiaAustraliaIcon
                 class="w-5 h-5"
-                v-if="post.is_private === false && post.only_me === false"
+                v-if="post.is_private === false && post.only_me === false || post.created_by.is_page"
               />
               <UserGroupIcon
                 class="w-5 h-5"
@@ -56,7 +56,7 @@
           <PrivacyTooltip :post="post"/>
           <GlobeAsiaAustraliaIcon
             class="w-5 h-5"
-            v-if="post.is_private === false && post.only_me === false"
+            v-if="post.is_private === false && post.only_me === false || post.created_by.is_page"
           />
           <UserGroupIcon
             class="w-5 h-5"

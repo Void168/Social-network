@@ -160,7 +160,7 @@
         id="profile-frame"
       >
         <div
-          v-if="userStore.user.id === user.id"
+          v-if="checkCurrentUserInPage"
           class="p-4 bg-white rounded-lg dark:bg-slate-600 dark:border-slate-700 dark:text-neutral-200"
         >
           <PostForm v-bind:user="user" v-bind:posts="posts" />
@@ -341,23 +341,18 @@ export default {
     },
 
     getFeed() {
-    //     axios
-    //       .get(`/api/posts/profile/${this.$route.params.id}/`)
-    //       .then((res) => {
-    //         // console.log(res.data);
-    //         this.postsList = res.data.posts;
-    //         this.user = res.data.user;
-    //         this.can_send_friendship_request =
-    //           res.data.can_send_friendship_request;
-    //         this.posts = res.data.posts.slice(0, this.PostToShow);
+        axios
+          .get(`/api/posts/page/profile/${this.$route.params.id}/`)
+          .then((res) => {
+            // console.log(res.data);
+            this.postsList = res.data;
+            this.posts = res.data.slice(0, this.PostToShow);
 
-    //         // console.log(res.data);
-    //       })
-    //       .catch((error) => {
-    //         console.log("error", error);
-    //       });
-    //   }
-    console.log("hello");
+            console.log(res.data);
+          })
+          .catch((error) => {
+            console.log("error", error);
+          });
     },
 
     infinateScroll() {

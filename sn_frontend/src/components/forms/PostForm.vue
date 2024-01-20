@@ -127,6 +127,7 @@
 </template>
 <script>
 import axios from "axios";
+import { usePageStore } from '../../stores/page'
 import {
   Listbox,
   ListboxLabel,
@@ -156,6 +157,7 @@ export default {
     LockClosedIcon,
   },
   setup() {
+    const pageStore = usePageStore()
     const privacy = [
       { name: "Công khai" },
       { name: "Bạn bè" },
@@ -163,11 +165,12 @@ export default {
     ];
     const selectedPrivacy = ref(privacy[0]);
 
-    return { selectedPrivacy };
+    return { selectedPrivacy, pageStore };
   },
   props: {
     user: Object,
     posts: Array,
+    page: Object,
   },
   data() {
     return {
@@ -219,29 +222,49 @@ export default {
       formData.append("is_private", this.is_private);
       formData.append("only_me", this.only_me);
 
-      axios
-        .post("/api/posts/create/", formData, {
+      if(this.user?.id){
+        axios
+          .post("/api/posts/create/", formData, {
+            headers: {
+              "Content-Type": "multipart/form-data",
+            },
+          })
+          .then((res) => {
+            // console.log("data", res.data);
+            this.body = "";
+            this.$refs.file.value = null;
+            this.is_private = false;
+            this.only_me = false;
+            this.urlPost = null;
+
+            if (this.user) {
+              this.user.posts_count += 1;
+            }
+          })
+          .catch((error) => {
+            console.log("error", error);
+          });
+      } else {
+        axios.post(`/api/posts/page/${this.pageStore.pageId}/create/`, formData, {
           headers: {
-            "Content-Type": "multipart/form-data",
-          },
-        })
-        .then((res) => {
-          // console.log("data", res.data);
+              "Content-Type": "multipart/form-data",
+            },
+        }).then((res) => {
+            // console.log("data", res.data);
+            this.body = "";
+            this.$refs.file.value = null;
+            this.is_private = false;
+            this.only_me = false;
+            this.urlPost = null;
 
-          this.posts.unshift(res.data);
-          this.body = "";
-          this.$refs.file.value = null;
-          this.is_private = false;
-          this.only_me = false;
-          this.urlPost = null;
-
-          if (this.user) {
-            this.user.posts_count += 1;
-          }
-        })
-        .catch((error) => {
-          console.log("error", error);
-        });
+            if (this.user) {
+              this.user.posts_count += 1;
+            }
+          })
+          .catch((error) => {
+            console.log("error", error);
+          });
+      }
     },
   },
 };

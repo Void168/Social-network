@@ -42,6 +42,17 @@ class PostAttachment(models.Model):
         else:
             return ''
 
+class PagePostAttachment(models.Model):
+    id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
+    image = models.ImageField(upload_to='post_attachments')
+    created_by = models.ForeignKey(Page, related_name='page_post_attachments', on_delete=models.CASCADE)
+    
+    def get_image(self):
+        if self.image:
+            return 'http://127.0.0.1:8000' + self.image.url
+        else:
+            return ''
+
 class Post(models.Model):
     id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
     body = models.TextField(blank=True, null=True)
@@ -74,7 +85,7 @@ class PagePost(models.Model):
     id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
     body = models.TextField(blank=True, null=True)
     
-    attachments = models.ManyToManyField(PostAttachment, blank=True)
+    attachments = models.ManyToManyField(PagePostAttachment, blank=True)
     
     is_avatar_post = models.BooleanField(default=False)
     
@@ -112,7 +123,7 @@ class GroupPost(models.Model):
     reported_by_users = models.ManyToManyField(User, blank=True)
     
     created_at = models.DateTimeField(auto_now_add=True)
-    created_by = models.ForeignKey(Page, related_name='page_posts', on_delete=models.CASCADE)
+    created_by = models.ForeignKey(User, related_name='group_posts', on_delete=models.CASCADE)
     
     pending = models.BooleanField(default=True)
     

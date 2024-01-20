@@ -224,9 +224,10 @@ export default {
         await axios
           .get(`/api/posts/page/${this.pageStore.pageId}`)
           .then((res) => {
-            // console.log(res.data);
-            this.postsList = res.data;
-            this.posts = res.data.slice(0, this.PostToShow);
+            const posts = res.data.posts
+            const pagePosts = res.data.page_posts
+            this.postsList = posts.concat(pagePosts)
+            this.posts = this.postsList.slice(0, this.PostToShow);
             this.isLoading = false;
           })
           .catch((error) => {

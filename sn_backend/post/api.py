@@ -12,9 +12,9 @@ from account.serializers import UserSerializer, FriendshipRequest
 
 from notification.utils import create_notification
 
-from .forms import PostForm, AttachmentForm
-from .models import Post, Comment, Like, Trend
-from .serializers import PostSerializer, PostDetailSerializer, CommentSerializer, TrendSerializer, LikeSerializer
+from .forms import PostForm, AttachmentForm, PageAttachmentForm, PagePostForm
+from .models import Post, Comment, Like, Trend, PagePost
+from .serializers import PostSerializer, PostDetailSerializer, CommentSerializer, TrendSerializer, LikeSerializer, PagePostSerializer
 from notification.serializers import NotificationSerializer
 
 # Create your views here.
@@ -40,9 +40,24 @@ def page_post_list(request, pk):
     following = User.objects.get(Q(id=request.user.id)).following.all()
     following_page = current_page.following.all()
             
-    page_posts = Post.objects.filter(Q(created_by__in=list(following), only_me=False, is_private=False) | Q(created_by__in=list(following_page), only_me=False, is_private=False))
+    posts = Post.objects.filter(Q(created_by__in=list(following), only_me=False, is_private=False) | Q(created_by__in=list(following_page), only_me=False, is_private=False))
+    page_posts = PagePost.objects.filter(Q(created_by=current_page))
     
-    serializer = PostSerializer(page_posts, many=True)
+    
+    posts_serializer = PostSerializer(posts, many=True)
+    page_posts_serializer = PagePostSerializer(page_posts, many=True)
+    
+    return JsonResponse({
+        'posts': posts_serializer.data,
+        'page_posts': page_posts_serializer.data
+        }, safe=False)
+
+def page_post_list_profile(request, pk):
+    current_page = Page.objects.get(pk=pk)
+            
+    page_posts = PagePost.objects.filter(Q(created_by=current_page))
+    
+    serializer = PagePostSerializer(page_posts, many=True)
     
     return JsonResponse(serializer.data, safe=False)
 
@@ -167,22 +182,22 @@ def post_create(request):
 @api_view(['POST'])
 def page_post_create(request, pk):
     page = Page.objects.get(pk=pk)
-    form = PostForm(request.POST)
-    attachment = None
-    attachment_form = AttachmentForm(request.POST, request.FILES)
+    form = PagePostForm(request.POST)
+    page_attachment = None
+    page_attachment_form = PageAttachmentForm(request.POST, request.FILES)
 
-    if attachment_form.is_valid():
-        attachment = attachment_form.save(commit=False)
-        attachment.created_by = page
-        attachment.save()
+    if page_attachment_form.is_valid():
+        attachment = page_attachment_form.save(commit=False)
+        page_attachment.created_by = page
+        page_attachment.save()
 
     if form.is_valid():
         page_post = form.save(commit=False)
         page_post.created_by = page
         page_post.save()
 
-        if attachment:
-            post.attachments.add(attachment)
+        if page_attachment:
+            page_post.attachments.add(page_attachment)
 
         page.posts_count = page.posts_count + 1
         page.save()

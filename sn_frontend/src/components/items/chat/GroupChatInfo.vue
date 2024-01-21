@@ -153,7 +153,6 @@
                 :options="options"
                 :show="isAddUsersOpen"
                 @closeModal="closeAddUsersModal"
-                @addUsers="addUsers"
               />
               <div v-for="user in activeConversation?.users" :key="user.id">
                 <div class="flex items-center justify-between gap-3 space-y-4">
@@ -527,9 +526,6 @@ export default (await import("vue")).defineComponent({
         .catch((error) => {
           console.log(error);
         });
-    },
-    addUsers() {
-      console.log("hello");
     },
     kickUser(user) {
       if (user.id !== this.activeConversation.admin.id) {

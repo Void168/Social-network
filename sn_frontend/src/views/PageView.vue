@@ -156,7 +156,7 @@
           <RouterLink
             to="/page/edit"
             class="flex justify-center items-center w-full"
-            v-if="checkCurrentUserInPage"
+            v-if="checkCurrentUserInPage && pageStore.pageId"
           >
             <button class="mt-4 btn lg:min-w-min xs:min-w-full">
               Chỉnh sửa chi tiết

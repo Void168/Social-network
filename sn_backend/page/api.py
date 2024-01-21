@@ -6,7 +6,7 @@ from .models import Page
 from account.models import User
 from rest_framework.decorators import api_view
 
-from .serializers import PageSerializer
+from .serializers import PageSerializer, PageDetailSerializer
 from notification.models import Notification
 from notification.serializers import NotificationSerializer
 from .forms import PageForm
@@ -41,6 +41,14 @@ def get_page(request, id):
     page = Page.objects.get(pk=id)
     
     serializer = PageSerializer(page)
+    
+    return JsonResponse(serializer.data, safe=False)
+
+@api_view(['GET'])
+def get_page_detail(request, id):
+    page = Page.objects.get(pk=id)
+    
+    serializer = PageDetailSerializer(page)
     
     return JsonResponse(serializer.data, safe=False)
 

@@ -16,6 +16,7 @@ import NotificationsView from "../views/NotificationsView.vue";
 import ConversationView from "../views/ConversationView.vue";
 import StoryView from "../views/StoryView.vue";
 import PageView from "../views/PageView.vue"
+import EditPageView from "../views/EditPageView.vue"
 import PageUsersView from "../views/PageUsersView.vue"
 
 const router = createRouter({
@@ -75,6 +76,11 @@ const router = createRouter({
       path: "/page/:id/users",
       name: "pageusers",
       component: PageUsersView,
+    },
+    {
+      path: "/page/edit",
+      name: "pageEdit",
+      component: EditPageView,
     },
     {
       path: "/chat/:id",

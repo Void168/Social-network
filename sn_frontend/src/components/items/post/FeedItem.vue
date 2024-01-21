@@ -7,7 +7,7 @@
         <div class="flex gap-1 items-center flex-wrap">
           <strong class="group">
             <RouterLink
-              :to="{ name: 'profile', params: { id: post.created_by.id } }"
+              :to="{ name: post.created_by.is_page ? 'page' : 'profile', params: { id: post.created_by.id } }"
               >{{ post.created_by.name }}</RouterLink
             >
             <TooltipProfileVue :user="post.created_by" class="hidden md:group-hover:block lg:left-[-150px] md:left-0"/>

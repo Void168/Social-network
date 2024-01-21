@@ -1,12 +1,12 @@
 <template>
   <div
-    class="w-[400px] min-h-max bg-slate-800 absolute top-[-150px] left-[-150px] shadow-md rounded-xl p-4 space-y-4"
+    class="w-[400px] min-h-max bg-slate-800 absolute top-[-140px] left-[-150px] shadow-md rounded-xl p-4 space-y-4"
   >
     <div class="grid grid-cols-4 space-x-4">
       <div class="col-span-1">
         <router-link
           :to="{
-            name: 'profile',
+            name: user.is_page ? 'page': 'profile',
             params: { id: user.id },
           }"
         >
@@ -16,7 +16,7 @@
       <div class="col-span-3 space-y-2">
         <router-link
           :to="{
-            name: 'profile',
+            name: user.is_page ? 'page' : 'profile',
             params: { id: user.id },
           }"
         >

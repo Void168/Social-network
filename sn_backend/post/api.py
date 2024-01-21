@@ -150,6 +150,20 @@ def post_attachment_list_profile(request, id):
 
     return JsonResponse(serializer.data, safe=False)
 
+@api_view(['GET'])
+def page_post_attachment_list_profile(request, id):      
+    page = Page.objects.get(pk=id)
+    page_posts = PagePost.objects.filter(created_by=page)
+    page_post_attachments = []
+    
+    for page_post in page_posts:
+        if page_post.attachments.count() > 0:
+            page_post_attachments.append(page_post)
+        
+    serializer = PagePostSerializer(page_post_attachments, many=True)
+
+    return JsonResponse(serializer.data, safe=False)
+
 @api_view(['POST'])
 def post_create(request):
     form = PostForm(request.POST)
@@ -187,7 +201,7 @@ def page_post_create(request, pk):
     page_attachment_form = PageAttachmentForm(request.POST, request.FILES)
 
     if page_attachment_form.is_valid():
-        attachment = page_attachment_form.save(commit=False)
+        page_attachment = page_attachment_form.save(commit=False)
         page_attachment.created_by = page
         page_attachment.save()
 

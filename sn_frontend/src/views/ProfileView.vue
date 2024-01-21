@@ -465,7 +465,7 @@ export default {
 
     getImages() {
       axios
-        .get(`/api/posts/profile/${this.$route.params.id}/attachments`)
+        .get(`/api/posts/profile/${this.$route.params.id}/attachments/`)
         .then((res) => {
           this.images = res.data;
         })

@@ -163,7 +163,7 @@
           v-if="checkCurrentUserInPage"
           class="p-4 bg-white rounded-lg dark:bg-slate-600 dark:border-slate-700 dark:text-neutral-200"
         >
-          <PostForm v-bind:user="user" v-bind:posts="posts" />
+          <PostForm :user="user" :posts="posts" :page="page" />
         </div>
         <p class="font-semibold text-2xl">Bài viết của {{ page.name }}</p>
         <div v-if="posts?.length">
@@ -317,42 +317,41 @@ export default {
       this.posts = this.posts.filter((post) => post.id !== id);
     },
     getImages() {
-    //     axios
-    //       .get(`/api/posts/profile/${this.$route.params.id}/attachments`)
-    //       .then((res) => {
-    //         this.images = res.data;
-    //       })
-    //       .catch((error) => {
-    //         console.log("error", error);
-    //       });
-    console.log("hello");
+      axios
+        .get(`/api/posts/page/${this.$route.params.id}/attachments/`)
+        .then((res) => {
+          this.images = res.data;
+          console.log(res.data)
+        })
+        .catch((error) => {
+          console.log("error", error);
+        });
     },
 
     sendDirectMessage() {
-        // axios
-        //   .get(`/api/chat/${this.$route.params.id}/get-or-create/`)
-        //   .then((res) => {
-        //     this.$router.push("/chat");
-        //   })
-        //   .catch((error) => {
-        //     console.log("error", error);
-        //   });
-    console.log("hello");
+      // axios
+      //   .get(`/api/chat/${this.$route.params.id}/get-or-create/`)
+      //   .then((res) => {
+      //     this.$router.push("/chat");
+      //   })
+      //   .catch((error) => {
+      //     console.log("error", error);
+      //   });
+      console.log("hello");
     },
 
     getFeed() {
-        axios
-          .get(`/api/posts/page/profile/${this.$route.params.id}/`)
-          .then((res) => {
-            // console.log(res.data);
-            this.postsList = res.data;
-            this.posts = res.data.slice(0, this.PostToShow);
+      axios
+        .get(`/api/posts/page/profile/${this.$route.params.id}/`)
+        .then((res) => {
+          this.postsList = res.data;
+          this.posts = res.data.slice(0, this.PostToShow);
 
-            console.log(res.data);
-          })
-          .catch((error) => {
-            console.log("error", error);
-          });
+          // console.log(res.data);
+        })
+        .catch((error) => {
+          console.log("error", error);
+        });
     },
 
     infinateScroll() {
@@ -398,27 +397,27 @@ export default {
     },
 
     followPage() {
-        // axios
-        //   .post(`/api/follow/${this.$route.params.id}/`)
-        //   .then((res) => {
-        //     console.log(res.data);
-        //   })
-        //   .catch((error) => {
-        //     console.log(error);
-        //   });
-    console.log("hello");
+      // axios
+      //   .post(`/api/follow/${this.$route.params.id}/`)
+      //   .then((res) => {
+      //     console.log(res.data);
+      //   })
+      //   .catch((error) => {
+      //     console.log(error);
+      //   });
+      console.log("hello");
     },
 
     unfollowedPage() {
-        // axios
-        //   .post(`/api/unfollowed/${this.$route.params.id}/`)
-        //   .then((res) => {
-        //     console.log(res.data);
-        //   })
-        //   .catch((error) => {
-        //     console.log(error);
-        //   });
-        console.log("hello");
+      // axios
+      //   .post(`/api/unfollowed/${this.$route.params.id}/`)
+      //   .then((res) => {
+      //     console.log(res.data);
+      //   })
+      //   .catch((error) => {
+      //     console.log(error);
+      //   });
+      console.log("hello");
 
       this.isUnfollowedOpen = false;
     },

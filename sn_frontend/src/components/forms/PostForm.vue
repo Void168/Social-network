@@ -8,7 +8,7 @@
         rows="4"
         placeholder="Bạn đang nghĩ gì?"
       ></textarea>
-      <div class="flex justify-end items-center gap-3">
+      <div class="flex justify-end items-center gap-3" v-if="!page">
         <GlobeAsiaAustraliaIcon
           class="w-6 h-6"
           v-if="selection.name === 'Công khai'"
@@ -219,10 +219,10 @@ export default {
       let formData = new FormData();
       formData.append("image", this.$refs.file.files[0]);
       formData.append("body", this.body);
-      formData.append("is_private", this.is_private);
-      formData.append("only_me", this.only_me);
 
       if(this.user?.id){
+        formData.append("is_private", this.is_private);
+        formData.append("only_me", this.only_me);
         axios
           .post("/api/posts/create/", formData, {
             headers: {
@@ -253,8 +253,6 @@ export default {
             // console.log("data", res.data);
             this.body = "";
             this.$refs.file.value = null;
-            this.is_private = false;
-            this.only_me = false;
             this.urlPost = null;
 
             if (this.user) {

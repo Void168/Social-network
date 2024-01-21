@@ -11,7 +11,7 @@
       :show="isOpen"
       @closeModal="closeModal"
       :imageId="post.id"
-      v-bind:post="post"
+      :post="post"
     />
   </div>
 </template>

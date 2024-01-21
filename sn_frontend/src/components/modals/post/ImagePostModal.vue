@@ -88,7 +88,7 @@
                       <GlobeAsiaAustraliaIcon
                         class="w-4 h-4"
                         v-if="
-                          post?.is_private === false && post?.only_me === false
+                          post?.is_private === false && post?.only_me === false || post?.created_by.is_page
                         "
                       />
                       <UserGroupIcon

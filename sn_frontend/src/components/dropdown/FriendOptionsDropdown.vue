@@ -98,7 +98,6 @@ export default {
   },
 
   props: {
-    isOpen: Boolean,
     followers: Array,
   },
 

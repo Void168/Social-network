@@ -16,6 +16,7 @@ import NotificationsView from "../views/NotificationsView.vue";
 import ConversationView from "../views/ConversationView.vue";
 import StoryView from "../views/StoryView.vue";
 import PageView from "../views/PageView.vue"
+import PageUsersView from "../views/PageUsersView.vue"
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
@@ -69,6 +70,11 @@ const router = createRouter({
       path: "/page/:id",
       name: "page",
       component: PageView,
+    },
+    {
+      path: "/page/:id/users",
+      name: "pageusers",
+      component: PageUsersView,
     },
     {
       path: "/chat/:id",

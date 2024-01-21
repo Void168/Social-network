@@ -43,3 +43,70 @@ def get_page(request, id):
     serializer = PageSerializer(page)
     
     return JsonResponse(serializer.data, safe=False)
+
+@api_view(['POST'])
+def like_page(request, id):
+    current_user = request.user
+    page = Page.objects.get(pk=id)
+    
+    if current_user not in page.likes.all():
+        page.followers.add(current_user)
+        page.likes.add(current_user)
+        
+        page.likes_count = page.likes_count + 1
+        page.followers_count = page.followers_count + 1
+        
+        page.save()
+    
+        return JsonResponse({'success': 'Liked page'})
+    else: 
+        return JsonResponse({'error': 'Failed'})
+    
+@api_view(['POST'])
+def dislike_page(request, id):
+    current_user = request.user
+    page = Page.objects.get(pk=id)
+    
+    if current_user in page.likes.all():
+        page.likes.remove(current_user)
+        page.likes_count = page.likes_count - 1
+        
+        if current_user in page.followers.all():
+            page.followers.remove(current_user)
+            page.followers_count = page.followers_count - 1
+        
+        page.save()
+    
+        return JsonResponse({'success': 'Disliked page'})
+    else: 
+        return JsonResponse({'error': 'Failed'})
+    
+@api_view(['POST'])
+def follow_page(request, id):
+    current_user = request.user
+    page = Page.objects.get(pk=id)
+        
+    if current_user not in page.followers.all():
+        page.followers.add(current_user)
+        page.followers_count = page.followers_count + 1
+        
+        page.save()
+    
+        return JsonResponse({'success': 'Followed page'})
+    else: 
+        return JsonResponse({'error': 'Failed'})
+    
+@api_view(['POST'])
+def unfollow_page(request, id):
+    current_user = request.user
+    page = Page.objects.get(pk=id)
+        
+    if current_user in page.followers.all():
+        page.followers.remove(current_user)
+        page.followers_count = page.followers_count - 1
+        
+        page.save()
+    
+        return JsonResponse({'success': 'Unfollowed page'})
+    else: 
+        return JsonResponse({'error': 'Failed'})

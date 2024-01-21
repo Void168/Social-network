@@ -1,6 +1,6 @@
 <template>
   <div
-    class="w-[400px] min-h-max bg-slate-800 absolute top-[-140px] left-[-150px] shadow-md rounded-xl p-4 space-y-4"
+    class="w-[400px] min-h-max bg-slate-800 absolute top-[50px] left-[-150px] shadow-md rounded-xl p-4 space-y-4"
   >
     <div class="grid grid-cols-4 space-x-4">
       <div class="col-span-1">
@@ -28,6 +28,32 @@
             Sống tại <strong>{{ user.living_city }}</strong>
           </h3>
         </span>
+        <div v-if="user.is_page" class="flex flex-col space-y-2">
+          <span class="flex gap-2">
+            <ExclamationCircleIcon class="w-6 mb-auto" />
+            <h3 class="font-normal">
+              <strong>Trang</strong> &middot; {{ user.page_type }}
+            </h3>
+          </span>
+          <span class="flex gap-2">
+            <UserIcon class="w-6 mb-auto" />
+            <h3 class="font-normal">
+              {{ user.biography }}
+            </h3>
+          </span>
+          <span class="flex gap-2">
+            <UserGroupIcon class="w-6 mb-auto" />
+            <h3 class="font-normal">
+              {{ user.followers_count }} người theo dõi
+            </h3>
+          </span>
+          <span class="flex gap-2" v-if="user.email">
+            <EnvelopeIcon class="w-6 mb-auto" />
+            <h3 class="font-normal">
+              {{ user.email }}
+            </h3>
+          </span>
+        </div>
       </div>
     </div>
     <div class="flex justify-center gap-2">
@@ -55,10 +81,17 @@
       />
       <button
         class="btn min-w-max gap-2 flex items-center justify-center"
-        v-if="user.id !== userStore.user.id && !checkIsFriend"
+        v-if="user.id !== userStore.user.id && !checkIsFriend && !user.is_page"
       >
         <UserPlusIcon class="w-6" />
         <h4>Thêm bạn bè</h4>
+      </button>
+      <button
+        class="btn min-w-max gap-2 flex items-center justify-center"
+        v-else-if="user.id !== userStore.user.id && !checkIsFriend && user.is_page"
+      >
+        <SquaresPlusIcon class="w-6" />
+        <h4>Theo dõi</h4>
       </button>
       <button
         class="btn text-sm min-w-max gap-2 flex items-center justify-center"
@@ -66,6 +99,20 @@
       >
         <PencilIcon class="w-4" />
         <h4>Chỉnh sửa trang cá nhân</h4>
+      </button>
+      <button
+        class="btn text-sm min-w-max gap-2 flex items-center justify-center"
+        v-if="user.id === userStore.user.id && !checkIsFriend && !user.is_page"
+      >
+        <PencilIcon class="w-4" />
+        <h4>Chỉnh sửa trang cá nhân</h4>
+      </button>
+      <button
+        class="btn text-sm min-w-max gap-2 flex items-center justify-center"
+        v-else-if="!checkIsFriend && user.is_page"
+      >
+        <HandThumbUpIcon class="w-4" />
+        <h4>Thích</h4>
       </button>
       <button
         class="btn min-w-max gap-2 flex items-center justify-center"
@@ -87,6 +134,12 @@ import {
   UsersIcon,
   PencilIcon,
   PlusIcon,
+  HandThumbUpIcon,
+  SquaresPlusIcon,
+  ExclamationCircleIcon,
+  UserIcon,
+  UserGroupIcon,
+  EnvelopeIcon
 } from "@heroicons/vue/24/solid";
 import { useUserStore } from "../../../stores/user";
 
@@ -98,7 +151,13 @@ export default (await import("vue")).defineComponent({
     UserPlusIcon,
     UsersIcon,
     PencilIcon,
+    HandThumbUpIcon,
     PlusIcon,
+    SquaresPlusIcon,
+    ExclamationCircleIcon,
+    UserIcon,
+    UserGroupIcon,
+    EnvelopeIcon,
     CreateStoryModal,
   },
   setup() {

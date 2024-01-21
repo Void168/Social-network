@@ -15,7 +15,9 @@
           <RouterLink :to="{ name: 'page', params: { id: page.id } }"
             >Giới thiệu</RouterLink
           >
-          <span>Người theo dõi</span>
+          <RouterLink :to="{ name: 'pageusers', params: { id: page.id } }"
+            >Người theo dõi</RouterLink
+          >
           <RouterLink :to="{ name: 'photos', params: { id: page.id } }"
             >Ảnh</RouterLink
           >
@@ -31,10 +33,22 @@
             <PencilSquareIcon class="w-6 md:hidden" />
           </button>
           <div class="flex flex-col gap-3 items-center">
-            <button class="btn flex gap-1 items-center">
+            <button
+              v-if="!checkInLikes && !isLike"
+              class="btn flex gap-1 items-center"
+              @click="likePage"
+            >
               <HandThumbUpIcon class="w-6" />
-              <span> Thích </span>
+              <span>Thích</span>
             </button>
+            <PageOptionsDropdown
+              v-else-if="isLike || checkInLikes"
+              :followers="page.followers"
+              :likes="page.likes"
+              @followPage="followPage"
+              @unfollowPage="unfollowPage"
+              @dislikePage="dislikePage"
+              />
             <button
               @click="sendDirectMessage"
               class="bg-violet-400 hover:bg-violet-600 btn w-full"
@@ -60,6 +74,7 @@
               class="icon relative w-[200px] h-[100px] bg-gray-100 dark:bg-slate-700 rounded-bl-[100px] rounded-br-[100px] before:content-[''] after:content-[''] before:absolute after:absolute before:top-0 after:top-0 before:left-[-50px] before:w-[55px] before:h-[35px] before:bg-transparent before:rounded-tr-[50px] before:shadow-[20px_-20px_0_20px_rgba(243,244,246,1)] after:right-[-50px] after:w-[55px] after:h-[35px] after:bg-transparent after:rounded-tl-[50px] after:shadow-[-20px_-20px_0_20px_rgba(243,244,246,1)] before:dark:shadow-[20px_-20px_0_20px_rgba(51,65,85,1)] after:dark:shadow-[-20px_-20px_0_20px_rgba(51,65,85,1)]"
             >
               <span
+                v-if="pageStore.pageId === page.id"
                 @click="openAvatarModal"
                 class="mb-6 rounded-full w-8 h-8 shadow-xl absolute flex justify-center items-center top-16 right-6 z-10 bg-neutral-200 dark:bg-slate-700 hover:ring-2 hover:ring-slate-300 dark:hover:ring-slate-500 transition cursor-pointer"
               >
@@ -68,13 +83,13 @@
                 />
               </span>
             </div>
-            <!-- avatar's height - frame's height -->
             <img
               :src="page.get_avatar"
               alt=""
               class="rounded-full w-44 h-44 shadow-xl absolute top-2"
             />
             <AvatarModal
+              v-if="pageStore.pageId === page.id"
               :show="avatarIsOpen"
               @closeAvatarModal="closeAvatarModal"
             />
@@ -87,7 +102,7 @@
           <div class="mt-6 flex space-x-8">
             <ul class="flex flex-col !justify-start space-y-4 text-sm">
               <li
-                class="text-gray-500 dark:text-neutral-200 flex items-center gap-2"
+                class="text-gray-500 dark:text-neutral-300 flex items-center gap-2"
               >
                 <div class="flex gap-1 items-center">
                   <ExclamationCircleIcon class="h-6 w-6" />
@@ -97,26 +112,38 @@
                 </div>
               </li>
               <li
-                class="text-gray-500 dark:text-neutral-200 flex items-center gap-2"
+                class="text-gray-500 dark:text-neutral-200 flex items-center gap-2 font-semibold"
+              >
+                <UserGroupIcon class="h-6 w-6" />
+                <span>{{ page.followers_count }} người theo dõi</span>
+              </li>
+              <li
+                class="text-gray-500 dark:text-neutral-200 flex items-center gap-2 font-semibold"
+              >
+                <HandThumbUpIcon class="h-6 w-6" />
+                <span>{{ page.likes_count }} lượt thích</span>
+              </li>
+              <li
+                class="text-gray-500 dark:text-neutral-300 flex items-center gap-2"
               >
                 <EnvelopeIcon class="h-6 w-6" />
                 <span>{{ page.email }}</span>
               </li>
               <li
-                class="text-gray-500 dark:text-neutral-200 flex items-center gap-2"
+                class="text-gray-500 dark:text-neutral-300 flex items-center gap-2"
               >
                 <ClipboardDocumentListIcon class="h-6 w-6" />
                 {{ page.posts_count }} bài đăng
               </li>
               <li
-                class="text-gray-500 dark:text-neutral-200 flex items-center gap-2"
+                class="text-gray-500 dark:text-neutral-300 flex items-center gap-2"
                 v-if="page.location"
               >
                 <MapPinIcon class="w-6 h-6 dark:text-neutral-200" />
                 <p>Địa điểm {{ page.location }}</p>
               </li>
               <li
-                class="text-gray-500 dark:text-neutral-200 flex items-center gap-2"
+                class="text-gray-500 dark:text-neutral-300 flex items-center gap-2"
               >
                 <ClockIcon class="w-6 h-6 dark:text-neutral-200" />
                 <p>
@@ -127,7 +154,7 @@
             </ul>
           </div>
           <RouterLink
-            to="/profile/edit"
+            to="/page/edit"
             class="flex justify-center items-center w-full"
             v-if="checkCurrentUserInPage"
           >
@@ -160,7 +187,7 @@
         id="profile-frame"
       >
         <div
-          v-if="checkCurrentUserInPage"
+          v-if="checkCurrentUserInPage && pageStore.pageId"
           class="p-4 bg-white rounded-lg dark:bg-slate-600 dark:border-slate-700 dark:text-neutral-200"
         >
           <PostForm :user="user" :posts="posts" :page="page" />
@@ -193,6 +220,7 @@ import PostForm from "../components/forms/PostForm.vue";
 import FeedItem from "../components/items/post/FeedItem.vue";
 import CoverImage from "../components/CoverImage.vue";
 import ImageShowcase from "../components/items/profile/ImageShowcase.vue";
+import PageOptionsDropdown from "../components/dropdown/PageOptionsDropdown.vue";
 import SkeletonLoadingPostVue from "../components/loadings/SkeletonLoadingPost.vue";
 
 import ContactModal from "../components/modals/profile/ContactModal.vue";
@@ -238,6 +266,7 @@ export default {
     SkeletonLoadingPostVue,
     ImageShowcase,
     UnfollowedModal,
+    PageOptionsDropdown,
     EnvelopeIcon,
     ClockIcon,
     ClipboardDocumentListIcon,
@@ -258,15 +287,13 @@ export default {
       user: {
         id: null,
       },
-      pageInfoHeight: 0,
       page: {},
-      followers: [],
       PostToShow: 5,
       loadMore: false,
       images: [],
       contactIsOpen: false,
       avatarIsOpen: false,
-      isUnfollowedOpen: false,
+      isLike: false,
     };
   },
 
@@ -275,6 +302,11 @@ export default {
       return this.pageStore.pagesList
         .map((page) => page.id)
         .includes(this.$route.params.id);
+    },
+    checkInLikes() {
+      return this.page?.likes
+        ?.map((user) => user.id)
+        .includes(this.userStore.user.id);
     },
   },
 
@@ -310,18 +342,19 @@ export default {
         .get(`/api/page/get-page/${this.$route.params.id}`)
         .then((res) => {
           this.page = res.data;
+          // console.log(res.data)
         })
         .catch((error) => console.log(error));
     },
     deletePost(id) {
       this.posts = this.posts.filter((post) => post.id !== id);
     },
-    getImages() {
-      axios
+    async getImages() {
+      await axios
         .get(`/api/posts/page/${this.$route.params.id}/attachments/`)
         .then((res) => {
           this.images = res.data;
-          console.log(res.data)
+          // console.log(res.data)
         })
         .catch((error) => {
           console.log("error", error);
@@ -340,8 +373,8 @@ export default {
       console.log("hello");
     },
 
-    getFeed() {
-      axios
+    async getFeed() {
+      await axios
         .get(`/api/posts/page/profile/${this.$route.params.id}/`)
         .then((res) => {
           this.postsList = res.data;
@@ -388,39 +421,84 @@ export default {
       this.avatarIsOpen = false;
     },
 
-    openUnfollowedModal() {
-      this.isUnfollowedOpen = true;
+    likePage() {
+      axios
+        .post(`/api/page/${this.$route.params.id}/like/`)
+        .then((res) => {
+          if (res.data.success) {
+            this.toastStore.showToast(
+              5000,
+              `Đã thích ${this.page.name}`,
+              "bg-emerald-400 text-white"
+            );
+            this.isLike = true;
+          } else {
+            this.toastStore.showToast(
+              5000,
+              "Thao tác thất bại",
+              "bg-rose-400 text-white"
+            );
+          }
+        })
+        .catch((error) => {
+          console.log(error);
+        });
+    },
+    followPage(){
+      axios.post(`/api/page/${this.$route.params.id}/follow/`).then((res) =>{
+        if(res.data.success){
+          this.toastStore.showToast(
+              5000,
+              `Đã theo dõi ${this.page.name}`,
+              "bg-emerald-400 text-white"
+            );
+        } else {
+          this.toastStore.showToast(
+              5000,
+              "Thao tác thất bại",
+              "bg-rose-400 text-white"
+            );
+        }
+      })
     },
 
-    closeUnfollowedModal() {
-      this.isUnfollowedOpen = false;
+    dislikePage(){
+      axios.post(`/api/page/${this.$route.params.id}/dislike/`).then((res) =>{
+        if(res.data.success){
+          this.toastStore.showToast(
+              5000,
+              `Đã bỏ thích ${this.page.name}`,
+              "bg-emerald-400 text-white"
+            );
+        } else {
+          this.toastStore.showToast(
+              5000,
+              "Thao tác thất bại",
+              "bg-rose-400 text-white"
+            );
+        }
+      })
     },
 
-    followPage() {
-      // axios
-      //   .post(`/api/follow/${this.$route.params.id}/`)
-      //   .then((res) => {
-      //     console.log(res.data);
-      //   })
-      //   .catch((error) => {
-      //     console.log(error);
-      //   });
-      console.log("hello");
+    unfollowPage() {
+      axios.post(`/api/page/${this.$route.params.id}/unfollow/`).then((res) =>{
+        if(res.data.success){
+          this.toastStore.showToast(
+              5000,
+              `Đã bỏ theo dõi ${this.page.name}`,
+              "bg-emerald-400 text-white"
+            );
+        } else {
+          this.toastStore.showToast(
+              5000,
+              "Thao tác thất bại",
+              "bg-rose-400 text-white"
+            );
+        }
+      })
     },
 
-    unfollowedPage() {
-      // axios
-      //   .post(`/api/unfollowed/${this.$route.params.id}/`)
-      //   .then((res) => {
-      //     console.log(res.data);
-      //   })
-      //   .catch((error) => {
-      //     console.log(error);
-      //   });
-      console.log("hello");
-
-      this.isUnfollowedOpen = false;
-    },
+    
   },
 };
 </script>

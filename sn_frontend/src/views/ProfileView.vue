@@ -47,7 +47,6 @@
               <div v-for="(value, index) in filtered" :key="index">
                 <FriendOptionsDropdown
                   :followers="followers"
-                  :isOpen="friendIsOpen"
                   v-if="value === userStore.user.id"
                   @openDeleteFriendModal="openDeleteFriendModal"
                   @openUnfollowedModal="openUnfollowedModal"
@@ -388,7 +387,6 @@ export default {
       images: [],
       contactIsOpen: false,
       avatarIsOpen: false,
-      friendIsOpen: false,
       isDeleteFriendOpen: false,
       isUnfollowedOpen: false,
     };
@@ -588,10 +586,6 @@ export default {
     },
     closeAvatarModal() {
       this.avatarIsOpen = false;
-    },
-
-    openDropdown() {
-      this.friendIsOpen = !this.friendIsOpen;
     },
 
     openDeleteFriendModal() {

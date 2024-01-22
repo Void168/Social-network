@@ -9,7 +9,7 @@ from rest_framework.decorators import api_view
 from .serializers import PageSerializer, PageDetailSerializer
 from notification.models import Notification
 from notification.serializers import NotificationSerializer
-from .forms import PageForm
+from .forms import PageForm, PageBiographyForm, PageTypeForm, PageLocationForm, PageProfileForm
 
 @api_view(['POST'])
 def page_create(request):
@@ -69,7 +69,73 @@ def like_page(request, id):
         return JsonResponse({'success': 'Liked page'})
     else: 
         return JsonResponse({'error': 'Failed'})
+
+@api_view(['POST'])
+def edit_page_profile(request, id):
+    current_page = Page.objects.get(id=id)
+    email = request.data.get('email')
+    name = request.data.get('name')
     
+    form = PageProfileForm(request.POST, instance=current_page)
+        
+    if form.is_valid():
+        form.save()
+        
+    serializer = PageSerializer(current_page)
+        
+    return JsonResponse({'message': 'information updated', 'page': serializer.data})
+
+@api_view(['POST'])
+def set_page_biography(request, id):
+    current_page = Page.objects.get(id=id)
+        
+    form = PageBiographyForm(data=request.POST, instance=current_page)
+    
+    if form.is_valid():
+        form.save()
+        
+        current_page.save()
+    
+        serializer = PageSerializer(current_page)
+    
+        return JsonResponse(serializer.data)
+    else: 
+        return JsonResponse({'message':'Failed'})
+
+@api_view(['POST'])
+def set_page_type(request, id):
+    current_page = Page.objects.get(id=id)
+    
+    form = PageTypeForm(data=request.POST, instance=current_page)
+    
+    if form.is_valid():
+        form.save()
+        
+        current_page.save()
+    
+        serializer = PageSerializer(current_page)
+    
+        return JsonResponse(serializer.data)
+    else: 
+        return JsonResponse({'message':'Failed'})
+
+@api_view(['POST'])
+def set_page_location(request, id):
+    current_page = Page.objects.get(id=id)
+    
+    form = PageLocationForm(data=request.POST, instance=current_page)
+    
+    if form.is_valid():
+        form.save()
+        
+        current_page.save()
+    
+        serializer = PageSerializer(current_page)
+    
+        return JsonResponse(serializer.data)
+    else: 
+        return JsonResponse({'message':'Failed'})
+
 @api_view(['POST'])
 def dislike_page(request, id):
     current_user = request.user

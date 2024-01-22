@@ -37,7 +37,7 @@
                   Huỷ
                 </button>
                 <button
-                  @click="submitBiographyForm"
+                  @click="submitPageBiographyForm"
                   v-bind:disabled="
                     page?.biography?.length === 0 &&
                     page.biography === 'undefined'
@@ -59,34 +59,73 @@
             ref="chooseType"
             v-model="type"
           />
+          <div
+            v-if="type?.name && type?.name !== page.page_type"
+            class="flex items-center justify-center mt-6"
+            @click="submitPageTypeForm"
+          >
+            <button class="btn">Lưu thay đổi</button>
+          </div>
         </div>
+
         <div class="flex flex-col space-y-4">
           <h3 class="text-lg font-semibold">Chọn địa điểm</h3>
-          <div class="flex flex-col gap-3">
-            <h3 class="font-semibold">Địa chỉ</h3>
-            <input
-              v-model="address"
-              type="text"
-              placeholder="Mô tả về bạn"
-              class="w-full py-2 px-6 border border-gray-200 dark:bg-slate-700 dark:border-slate-800 dark:text-neutral-200 rounded-lg"
-            />
+          <h4 class="font-semibold mb-4" v-if="page.location">
+            Hiện tại: {{ page.location }}
+          </h4>
+          <div
+            v-if="!updatePageLocation"
+            class="flex flex-col justify-center items-center space-y-4"
+          >
+            <button
+              @click="openPageLocationForm"
+              class="md:w-[50%] w-full px-4 py-2 bg-slate-200 dark:bg-slate-700 dark:hover:bg-slate-800 rounded-xl shadow-md font-semibold hover:bg-slate-500 hover:text-neutral-200 transition"
+            >
+              Chỉnh sửa địa điểm
+            </button>
           </div>
-          <div class="flex gap-3 min-w-full">
-            <div class="w-full">
-              <h4 class="font-semibold">Quốc gia</h4>
-              <SelectCountryForm
-                v-bind:countries="countries"
-                @selectCountry="selectCountry(country?.isoCode)"
-                v-model="country"
+          <div v-else class="flex flex-col gap-3">
+            <div class="space-y-4">
+              <h3 class="font-semibold">Địa chỉ</h3>
+              <input
+                v-model="address"
+                type="text"
+                placeholder="Địa chỉ cụ thể"
+                class="w-full py-2 px-6 border border-gray-200 dark:bg-slate-700 dark:border-slate-800 dark:text-neutral-200 rounded-lg"
               />
             </div>
-            <div class="w-full">
-              <h4 class="font-semibold">Bang/Tỉnh</h4>
-              <SelectStateForm
-                v-bind:states="statesList"
-                @selectState="selectState(state?.isoCode)"
-                v-model="state"
-              />
+            <div class="flex gap-3 min-w-full">
+              <div class="w-full space-y-4">
+                <h4 class="font-semibold">Quốc gia</h4>
+                <SelectCountryForm
+                  v-bind:countries="countries"
+                  @selectCountry="selectCountry(country?.isoCode)"
+                  v-model="country"
+                />
+              </div>
+              <div class="w-full space-y-4">
+                <h4 class="font-semibold">Bang/Tỉnh</h4>
+                <SelectStateForm
+                  v-bind:states="statesList"
+                  @selectState="selectState(state?.isoCode)"
+                  v-model="state"
+                />
+              </div>
+            </div>
+            <div class="flex gap-2 justify-end mt-4">
+              <button
+                @click="openPageLocationForm"
+                class="px-4 py-2 bg-slate-200 dark:bg-slate-700 rounded-xl shadow-md font-semibold dark:hover:bg-slate-500 hover:bg-slate-300 transition"
+              >
+                Huỷ
+              </button>
+              <button
+                type="button"
+                @click="submitPageLocationForm"
+                class="px-4 py-2 bg-slate-200 dark:bg-slate-700 rounded-xl shadow-md font-semibold dark:hover:bg-slate-500 hover:bg-slate-300 transition"
+              >
+                Lưu
+              </button>
             </div>
           </div>
         </div>
@@ -134,16 +173,16 @@
               </div>
               <div v-else class="flex items-center justify-center">
                 <button
-                    @click="openAddModeratorsModal"
+                  @click="openAddModeratorsModal"
                   class="flex gap-2 items-center justify-center md:w-[50%] w-full px-4 py-2 bg-slate-200 dark:hover:bg-slate-800 dark:bg-slate-700 rounded-xl shadow-md font-semibold hover:bg-slate-500 hover:text-neutral-200 transition"
                 >
                   <PlusCircleIcon class="w-8" />
                   <span class="font-semibold">Thêm quản trị viên</span>
                 </button>
                 <AddModeratorsModalVue
-                    :options="options"
-                    :show="isAddModeratorsOpen"
-                    @closeModal="closeAddUsersModal"
+                  :options="options"
+                  :show="isAddModeratorsOpen"
+                  @closeModal="closeAddUsersModal"
                 />
               </div>
             </div>
@@ -283,6 +322,7 @@
         </div>
       </div>
     </div>
+    <!-- <Map :query="page.location"/> -->
   </div>
 </template>
 
@@ -295,16 +335,15 @@ import { onMounted, ref } from "vue";
 import pageTypes from "../data/pageTypes";
 import { Country, State } from "country-state-city";
 
-import {
-  PlusCircleIcon,
-} from "@heroicons/vue/20/solid";
+import { PlusCircleIcon } from "@heroicons/vue/20/solid";
 import ChooseTypePage from "../components/dropdown/ChooseTypePage.vue";
 import SelectCountryForm from "../components/forms/SelectCountryForm.vue";
 import SelectStateForm from "../components/forms/SelectStateForm.vue";
 import WebsiteItem from "../components/items/profile/WebsiteItem.vue";
 import PhoneNumberItem from "../components/items/profile/PhoneNumberItem.vue";
 import { RouterLink } from "vue-router";
-import AddModeratorsModalVue from '../components/modals/page/AddModeratorsModal.vue';
+import AddModeratorsModalVue from "../components/modals/page/AddModeratorsModal.vue";
+// import Map from '../components/map/Map.vue'
 export default {
   components: {
     ChooseTypePage,
@@ -315,6 +354,7 @@ export default {
     PhoneNumberItem,
     RouterLink,
     AddModeratorsModalVue,
+    //Map,
   },
   setup() {
     const toastStore = useToastStore();
@@ -351,6 +391,7 @@ export default {
       selection: "",
       errors: [],
       updateBio: false,
+      updatePageLocation: false,
       addWebsite: false,
       addPhoneNumber: false,
       websites: [],
@@ -358,7 +399,7 @@ export default {
       websiteUrl: "",
       phoneNumber: "",
       options: [],
-      isAddModeratorsOpen: false
+      isAddModeratorsOpen: false,
     };
   },
 
@@ -409,6 +450,9 @@ export default {
     openAddWebsiteForm() {
       this.addWebsite = !this.addWebsite;
     },
+    openPageLocationForm() {
+      this.updatePageLocation = !this.updatePageLocation;
+    },
     getOption(data) {
       this.type = data;
     },
@@ -419,7 +463,6 @@ export default {
       } else {
         console.log("No country selected");
       }
-      //console.log(this.country);
     },
     selectState(stateIsoCode) {
       if (stateIsoCode) {
@@ -432,7 +475,171 @@ export default {
       } else {
         console.log("No state selected");
       }
-      //console.log(this.state);
+    },
+    submitPageBiographyForm() {
+      this.errors = [];
+
+      if (this.errors.length === 0) {
+        let formData = new FormData();
+        formData.append("biography", this.page.biography);
+
+        axios
+          .post(`/api/page/set-biography/${this.page.id}/`, formData, {
+            headers: {
+              "Content-Type": "multipart/form-data",
+            },
+          })
+          .then((res) => {
+            if (res.data.message !== "Failed") {
+              this.updateBio = false;
+              this.toastStore.showToast(
+                3500,
+                "Đã lưu thông tin chỉnh sửa.",
+                "bg-emerald-500 text-white"
+              );
+              setTimeout(() => {
+                this.$router.go(0);
+              }, 4000);
+            } else {
+              this.toastStore.showToast(
+                3500,
+                `${res.data.message}`,
+                "bg-rose-400 text-white"
+              );
+            }
+          })
+          .catch((error) => {
+            console.log("error", error);
+          });
+      }
+    },
+    submitPageTypeForm() {
+      this.errors = [];
+
+      if (this.errors.length === 0) {
+        let formData = new FormData();
+        formData.append("page_type", this.type?.name);
+
+        axios
+          .post(`/api/page/set-type/${this.page.id}/`, formData, {
+            headers: {
+              "Content-Type": "multipart/form-data",
+            },
+          })
+          .then((res) => {
+            if (res.data.message !== "Failed") {
+              this.toastStore.showToast(
+                3500,
+                "Đã lưu thông tin chỉnh sửa.",
+                "bg-emerald-500 text-white"
+              );
+              setTimeout(() => {
+                this.$router.go(0);
+              }, 4000);
+            } else {
+              this.toastStore.showToast(
+                3500,
+                `${res.data.message}`,
+                "bg-rose-400 text-white"
+              );
+            }
+          })
+          .catch((error) => {
+            console.log("error", error);
+          });
+      }
+    },
+    submitPageLocationForm() {
+      let formData = new FormData();
+      if (this.address) {
+        formData.append(
+          "location",
+          `${this.address}, ${this.state.name}, ${this.country.name}`
+        );
+      } else if (this.state.name && !this.address) {
+        formData.append("location", `${this.state.name}, ${this.country.name}`);
+      } else if (!this.state.name) {
+        formData.append("location", `${this.country.name}`);
+      }
+
+      axios
+        .post(`/api/page/set-location/${this.page.id}/`, formData, {
+          headers: {
+            "Content-Type": "multipart/form-data",
+          },
+        })
+        .then((res) => {
+          if (res.data.message !== "Failed") {
+            this.toastStore.showToast(
+              3500,
+              "Đã lưu thông tin",
+              "bg-emerald-500 text-white"
+            );
+            setTimeout(() => {
+                this.$router.go(0);
+              }, 4000);
+          } else {
+            this.toastStore.showToast(
+              3500,
+              `${res.data.message}`,
+              "bg-rose-400 text-white"
+            );
+            setTimeout(() => {
+                this.$router.go(0);
+              }, 4000);
+          }
+        })
+        .catch((error) => {
+          console.log("error", error);
+        });
+    },
+    submitForm() {
+      this.errors = [];
+
+      if (this.page.email === "") {
+        this.errors.push("E-mail trống");
+      }
+
+      if (this.page.name === "") {
+        this.errors.push("Tên đăng nhập trống");
+      }
+
+      if (this.errors.length === 0) {
+        let formData = new FormData();
+        formData.append("name", this.page.name);
+        formData.append("email", this.page.email);
+
+        axios
+          .post(`/api/page/edit-profile-page/${this.page.id}/`, formData, {
+            headers: {
+              "Content-Type": "multipart/form-data",
+            },
+          })
+          .then((res) => {
+            if (res.data.message === "information updated") {
+              this.toastStore.showToast(
+                3500,
+                "Đã lưu thông tin chỉnh sửa.",
+                "bg-emerald-500 text-white"
+              );
+              setTimeout(() => {
+                this.$router.go(0);
+              }, 4000)
+            } else {
+              this.toastStore.showToast(
+                3500,
+                `${res.data.message}`,
+                "bg-rose-400 text-white"
+              );
+              setTimeout(() => {
+                this.$router.go(0);
+              }, 4000)
+            }
+          })
+          .catch((error) => {
+            console.log("error", error);
+          });
+      }
     },
   },
 };

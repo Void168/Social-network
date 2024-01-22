@@ -140,7 +140,7 @@
                 v-if="page.location"
               >
                 <MapPinIcon class="w-6 h-6 dark:text-neutral-200" />
-                <p>Địa điểm {{ page.location }}</p>
+                <p>{{ page.location }}</p>
               </li>
               <li
                 class="text-gray-500 dark:text-neutral-300 flex items-center gap-2"

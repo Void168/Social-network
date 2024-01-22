@@ -11,7 +11,6 @@ class Page(models.Model):
     is_page = models.BooleanField(default=True)
     email = models.EmailField(blank=True, null=True)
     name = models.CharField(blank=True, max_length=50)
-    phone_number = models.CharField(blank=True, null=True, max_length=20)
     location = models.CharField(blank=True, null=True, max_length=255)
     
     avatar = models.ImageField(upload_to='avatars', blank=True, null=True)

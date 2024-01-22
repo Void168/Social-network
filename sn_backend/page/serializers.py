@@ -21,4 +21,4 @@ class PageDetailSerializer(serializers.ModelSerializer):
     
     class Meta:
         model = Page
-        fields = ('id', 'name', 'email', 'is_page', 'phone_number', 'location', 'likes_count','posts_count','get_avatar','get_cover_image', 'created_at','followers_count','page_type', 'biography', 'following', 'followers', 'likes', 'business_hours_status', 'start_time', 'close_time', 'admin', 'moderators',)
+        fields = ('id', 'name', 'email', 'is_page', 'location', 'likes_count','posts_count','get_avatar','get_cover_image', 'created_at','followers_count','page_type', 'biography', 'following', 'followers', 'likes', 'business_hours_status', 'start_time', 'close_time', 'admin', 'moderators',)

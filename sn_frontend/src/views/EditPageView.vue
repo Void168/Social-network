@@ -403,6 +403,12 @@ export default {
     openBioForm() {
       this.updateBio = !this.updateBio;
     },
+    openAddPhoneNumberForm() {
+      this.addPhoneNumber = !this.addPhoneNumber;
+    },
+    openAddWebsiteForm() {
+      this.addWebsite = !this.addWebsite;
+    },
     getOption(data) {
       this.type = data;
     },

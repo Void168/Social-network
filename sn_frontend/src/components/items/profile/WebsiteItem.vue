@@ -6,7 +6,7 @@
         v-if="edit"
         class="w-[60%] mt-2 py-2 px-6 border border-gray-200 dark:bg-slate-800 dark:border-slate-700 dark:text-neutral-200 rounded-lg"
       />
-      <a v-else href="{website.url}" target="_blank" class=" break-all">{{ website.url }}</a>
+      <a v-else href="{website.url}" target="_blank" class=" break-all">{{ website?.url }}</a>
       <div class="flex gap-2 sm:flex-row xs:flex-col">
         <button
           @click="editWebsite"
@@ -87,6 +87,7 @@ import {
 export default (await import("vue")).defineComponent({
   props: {
     website: Object,
+    page: Object
   },
 
   setup() {
@@ -109,9 +110,9 @@ export default (await import("vue")).defineComponent({
         { name: "Chỉ mình tôi" },
       ],
       privacy: {},
-      is_private: this.website.is_private || false,
-      only_me: this.website.only_me || false,
-      url: this.website.url,
+      is_private: this.website?.is_private || false,
+      only_me: this.website?.only_me || false,
+      url: this.website?.url,
       edit: false,
     };
   },
@@ -120,26 +121,49 @@ export default (await import("vue")).defineComponent({
     deleteWebsite() {
       this.$emit("deleteWebsite", this.website.id);
 
-      axios
-        .delete(`/api/informations/${this.website.id}/delete/website/`)
-        .then((res) => {
-          setTimeout(() => {
-            this.closeModal();
-          }, 1000);
-          this.toastStore.showToast(
-            5000,
-            "Trang liên kết đã được xóa",
-            "bg-emerald-500 text-white"
-          );
-        })
-        .catch((error) => {
-          console.log(error);
-          this.toastStore.showToast(
-            5000,
-            "Xóa liên kết thất bại",
-            "bg-rose-500 text-white"
-          );
-        });
+      if(!this.page){
+        axios
+          .delete(`/api/informations/${this.website.id}/delete/website/`)
+          .then((res) => {
+            setTimeout(() => {
+              this.closeModal();
+            }, 1000);
+            this.toastStore.showToast(
+              5000,
+              "Trang liên kết đã được xóa",
+              "bg-emerald-500 text-white"
+            );
+          })
+          .catch((error) => {
+            console.log(error);
+            this.toastStore.showToast(
+              5000,
+              "Xóa liên kết thất bại",
+              "bg-rose-500 text-white"
+            );
+          });
+      } else {
+        axios
+          .delete(`/api/informations/page/${this.page.id}/delete/website/${this.website.id}/`)
+          .then((res) => {
+            setTimeout(() => {
+              this.closeModal();
+            }, 1000);
+            this.toastStore.showToast(
+              5000,
+              "Trang liên kết đã được xóa",
+              "bg-emerald-500 text-white"
+            );
+          })
+          .catch((error) => {
+            console.log(error);
+            this.toastStore.showToast(
+              5000,
+              "Xóa liên kết thất bại",
+              "bg-rose-500 text-white"
+            );
+          });
+      }
     },
     getOption() {
       if (this.privacy.name === "Công khai") {

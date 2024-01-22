@@ -465,8 +465,8 @@
               v-bind:key="website.id"
             >
               <WebsiteItem
-                v-bind:website="website"
-                v-on:deleteWebsite="deleteWebsite"
+                :website="website"
+                :deleteWebsite="deleteWebsite"
               />
             </div>
             <form action="" class="space-y-6 mt-4" v-if="addWebsite">

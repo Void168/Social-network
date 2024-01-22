@@ -231,8 +231,10 @@
               v-bind:key="website.id"
             >
               <WebsiteItem
-                v-bind:website="website"
-                v-on:deleteWebsite="deleteWebsite"
+                :page="page"
+                :website="website"
+                :deleteWebsite="deleteWebsite"
+                
               />
             </div>
             <form action="" class="space-y-6 mt-4" v-if="addWebsite">
@@ -279,8 +281,9 @@
               v-bind:key="number.id"
             >
               <PhoneNumberItem
-                v-bind:phoneNumber="number"
-                v-on:deleteWebsite="deletePhoneNumber"
+                :phoneNumber="number"
+                :deletePhoneNumber="deletePhoneNumber"
+                :page="page"
               />
             </div>
             <form action="" class="space-y-6 mt-4" v-if="addPhoneNumber">
@@ -400,11 +403,16 @@ export default {
       phoneNumber: "",
       options: [],
       isAddModeratorsOpen: false,
+      page_website_is_private: false,
+      page_website_only_me: false,
+      page_phoneNumber_is_private: false,
+      page_phoneNumber_only_me: false,
     };
   },
 
   mounted() {
     this.getPageDetail();
+    
   },
 
   methods: {
@@ -413,6 +421,8 @@ export default {
         .get(`/api/page/get-page/${this.pageStore.pageId}/detail/`)
         .then((res) => {
           this.page = res.data;
+          this.getPageWebsitesList();
+          this.getPagePhoneNumbersList();
         })
         .catch((error) => {
           console.log(error);
@@ -640,6 +650,74 @@ export default {
             console.log("error", error);
           });
       }
+    },
+    async getPageWebsitesList() {
+      await axios
+        .get(`/api/informations/page/${this.page?.id}/websites/`)
+        .then((res) => {
+          this.websites = res.data.websites;
+          //console.log(this.websites)
+        })
+        .catch((error) => console.log(error));
+    },
+    async getPagePhoneNumbersList() {
+      await axios
+        .get(`/api/informations/page/${this.page?.id}/phone-numbers/`)
+        .then((res) => {
+          this.phoneNumbers = res.data.phone_numbers;
+        })
+        .catch((error) => console.log(error));
+    },
+    submitPhoneNumberForm() {
+      let formData = new FormData();
+      formData.append("phone_number", this.phoneNumber);
+      formData.append("is_private", this.page_phoneNumber_is_private);
+      formData.append("only_me", this.page_phoneNumber_only_me);
+      axios
+        .post(`/api/informations/page/${this.page.id}/create/phone-number/`, formData, {
+          headers: {
+            "Content-Type": "multipart/form-data",
+          },
+        })
+        .then((res) => {
+          //console.log("data", res.data);
+
+          this.phoneNumbers.unshift(res.data);
+          this.phoneNumber = "";
+        })
+        .catch((error) => {
+          console.log("error", error);
+        });
+    },
+    submitWebsiteForm() {
+      let formData = new FormData();
+      formData.append("url", this.websiteUrl);
+      formData.append("is_private", this.page_website_is_private);
+      formData.append("only_me", this.page_website_only_me);
+
+      axios
+        .post(`/api/informations/page/${this.page.id}/create/website/`, formData, {
+          headers: {
+            "Content-Type": "multipart/form-data",
+          },
+        })
+        .then((res) => {
+          //console.log("data", res.data);
+
+          this.websites.unshift(res.data);
+          this.websiteUrl = "";
+        })
+        .catch((error) => {
+          console.log("error", error);
+        });
+    },
+    deletePhoneNumber(id) {
+      this.phoneNumbers = this.phoneNumbers.filter(
+        (phoneNumber) => phoneNumber.id !== id
+      );
+    },
+    deleteWebsite(id) {
+      this.websites = this.websites.filter((website) => website.id !== id);
     },
   },
 };

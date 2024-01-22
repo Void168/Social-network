@@ -88,6 +88,7 @@ import {
 export default (await import("vue")).defineComponent({
   props: {
     phoneNumber: Object,
+    page: Object,
   },
 
   setup() {
@@ -121,26 +122,49 @@ export default (await import("vue")).defineComponent({
     deletePhoneNumber() {
       this.$emit("deletePhoneNumber", this.phoneNumber.id);
 
-      axios
-        .delete(`/api/informations/${this.phoneNumber.id}/delete/phone-number/`)
-        .then((res) => {
-          setTimeout(() => {
-            this.closeModal();
-          }, 1000);
-          this.toastStore.showToast(
-            5000,
-            "Trang liên kết đã được xóa",
-            "bg-emerald-500 text-white"
-          );
-        })
-        .catch((error) => {
-          console.log(error);
-          this.toastStore.showToast(
-            5000,
-            "Xóa liên kết thất bại",
-            "bg-rose-500 text-white"
-          );
-        });
+      if(!this.page){
+        axios
+          .delete(`/api/informations/${this.phoneNumber.id}/delete/phone-number/`)
+          .then((res) => {
+            setTimeout(() => {
+              this.closeModal();
+            }, 1000);
+            this.toastStore.showToast(
+              5000,
+              "Số điện thoại đã được xóa",
+              "bg-emerald-500 text-white"
+            );
+          })
+          .catch((error) => {
+            console.log(error);
+            this.toastStore.showToast(
+              5000,
+              "Xóa số điện thoại thất bại",
+              "bg-rose-500 text-white"
+            );
+          });
+      } else {
+        axios
+          .delete(`/api/informations/page/${this.page.id}/delete/phone-number/${this.phoneNumber.id}/`)
+          .then((res) => {
+            setTimeout(() => {
+              this.closeModal();
+            }, 1000);
+            this.toastStore.showToast(
+              5000,
+              "Số điện thoại đã được xóa",
+              "bg-emerald-500 text-white"
+            );
+          })
+          .catch((error) => {
+            console.log(error);
+            this.toastStore.showToast(
+              5000,
+              "Xóa số điện thoại thất bại",
+              "bg-rose-500 text-white"
+            );
+          });
+      }
     },
     getOption() {
       if (this.privacy.name === "Công khai") {

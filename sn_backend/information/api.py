@@ -130,7 +130,7 @@ def phone_number_delete(request, pk):
 @api_view(['GET'])
 def page_website_list_profile(request, id):
     page = Page.objects.get(pk=id)
-    page_websites = Website.objects.filter(created_by=page)
+    page_websites = PageWebsite.objects.filter(created_by=page)
         
     page_websites_serializer = PageWebsiteSerializer(page_websites, many=True)
 
@@ -183,10 +183,10 @@ def page_website_delete(request, pk, id):
 
 @api_view(['GET'])
 def page_phone_number_list_profile(request, id):
-    user = User.objects.get(pk=id)
+    page = Page.objects.get(pk=id)
     page_phone_numbers = PagePhoneNumber.objects.filter(created_by=page)
         
-    page_phone_numbers_serializer = PhoneNumberSerializer(page_phone_numbers, many=True)
+    page_phone_numbers_serializer = PagePhoneNumberSerializer(page_phone_numbers, many=True)
 
     return JsonResponse({
         'phone_numbers': page_phone_numbers_serializer.data,

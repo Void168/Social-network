@@ -120,6 +120,7 @@
     props: {
       isAddModeratorsOpen: Boolean,
       options: Array,
+      page: Object,
     },
     data() {
       return {
@@ -137,34 +138,34 @@
         this.otherUserId = this.profileId.slice(this.profileId.lastIndexOf('/') + 1)
       },
       addModerators() {
-        //   axios
-        //     .post(`/api/chat/group/${this.$route.params.id}/add-users/`, {
-        //       users: this.value,
-        //       otherUser: this.otherUserId,
-        //     })
-        //     .then((res) => {
-        //       console.log(res.data);
-        //       this.value = [];
-        //       if (res.data.message === "users update") {
-        //         this.toastStore.showToast(
-        //           3000,
-        //           "Thêm thành viên thành công.",
-        //           "bg-emerald-500 text-white"
-        //         );
-        //         setTimeout(() => {
-        //           this.$router.go(0);
-        //         }, 3500)
-        //       } else {
-        //         this.toastStore.showToast(
-        //           3000,
-        //           "Thêm thành viên thất bại.",
-        //           "bg-rose-400 text-white"
-        //         );
-        //       }
-        //     })
-        //     .catch((error) => {
-        //       console.log(error);
-        //     });
+          axios
+            .post(`/api/page/${this.page.id}/add-moderators/`, {
+              users: this.value,
+              otherUser: this.otherUserId,
+            })
+            .then((res) => {
+              console.log(res.data);
+              this.value = [];
+              if (res.data.message === "moderators update") {
+                this.toastStore.showToast(
+                  3000,
+                  "Thêm quản trị viên thành công.",
+                  "bg-emerald-500 text-white"
+                );
+                setTimeout(() => {
+                  this.$router.go(0);
+                }, 3500)
+              } else {
+                this.toastStore.showToast(
+                  3000,
+                  "Thêm quản trị viên thất bại.",
+                  "bg-rose-400 text-white"
+                );
+              }
+            })
+            .catch((error) => {
+              console.log(error);
+            });
         }
     },
   });

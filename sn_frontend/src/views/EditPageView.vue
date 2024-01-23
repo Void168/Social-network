@@ -146,29 +146,37 @@
           <div class="flex flex-col space-y-4">
             <div class="flex flex-col">
               <h3 class="font-semibold mb-4">Chủ trang</h3>
-              <div
-                class="flex items-center gap-3 py-2 px-4 bg-slate-700 rounded-lg"
-              >
-                <img
-                  :src="page?.admin?.get_avatar"
-                  class="w-12 h-12 rounded-full"
-                />
-                <h4 class="font-semibold">{{ page?.admin?.name }}</h4>
+              <div v-if="page?.admin" class="">
+                <RouterLink
+                  :to="{ name: 'profile', params: { id: page?.admin?.id } }"
+                  class="flex items-center gap-3 py-2 px-4 bg-slate-700 rounded-lg"
+                >
+                    <img
+                      :src="page?.admin?.get_avatar"
+                      class="w-12 h-12 rounded-full"
+                    />
+                    <h4 class="font-semibold">{{ page?.admin?.name }}</h4>
+                </RouterLink>
               </div>
             </div>
             <div class="flex flex-col">
               <h3 class="font-semibold mb-4">Quản trị viên</h3>
               <div v-if="page?.moderators?.length">
-                <div
-                  class="flex items-center gap-3 py-2 px-4 bg-slate-700 rounded-lg"
-                  v-for="moderator in page?.moderators"
-                  :key="moderator.id"
-                >
-                  <img
-                    :src="page?.admin?.get_avatar"
-                    class="w-12 h-12 rounded-full"
-                  />
-                  <h4 class="font-semibold">{{ page?.admin?.name }}</h4>
+                  <div
+                    class="py-2 px-4 bg-slate-700 rounded-lg w-full"
+                    v-for="moderator in page?.moderators"
+                    :key="moderator.id"
+                  >
+                    <RouterLink
+                      :to="{ name: 'profile', params: { id: moderator?.id } }"
+                      class="flex items-center gap-3"
+                    >
+                      <img
+                        :src="moderator.get_avatar"
+                        class="w-12 h-12 rounded-full"
+                      />
+                      <h4 class="font-semibold">{{ moderator.name }}</h4>
+                    </RouterLink>
                 </div>
               </div>
               <div v-else class="flex items-center justify-center">
@@ -180,6 +188,7 @@
                   <span class="font-semibold">Thêm quản trị viên</span>
                 </button>
                 <AddModeratorsModalVue
+                  :page="page"
                   :options="options"
                   :show="isAddModeratorsOpen"
                   @closeModal="closeAddUsersModal"
@@ -325,8 +334,13 @@
       </div>
     </div>
     <!-- <Map :query="page.location"/> -->
-    <div class="flex justify-end items-end col-span-2 mb-4 dark:text-neutral-200">
-      <div class="flex flex-col items-end space-y-4  rounded-lg" :class="isPasswordOpen ? 'dark:bg-slate-600 p-4' : ''">
+    <div
+      class="flex justify-end items-end col-span-2 mb-4 dark:text-neutral-200"
+    >
+      <div
+        class="flex flex-col items-end space-y-4 rounded-lg"
+        :class="isPasswordOpen ? 'dark:bg-slate-600 p-4' : ''"
+      >
         <div v-if="isPasswordOpen">
           <label for="">Mật khẩu</label>
           <input
@@ -338,13 +352,25 @@
           />
         </div>
         <div class="flex items-center justify-center gap-2">
-          <button class="px-4 py-2 font-semibold dark:text-neutral-200 bg-rose-400 rounded-lg shadow-md" v-if="isPasswordOpen" @click="closePassword">
+          <button
+            class="px-4 py-2 font-semibold dark:text-neutral-200 bg-rose-400 rounded-lg shadow-md"
+            v-if="isPasswordOpen"
+            @click="closePassword"
+          >
             Hủy
           </button>
-          <button class="px-4 py-2 font-semibold dark:text-neutral-200 bg-emerald-400 rounded-lg shadow-md" v-if="isPasswordOpen" @click="openDeletePageModal">
+          <button
+            class="px-4 py-2 font-semibold dark:text-neutral-200 bg-emerald-400 rounded-lg shadow-md"
+            v-if="isPasswordOpen"
+            @click="openDeletePageModal"
+          >
             Đồng ý
           </button>
-          <button class="px-4 py-2 font-semibold dark:text-neutral-200 bg-rose-400 rounded-lg shadow-md" v-if="!isPasswordOpen" @click="openPassword">
+          <button
+            class="px-4 py-2 font-semibold dark:text-neutral-200 bg-rose-400 rounded-lg shadow-md"
+            v-if="!isPasswordOpen"
+            @click="openPassword"
+          >
             Xóa trang
           </button>
         </div>
@@ -772,7 +798,7 @@ export default {
           },
         })
         .then((res) => {
-          this.isDeletePageOpen = false
+          this.isDeletePageOpen = false;
           if (res.data.message === "success") {
             this.pageStore.outPage();
             this.toastStore.showToast(
@@ -781,8 +807,8 @@ export default {
               "bg-emerald-500 text-white"
             );
             setTimeout(() => {
-              window.location = '/'
-            }, 4000)
+              window.location = "/";
+            }, 4000);
           } else {
             this.toastStore.showToast(
               3500,
@@ -795,22 +821,20 @@ export default {
           console.log("error", error);
         });
     },
-    closePassword(){
-      this.isPasswordOpen = false
-      this.adminPassword = ""
+    closePassword() {
+      this.isPasswordOpen = false;
+      this.adminPassword = "";
     },
-    openPassword(){
-      this.isPasswordOpen = true
+    openPassword() {
+      this.isPasswordOpen = true;
       const targetRef = this.$refs.myScrollTarget;
 
       this.$nextTick(() => {
-        targetRef.scrollTo(
-          {
-            top: targetRef.scrollHeight,
-            left: 0,
-            behavior: "smooth"
-          }
-        );
+        targetRef.scrollTo({
+          top: targetRef.scrollHeight,
+          left: 0,
+          behavior: "smooth",
+        });
       });
     },
     closeDeletePageModal() {

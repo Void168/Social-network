@@ -87,6 +87,27 @@ def edit_page_profile(request, id):
     return JsonResponse({'message': 'information updated', 'page': serializer.data})
 
 @api_view(['POST'])
+def page_add_moderators(request, id):
+    current_page = Page.objects.get(id=id)
+    
+    other_user_id =request.data.get('otherUser')
+    
+    users = request.data.get('users')
+    for user in users:
+        current_page.moderators.add(user)
+    
+    if other_user_id != "":
+        other_user = User.objects.get(id=other_user_id)
+    
+        current_page.moderators.add(other_user)
+    
+    current_page.save()
+    
+    serializer = PageDetailSerializer(current_page)
+    
+    return JsonResponse({'message':'moderators update'})
+
+@api_view(['POST'])
 def set_page_biography(request, id):
     current_page = Page.objects.get(id=id)
         

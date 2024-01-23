@@ -9,6 +9,7 @@ urlpatterns = [
     path('get-page/<uuid:id>/detail/',api.get_page_detail, name='get_page_detail'),
     path('<uuid:id>/like/',api.like_page, name='like_page'),
     path('edit-profile-page/<uuid:id>/', api.edit_page_profile, name='edit_page_profile'),
+    path('<uuid:id>/add-moderators/', api.page_add_moderators, name='page_add_moderators'),
     path('set-biography/<uuid:id>/', api.set_page_biography, name='set_page_biography'),
     path('set-type/<uuid:id>/', api.set_page_type, name='set_page_type'),
     path('set-location/<uuid:id>/', api.set_page_location, name='set_page_location'),

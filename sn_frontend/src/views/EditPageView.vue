@@ -1,5 +1,5 @@
 <template>
-  <div class="max-w-7xl mx-auto grid grid-cols-2 gap-4">
+  <div class="max-w-7xl mx-auto grid grid-cols-2 gap-4" ref="myScrollTarget">
     <div class="main-left md:block lg:col-span-1 col-span-2">
       <div
         class="flex flex-col space-y-6 p-12 bg-white border border-gray-200 rounded-lg dark:bg-slate-600 dark:border-slate-700 dark:text-neutral-200"
@@ -234,7 +234,6 @@
                 :page="page"
                 :website="website"
                 :deleteWebsite="deleteWebsite"
-                
               />
             </div>
             <form action="" class="space-y-6 mt-4" v-if="addWebsite">
@@ -326,6 +325,36 @@
       </div>
     </div>
     <!-- <Map :query="page.location"/> -->
+    <div class="flex justify-end items-end col-span-2 mb-4 dark:text-neutral-200">
+      <div class="flex flex-col items-end space-y-4  rounded-lg" :class="isPasswordOpen ? 'dark:bg-slate-600 p-4' : ''">
+        <div v-if="isPasswordOpen">
+          <label for="">Mật khẩu</label>
+          <input
+            autocomplete="off"
+            type="password"
+            v-model="adminPassword"
+            placeholder="Mật khẩu của bạn"
+            class="w-full mt-2 py-2 px-6 border border-gray-200 dark:bg-slate-800 shadow-md dark:border-slate-800 dark:text-neutral-200 rounded-lg"
+          />
+        </div>
+        <div class="flex items-center justify-center gap-2">
+          <button class="px-4 py-2 font-semibold dark:text-neutral-200 bg-rose-400 rounded-lg shadow-md" v-if="isPasswordOpen" @click="closePassword">
+            Hủy
+          </button>
+          <button class="px-4 py-2 font-semibold dark:text-neutral-200 bg-emerald-400 rounded-lg shadow-md" v-if="isPasswordOpen" @click="openDeletePageModal">
+            Đồng ý
+          </button>
+          <button class="px-4 py-2 font-semibold dark:text-neutral-200 bg-rose-400 rounded-lg shadow-md" v-if="!isPasswordOpen" @click="openPassword">
+            Xóa trang
+          </button>
+        </div>
+        <DeletePageModalVue
+          :show="isDeletePageOpen"
+          @closeDeletePageModal="closeDeletePageModal"
+          @deletePage="deletePage"
+        />
+      </div>
+    </div>
   </div>
 </template>
 
@@ -346,6 +375,7 @@ import WebsiteItem from "../components/items/profile/WebsiteItem.vue";
 import PhoneNumberItem from "../components/items/profile/PhoneNumberItem.vue";
 import { RouterLink } from "vue-router";
 import AddModeratorsModalVue from "../components/modals/page/AddModeratorsModal.vue";
+import DeletePageModalVue from "../components/modals/page/DeletePageModal.vue";
 // import Map from '../components/map/Map.vue'
 export default {
   components: {
@@ -357,6 +387,7 @@ export default {
     PhoneNumberItem,
     RouterLink,
     AddModeratorsModalVue,
+    DeletePageModalVue,
     //Map,
   },
   setup() {
@@ -407,12 +438,14 @@ export default {
       page_website_only_me: false,
       page_phoneNumber_is_private: false,
       page_phoneNumber_only_me: false,
+      adminPassword: "",
+      isPasswordOpen: false,
+      isDeletePageOpen: false,
     };
   },
 
   mounted() {
     this.getPageDetail();
-    
   },
 
   methods: {
@@ -586,8 +619,8 @@ export default {
               "bg-emerald-500 text-white"
             );
             setTimeout(() => {
-                this.$router.go(0);
-              }, 4000);
+              this.$router.go(0);
+            }, 4000);
           } else {
             this.toastStore.showToast(
               3500,
@@ -595,8 +628,8 @@ export default {
               "bg-rose-400 text-white"
             );
             setTimeout(() => {
-                this.$router.go(0);
-              }, 4000);
+              this.$router.go(0);
+            }, 4000);
           }
         })
         .catch((error) => {
@@ -634,7 +667,7 @@ export default {
               );
               setTimeout(() => {
                 this.$router.go(0);
-              }, 4000)
+              }, 4000);
             } else {
               this.toastStore.showToast(
                 3500,
@@ -643,7 +676,7 @@ export default {
               );
               setTimeout(() => {
                 this.$router.go(0);
-              }, 4000)
+              }, 4000);
             }
           })
           .catch((error) => {
@@ -674,11 +707,15 @@ export default {
       formData.append("is_private", this.page_phoneNumber_is_private);
       formData.append("only_me", this.page_phoneNumber_only_me);
       axios
-        .post(`/api/informations/page/${this.page.id}/create/phone-number/`, formData, {
-          headers: {
-            "Content-Type": "multipart/form-data",
-          },
-        })
+        .post(
+          `/api/informations/page/${this.page.id}/create/phone-number/`,
+          formData,
+          {
+            headers: {
+              "Content-Type": "multipart/form-data",
+            },
+          }
+        )
         .then((res) => {
           //console.log("data", res.data);
 
@@ -696,11 +733,15 @@ export default {
       formData.append("only_me", this.page_website_only_me);
 
       axios
-        .post(`/api/informations/page/${this.page.id}/create/website/`, formData, {
-          headers: {
-            "Content-Type": "multipart/form-data",
-          },
-        })
+        .post(
+          `/api/informations/page/${this.page.id}/create/website/`,
+          formData,
+          {
+            headers: {
+              "Content-Type": "multipart/form-data",
+            },
+          }
+        )
         .then((res) => {
           //console.log("data", res.data);
 
@@ -718,6 +759,65 @@ export default {
     },
     deleteWebsite(id) {
       this.websites = this.websites.filter((website) => website.id !== id);
+    },
+    deletePage() {
+      let formData = new FormData();
+      formData.append("username", this.userStore.user.email);
+      formData.append("password", this.adminPassword);
+
+      axios
+        .post(`/api/page/delete/${this.page.id}/`, formData, {
+          headers: {
+            "Content-Type": "multipart/form-data",
+          },
+        })
+        .then((res) => {
+          this.isDeletePageOpen = false
+          if (res.data.message === "success") {
+            this.pageStore.outPage();
+            this.toastStore.showToast(
+              3500,
+              "Thành công",
+              "bg-emerald-500 text-white"
+            );
+            setTimeout(() => {
+              window.location = '/'
+            }, 4000)
+          } else {
+            this.toastStore.showToast(
+              3500,
+              "Mật khẩu không đúng",
+              "bg-rose-500 text-white"
+            );
+          }
+        })
+        .catch((error) => {
+          console.log("error", error);
+        });
+    },
+    closePassword(){
+      this.isPasswordOpen = false
+      this.adminPassword = ""
+    },
+    openPassword(){
+      this.isPasswordOpen = true
+      const targetRef = this.$refs.myScrollTarget;
+
+      this.$nextTick(() => {
+        targetRef.scrollTo(
+          {
+            top: targetRef.scrollHeight,
+            left: 0,
+            behavior: "smooth"
+          }
+        );
+      });
+    },
+    closeDeletePageModal() {
+      this.isDeletePageOpen = false;
+    },
+    openDeletePageModal() {
+      this.isDeletePageOpen = true;
     },
   },
 };

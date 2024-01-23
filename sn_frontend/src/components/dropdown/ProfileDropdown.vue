@@ -69,7 +69,11 @@
                     <RouterLink
                       :to="{
                         name: pageStore.pageId ? 'page' : 'profile',
-                        params: { id: pageStore.pageId ? pageStore.pageId : userStore.user.id },
+                        params: {
+                          id: pageStore.pageId
+                            ? pageStore.pageId
+                            : userStore.user.id,
+                        },
                       }"
                     >
                       <span class="flex items-center">
@@ -126,7 +130,9 @@
                     @click="accept(close)"
                     class="flow-root rounded-md px-2 py-2 transition duration-150 ease-in-out hover:bg-gray-100 dark:hover:bg-slate-600 focus:outline-none focus-visible:ring focus-visible:ring-orange-500/50 cursor-pointer"
                   >
-                    <RouterLink :to="pageStore.pageId ? '/page/edit' : '/profile/edit'">
+                    <RouterLink
+                      :to="pageStore.pageId ? '/page/edit' : '/profile/edit'"
+                    >
                       <span class="flex items-center">
                         <span
                           class="text-sm font-medium text-gray-900 dark:text-neutral-200"
@@ -292,6 +298,7 @@ import { ref } from "vue";
 import { useUserStore } from "../../stores/user";
 import { usePageStore } from "../../stores/page";
 import { RouterLink } from "vue-router";
+import { useRoute } from "vue-router";
 
 import CreatePageModal from "../modals/page/createPage/CreatePageModal.vue";
 
@@ -302,13 +309,14 @@ export default {
     const isDark = useDark();
     const toggleDark = useToggle(isDark);
     const enabled = ref(false);
-
+    const route = useRoute();
     return {
       userStore,
       toggleDark,
       isDark,
       enabled,
       pageStore,
+      route,
     };
   },
 
@@ -351,15 +359,21 @@ export default {
     goToPage(data) {
       if (data) {
         setTimeout(() => {
-          this.pageStore.setActivePage(data.id);
-          this.$router.go(0);
+          this.pageStore.setActivePage(data?.id);
+          if (this.route.name === "profileedit") {
+            window.location = "/page/edit";
+          } else if (this.route.name === "pageEdit") {
+            window.location = "/profile/edit";
+          } else {
+            window.location = "/";
+          }
         }, 3000);
       }
     },
     outPage() {
       setTimeout(() => {
         this.pageStore.outPage();
-        this.$router.go(0);
+        window.location = "/";
       }, 3000);
     },
     outListPage() {

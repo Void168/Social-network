@@ -19,14 +19,16 @@ export const usePageStore = defineStore({
       this.pageId = localStorage.setItem("pageId", this.pageActive.id);
     },
     async getActivePage() {
-      await axios
-        .get(`/api/page/get-page/${this.pageId}/`)
-        .then((res) => {
-          this.pageActive = res.data;
-        })
-        .catch((erorr) => {
-
-        });
+      if(this.pageId){
+        await axios
+          .get(`/api/page/get-page/${this.pageId}/`)
+          .then((res) => {
+            this.pageActive = res.data;
+          })
+          .catch((erorr) => {
+  
+          });
+      }
     },
     async getPagesList(data) {
       await axios

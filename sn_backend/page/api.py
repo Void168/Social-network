@@ -1,5 +1,6 @@
 from django.db.models import Q
 from django.http import JsonResponse
+from django.contrib.auth.forms import AuthenticationForm
 
 from notification.utils import create_notification
 from .models import Page
@@ -184,3 +185,18 @@ def unfollow_page(request, id):
         return JsonResponse({'success': 'Unfollowed page'})
     else: 
         return JsonResponse({'error': 'Failed'})
+    
+@api_view(['POST'])
+def delete_page(request, id):
+    current_user = request.user
+    page = Page.objects.get(pk=id)
+    
+    form = AuthenticationForm(data=request.POST)
+
+    if form.is_valid() and current_user == page.admin:
+        
+        page.delete()
+        
+        return JsonResponse({'message': 'success'})
+    else:
+        return JsonResponse({'message': form.errors.as_json()}, safe=False)

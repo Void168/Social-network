@@ -725,7 +725,6 @@ export default (await import("vue")).defineComponent({
     this.getFriends();
     this.getWebsitesList();
     this.getPhoneNumbersList();
-    console.log(this.websiteUrl);
   },
 
   methods: {

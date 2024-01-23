@@ -15,4 +15,5 @@ urlpatterns = [
     path('<uuid:id>/dislike/',api.dislike_page, name='dislike_page'),
     path('<uuid:id>/follow/',api.follow_page, name='follow_page'),
     path('<uuid:id>/unfollow/',api.unfollow_page, name='unfollow_page'),
+    path('delete/<uuid:id>/',api.delete_page, name='delete_page'),
 ]

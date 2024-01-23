@@ -22,7 +22,7 @@
             <RouterLink :to="{ name: 'friends', params: { id: user.id } }">
               <span>Bạn bè</span>
             </RouterLink>
-            <div class="flex gap-2" v-if="user.id === userStore.user.id">
+            <div class="flex gap-2" v-if="user.id === userStore.user.id && !pageStore.pageId">
               <span
                 class="bg-rose-400 md:h-6 md:w-6 xs:h-4 xs:w-4 md:text-sm xs:text-xs text-center rounded-full font-semibold flex justify-center items-center"
                 >{{ friendshipRequest.length }}
@@ -327,15 +327,18 @@ import { RouterLink } from "vue-router";
 
 import { useUserStore } from "../stores/user";
 import { useToastStore } from "../stores/toast";
+import { usePageStore } from "../stores/page" 
 
 export default {
   setup() {
     const userStore = useUserStore();
     const toastStore = useToastStore();
+    const pageStore = usePageStore()
 
     return {
       userStore,
       toastStore,
+      pageStore
     };
   },
   name: "FeedView",

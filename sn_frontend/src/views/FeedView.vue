@@ -208,7 +208,7 @@ export default {
   methods: {
     async getFeed() {
       this.isLoading = true;
-      if(!this.pageStore.pageId){
+      if(!this.pageStore?.pageId){
         await axios
           .get("/api/posts/")
           .then((res) => {

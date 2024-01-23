@@ -8,6 +8,7 @@
           class="w-full border-slate-500 border rounded-md py-2 pl-3 pr-10 text-sm leading-5 text-gray-900 dark:text-slate-200 dark:bg-slate-800 focus:ring-0"
           @change="query = $event.target.value"
           :displayValue="(type) => type.name"
+          autocomplete="off"
         />
         <ComboboxButton
           class="absolute inset-y-0 right-0 flex items-center pr-2"

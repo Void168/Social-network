@@ -255,7 +255,7 @@ export default {
 
       if (this.body.length > 0 && !this.pageStore.pageId) {
         axios
-          .post(`/api/posts/${this.$route.params.id}/comment-by-user/`, {
+          .post(`/api/posts/page/${this.$route.params.id}/comment-by-user/`, {
             body: this.body,
             tags: this.tags,
           })

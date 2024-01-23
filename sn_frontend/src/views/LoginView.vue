@@ -124,7 +124,7 @@ export default {
           .then((res) => {
             this.userStore.setUserInfo(res.data);
 
-            this.$router.push("/");
+            window.location = '/'
           })
           .catch((error) => {
             console.log("error", error);

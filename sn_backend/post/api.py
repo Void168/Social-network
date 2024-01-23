@@ -24,15 +24,21 @@ def post_list(request):
     current_user = request.user
     friends = User.objects.get(Q(email=current_user)).friends.all()
     following = User.objects.get(Q(email=current_user)).following.all()
+    pages = Page.objects.filter(Q(followers__in=list([request.user])))
     
     for user in request.user.friends.all():
         user_ids.append(user.id)
             
     posts = Post.objects.filter(Q(created_by__in=list(user_ids), only_me=False) | Q(created_by__in=list(following), only_me=False) | Q(post_to__in=list(friends), only_me=False))
+    page_posts = PagePost.objects.filter(Q(created_by__in=list(pages)))
     
-    serializer = PostSerializer(posts, many=True)
+    post_serializer = PostSerializer(posts, many=True)
+    page_posts_serializer = PagePostSerializer(page_posts, many=True)
     
-    return JsonResponse(serializer.data, safe=False)
+    return JsonResponse({
+            'posts':post_serializer.data,
+            'page_posts': page_posts_serializer.data,
+         }, safe=False)
 
 @api_view(['GET'])
 def page_post_list(request, pk):

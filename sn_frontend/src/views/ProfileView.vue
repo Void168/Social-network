@@ -525,21 +525,39 @@ export default {
     },
 
     getFeed() {
-      axios
-        .get(`/api/posts/profile/${this.$route.params.id}/`)
-        .then((res) => {
-          // console.log(res.data);
-          this.postsList = res.data.posts;
-          this.user = res.data.user;
-          this.can_send_friendship_request =
-            res.data.can_send_friendship_request;
-          this.posts = res.data.posts.slice(0, this.PostToShow);
-
-          // console.log(res.data);
-        })
-        .catch((error) => {
-          console.log("error", error);
-        });
+      if(!this.pageStore.pageId){
+        axios
+          .get(`/api/posts/profile/${this.$route.params.id}/`)
+          .then((res) => {
+            // console.log(res.data);
+            this.postsList = res.data.posts;
+            this.user = res.data.user;
+            this.can_send_friendship_request =
+              res.data.can_send_friendship_request;
+            this.posts = res.data.posts.slice(0, this.PostToShow);
+  
+            // console.log(res.data);
+          })
+          .catch((error) => {
+            console.log("error", error);
+          });
+      } else {
+        axios
+          .get(`/api/posts/profile/${this.$route.params.id}/${this.pageStore.pageId}/`)
+          .then((res) => {
+            // console.log(res.data);
+            this.postsList = res.data.posts;
+            this.user = res.data.user;
+            this.can_send_friendship_request =
+              res.data.can_send_friendship_request;
+            this.posts = res.data.posts.slice(0, this.PostToShow);
+  
+            // console.log(res.data);
+          })
+          .catch((error) => {
+            console.log("error", error);
+          });
+      }
     },
 
     infinateScroll() {

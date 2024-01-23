@@ -1,7 +1,8 @@
-from .models import Notification
+from .models import Notification, NotificationForPage
 
-from post.models import Post, Comment
+from post.models import Post, Comment, PagePost
 from account.models import FriendshipRequest, RelationshipRequest, User
+from page.models import Page
 from story.models import ReactStory
 
 def create_notification(request, type_of_notification, post_id=None, friendrequest_id=None, relationship_request_id=None, comment_id=None, story_request_id=None):
@@ -60,3 +61,53 @@ def create_notification(request, type_of_notification, post_id=None, friendreque
                 )
                 
                 return notification
+
+def create_page_notification(request, type_of_notification, post_id=None, comment_id=None, story_request_id=None, page_id=None):
+    created_for = None
+    page = Page.objects.get(id=page_id)
+    if not page:
+        if type_of_notification == 'post_like':
+            body = f'{request.user.name} đã thích bài viết trang của bạn'
+            page_post = PagePost.objects.get(pk=post_id)
+            created_for = post.created_by
+        elif type_of_notification == 'post_comment':
+            body = f'{request.user.name} đã bình luận bài viết trang của bạn'
+            page_post = PagePost.objects.get(pk=post_id)
+            created_for = post.created_by
+        elif type_of_notification == 'tag_comment':
+            body = f'{request.user.name} đã nhắc đến trang của bạn trong một bình luận'
+            comment = Comment.objects.get(pk=comment_id)
+            for tag in comment.tags:
+                tag_user = User.objects.get(id=tag['id'])
+                created_for = tag_user
+        if request.user != created_for:
+            notification = NotificationForPage.objects.create(
+                body=body,
+                type_of_notification=type_of_notification,
+                created_by=request.user,
+                post_id=post_id,
+                created_for=created_for
+            )
+    else:
+        if type_of_notification == 'post_like':
+            body = f'{page.name} đã thích bài viết trang của bạn'
+            page_post = PagePost.objects.get(pk=post_id)
+            created_for = post.created_by
+        elif type_of_notification == 'post_comment':
+            body = f'{page.name} đã bình luận bài viết trang của bạn'
+            page_post = PagePost.objects.get(pk=post_id)
+            created_for = post.created_by
+        elif type_of_notification == 'tag_comment':
+            body = f'{page.name} đã nhắc đến trang của bạn trong một bình luận'
+            comment = Comment.objects.get(pk=comment_id)
+            for tag in comment.tags:
+                tag_user = User.objects.get(id=tag['id'])
+                created_for = tag_user
+        if page != created_for:
+            notification = NotificationForPage.objects.create(
+                body=body,
+                type_of_notification=type_of_notification,
+                created_by=page,
+                post_id=post_id,
+                created_for=created_for
+            )

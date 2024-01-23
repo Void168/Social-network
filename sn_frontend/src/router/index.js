@@ -7,6 +7,7 @@ import ProfileView from "../views/ProfileView.vue";
 import ProfileImagesView from "../views/ProfileImagesView.vue";
 import FriendsView from "../views/FriendsView.vue";
 import PostView from "../views/PostView.vue";
+import PagePostView from "../views/PagePostView.vue";
 import ChatView from "../views/ChatView.vue";
 import GroupChatView from "../views/GroupChatView.vue";
 import TrendView from "../views/TrendView.vue";
@@ -116,6 +117,11 @@ const router = createRouter({
       path: "/post/:id",
       name: "postview",
       component: PostView,
+    },
+    {
+      path: "/page/post/:id",
+      name: "pagepostview",
+      component: PagePostView,
     },
   ],
 });

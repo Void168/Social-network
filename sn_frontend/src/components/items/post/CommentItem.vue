@@ -6,16 +6,16 @@
           <RouterLink
             :to="{
               name: 'profile',
-              params: { id: comment.created_by.id },
+              params: { id: comment?.created_by?.id },
             }"
           >
             <img
-              :src="comment.created_by.get_avatar"
+              :src="comment?.created_by?.get_avatar"
               class="w-10 h-10 rounded-full"
             />
           </RouterLink>
           <TooltipProfile
-            :user="comment.created_by"
+            :user="comment?.created_by"
             class="hidden group-hover:block"
           />
         </div>
@@ -28,17 +28,21 @@
                 <RouterLink
                   :to="{
                     name: 'profile',
-                    params: { id: comment.created_by.id },
+                    params: { id: comment?.created_by?.id },
                   }"
-                  >{{ comment.created_by.name }}</RouterLink
+                  >{{ comment?.created_by.name }}</RouterLink
                 >
                 <TooltipProfile
-                  :user="comment.created_by"
+                  :user="comment?.created_by"
                   class="hidden md:group-hover:block"
                 />
               </strong>
               <CommentDropDownVue
-                v-if="comment.created_by.id === userStore.user.id"
+                v-if="comment?.created_by?.id === userStore.user.id && !pageStore.pageId"
+                @deleteComment="deleteComment"
+              />
+              <CommentDropDownVue
+                v-if="pageStore.pageId === post?.created_by?.id && pageStore.pageId"
                 @deleteComment="deleteComment"
               />
             </div>
@@ -64,7 +68,7 @@
             </div>
           </div>
           <p class="text-gray-600 dark:text-neutral-200 sm:text-base text-xs px-1">
-            {{ comment.created_at_formatted }} trước
+            {{ comment?.created_at_formatted }} trước
           </p>
         </div>
       </div>
@@ -79,63 +83,88 @@ import TooltipProfile from "../profile/TooltipProfile.vue";
 import CommentDropDownVue from "../../dropdown/CommentDropDown.vue";
 import { useUserStore } from "../../../stores/user";
 import { useToastStore } from "../../../stores/toast";
+import { usePageStore } from "../../../stores/page";
 export default (await import("vue")).defineComponent({
   setup() {
     const userStore = useUserStore();
     const toastStore = useToastStore();
-
+    const pageStore = usePageStore()
     return {
       userStore,
       toastStore,
+      pageStore
     };
   },
   props: {
     comment: Object,
+    post: Object
   },
   data() {
     return {
-      tags: this.comment.tags,
+      tags: this.comment?.tags,
       filteredTags: [],
       onHover: false,
     };
   },
   computed: {
     words() {
-      return this.comment.body.split(" ");
+      return this.comment?.body?.split(" ");
     },
   },
 
   mounted() {
     this.checkTag();
+    console.log(this.comment)
   },
 
   methods: {
     checkTag() {
-      const tagNames = this.tags.map((tag) => tag.name);
-      tagNames.forEach((name) => {
-        const filter = this.words.filter((word) => word.includes(name));
-        this.filteredTags.push(...filter);
-      });
+      if(this.tags){
+        const tagNames = this.tags.map((tag) => tag.name);
+        tagNames.forEach((name) => {
+          const filter = this.words.filter((word) => word.includes(name));
+          this.filteredTags.push(...filter);
+        });
+      }
     },
     deleteComment() {
-      axios
-        .delete(`/api/posts/comment/${this.comment.id}/delete/`)
-        .then((res) => {
-          console.log(res.data)
-          if (res.data.message === "comment deleted") {
-            this.toastStore.showToast(
-              2000,
-              "Đã xóa bình luận",
-              "bg-emerald-500 text-white"
-            );
-            setTimeout(() => {
-              this.$router.go(0);
-            }, 2500);
-          }
-        })
-        .catch((error) => {
-          console.log(error);
-        });
+      if(!this.post?.created_by?.is_page){
+        axios
+          .delete(`/api/posts/${this.$route.params.id}/comment/${this.comment.id}/delete/`)
+          .then((res) => {
+            if (res.data.message === "comment deleted") {
+              this.toastStore.showToast(
+                2000,
+                "Đã xóa bình luận",
+                "bg-emerald-500 text-white"
+              );
+              setTimeout(() => {
+                this.$router.go(0);
+              }, 2500);
+            }
+          })
+          .catch((error) => {
+            console.log(error);
+          });
+      } else {
+        axios
+          .delete(`/api/posts/page/${this.$route.params.id}/comment/${this.comment.id}/delete/`)
+          .then((res) => {
+            if (res.data.message === "comment deleted") {
+              this.toastStore.showToast(
+                2000,
+                "Đã xóa bình luận",
+                "bg-emerald-500 text-white"
+              );
+              setTimeout(() => {
+                this.$router.go(0);
+              }, 2500);
+            }
+          })
+          .catch((error) => {
+            console.log(error);
+          });
+      }
     },
   },
   components: { RouterLink, TooltipProfile, CommentDropDownVue },

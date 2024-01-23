@@ -144,7 +144,7 @@
           </svg>
 
           <RouterLink
-            :to="{ name: 'postview', params: { id: post.id } }"
+            :to="{ name: post.created_by.is_page ? 'pagepostview' : 'postview', params: { id: post.id } }"
             class="text-gray-500 text-xs dark:text-neutral-200"
             >{{ post?.comments_count }} bình luận</RouterLink
           >
@@ -186,7 +186,7 @@
             <MenuItems
               class="absolute right-0 z-10 mt-2 w-56 origin-top-right divide-y divide-gray-100 rounded-md bg-white shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none"
             >
-              <div class="py-1" v-if="userStore.user.id === post.created_by.id">
+              <div class="py-1" v-if="userStore.user.id === post.created_by.id || pageStore.pageId === post.created_by.id">
                 <MenuItem v-slot="{ active }" @click="openModal">
                   <div
                     :class="[
@@ -242,6 +242,7 @@ import {
 import { HeartIcon as HeartLike } from "@heroicons/vue/24/solid";
 import { useUserStore } from "../../../stores/user";
 import { useToastStore } from "../../../stores/toast";
+import { usePageStore } from "../../../stores/page";
 import DeletePostModal from "../../modals/post/DeletePostModal.vue";
 import CreatedAtTooltip from "./Tooltip/CreatedAtTooltip.vue";
 import PrivacyTooltip from "./Tooltip/PrivacyTooltip.vue";
@@ -262,10 +263,12 @@ export default (await import("vue")).defineComponent({
   setup() {
     const userStore = useUserStore();
     const toastStore = useToastStore();
+    const pageStore = usePageStore()
 
     return {
       userStore,
       toastStore,
+      pageStore
     };
   },
 
@@ -283,41 +286,78 @@ export default (await import("vue")).defineComponent({
       }
     },
     likePost(id) {
-      axios
-        .post(`/api/posts/${id}/like/`)
-        .then((res) => {
-          if (res.data.message !== "post already liked") {
-            this.post.likes_count += 1;
-            this.isLike = true;
-          }
-        })
-        .catch((error) => {
-          console.log(error);
-        });
+      if(!this.post.created_by.is_page){
+        axios
+          .post(`/api/posts/${id}/like/`)
+          .then((res) => {
+            if (res.data.message !== "post already liked") {
+              this.post.likes_count += 1;
+              this.isLike = true;
+            }
+          })
+          .catch((error) => {
+            console.log(error);
+          });
+      } else {
+        axios
+          .post(`/api/posts/${id}/like-by-user/`)
+          .then((res) => {
+            if (res.data.message !== "post already liked") {
+              this.post.likes_count += 1;
+              this.isLike = true;
+            }
+          })
+          .catch((error) => {
+            console.log(error);
+          });
+      }
     },
     deletePost() {
       this.$emit("deletePost", this.post.id);
 
-      axios
-        .delete(`/api/posts/${this.post.id}/delete/`)
-        .then((res) => {
-          setTimeout(() => {
-            this.closeModal();
-          }, 1000);
-          this.toastStore.showToast(
-            5000,
-            "Bài viết đã được xóa",
-            "bg-emerald-500 text-white"
-          );
-        })
-        .catch((error) => {
-          console.log(error);
-          this.toastStore.showToast(
-            5000,
-            "Xóa bài viết thất bại",
-            "bg-rose-500 text-white"
-          );
-        });
+      if(!this.post.created_by.is_page){
+        axios
+          .delete(`/api/posts/${this.post.id}/delete/`)
+          .then((res) => {
+            setTimeout(() => {
+              this.closeModal();
+            }, 1000);
+            this.toastStore.showToast(
+              5000,
+              "Bài viết đã được xóa",
+              "bg-emerald-500 text-white"
+            );
+          })
+          .catch((error) => {
+            console.log(error);
+            this.toastStore.showToast(
+              5000,
+              "Xóa bài viết thất bại",
+              "bg-rose-500 text-white"
+            );
+          });
+      } else {
+        axios
+          .delete(`/api/posts/page/${this.pageStore.pageId}/${this.post.id}/delete/`)
+          .then((res) => {
+            setTimeout(() => {
+              this.closeModal();
+            }, 1000);
+            this.toastStore.showToast(
+              5000,
+              "Bài viết đã được xóa",
+              "bg-emerald-500 text-white"
+            );
+          })
+          .catch((error) => {
+            console.log(error);
+            this.toastStore.showToast(
+              5000,
+              "Xóa bài viết thất bại",
+              "bg-rose-500 text-white"
+            );
+          });
+      }
     },
     reportPost() {
       axios

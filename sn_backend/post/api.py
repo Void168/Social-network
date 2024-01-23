@@ -10,12 +10,12 @@ from account.models import User
 from page.models import Page
 from account.serializers import UserSerializer, FriendshipRequest
 
-from notification.utils import create_notification
+from notification.utils import create_notification, create_page_notification
 
 from .forms import PostForm, AttachmentForm, PageAttachmentForm, PagePostForm
-from .models import Post, Comment, Like, Trend, PagePost
-from .serializers import PostSerializer, PostDetailSerializer, CommentSerializer, TrendSerializer, LikeSerializer, PagePostSerializer
-from notification.serializers import NotificationSerializer
+from .models import Post, Comment, Like, Trend, PagePost, PageComment, PageLike
+from .serializers import PostSerializer, PostDetailSerializer, CommentSerializer, TrendSerializer, LikeSerializer, PagePostSerializer, PageLikeSerializer, PageCommentSerializer, PagePostDetailSerializer
+from notification.serializers import NotificationSerializer, NotificationForPageSerializer
 
 # Create your views here.
 @api_view(['GET'])
@@ -90,6 +90,14 @@ def post_detail(request, pk):
     return JsonResponse({
         'post': PostDetailSerializer(post).data
     })
+    
+@api_view(['GET'])
+def page_post_detail(request, pk):
+    page_post = PagePost.objects.get(pk=pk)
+    
+    return JsonResponse({
+        'page_post': PagePostDetailSerializer(page_post).data
+    })
 
 @api_view(['GET'])
 def post_list_profile(request, id):      
@@ -133,6 +141,33 @@ def post_list_profile(request, id):
         'posts': posts_serializer.data,
         'user': user_serializer.data,
         'can_send_friendship_request': can_send_friendship_request
+    }, safe=False)
+    
+@api_view(['GET'])
+def page_watch_post_list_profile(request, id, pk):      
+    page = Page.objects.get(pk=pk)
+    user = User.objects.get(pk=id)
+    posts = Post.objects.filter(created_by_id=id)
+    receivedPosts = Post.objects.filter(post_to=id)
+    
+    if not request.user in user.friends.all() or (user == page.admin or user in page.moderators.all()):
+        posts = posts.filter(Q(is_private=False) & Q(only_me=False))
+    
+    elif request.user in user.friends.all() and user not in page.moderators.all() and user != page.admin:
+        posts = posts.filter(only_me=False)
+        
+    elif request.user == user:
+        posts = Post.objects.filter(created_by_id=id)
+    
+    allPosts = posts | receivedPosts
+    allPosts.order_by('-created_at')
+        
+    posts_serializer = PostSerializer(allPosts, many=True)
+    user_serializer = UserSerializer(user)
+
+    return JsonResponse({
+        'posts': posts_serializer.data,
+        'user': user_serializer.data,
     }, safe=False)
     
 @api_view(['GET'])
@@ -258,7 +293,7 @@ def post_like(request,pk):
     like = Like.objects.create(created_by=request.user)
     
     if not post.likes.filter(created_by=request.user):
-        post =Post.objects.get(pk=pk)
+        post = Post.objects.get(pk=pk)
         post.likes_count = post.likes_count + 1
         post.likes.add(like)
         post.save()
@@ -279,6 +314,30 @@ def post_like(request,pk):
         return JsonResponse(serializer.data, safe=False)
     else:
         return JsonResponse({'message': 'post already liked'})
+
+@api_view(['POST'])
+def page_post_like_by_user(request, pk):
+    page_post = PagePost.objects.get(pk=pk)
+    
+    if not page_post.likes.filter(created_by=request.user):
+        like = Like.objects.create(created_by=request.user)
+        page_post.likes_count = page_post.likes_count + 1
+        page_post.likes.add(like)
+        page_post.save()
+            
+        # page_notification = create_page_notification(request, 'post_like', post_id=post.id)
+            
+        # serializer_notification = NotificationForPageSerializer(page_notification)
+        
+            
+        serializer = LikeSerializer(like)
+            
+        return JsonResponse(serializer.data, safe=False)
+    else:
+        return JsonResponse({'message': 'post already liked'})
+    
+# @api_view(['POST'])
+# def page_post_like_by_page(request, pk, id):     
         
 @api_view(['POST'])
 def post_create_comment(request, pk):
@@ -313,10 +372,54 @@ def post_create_comment(request, pk):
     
     return JsonResponse(serializer.data, safe=False)
 
+@api_view(['POST'])
+def page_post_create_comment_by_user(request, pk):
+    comment = Comment.objects.create(body=request.data.get('body'), tags=request.data.get('tags'), created_by=request.user)
+
+    page_post = PagePost.objects.get(pk=pk)
+    page_post.comments.add(comment)
+    page_post.comments_count = page_post.comments_count + 1
+    page_post.save()
+    
+    serializer = CommentSerializer(comment)
+    
+    return JsonResponse(serializer.data, safe=False)
+
+@api_view(['POST'])
+def page_post_create_comment_by_page(request, pk, id):
+    page = Page.objects.get(id=id)
+    page_comment = PageComment.objects.create(body=request.data.get('body'), tags=request.data.get('tags'), created_by=page)
+
+    page_post = PagePost.objects.get(pk=pk)
+    page_post.page_comments.add(page_comment)
+    page_post.comments_count = page_post.comments_count + 1
+    page_post.save()
+    
+    serializer = PageCommentSerializer(page_comment)
+    
+    return JsonResponse(serializer.data, safe=False)
+
 @api_view(['DELETE'])
-def comment_delete(request, pk):
+def comment_delete(request, pk, id):
+    post = Post.objects.get(id=id)
     comment = Comment.objects.filter(created_by=request.user).get(pk=pk)
     comment.delete()
+    
+    post.comments_count = post.comments_count - 1
+    post.save()
+    
+    return JsonResponse({'message': 'comment deleted'})
+
+@api_view(['DELETE'])
+def page_comment_delete(request, pk, id):
+    page_post = PagePost.objects.get(id=id)
+    
+    comment = Comment.objects.filter(created_by=request.user).get(pk=pk)
+    comment.delete()
+    
+    page_post.comments_count = page_post.comments_count - 1
+    page_post.save()
+    
     
     return JsonResponse({'message': 'comment deleted'})
 
@@ -330,6 +433,17 @@ def post_delete(request, pk):
     user.save()
     
     return JsonResponse({'message': 'post deleted'})
+
+@api_view(['DELETE'])
+def page_post_delete(request, pk, id):
+    page = Page.objects.get(id=id)
+    page_post = PagePost.objects.filter(created_by=page).get(pk=pk)
+    page_post.delete()
+    
+    page.posts_count = page.posts_count - 1
+    page.save()
+    
+    return JsonResponse({'message': 'page post deleted'})
 
 @api_view(['POST'])
 def post_report(request, pk):

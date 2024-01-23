@@ -6,33 +6,33 @@
       <div class="col-span-1">
         <router-link
           :to="{
-            name: user.is_page ? 'page': 'profile',
-            params: { id: user.id },
+            name: user?.is_page ? 'page': 'profile',
+            params: { id: user?.id },
           }"
         >
-          <img :src="user.get_avatar" class="w-20 h-20 rounded-full" />
+          <img :src="user?.get_avatar" class="w-20 h-20 rounded-full" />
         </router-link>
       </div>
       <div class="col-span-3 space-y-2">
         <router-link
           :to="{
-            name: user.is_page ? 'page' : 'profile',
-            params: { id: user.id },
+            name: user?.is_page ? 'page' : 'profile',
+            params: { id: user?.id },
           }"
         >
-          <h2 class="text-lg font-bold text-center">{{ user.name }}</h2>
+          <h2 class="text-lg font-bold text-center">{{ user?.name }}</h2>
         </router-link>
-        <span v-if="user.living_city" class="flex gap-2">
+        <span v-if="user?.living_city" class="flex gap-2">
           <HomeIcon class="w-10 mb-auto" />
           <h3>
-            Sống tại <strong>{{ user.living_city }}</strong>
+            Sống tại <strong>{{ user?.living_city }}</strong>
           </h3>
         </span>
-        <div v-if="user.is_page" class="flex flex-col space-y-2">
+        <div v-if="user?.is_page" class="flex flex-col space-y-2">
           <span class="flex gap-2">
             <ExclamationCircleIcon class="w-6 mb-auto" />
             <h3 class="font-normal">
-              <strong>Trang</strong> &middot; {{ user.page_type }}
+              <strong>Trang</strong> &middot; {{ user?.page_type }}
             </h3>
           </span>
           <span class="flex gap-2">
@@ -59,14 +59,14 @@
     <div class="flex justify-center gap-2">
       <button
         class="btn text-sm min-w-max flex gap-2 items-center justify-center"
-        v-if="user.id !== userStore.user.id"
+        v-if="user?.id !== userStore.user.id"
       >
         <ChatBubbleOvalLeftIcon class="w-6" />
         <h4>Nhắn tin</h4>
       </button>
       <button
         class="btn text-sm min-w-max gap-2 flex items-center justify-center"
-        v-if="user.id === userStore.user.id && !checkIsFriend"
+        v-if="user?.id === userStore.user.id && !checkIsFriend"
         @click="openModal"
       >
         <PlusIcon class="w-4" />
@@ -81,35 +81,35 @@
       />
       <button
         class="btn min-w-max gap-2 flex items-center justify-center"
-        v-if="user.id !== userStore.user.id && !checkIsFriend && !user.is_page"
+        v-if="user?.id !== userStore.user.id && !checkIsFriend && !user?.is_page"
       >
         <UserPlusIcon class="w-6" />
         <h4>Thêm bạn bè</h4>
       </button>
       <button
         class="btn min-w-max gap-2 flex items-center justify-center"
-        v-else-if="user.id !== userStore.user.id && !checkIsFriend && user.is_page"
+        v-else-if="user.id !== userStore.user.id && !checkIsFriend && user?.is_page"
       >
         <SquaresPlusIcon class="w-6" />
         <h4>Theo dõi</h4>
       </button>
       <button
         class="btn text-sm min-w-max gap-2 flex items-center justify-center"
-        v-if="user.id === userStore.user.id && !checkIsFriend"
+        v-if="user?.id === userStore.user.id && !checkIsFriend"
       >
         <PencilIcon class="w-4" />
         <h4>Chỉnh sửa trang cá nhân</h4>
       </button>
       <button
         class="btn text-sm min-w-max gap-2 flex items-center justify-center"
-        v-if="user.id === userStore.user.id && !checkIsFriend && !user.is_page"
+        v-if="user?.id === userStore.user.id && !checkIsFriend && !user?.is_page"
       >
         <PencilIcon class="w-4" />
         <h4>Chỉnh sửa trang cá nhân</h4>
       </button>
       <button
         class="btn text-sm min-w-max gap-2 flex items-center justify-center"
-        v-else-if="!checkIsFriend && user.is_page"
+        v-else-if="!checkIsFriend && user?.is_page"
       >
         <HandThumbUpIcon class="w-4" />
         <h4>Thích</h4>
@@ -181,7 +181,7 @@ export default (await import("vue")).defineComponent({
 
   computed: {
     checkIsFriend() {
-      return this.currentUserFriends.map((fr) => fr.id).includes(this.user.id);
+      return this.currentUserFriends.map((fr) => fr?.id).includes(this.user?.id);
     },
   },
 

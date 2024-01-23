@@ -30,6 +30,24 @@ class Comment(models.Model):
     
     def created_at_formatted(self):
        return timesince(self.created_at)
+   
+class PageLike(models.Model):
+    id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
+    created_at = models.DateTimeField(auto_now_add=True)
+    created_by = models.ForeignKey(Page, related_name='page_likes', on_delete=models.CASCADE)
+    
+class PageComment(models.Model):
+    id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
+    body = models.TextField(blank=True, null=True)
+    tags = models.JSONField('tags', null=True, blank=True, editable=False)
+    created_by = models.ForeignKey(Page, related_name='page_comments', on_delete=models.CASCADE)
+    created_at = models.DateTimeField(auto_now_add=True)
+    
+    class Meta:
+        ordering = ('-created_at',)
+    
+    def created_at_formatted(self):
+       return timesince(self.created_at)
     
 class PostAttachment(models.Model):
     id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
@@ -90,9 +108,12 @@ class PagePost(models.Model):
     is_avatar_post = models.BooleanField(default=False)
     
     likes = models.ManyToManyField(Like, blank=True)
+    page_likes = models.ManyToManyField(PageLike, blank=True)
     likes_count = models.IntegerField(default=0)
     
     comments = models.ManyToManyField(Comment, blank=True)
+    page_comments = models.ManyToManyField(PageComment, blank=True)
+    
     comments_count = models.IntegerField(default=0)
     
     reported_by_users = models.ManyToManyField(User, blank=True)

@@ -1,12 +1,12 @@
 <template>
-  <SkeletonLoadingPost v-if="isLoading"/>
+  <SkeletonLoadingPost v-if="isLoading" />
   <div class="max-w-7xl mx-auto flex justify-center items-center gap-4" v-else>
     <div class="space-y-4 xl:w-6/12 md:w-8/12 mx-2 md:mx-0">
       <div
-        v-if="post.id"
+        v-if="page_post.id"
         class="p-4 bg-white border border-gray-200 rounded-lg mt-4 shadow-md dark:bg-slate-600 dark:border-slate-700 dark:text-neutral-200"
       >
-        <FeedItem v-bind:post="post" />
+        <FeedItem v-bind:post="page_post" />
       </div>
       <div
         class="p-4 bg-white border border-gray-200 rounded-lg shadow-md dark:bg-slate-600 dark:border-slate-700 dark:text-neutral-200"
@@ -74,7 +74,7 @@
         class="p-4 bg-white border border-gray-200 rounded-lg sm:ml-10 shadow-md dark:bg-slate-600 dark:border-slate-700 dark:text-neutral-200"
       >
         <div
-          v-if="!post.comments?.length"
+          v-if="!page_post.comments?.length && !page_post.page_comments?.length"
           class="flex justify-center items-center"
         >
           Chưa có bình luận nào
@@ -85,13 +85,13 @@
           v-for="comment in allComments.slice(0, lastComment)"
           v-bind:key="comment?.id"
         >
-          <CommentItem v-bind:comment="comment" />
+          <CommentItem v-bind:comment="comment" :post="page_post" />
         </div>
         <div class="flex justify-end">
           <button
             class="hover:underline transition"
             @click="loadMore"
-            v-if="lastComment < allComments.length"
+            v-if="lastComment < page_post.comments.length"
           >
             Tải thêm bình luận
           </button>
@@ -124,16 +124,17 @@ export default {
 
   setup() {
     const userStore = useUserStore();
-    const pageStore = usePageStore()
+    const pageStore = usePageStore();
+
     return {
       userStore,
-      pageStore
+      pageStore,
     };
   },
 
   data() {
     return {
-      post: {
+      page_post: {
         id: null,
         comments: [],
       },
@@ -145,7 +146,7 @@ export default {
       queries: [],
       tagInfo: {},
       tags: [],
-      isLoading: false
+      isLoading: false,
     };
   },
 
@@ -164,12 +165,12 @@ export default {
       );
     },
     allComments(){
-      return this.post?.comments.concat(this.post?.page_comments)
+        return this.page_post?.comments.concat(this.page_post?.page_comments)
     }
   },
 
   mounted() {
-    this.getPost();
+    this.getPagePost();
     this.getFriends();
     document.addEventListener("click", this.clickOutside);
   },
@@ -179,15 +180,15 @@ export default {
   },
 
   methods: {
-    async getPost() {
-      this.isLoading = true
+    async getPagePost() {
+      this.isLoading = true;
       await axios
-        .get(`/api/posts/${this.$route.params.id}`)
+        .get(`/api/posts/page/${this.$route.params.id}/detail/`)
         .then((res) => {
           // console.log("data", res.data);
-          
-          this.post = res.data.post;
-          this.isLoading = false
+
+          this.page_post = res.data.page_post;
+          this.isLoading = false;
         })
         .catch((error) => {
           console.log(error);
@@ -212,7 +213,7 @@ export default {
     getWords() {
       const commentContent = this.$refs.content;
       this.body = commentContent.innerHTML.replace(/&nbsp;/g, " ");
-      this.words = this.body.split(" ").map(name => name.toLowerCase());
+      this.words = this.body.split(" ").map((name) => name.toLowerCase());
       this.queries = this.words.filter((word) => word.indexOf("@") === 0);
       if (
         this.words[this.words.length - 1].indexOf("@") === 0 &&
@@ -230,7 +231,11 @@ export default {
     getTag(friend) {
       const commentContent = this.$refs.content;
       this.queries[this.queries.length - 1] = friend.name;
-      commentContent.innerHTML = commentContent.innerHTML.slice(0, commentContent.innerHTML.lastIndexOf('@') + 1) + friend.name;
+      commentContent.innerHTML =
+        commentContent.innerHTML.slice(
+          0,
+          commentContent.innerHTML.lastIndexOf("@") + 1
+        ) + friend.name;
       this.tagInfo = friend;
       this.tags.push(this.tagInfo);
 
@@ -248,27 +253,26 @@ export default {
     submitForm() {
       // console.log("submitForm", this.body);
 
-      if (this.body.length > 0) {
+      if (this.body.length > 0 && !this.pageStore.pageId) {
         axios
-          .post(`/api/posts/${this.$route.params.id}/comment/`, {
+          .post(`/api/posts/${this.$route.params.id}/comment-by-user/`, {
             body: this.body,
-            tags: this.tags
+            tags: this.tags,
           })
           .then((res) => {
             // console.log("data", res.data);
 
             this.words = [];
             this.body = "";
-            this.tags = []
+            this.tags = [];
             this.$refs.content.innerHTML = "";
-            this.post.comments.unshift(res.data);
-            this.post.comments_count += 1;
+            this.page_post.comments.unshift(res.data);
+            this.page_post.comments_count += 1;
           })
           .catch((error) => {
             console.log("error", error);
           });
-      }
-      else if (this.body.length > 0 && this.pageStore.pageId){
+      } else {
         axios
           .post(`/api/posts/page/${this.pageStore.pageId}/${this.$route.params.id}/comment-by-page/`, {
             body: this.body,

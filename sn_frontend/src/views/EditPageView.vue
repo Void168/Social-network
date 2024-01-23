@@ -368,7 +368,7 @@
           </button>
           <button
             class="px-4 py-2 font-semibold dark:text-neutral-200 bg-rose-400 rounded-lg shadow-md"
-            v-if="!isPasswordOpen"
+            v-if="!isPasswordOpen && userStore.user.id === page?.admin?.id"
             @click="openPassword"
           >
             Xóa trang

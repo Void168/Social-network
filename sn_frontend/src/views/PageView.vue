@@ -48,7 +48,7 @@
               @followPage="followPage"
               @unfollowPage="unfollowPage"
               @dislikePage="dislikePage"
-              />
+            />
             <button
               @click="sendDirectMessage"
               class="bg-violet-400 hover:bg-violet-600 btn w-full"
@@ -422,83 +422,107 @@ export default {
     },
 
     likePage() {
-      axios
-        .post(`/api/page/${this.$route.params.id}/like/`)
-        .then((res) => {
-          if (res.data.success) {
-            this.toastStore.showToast(
-              5000,
-              `Đã thích ${this.page.name}`,
-              "bg-emerald-400 text-white"
-            );
-            this.isLike = true;
-          } else {
-            this.toastStore.showToast(
-              5000,
-              "Thao tác thất bại",
-              "bg-rose-400 text-white"
-            );
-          }
-        })
-        .catch((error) => {
-          console.log(error);
-        });
+      if (!this.pageStore.pageId) {
+        axios
+          .post(`/api/page/${this.$route.params.id}/like/`)
+          .then((res) => {
+            if (res.data.success) {
+              this.toastStore.showToast(
+                5000,
+                `Đã thích ${this.page.name}`,
+                "bg-emerald-400 text-white"
+              );
+              this.isLike = true;
+            } else {
+              this.toastStore.showToast(
+                5000,
+                "Thao tác thất bại",
+                "bg-rose-400 text-white"
+              );
+            }
+          })
+          .catch((error) => {
+            console.log(error);
+          });
+      } else {
+        axios
+          .post(
+            `/api/page/${this.pageStore.pageId}/like/${this.$route.params.id}/`
+          )
+          .then((res) => {
+            if (res.data.success) {
+              this.toastStore.showToast(
+                5000,
+                `Đã thích ${this.page.name}`,
+                "bg-emerald-400 text-white"
+              );
+              this.isLike = true;
+            } else {
+              this.toastStore.showToast(
+                5000,
+                "Thao tác thất bại",
+                "bg-rose-400 text-white"
+              );
+            }
+          })
+          .catch((error) => {
+            console.log(error);
+          });
+      }
     },
-    followPage(){
-      axios.post(`/api/page/${this.$route.params.id}/follow/`).then((res) =>{
-        if(res.data.success){
+    followPage() {
+      axios.post(`/api/page/${this.$route.params.id}/follow/`).then((res) => {
+        if (res.data.success) {
           this.toastStore.showToast(
-              5000,
-              `Đã theo dõi ${this.page.name}`,
-              "bg-emerald-400 text-white"
-            );
+            5000,
+            `Đã theo dõi ${this.page.name}`,
+            "bg-emerald-400 text-white"
+          );
         } else {
           this.toastStore.showToast(
-              5000,
-              "Thao tác thất bại",
-              "bg-rose-400 text-white"
-            );
+            5000,
+            "Thao tác thất bại",
+            "bg-rose-400 text-white"
+          );
         }
-      })
+      });
     },
 
-    dislikePage(){
-      axios.post(`/api/page/${this.$route.params.id}/dislike/`).then((res) =>{
-        if(res.data.success){
+    dislikePage() {
+      axios.post(`/api/page/${this.$route.params.id}/dislike/`).then((res) => {
+        if (res.data.success) {
           this.toastStore.showToast(
-              5000,
-              `Đã bỏ thích ${this.page.name}`,
-              "bg-emerald-400 text-white"
-            );
+            5000,
+            `Đã bỏ thích ${this.page.name}`,
+            "bg-emerald-400 text-white"
+          );
         } else {
           this.toastStore.showToast(
-              5000,
-              "Thao tác thất bại",
-              "bg-rose-400 text-white"
-            );
+            5000,
+            "Thao tác thất bại",
+            "bg-rose-400 text-white"
+          );
         }
-      })
+      });
     },
 
     unfollowPage() {
-      axios.post(`/api/page/${this.$route.params.id}/unfollow/`).then((res) =>{
-        if(res.data.success){
+      axios.post(`/api/page/${this.$route.params.id}/unfollow/`).then((res) => {
+        if (res.data.success) {
           this.toastStore.showToast(
-              5000,
-              `Đã bỏ theo dõi ${this.page.name}`,
-              "bg-emerald-400 text-white"
-            );
+            5000,
+            `Đã bỏ theo dõi ${this.page.name}`,
+            "bg-emerald-400 text-white"
+          );
         } else {
           this.toastStore.showToast(
-              5000,
-              "Thao tác thất bại",
-              "bg-rose-400 text-white"
-            );
+            5000,
+            "Thao tác thất bại",
+            "bg-rose-400 text-white"
+          );
         }
-      })
+      });
     },
-
-    
   },
 };
 </script>

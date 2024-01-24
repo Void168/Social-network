@@ -282,10 +282,10 @@ export default (await import("vue")).defineComponent({
 
   computed: {
     checkUserLike(){
-      return this.post.likes.map((like) => like.created_by.id).includes(this.userStore.user.id)
+      return this.post?.likes?.map((like) => like?.created_by?.id).includes(this.userStore.user.id)
     },
     checkPageLike(){
-      return this.post.page_likes.map((like) => like.created_by.id).includes(this.pageStore.pageId)
+      return this.post?.page_likes?.map((like) => like?.created_by?.id).includes(this.pageStore.pageId)
     }
   },
 

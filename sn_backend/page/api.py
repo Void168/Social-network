@@ -8,9 +8,11 @@ from account.models import User
 from rest_framework.decorators import api_view
 
 from .serializers import PageSerializer, PageDetailSerializer
-from notification.models import Notification
+from notification.models import NotificationForPage
 from notification.serializers import NotificationSerializer
 from .forms import PageForm, PageBiographyForm, PageTypeForm, PageLocationForm, PageProfileForm
+
+from notification.serializers import NotificationForPageSerializer
 
 @api_view(['POST'])
 def page_create(request):
@@ -23,7 +25,7 @@ def page_create(request):
         
         serializer = PageSerializer(page)
 
-        return JsonResponse({'success':'create page successfully'})
+        return JsonResponse({'success':'create page successfully', 'data':serializer})
     else:
         return JsonResponse({'error': 'create page failed'})
     
@@ -66,6 +68,38 @@ def like_page(request, id):
         page.followers_count = page.followers_count + 1
         
         page.save()
+        
+        page_notification = NotificationForPage.objects.create(
+            body=f'{request.user.name} đã thích trang của bạn',
+            type_of_notification='like_page',
+            created_by=request.user,
+            created_for=page
+        )
+    
+        return JsonResponse({'success': 'Liked page'})
+    else: 
+        return JsonResponse({'error': 'Failed'})
+    
+@api_view(['POST'])
+def page_like_page(request, id, pk):
+    current_page = Page.objects.get(pk=pk)
+    page = Page.objects.get(id=id)
+    
+    if current_page not in page.other_page_likes.all():
+        page.other_page_followers.add(current_page)
+        page.other_page_likes.add(current_page)
+        
+        page.likes_count = page.likes_count + 1
+        page.followers_count = page.followers_count + 1
+        
+        page.save()
+        
+        page_notification = NotificationForPage.objects.create(
+            body=f'Trang {current_page.name} đã thích trang của bạn',
+            type_of_notification='like_page',
+            created_by_page=current_page,
+            created_for=page
+        )
     
         return JsonResponse({'success': 'Liked page'})
     else: 

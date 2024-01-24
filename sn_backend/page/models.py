@@ -22,6 +22,10 @@ class Page(models.Model):
     followers = models.ManyToManyField(User, related_name='page_followers', blank=True)
     likes = models.ManyToManyField(User, related_name='page_likes', blank=True)
     
+    other_page_following = models.ManyToManyField('self')
+    other_page_followers = models.ManyToManyField('self')
+    other_page_likes = models.ManyToManyField('self')
+    
     followers_count = models.IntegerField(default=0)
     likes_count = models.IntegerField(default=0)       
     posts_count = models.IntegerField(default=0)

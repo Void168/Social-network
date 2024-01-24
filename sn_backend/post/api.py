@@ -10,7 +10,7 @@ from account.models import User
 from page.models import Page
 from account.serializers import UserSerializer, FriendshipRequest
 from notification.models import NotificationForPage
-from notification.utils import create_notification, create_notification_by_page, create_page_notification_by_user, create_page_notification_by_page
+from notification.utils import create_notification
 
 from .forms import PostForm, AttachmentForm, PageAttachmentForm, PagePostForm
 from .models import Post, Comment, Like, Trend, PagePost, PageComment, PageLike

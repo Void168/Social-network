@@ -265,7 +265,7 @@
     </template>
 
     <template v-else>
-      <div class="flex justify-between items-center gap-3">
+      <div class="flex justify-between items-center gap-3 py-[6px]">
         <RouterLink to="/login"
           ><button class="btn">Đăng nhập</button></RouterLink
         >

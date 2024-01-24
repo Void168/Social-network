@@ -5,6 +5,7 @@ from django.utils.timesince import timesince
 from django.utils import timezone
 
 from account.models import User
+from page.models import Page
 # Create your models here.
  
 class Conversation(models.Model):
@@ -36,6 +37,17 @@ class GroupConversation(models.Model):
         if self.avatar:
             return 'http://127.0.0.1:8000' + self.avatar.url
 
+class PageConversation(models.Model):
+    id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
+    user = models.ForeignKey(User, related_name='user_in_conversations', on_delete=models.CASCADE)
+    page = models.ForeignKey(Page, related_name='page_in_conversations', on_delete=models.CASCADE)
+    created_at = models.DateTimeField(auto_now_add=True)
+    modified_at = models.DateTimeField(auto_now=True)
+    theme = models.CharField(blank=True, default='Cổ điển', max_length=50)
+    
+    def modified_at_formatted(self):
+        return timesince(self.created_at)
+
 class SeenUser(models.Model):
     id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
     created_at = models.DateTimeField(auto_now_add=True)
@@ -44,10 +56,29 @@ class SeenUser(models.Model):
     def created_at_formatted(self):
         return timesince(self.created_at)
 
+class SeenPage(models.Model):
+    id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
+    created_at = models.DateTimeField(auto_now_add=True)
+    created_by = models.ForeignKey(Page, related_name='seen_page', on_delete=models.CASCADE)
+    
+    def created_at_formatted(self):
+        return timesince(self.created_at)
+
 class MessageAttachment(models.Model):
     id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
     image = models.ImageField(upload_to='message_attachments')
     created_by = models.ForeignKey(User, related_name='message_attachments', on_delete=models.CASCADE)
+    
+    def get_image(self):
+        if self.image:
+            return 'http://127.0.0.1:8000' + self.image.url
+        else:
+            return ''
+        
+class PageMessageAttachment(models.Model):
+    id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
+    image = models.ImageField(upload_to='message_attachments')
+    created_by = models.ForeignKey(Page, related_name='page_message_attachments', on_delete=models.CASCADE)
     
     def get_image(self):
         if self.image:
@@ -65,6 +96,24 @@ class ConversationMessage(models.Model):
     created_by = models.ForeignKey(User, related_name='sent_messages', on_delete=models.CASCADE)
     is_latest_message = models.BooleanField(default=False)
     seen_by = models.ManyToManyField(SeenUser, related_name='seen_message')
+    
+    def created_at_formatted(self):
+        return timesince(self.created_at)
+    
+class PageConversationMessage(models.Model):
+    id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
+    conversation = models.ForeignKey(PageConversation, related_name='page_messages', on_delete=models.CASCADE)
+    body = models.TextField(blank=True)
+    attachments = models.ManyToManyField(MessageAttachment, blank=True)
+    page_attachments = models.ManyToManyField(PageMessageAttachment, blank=True)
+    sent_to = models.ForeignKey(User, related_name='user_received_messages', on_delete=models.CASCADE)
+    sent_to_page = models.ForeignKey(Page, related_name='page_received_messages', on_delete=models.CASCADE)
+    created_at = models.DateTimeField(auto_now_add=True)
+    created_by = models.ForeignKey(User, related_name='user_sent_messages', on_delete=models.CASCADE)
+    created_by_page = models.ForeignKey(Page, related_name='page_sent_messages', on_delete=models.CASCADE)
+    is_latest_message = models.BooleanField(default=False)
+    seen_by = models.ManyToManyField(SeenUser, related_name='user_seen_message')
+    seen_by_page = models.ManyToManyField(SeenPage, related_name='page_seen_message')
     
     def created_at_formatted(self):
         return timesince(self.created_at)

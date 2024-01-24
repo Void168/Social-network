@@ -84,7 +84,7 @@
                   class="p-4 bg-gray-200 dark:bg-slate-700 dark:border-slate-800 dark:text-neutral-200 text-center rounded-lg"
                 >
                 <UserItem :user="follower" v-if="!follower.is_page"/>
-                <PageItemVue :page="follower" v-else/>
+                <PageItem :page="follower" v-else/>
                 </div>
               </div>
               <div
@@ -105,7 +105,7 @@
                   class="p-4 bg-gray-200 dark:bg-slate-700 dark:border-slate-800 dark:text-neutral-200 text-center rounded-lg"
                 >
                 <UserItem :user="following" v-if="!following.is_page"/>
-                <PageItemVue :page="following" v-else/>
+                <PageItem :page="following" v-else/>
                 </div>
               </div>
               <div
@@ -126,7 +126,7 @@
                   class="p-4 bg-gray-200 dark:bg-slate-700 dark:border-slate-800 dark:text-neutral-200 text-center rounded-lg"
                 >
                 <UserItem :user="like" v-if="!like.is_page"/>
-                <PageItemVue :page="like" v-else/>
+                <PageItem :page="like" v-else/>
                 </div>
               </div>
               <div
@@ -154,7 +154,7 @@ import { MagnifyingGlassIcon } from "@heroicons/vue/24/outline";
 import { useUserStore } from "../stores/user";
 
 import UserItem from "../components/items/profile/UserItem.vue";
-import PageItemVue from '../components/items/page/PageItem.vue';
+import PageItem from '../components/items/page/PageItem.vue';
 export default {
   setup() {
     const userStore = useUserStore();
@@ -174,7 +174,7 @@ export default {
     TabPanel,
     MagnifyingGlassIcon,
     UserItem,
-    PageItemVue
+    PageItem
   },
 
   data() {

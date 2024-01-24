@@ -25,7 +25,7 @@ def page_create(request):
         
         serializer = PageSerializer(page)
 
-        return JsonResponse({'success':'create page successfully', 'data':serializer})
+        return JsonResponse({'success':'create page successfully', 'data':serializer.data})
     else:
         return JsonResponse({'error': 'create page failed'})
     

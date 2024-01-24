@@ -23,7 +23,7 @@ export const usePageStore = defineStore({
         await axios
           .get(`/api/page/get-page/${this.pageId}/`)
           .then((res) => {
-            this.pageActive = res.data;
+            this.pageActive = res.data.data;
           })
           .catch((erorr) => {
   

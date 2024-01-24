@@ -21,21 +21,21 @@
       <div
         class="dark:text-neutral-200 space-y-4 p-4 dark:bg-slate-800/50 rounded-lg"
       >
-      <div class="flex justify-between items-center">
+        <div class="flex justify-between items-center">
           <h2 class="text-2xl font-bold">Người theo dõi</h2>
           <div class="relative">
-          <MagnifyingGlassIcon
-            class="absolute top-[18px] left-2 sm:w-6 sm:h-6 xs:w-3 xs:h-3 dark:text-neutral-400"
-          />
-          <input
-            @keyup="getQuery"
-            ref="searchInput"
-            type="text"
-            placeholder="Tìm kiếm"
-            class="w-full my-2 sm:py-2 sm:px-8 xs:py-1 xs:px-6 border border-gray-200 dark:bg-slate-700 dark:border-slate-800 dark:text-neutral-200 rounded-2xl sm:text-base xs:text-sm"
-          />
+            <MagnifyingGlassIcon
+              class="absolute top-[18px] left-2 sm:w-6 sm:h-6 xs:w-3 xs:h-3 dark:text-neutral-400"
+            />
+            <input
+              @keyup="getQuery"
+              ref="searchInput"
+              type="text"
+              placeholder="Tìm kiếm"
+              class="w-full my-2 sm:py-2 sm:px-8 xs:py-1 xs:px-6 border border-gray-200 dark:bg-slate-700 dark:border-slate-800 dark:text-neutral-200 rounded-2xl sm:text-base xs:text-sm"
+            />
+          </div>
         </div>
-      </div>
         <TabGroup>
           <TabList class="flex space-x-1 rounded-xl bg-blue-900/20 p-1">
             <Tab
@@ -55,10 +55,10 @@
               >
                 <span>{{ category.name }}</span>
                 <span v-if="category.name === 'Người theo dõi'">
-                  ({{ page.followers?.length }})</span
+                  ({{ allFollowers?.length }})</span
                 >
                 <span v-if="category.name === 'Đang theo dõi'">
-                  ({{ page.following?.length }})</span
+                  ({{ page?.followings_count }})</span
                 >
                 <span v-if="category.name === 'Lượt thích'">
                   ({{ page?.likes_count }})</span
@@ -75,35 +75,16 @@
               class="p-4 bg-white border border-gray-200 rounded-lg dark:bg-slate-600 dark:border-slate-700 dark:text-neutral-200"
             >
               <div
-                v-if="page?.followers?.length && n === 1"
+                v-if="allFollowers?.length && n === 1"
                 class="grid sm:grid-cols-2 grid-cols-1 gap-4"
               >
                 <div
-                  v-for="follower in page?.followers"
+                  v-for="follower in allFollowers"
                   v-bind:key="follower.id"
-                  class="p-4 bg-gray-200 dark:bg-slate-500 dark:border-slate-800 dark:text-neutral-200 text-center rounded-lg"
+                  class="p-4 bg-gray-200 dark:bg-slate-700 dark:border-slate-800 dark:text-neutral-200 text-center rounded-lg"
                 >
-                  <RouterLink
-                    :to="{ name: 'profile', params: { id: follower.id } }"
-                    class="flex flex-col items-center"
-                  >
-                    <img
-                      :src="follower.get_avatar"
-                      alt=""
-                      class="w-32 h-32 mb-6 rounded-full"
-                    />
-                    <p>
-                      <strong> {{ follower.name }}</strong>
-                    </p>
-                    <div class="mt-6 flex space-x-8 justify-around">
-                      <p class="text-xs text-gray-500 dark:text-neutral-200">
-                        {{ follower.friends_count }} người bạn
-                      </p>
-                      <p class="text-xs text-gray-500 dark:text-neutral-200">
-                        {{ follower.posts_count }} bài đăng
-                      </p>
-                    </div>
-                  </RouterLink>
+                <UserItem :user="follower" v-if="!follower.is_page"/>
+                <PageItemVue :page="follower" v-else/>
                 </div>
               </div>
               <div
@@ -115,39 +96,20 @@
                 </h1>
               </div>
               <div
-                v-if="page.following?.length && n === 2"
+                v-if="allFollowings?.length && n === 2"
                 class="grid sm:grid-cols-2 grid-cols-1 gap-4"
               >
                 <div
-                  v-for="following in page.following"
+                  v-for="following in allFollowings"
                   v-bind:key="following.id"
                   class="p-4 bg-gray-200 dark:bg-slate-700 dark:border-slate-800 dark:text-neutral-200 text-center rounded-lg"
                 >
-                  <RouterLink
-                    :to="{ name: 'profile', params: { id: following.id } }"
-                    class="flex flex-col items-center"
-                  >
-                    <img
-                      :src="following.get_avatar"
-                      alt=""
-                      class="w-32 h-32 mb-6 rounded-full"
-                    />
-                    <p>
-                      <strong> {{ following.name }}</strong>
-                    </p>
-                    <div class="mt-6 flex space-x-8 justify-around">
-                      <p class="text-xs text-gray-500 dark:text-neutral-200">
-                        {{ following.friends_count }} người bạn
-                      </p>
-                      <p class="text-xs text-gray-500 dark:text-neutral-200">
-                        {{ following.posts_count }} bài đăng
-                      </p>
-                    </div>
-                  </RouterLink>
+                <UserItem :user="following" v-if="!following.is_page"/>
+                <PageItemVue :page="following" v-else/>
                 </div>
               </div>
               <div
-                v-else-if="!page?.following?.length && n === 2"
+                v-else-if="!allFollowings?.length && n === 2"
                 class="h-48 flex justify-center items-center"
               >
                 <h1 class="text-2xl font-semibold dark:text-neutral-400">
@@ -155,35 +117,16 @@
                 </h1>
               </div>
               <div
-                v-if="page?.likes?.length && n === 3"
+                v-if="allLikes?.length && n === 3"
                 class="grid sm:grid-cols-2 grid-cols-1 gap-4"
               >
                 <div
-                  v-for="user in page.likes"
-                  v-bind:key="user.id"
+                  v-for="like in allLikes"
+                  v-bind:key="like.id"
                   class="p-4 bg-gray-200 dark:bg-slate-700 dark:border-slate-800 dark:text-neutral-200 text-center rounded-lg"
                 >
-                  <RouterLink
-                    :to="{ name: 'profile', params: { id: user.id } }"
-                    class="flex flex-col items-center"
-                  >
-                    <img
-                      :src="user.get_avatar"
-                      alt=""
-                      class="w-32 h-32 mb-6 rounded-full"
-                    />
-                    <p>
-                      <strong> {{ user.name }}</strong>
-                    </p>
-                    <div class="mt-6 flex space-x-8 justify-around">
-                      <p class="text-xs text-gray-500 dark:text-neutral-200">
-                        {{ user.friends_count }} người bạn
-                      </p>
-                      <p class="text-xs text-gray-500 dark:text-neutral-200">
-                        {{ user.posts_count }} bài đăng
-                      </p>
-                    </div>
-                  </RouterLink>
+                <UserItem :user="like" v-if="!like.is_page"/>
+                <PageItemVue :page="like" v-else/>
                 </div>
               </div>
               <div
@@ -209,6 +152,9 @@ import { TabGroup, TabList, Tab, TabPanels, TabPanel } from "@headlessui/vue";
 import { MagnifyingGlassIcon } from "@heroicons/vue/24/outline";
 
 import { useUserStore } from "../stores/user";
+
+import UserItem from "../components/items/profile/UserItem.vue";
+import PageItemVue from '../components/items/page/PageItem.vue';
 export default {
   setup() {
     const userStore = useUserStore();
@@ -227,11 +173,17 @@ export default {
     TabPanels,
     TabPanel,
     MagnifyingGlassIcon,
+    UserItem,
+    PageItemVue
   },
 
   data() {
     return {
       page: {},
+      other_page_followers: [],
+      other_page_likes: [],
+      other_page_following: [],
+      // allFollowers: [],
       categories: [
         {
           name: "Người theo dõi",
@@ -247,6 +199,57 @@ export default {
     };
   },
 
+  computed: {
+    allFollowers() {
+      return this.page?.followers
+        ?.concat(this.other_page_followers)
+        .sort((a, b) => {
+          const nameA = a.name.toUpperCase();
+          const nameB = b.name.toUpperCase();
+          if (nameA < nameB) {
+            return -1;
+          }
+          if (nameA > nameB) {
+            return 1;
+          }
+
+          return 0;
+        });
+    },
+    allLikes(){
+      return this.page?.likes
+        ?.concat(this.other_page_likes)
+        .sort((a, b) => {
+          const nameA = a.name.toUpperCase();
+          const nameB = b.name.toUpperCase();
+          if (nameA < nameB) {
+            return -1;
+          }
+          if (nameA > nameB) {
+            return 1;
+          }
+
+          return 0;
+        });
+    },
+    allFollowings(){
+      return this.page?.following
+        ?.concat(this.other_page_following)
+        .sort((a, b) => {
+          const nameA = a.name.toUpperCase();
+          const nameB = b.name.toUpperCase();
+          if (nameA < nameB) {
+            return -1;
+          }
+          if (nameA > nameB) {
+            return 1;
+          }
+
+          return 0;
+        });
+    }
+  },
+
   mounted() {
     this.getUsers();
   },
@@ -256,7 +259,10 @@ export default {
       await axios
         .get(`/api/page/get-page/${this.$route.params.id}`)
         .then((res) => {
-          this.page = res.data;
+          this.page = res.data.data;
+          this.other_page_followers = res.data.other_page_followers;
+          this.other_page_likes = res.data.other_page_likes
+          this.other_page_following = res.data.other_page_following
         })
         .catch((error) => console.log(error));
       console.log("hello");

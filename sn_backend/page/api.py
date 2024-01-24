@@ -42,10 +42,21 @@ def get_user_page(request, id):
 @api_view(['GET'])
 def get_page(request, id):
     page = Page.objects.get(pk=id)
+    other_page_followers = page.other_page_followers.all()
+    other_page_likes = page.other_page_likes.all()
+    other_page_following = page.other_page_following.all()
     
     serializer = PageSerializer(page)
+    other_page_followers_serializer = PageSerializer(other_page_followers, many=True)
+    other_page_likes_serializer = PageSerializer(other_page_likes, many=True)
+    other_page_following_serializer = PageSerializer(other_page_following, many=True)
     
-    return JsonResponse(serializer.data, safe=False)
+    return JsonResponse({
+        'data':serializer.data,
+        'other_page_followers':other_page_followers_serializer.data,
+        'other_page_likes':other_page_likes_serializer.data,
+        'other_page_following':other_page_following_serializer.data
+    }, safe=False)
 
 @api_view(['GET'])
 def get_page_detail(request, id):
@@ -91,8 +102,9 @@ def page_like_page(request, id, pk):
         
         page.likes_count = page.likes_count + 1
         page.followers_count = page.followers_count + 1
-        
+        current_page.followings_count = current_page.followings_count + 1
         page.save()
+        current_page.save()
         
         page_notification = NotificationForPage.objects.create(
             body=f'Trang {current_page.name} đã thích trang của bạn',

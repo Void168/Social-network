@@ -291,7 +291,6 @@ export default (await import("vue")).defineComponent({
 
   mounted() {
     this.like();
-    console.log(this.post)
   },
 
   methods: {

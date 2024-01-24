@@ -341,7 +341,7 @@ export default {
       await axios
         .get(`/api/page/get-page/${this.$route.params.id}`)
         .then((res) => {
-          this.page = res.data;
+          this.page = res.data.data;
           // console.log(res.data)
         })
         .catch((error) => console.log(error));

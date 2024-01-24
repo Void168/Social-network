@@ -10,6 +10,7 @@ urlpatterns = [
     path('page/<uuid:pk>/detail/', api.page_post_detail, name='page_post_detail'),
     path('<uuid:pk>/like/', api.post_like, name='post_like'),
     path('<uuid:pk>/like-by-user/', api.page_post_like_by_user, name='page_post_like_by_user'),
+    path('page/<uuid:id>/<uuid:pk>/like-by-page/', api.page_post_like_by_page, name='page_post_like_by_page'),
     path('<uuid:pk>/comment/', api.post_create_comment, name='post_create_comment'),
     path('page/<uuid:pk>/comment-by-user/', api.page_post_create_comment_by_user, name='page_post_create_comment_by_user'),
     path('page/<uuid:id>/<uuid:pk>/comment-by-page/', api.page_post_create_comment_by_page, name='page_post_create_comment_by_page'),

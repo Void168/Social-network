@@ -346,9 +346,32 @@ def page_post_like_by_user(request, pk):
     else:
         return JsonResponse({'message': 'post already liked'})
     
-# @api_view(['POST'])
-# def page_post_like_by_page(request, pk, id):     
+@api_view(['POST'])
+def page_post_like_by_page(request, pk, id):     
+    page_post = PagePost.objects.get(pk=pk)
+    page = Page.objects.get(id=id)
+    
+    if not page_post.page_likes.filter(created_by=page):
+        page_like = PageLike.objects.create(created_by=page)
+        page_post.likes_count = page_post.likes_count + 1
+        page_post.page_likes.add(page_like)
+        page_post.save()
+            
+        page_notification = NotificationForPage.objects.create(
+            body=f'Trang {page.name} đã thích bài viêt trang của bạn',
+            type_of_notification='post_like',
+            created_by_page=page,
+            created_for=page_post.created_by
+        )
+            
+        serializer_notification = NotificationForPageSerializer(page_notification)
         
+        serializer = PageLikeSerializer(page_like)
+            
+        return JsonResponse({'data':serializer.data, 'notification':serializer_notification.data}, safe=False)
+    else:
+        return JsonResponse({'message': 'post already liked'})
+    
 @api_view(['POST'])
 def post_create_comment(request, pk):
     comment = Comment.objects.create(body=request.data.get('body'), tags=request.data.get('tags'), created_by=request.user)
@@ -391,6 +414,13 @@ def page_post_create_comment_by_user(request, pk):
     page_post.comments_count = page_post.comments_count + 1
     page_post.save()
     
+    page_notification = NotificationForPage.objects.create(
+            body=f'{request.user.name} đã bình luận bài viêt trang của bạn',
+            type_of_notification='post_comment',
+            created_by=request.user,
+            created_for=page_post.created_by
+        )
+    
     serializer = CommentSerializer(comment)
     
     return JsonResponse(serializer.data, safe=False)
@@ -404,6 +434,13 @@ def page_post_create_comment_by_page(request, pk, id):
     page_post.page_comments.add(page_comment)
     page_post.comments_count = page_post.comments_count + 1
     page_post.save()
+    
+    page_notification = NotificationForPage.objects.create(
+            body=f'{page.name} đã bình luận bài viêt trang của bạn',
+            type_of_notification='post_comment',
+            created_by_page=page,
+            created_for=page_post.created_by
+        )
     
     serializer = PageCommentSerializer(page_comment)
     

@@ -113,15 +113,7 @@ def create_notification_by_page(request, type_of_notification, post_id=None, pag
 
 def create_page_notification_by_user(request, type_of_notification, post_id=None, comment_id=None, story_request_id=None):
     created_for = None
-    if type_of_notification == 'post_like':
-        body = f'{request.user.name} đã thích bài viết trang của bạn'
-        page_post = PagePost.objects.get(pk=post_id)
-        created_for = page_post.created_by
-    elif type_of_notification == 'post_comment':
-        body = f'{request.user.name} đã bình luận bài viết trang của bạn'
-        page_post = PagePost.objects.get(pk=post_id)
-        created_for = page_post.created_by
-    elif type_of_notification == 'tag_comment':
+    if type_of_notification == 'tag_comment':
         body = f'{request.user.name} đã nhắc đến trang của bạn trong một bình luận'
         comment = Comment.objects.get(pk=comment_id)
         for tag in comment.tags:

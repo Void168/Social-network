@@ -115,7 +115,15 @@
         <div class="flex items-center space-x-2">
           <HeartLike
             class="w-6 h-6 text-rose-500 cursor-pointer"
-            v-if="isLike"
+            v-if="!pageStore.pageId && checkUserLike"
+          />
+          <HeartLike
+          class="w-6 h-6 text-rose-500 cursor-pointer"
+          v-else-if="pageStore.pageId && checkPageLike"
+          />
+          <HeartLike
+            class="w-6 h-6 text-rose-500 cursor-pointer"
+            v-else-if="isLike"
           />
           <HeartLike
             v-else
@@ -272,8 +280,18 @@ export default (await import("vue")).defineComponent({
     };
   },
 
+  computed: {
+    checkUserLike(){
+      return this.post.likes.map((like) => like.created_by.id).includes(this.userStore.user.id)
+    },
+    checkPageLike(){
+      return this.post.page_likes.map((like) => like.created_by.id).includes(this.pageStore.pageId)
+    }
+  },
+
   mounted() {
     this.like();
+    console.log(this.post)
   },
 
   methods: {
@@ -298,7 +316,21 @@ export default (await import("vue")).defineComponent({
           .catch((error) => {
             console.log(error);
           });
-      } else {
+      }
+      if(this.post.created_by.is_page && this.pageStore.pageId){
+        axios
+          .post(`/api/posts/page/${this.pageStore.pageId}/${id}/like-by-page/`)
+          .then((res) => {
+            if (res.data.message !== "post already liked") {
+              this.post.likes_count += 1;
+              this.isLike = true;
+            }
+          })
+          .catch((error) => {
+            console.log(error);
+          });
+      }
+      else {
         axios
           .post(`/api/posts/${id}/like-by-user/`)
           .then((res) => {

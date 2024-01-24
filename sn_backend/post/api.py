@@ -9,8 +9,8 @@ from rest_framework.decorators import api_view, authentication_classes, permissi
 from account.models import User
 from page.models import Page
 from account.serializers import UserSerializer, FriendshipRequest
-
-from notification.utils import create_notification, create_page_notification
+from notification.models import NotificationForPage
+from notification.utils import create_notification, create_notification_by_page, create_page_notification_by_user, create_page_notification_by_page
 
 from .forms import PostForm, AttachmentForm, PageAttachmentForm, PagePostForm
 from .models import Post, Comment, Like, Trend, PagePost, PageComment, PageLike
@@ -331,14 +331,18 @@ def page_post_like_by_user(request, pk):
         page_post.likes.add(like)
         page_post.save()
             
-        # page_notification = create_page_notification(request, 'post_like', post_id=post.id)
+        page_notification = NotificationForPage.objects.create(
+            body=f'{request.user.name} đã thích bài viêt trang của bạn',
+            type_of_notification='post_like',
+            created_by=request.user,
+            created_for=page_post.created_by
+        )
             
-        # serializer_notification = NotificationForPageSerializer(page_notification)
+        serializer_notification = NotificationForPageSerializer(page_notification)
         
-            
         serializer = LikeSerializer(like)
             
-        return JsonResponse(serializer.data, safe=False)
+        return JsonResponse({'data':serializer.data, 'notification':serializer_notification.data}, safe=False)
     else:
         return JsonResponse({'message': 'post already liked'})
     

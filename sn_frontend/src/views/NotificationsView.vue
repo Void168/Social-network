@@ -52,6 +52,7 @@
 import axios from "axios";
 import Pusher from "pusher-js";
 import { useUserStore } from "../stores/user";
+import { usePageStore } from "../stores/page";
 
 import vi from "date-fns/locale/vi";
 import formatDistanceToNow from "date-fns/formatDistanceToNow";
@@ -60,9 +61,11 @@ export default (await import("vue")).defineComponent({
   name: "notifications",
   setup() {
     const userStore = useUserStore();
+    const pageStore = usePageStore()
 
     return {
       userStore,
+      pageStore
     };
   },
   data() {
@@ -118,9 +121,9 @@ export default (await import("vue")).defineComponent({
       const result = d1.getTime();
       return formatDistanceToNow(result, { locale: vi });
     },
-    getNotifications() {
-      setTimeout(() => {
-        axios
+    async getNotifications() {
+      if(!this.pageStore.pageId){
+        await axios
           .get("/api/notifications/")
           .then((res) => {
             this.notifications = res.data;
@@ -128,7 +131,16 @@ export default (await import("vue")).defineComponent({
           .catch((error) => {
             console.log(error);
           });
-      }, 500)
+      } else {
+        await axios
+          .get(`/api/notifications/page/${this.pageStore.pageId}/`)
+          .then((res) => {
+            this.notifications = res.data;
+          })
+          .catch((error) => {
+            console.log(error);
+          });
+      }
     },
 
     loadMore() {

@@ -2,7 +2,7 @@
   <div @click="$emit('seenMessage')">
     <RouterLink
       class="flex justify-between cursor-pointer"
-      :to="{ name: 'conversation', params: { id: conversation.id } }"
+      :to="{ name: 'conversation', params: { id: pageConversation.id } }"
     >
       <div
         class="w-full group relative flex flex-col gap-1 px-3 py-2 rounded-lg hover:bg-gray-200 dark:hover:bg-slate-500 duration-100"
@@ -43,9 +43,9 @@
                         :to="{
                           name: 'profile',
                           params: {
-                            id: conversation.users?.filter(
-                              (user) => this.userStore.user.id !== user.id
-                            )[0].id,
+                            id: pageStore.pageId
+                              ? pageConversation.user.id
+                              : pageConversation.page.id,
                           },
                         }"
                       >
@@ -72,16 +72,16 @@
               </MenuItems>
             </transition>
           </Menu>
-          <DeleteConversationModal
+          <!-- <DeleteConversationModal
             :show="isOpen"
             @closeModal="closeModal"
             @deleteConversation="deleteConversation"
-          />
+          /> -->
         </div>
         <div class="flex sm:justify-between justify-center items-center">
           <div class="flex justify-center items-center gap-3">
             <img
-              :src="friend?.get_avatar"
+              :src="pageConversation?.page?.get_avatar"
               alt="avatar"
               class="xm:w-14 xm:h-14 h-10 w-10 rounded-full shadow-lg"
             />
@@ -93,18 +93,21 @@
                   .includes(userStore.user.email) === false
               "
             >
-              {{ friend?.name }}
+              {{ pageConversation?.page?.name }}
             </p>
             <p
-              v-else-if="friend?.id !== userStore.user.id"
+              v-else-if="pageConversation?.page?.id !== userStore.user.id"
               class="text-sm dark:text-neutral-300 font-semibold sm:block hidden"
             >
-              {{ friend?.name }}
+              {{ pageConversation?.page?.name }}
             </p>
           </div>
 
           <span
-            v-if="conversation?.messages?.length"
+            v-if="
+              pageConversation?.messages?.length ||
+              pageConversation?.page_messages?.length
+            "
             class="text-xs text-gray-600 dark:text-neutral-300 sm:block hidden"
             >{{ lastMessage.created_at_formatted }} trước</span
           >
@@ -112,7 +115,10 @@
 
         <div class="text-sm sm:block hidden">
           <div
-            v-if="conversation?.messages?.length"
+            v-if="
+              pageConversation?.messages?.length ||
+              pageConversation?.page_messages?.length
+            "
             class="flex gap-1 justify-between"
           >
             <div class="flex gap-2 px-2 py-1 w-[50%]">
@@ -138,8 +144,13 @@
                 <p
                   class="truncate font-bold text-emerald-500 dark:text-neutral-200"
                   v-if="
-                    conversation.messages[
-                      conversation.messages.length - 1
+                    pageConversation.messages[
+                      pageConversation.messages.length - 1
+                    ]?.seen_by
+                      .map((obj) => obj.created_by.email)
+                      .includes(userStore.user.email) === false ||
+                    pageConversation.page_messages[
+                      pageConversation.page_messages.length - 1
                     ]?.seen_by
                       .map((obj) => obj.created_by.email)
                       .includes(userStore.user.email) === false
@@ -155,14 +166,23 @@
             <span
               class="bg-emerald-500 w-3 h-3 rounded-full shadow-md"
               v-if="
-                conversation.messages[conversation.messages.length - 1]?.seen_by
+                pageConversation.messages[
+                  pageConversation.messages.length - 1
+                ]?.seen_by
                   .map((obj) => obj.created_by.email)
-                  .includes(userStore.user.email) === false 
+                  .includes(userStore.user.email) === false ||
+                pageConversation.page_messages[
+                  pageConversation.page_messages.length - 1
+                ]?.seen_by
+                  .map((obj) => obj.created_by.email)
+                  .includes(userStore.user.email) === false
               "
             ></span>
-            <span v-if="seen && lastMessage?.created_by?.id === userStore.user.id">
+            <span
+              v-if="seen && lastMessage?.created_by?.id === userStore.user.id"
+            >
               <img
-                :src="friend.get_avatar"
+                :src="pageConversation?.page?.get_avatar"
                 class="w-4 h-4 rounded-full"
                 alt="seen-avatar"
               />
@@ -178,6 +198,7 @@
 import axios from "axios";
 import Pusher from "pusher-js";
 import { useUserStore } from "../../../stores/user";
+import { usePageStore } from "../../../stores/page";
 import { Menu, MenuButton, MenuItem, MenuItems } from "@headlessui/vue";
 import {
   EllipsisHorizontalIcon,
@@ -188,7 +209,7 @@ import { useToastStore } from "../../../stores/toast";
 import DeleteConversationModal from "../../modals/chat/DeleteConversationModal.vue";
 
 export default (await import("vue")).defineComponent({
-  name: "ConversationBox",
+  name: "PageConversationBox",
   components: {
     Menu,
     MenuButton,
@@ -205,43 +226,47 @@ export default (await import("vue")).defineComponent({
     };
   },
   props: {
-    conversation: Object,
+    pageConversation: Object,
   },
   setup() {
     const userStore = useUserStore();
     const toastStore = useToastStore();
+    const pageStore = usePageStore();
 
     return {
       userStore,
       toastStore,
+      pageStore,
     };
   },
 
+  data(){
+    return {
+        messages: [],
+        pageMessages: [],
+    }
+  },
+
   computed: {
-    getOtherUserId() {
-      return this.conversation?.users?.filter(
-        (user) => this.userStore.user.id !== user.id
-      )[0];
+    allMessages(){
+        return this.messages?.concat(this.pageMessages)
     },
     lastMessage() {
-      return this.conversation?.messages[
-        this.conversation?.messages?.length - 1
+      return this.allMessages[
+        this.allMessages?.length - 1
       ];
-    },
-    friend() {
-      return this.conversation?.users?.filter(
-        (user) => user.id !== this.userStore.user.id
-      )[0];
     },
     seen() {
       return this.lastMessage?.seen_by
         ?.map((user) => user?.created_by?.id)
-        .includes(this.friend?.id);
+        .includes(this.pageConversation?.page?.id);
     },
   },
 
   mounted() {
     this.getPusher();
+    this.messages = this.pageConversation.messages
+    this.pageMessages = this.pageConversation.page_messages
   },
 
   methods: {
@@ -260,10 +285,10 @@ export default (await import("vue")).defineComponent({
       });
     },
     deleteConversation() {
-      this.$emit("deleteConversation", this.conversation.id);
+      this.$emit("deleteConversation", this.pageConversation.id);
 
       axios
-        .delete(`/api/chat/${this.conversation.id}/delete/`)
+        .delete(`/api/chat/${this.pageConversation.id}/delete/`)
         .then((res) => {
           setTimeout(() => {
             this.closeModal();

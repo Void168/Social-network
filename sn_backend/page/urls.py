@@ -15,7 +15,10 @@ urlpatterns = [
     path('set-type/<uuid:id>/', api.set_page_type, name='set_page_type'),
     path('set-location/<uuid:id>/', api.set_page_location, name='set_page_location'),
     path('<uuid:id>/dislike/',api.dislike_page, name='dislike_page'),
+    path('<uuid:pk>/dislike/page/<uuid:id>/',api.page_dislike_page, name='page_dislike_page'),
     path('<uuid:id>/follow/',api.follow_page, name='follow_page'),
+    path('<uuid:pk>/follow/page/<uuid:id>/',api.page_follow_page, name='page_follow_page'),
     path('<uuid:id>/unfollow/',api.unfollow_page, name='unfollow_page'),
+    path('<uuid:pk>/unfollow/page/<uuid:id>/',api.page_unfollow_page, name='page_unfollow_page'),
     path('delete/<uuid:id>/',api.delete_page, name='delete_page'),
 ]

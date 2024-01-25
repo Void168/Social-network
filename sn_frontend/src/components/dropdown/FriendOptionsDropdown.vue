@@ -1,9 +1,13 @@
 <template>
   <Menu as="div" class="relative inline-block text-left">
     <div>
-      <MenuButton class="btn flex gap-2 items-center">
+      <MenuButton class="btn flex gap-2 items-center" v-if="!pageStore.pageId">
         <UsersIcon class="w-5" />
         <span>Bạn bè</span>
+      </MenuButton>
+      <MenuButton class="btn flex gap-2 items-center" v-else>
+        <EyeIcon class="w-5" />
+        <span>Đang theo dõi</span>
       </MenuButton>
     </div>
 
@@ -44,7 +48,7 @@
             </div>
           </MenuItem>
         </div>
-        <div class="py-1">
+        <div class="py-1" v-if="!pageStore.pageId">
           <MenuItem v-slot="{ active }" @click="$emit('openDeleteFriendModal')">
             <div
               href="#"
@@ -73,9 +77,10 @@ import {
   UsersIcon,
   EyeSlashIcon,
   UserMinusIcon,
+  EyeIcon,
 } from "@heroicons/vue/24/solid";
 import { useUserStore } from "../../stores/user";
-
+import { usePageStore } from "../../stores/page";
 export default {
   components: {
     Menu,
@@ -87,13 +92,16 @@ export default {
     UsersIcon,
     EyeSlashIcon,
     UserMinusIcon,
+    EyeIcon,
   },
 
   setup() {
     const userStore = useUserStore();
+    const pageStore = usePageStore()
 
     return {
       userStore,
+      pageStore
     };
   },
 

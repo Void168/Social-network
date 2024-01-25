@@ -2,6 +2,7 @@ import "./assets/main.css";
 
 import { createApp } from "vue";
 import { useUserStore } from "./stores/user";
+import { usePageStore } from "./stores/page";
 import { createPinia } from "pinia";
 
 import App from "./App.vue";
@@ -17,6 +18,7 @@ app.use(pinia);
 app.use(router, axios);
 
 const userStore = useUserStore();
+const pageStore = usePageStore();
 
 router.beforeEach((to, from) => {
   if (to.path !== "/login" && !userStore.user.isAuthenticated) {

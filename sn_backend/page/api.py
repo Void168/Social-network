@@ -216,6 +216,28 @@ def dislike_page(request, id):
         if current_user in page.followers.all():
             page.followers.remove(current_user)
             page.followers_count = page.followers_count - 1
+            
+        page.save()
+    
+        return JsonResponse({'success': 'Disliked page'})
+    else: 
+        return JsonResponse({'error': 'Failed'})
+    
+@api_view(['POST'])
+def page_dislike_page(request, id, pk):
+    current_page = Page.objects.get(pk=pk)
+    page = Page.objects.get(id=id)
+        
+    if current_page in page.other_page_likes.all():
+        page.other_page_likes.remove(current_page)
+        page.likes_count = page.likes_count - 1
+        
+        if current_page in page.other_page_followers.all():
+            page.other_page_followers.remove(current_page)
+            page.followers_count = page.followers_count - 1
+            
+            current_page.other_page_following.remove(page)
+            current_page.followings_count = current_page.followings_count - 1
         
         page.save()
     
@@ -239,6 +261,25 @@ def follow_page(request, id):
         return JsonResponse({'error': 'Failed'})
     
 @api_view(['POST'])
+def page_follow_page(request, id, pk):
+    current_page = Page.objects.get(pk=pk)
+    page = Page.objects.get(id=id)
+        
+    if current_page not in page.other_page_followers.all():
+        page.other_page_followers.add(current_page)
+        page.followers_count = page.followers_count + 1
+        
+        current_page.other_page_following.add(page)
+        current_page.followings_count = page.followings_count + 1
+        
+        page.save()
+        current_page.save()
+    
+        return JsonResponse({'success': 'Followed page'})
+    else: 
+        return JsonResponse({'error': 'Failed'})
+    
+@api_view(['POST'])
 def unfollow_page(request, id):
     current_user = request.user
     page = Page.objects.get(pk=id)
@@ -248,6 +289,25 @@ def unfollow_page(request, id):
         page.followers_count = page.followers_count - 1
         
         page.save()
+    
+        return JsonResponse({'success': 'Unfollowed page'})
+    else: 
+        return JsonResponse({'error': 'Failed'})
+    
+@api_view(['POST'])
+def page_unfollow_page(request, id, pk):
+    current_page = Page.objects.get(pk=pk)
+    page = Page.objects.get(id=id)
+        
+    if current_page in page.other_page_followers.all():
+        page.other_page_followers.remove(current_page)
+        page.followers_count = page.followers_count - 1
+        
+        current_page.other_page_following.remove(page)
+        current_page.followings_count = current_page.followings_count - 1
+        
+        page.save()
+        current_page.save()
     
         return JsonResponse({'success': 'Unfollowed page'})
     else: 

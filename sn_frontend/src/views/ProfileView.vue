@@ -47,7 +47,7 @@
               <div v-for="(value, index) in filtered" :key="index">
                 <FriendOptionsDropdown
                   :followers="followers"
-                  v-if="value === userStore.user.id"
+                  v-if="value === userStore.user.id && !pageStore.pageId"
                   @openDeleteFriendModal="openDeleteFriendModal"
                   @openUnfollowedModal="openUnfollowedModal"
                   @followUser="followUser"

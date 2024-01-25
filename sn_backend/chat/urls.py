@@ -3,6 +3,7 @@ from . import api
 
 urlpatterns = [
     path('', api.conversation_list, name='conversation_list'),
+    path('page/', api.conversation_list, name='page_conversation_list'),
     path('group/', api.group_conversation_list, name='group_conversation_list'),
     path('<uuid:pk>/', api.conversation_detail, name='conversation_detail'),
     path('group/<uuid:pk>/', api.group_conversation_detail, name='group_conversation_detail'),
@@ -26,6 +27,7 @@ urlpatterns = [
     path('<uuid:pk>/delete/', api.conversation_delete, name='conversation_delete'),
     path('group/<uuid:pk>/delete/', api.group_conversation_delete, name='group_conversation_delete'),
     path('<uuid:user_pk>/get-or-create/', api.conversation_get_or_create, name='conversation_get_or_create'),
+    path('<uuid:user_pk>/get-or-create/page/<uuid:id>/', api.page_conversation_get_or_create, name='page_conversation_get_or_create'),
     path('<uuid:pk>/get/', api.conversation_get, name='conversation_get'),
     path('<uuid:user_pk>/get-chat-window/', api.chat_window_detail, name='chat_window_detail'),
     path('<uuid:user_pk>/create/', api.conversation_create, name='conversation_create'),

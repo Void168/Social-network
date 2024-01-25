@@ -1,10 +1,15 @@
 from django.forms import ModelForm
 
-from .models import ConversationMessage, GroupConversationMessage, MessageAttachment, Conversation, GroupConversation, GroupPoll
+from .models import ConversationMessage, GroupConversationMessage, MessageAttachment, Conversation, GroupConversation, GroupPoll, PageMessageAttachment, PageConversationMessage
 
 class MessageForm(ModelForm):
     class Meta:
         model = ConversationMessage
+        fields = ('body',)
+        
+class PageMessageForm(ModelForm):
+    class Meta:
+        model = PageConversationMessage
         fields = ('body',)
 
 class GroupMessageForm(ModelForm):
@@ -15,6 +20,11 @@ class GroupMessageForm(ModelForm):
 class AttachmentForm(ModelForm):
     class Meta:
         model = MessageAttachment
+        fields = ('image',)
+        
+class PageAttachmentForm(ModelForm):
+    class Meta:
+        model = PageMessageAttachment
         fields = ('image',)
 
 class ChooseThemeForm(ModelForm):

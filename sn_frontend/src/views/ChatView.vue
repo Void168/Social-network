@@ -27,10 +27,10 @@
           />
         </div>
         <div
-          v-for="conversation in filteredConversation"
+          v-for="conversation in conversations"
           v-bind:key="conversation.id"
         >
-          <ConversationBox v-bind:conversation="conversation" />
+          <ConversationBox :conversation="conversation" />
         </div>
         <div
           class="flex flex-col bg-white dark:bg-slate-600 dark:text-neutral-200 rounded-lg px-2"
@@ -67,6 +67,19 @@
             />
           </div>
         </div>
+        <h3 class="sm:text-xl p-3 xm:block hidden sm:text-left text-center">
+          Đoạn hội thoại trang ({{ pageConversations.length }})
+        </h3>
+        <div class="flex justify-center items-center xm:hidden p-3">
+          <UserIcon class="w-6" /> ({{ conversations.length }})
+        </div>
+
+        <div
+          v-for="pageConversation in pageConversations"
+          v-bind:key="pageConversation.id"
+        >
+          <PageConversationBox :pageConversation="pageConversation"/>
+        </div>
       </div>
     </div>
     <div
@@ -80,7 +93,7 @@
       </div>
     </div>
     <CreateGroupChatModal
-      :show="isOpen"
+      :show="isCreateGroupOpen"
       @closeModal="closeModal"
       :options="options"
     />
@@ -92,11 +105,13 @@ import axios from "axios";
 
 import { useUserStore } from "../stores/user";
 import { useToastStore } from "../stores/toast";
+import { usePageStore } from "../stores/page";
 import { RouterLink } from "vue-router";
 
 import ConversationBox from "../components/items/chat/ConversationBox.vue";
 import CreateGroupChatModal from "../components/modals/chat/CreateGroupChatModal.vue";
 import GroupConversationBox from "../components/items/chat/GroupConversationBox.vue";
+import PageConversationBox from "../components/items/chat/PageConversationBox.vue";
 
 import { MagnifyingGlassIcon, PlusCircleIcon } from "@heroicons/vue/24/outline";
 import { UserIcon, UserGroupIcon } from "@heroicons/vue/24/solid";
@@ -108,6 +123,7 @@ export default (await import("vue")).defineComponent({
     RouterLink,
     CreateGroupChatModal,
     GroupConversationBox,
+    PageConversationBox,
     MagnifyingGlassIcon,
     PlusCircleIcon,
     UserIcon,
@@ -116,20 +132,23 @@ export default (await import("vue")).defineComponent({
   setup() {
     const userStore = useUserStore();
     const toastStore = useToastStore();
+    const pageStore = usePageStore()
 
     return {
       userStore,
       toastStore,
+      pageStore,
     };
   },
 
   data() {
     return {
       conversations: [],
+      pageConversations: [],
       groupConversations: [],
       body: "",
       query: "",
-      isOpen: false,
+      isCreateGroupOpen: false,
       options: [],
     };
   },
@@ -138,9 +157,9 @@ export default (await import("vue")).defineComponent({
     filteredConversation() {
       return this.query === ""
         ? this.conversations
-        : this.conversations.filter((conversation) =>
-            conversation.users
-              .map((user) => user.name.toLowerCase())
+        : this.conversations?.filter((conversation) =>
+            conversation?.users
+              .map((user) => user?.name?.toLowerCase())
               .filter((name) => name !== this.userStore.user.name.toLowerCase())
               .includes(this.query)
           );
@@ -163,22 +182,22 @@ export default (await import("vue")).defineComponent({
   },
 
   methods: {
-    getConversations() {
-      setTimeout(() => {
-        axios
+    async getConversations() {
+      if(!this.pageStore.pageId){
+        await axios
           .get("/api/chat/")
           .then((res) => {
-            this.conversations = res.data;
-            // console.log(this.conversations);
+            this.conversations = res.data.conversations;
+            this.pageConversations = res.data.page_conversations;
           })
           .catch((error) => {
             console.log(error);
           });
-      }, 500);
+      }
     },
-    getFriends() {
-      setTimeout(() => {
-        axios
+    async getFriends() {
+      if(!this.pageStore.pageId){
+        await axios
           .get(`/api/friends/${this.userStore.user.id}/`)
           .then((res) => {
             // console.log(res.data)
@@ -192,11 +211,11 @@ export default (await import("vue")).defineComponent({
           .catch((error) => {
             console.log(error);
           });
-      }, 2000);
+      }
     },
-    getGroupConversations() {
-      setTimeout(() => {
-        axios
+    async getGroupConversations() {
+      if(!this.pageStore.pageId){
+        await axios
           .get("/api/chat/group/")
           .then((res) => {
             this.groupConversations = res.data;
@@ -205,16 +224,16 @@ export default (await import("vue")).defineComponent({
           .catch((error) => {
             console.log(error);
           });
-      }, 1000);
+      }
     },
     getQuery() {
       this.query = this.$refs.input.value;
     },
     closeModal() {
-      this.isOpen = false;
+      this.isCreateGroupOpen = false;
     },
     openModal() {
-      this.isOpen = true;
+      this.isCreateGroupOpen = true;
     },
   },
 });

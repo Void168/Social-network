@@ -112,7 +112,7 @@ export default (await import("vue")).defineComponent({
     };
   },
   props: {
-    isOpen: Boolean,
+    isCreateGroupOpen: Boolean,
     options: Array
   },
   data() {

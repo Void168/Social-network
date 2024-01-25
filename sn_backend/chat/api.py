@@ -9,17 +9,32 @@ from rest_framework.permissions import IsAuthenticated
 from rest_framework.decorators import api_view, authentication_classes, permission_classes
 from django.db.models import Q
 
-from .forms import MessageForm, GroupMessageForm, AttachmentForm, ChooseThemeForm, ChooseGroupThemeForm, ChangeGroupNameForm, AvatarGroupForm
+from .forms import MessageForm, GroupMessageForm, AttachmentForm, ChooseThemeForm, ChooseGroupThemeForm, ChangeGroupNameForm, AvatarGroupForm, PageMessageForm, PageAttachmentForm
 
 from account.models import User
-from .models import Conversation, GroupConversation, ConversationMessage, SeenUser, GroupPoll, PollOption, GroupNotification
-from .serializers import ConversationSerializer, ConversationDetailSerializer, GroupConversationSerializer, ConversationMessageSerializer, GroupConversationMessageSerializer, SeenUserSerializer, GroupPollSerializer, GroupNotificationSerializer
+from page.models import Page
+from .models import Conversation, GroupConversation, ConversationMessage, SeenUser, GroupPoll, PollOption, GroupNotification, PageConversation, SeenPage
+from .serializers import ConversationSerializer, ConversationDetailSerializer, GroupConversationSerializer, ConversationMessageSerializer, GroupConversationMessageSerializer, SeenUserSerializer, GroupPollSerializer, GroupNotificationSerializer, PageConversationSerializer, PageConversationMessageSerializer
 
 @api_view(['GET'])
 def conversation_list(request):
     conversations = Conversation.objects.filter(users__in=list([request.user]))
+    page_conversations = PageConversation.objects.filter(user=request.user)
     
     serializer = ConversationSerializer(conversations, many=True)
+    page_serializer = PageConversationSerializer(page_conversations, many=True)
+        
+    return JsonResponse({
+        'conversations': serializer.data,
+        'page_conversations': page_serializer.data
+        }, safe=False)
+
+@api_view(['GET'])
+def page_conversation_list(request, id):
+    current_page = Page.objects.get(id=id)
+    page_conversations = PageConversation.objects.filter(users__in=list([current_page]))
+    
+    serializer = PageConversationSerializer(page_conversations, many=True)
         
     return JsonResponse(serializer.data, safe=False)
 
@@ -35,6 +50,14 @@ def group_conversation_list(request):
 def conversation_detail(request, pk):
     conversation = Conversation.objects.filter(users__in=list([request.user])).get(pk=pk)
     serializer = ConversationDetailSerializer(conversation)
+        
+    return JsonResponse(serializer.data, safe=False)
+
+@api_view(['GET'])
+def page_conversation_detail(request, pk, id):
+    current_page = Page.objects.get(id=id)
+    page_conversation = Conversation.objects.filter(page=current_page).get(pk=pk)
+    serializer = PageConversationSerializer(page_conversation)
         
     return JsonResponse(serializer.data, safe=False)
 
@@ -89,11 +112,41 @@ def conversation_create(request, user_pk):
     return JsonResponse(serializer.data, safe=False)
 
 @api_view(['GET'])
+def page_conversation_get_or_create(request, user_pk, id):
+    current_page = Page.objects.get(id=id)
+    user = User.objects.get(pk=user_pk)
+
+    page_conversations = PageConversation.objects.filter(user=user).filter(page=current_page)
+    
+    if page_conversations.exists():
+        page_conversation = page_conversations.first()
+    else:
+        page_conversation = PageConversation.objects.create(
+            user = user,
+            page = current_page
+        )
+
+        page_conversation.save()
+
+    serializer = PageConversationSerializer(page_conversation)
+    
+    return JsonResponse(serializer.data, safe=False)
+
+@api_view(['GET'])
 def conversation_get(request, pk):
 
     conversation = Conversation.objects.get(pk=pk)
 
     serializer = ConversationDetailSerializer(conversation)
+    
+    return JsonResponse(serializer.data, safe=False)
+
+@api_view(['GET'])
+def page_conversation_get(request, pk):
+
+    page_conversation = PageConversation.objects.get(pk=pk)
+
+    serializer = PageConversationSerializer(conversation)
     
     return JsonResponse(serializer.data, safe=False)
 
@@ -150,6 +203,7 @@ def pusher_auth(request, pk):
 
 @api_view(['POST'])
 def conversation_send_message(request, pk):
+    
     form = MessageForm(request.POST)
     attachment = None
     attachment_form = AttachmentForm(request.POST, request.FILES)
@@ -187,6 +241,94 @@ def conversation_send_message(request, pk):
         json_data = json.dumps(serializer_data)
         
         pusher_client.trigger(f'{str(pk)}', 'message:new', {'message': json_data})
+        
+        return JsonResponse(serializer.data, safe=False)
+    else:
+        return JsonResponse({'error': 'add something here later!...'})
+    
+@api_view(['POST'])
+def page_conversation_send_message(request, pk, id):
+    page = Page.objects.get(id=id)
+    form = PageMessageForm(request.POST)
+    page_attachment = None
+    page_attachment_form = PageMessageForm(request.POST, request.FILES)
+    
+    page_conversation = PageConversation.objects.filter(page=page).get(id=pk)
+    seenPage = seenPage.objects.create(created_by=page)
+    
+    if page_attachment_form.is_valid():
+        page_attachment = page_attachment_form.save(commit=False)
+        page_attachment.created_by = page
+        page_attachment.save()
+
+    if form.is_valid():
+        page_message = form.save(commit=False)
+        page_message.created_by = page
+        page_message.page_conversation = page_conversation
+
+        sent_to = page_conversation.user
+        page_message.sent_to = sent_to
+                
+        page_message.save()
+        
+        if page_attachment:
+            page_message.page_attachments.add(page_attachment)
+            page_message.save()
+        
+        page_message.seen_by.add(seenPage)
+        page_message.save()
+        
+        serializer = PageConversationMessageSerializer(page_message)
+        
+        serializer_data = serializer.data
+
+        json_data = json.dumps(serializer_data)
+        
+        pusher_client.trigger(f'{str(pk)}', 'page_message:new', {'message': json_data})
+        
+        return JsonResponse(serializer.data, safe=False)
+    else:
+        return JsonResponse({'error': 'add something here later!...'})
+    
+@api_view(['POST'])
+def user_conversation_send_message_to_page(request, pk, id):
+    user = User.objects.get(id=id)
+    form = MessageForm(request.POST)
+    attachment = None
+    attachment_form = MessageForm(request.POST, request.FILES)
+    
+    page_conversation = PageConversation.objects.filter(user=user).get(id=pk)
+    seenUser = seenUser.objects.create(created_by=user)
+    
+    if attachment_form.is_valid():
+        attachment = attachment_form.save(commit=False)
+        attachment.created_by = user
+        attachment.save()
+
+    if form.is_valid():
+        message = form.save(commit=False)
+        message.created_by = user
+        message.page_conversation = page_conversation
+
+        sent_to = page_conversation.page
+        message.sent_to = sent_to
+                
+        message.save()
+        
+        if attachment:
+            message.attachments.add(attachment)
+            message.save()
+        
+        message.seen_by.add(seenUser)
+        message.save()
+        
+        serializer = ConversationMessageSerializer(message)
+        
+        serializer_data = serializer.data
+
+        json_data = json.dumps(serializer_data)
+        
+        pusher_client.trigger(f'{str(pk)}', 'user_page_message:new', {'message': json_data})
         
         return JsonResponse(serializer.data, safe=False)
     else:
@@ -469,6 +611,31 @@ def set_seen(request, pk):
         return JsonResponse({'message': serializer.data})
     else:
         return JsonResponse({'message': 'conversation not exists'})
+    
+@api_view(['POST'])
+def page_set_seen(request, pk, id):
+    page = Page.objects.get(id=id)
+    page_conversation = PageConversation.objects.filter(page=page).get(pk=pk)
+    
+    seenPage = SeenPage.objects.create(created_by=page)
+        
+    page_messages = page_conversation.page_messages.exclude(created_by=page)
+    
+    if page_messages:
+        for page_message in page_messages:
+            if not page_messages.seen_by_page.all().filter(created_by=page):
+                message.seen_by_page.add(seenPage)
+                message.save()
+    
+        serializer = PageConversationMessageSerializer(page_messages, many=True)
+        serializer_data = serializer.data[-1]
+        json_data = json.dumps(serializer_data)
+            
+        pusher_client.trigger(str(pk), 'page_seen_message', {'message': json_data})
+                
+        return JsonResponse({'message': serializer.data})
+    else:
+        return JsonResponse({'message': 'conversation not exists'})
 
 @api_view(['POST'])
 def group_set_seen(request, pk):
@@ -488,6 +655,13 @@ def group_set_seen(request, pk):
 def conversation_delete(request, pk):
     conversation = Conversation.objects.get(pk=pk)
     conversation.delete()
+    
+    return JsonResponse({'message': 'conversation deleted'})
+
+@api_view(['DELETE'])
+def page_conversation_delete(request, pk):
+    page_conversation = PageConversation.objects.get(pk=pk)
+    page_conversation.delete()
     
     return JsonResponse({'message': 'conversation deleted'})
 

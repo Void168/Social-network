@@ -55,6 +55,19 @@
               @seenGroupMessage="seenGroupMessage"
             />
           </div>
+          <h3 class="sm:text-xl p-3 xm:block hidden sm:text-left text-center">
+          Đoạn hội thoại trang ({{ pageConversations.length }})
+        </h3>
+        <div class="flex justify-center items-center xm:hidden p-3">
+          <UserIcon class="w-6" /> ({{ conversations.length }})
+        </div>
+
+        <div
+          v-for="pageConversation in pageConversations"
+          v-bind:key="pageConversation.id"
+        >
+          <PageConversationBox :pageConversation="pageConversation"/>
+        </div>
         </div>
       </div>
     </div>
@@ -73,6 +86,7 @@ import axios from "axios";
 import ConversationBox from "../components/items/chat/ConversationBox.vue";
 import GroupConversationBox from "../components/items/chat/GroupConversationBox.vue";
 import ChatBox from "../components/items/chat/ChatBox.vue";
+import PageConversationBox from "../components/items/chat/PageConversationBox.vue";
 
 import { useUserStore } from "../stores/user";
 import { useToastStore } from "../stores/toast";
@@ -83,7 +97,7 @@ import { UserIcon, UserGroupIcon } from "@heroicons/vue/24/solid";
 import { RouterLink } from "vue-router";
 
 export default (await import("vue")).defineComponent({
-  name: "chat",
+  name: "conversation",
   setup() {
     const userStore = useUserStore();
     const toastStore = useToastStore();
@@ -97,6 +111,7 @@ export default (await import("vue")).defineComponent({
     return {
       conversations: [],
       groupConversations: [],
+      pageConversations: [],
       activeConversation: {},
       body: "",
       listMessages: [],
@@ -117,17 +132,16 @@ export default (await import("vue")).defineComponent({
     this.getGroupConversations();
   },
   methods: {
-    getConversations() {
-      setTimeout(() => {
-        axios
-          .get("/api/chat/")
-          .then((res) => {
-            this.conversations = res.data;
-          })
-          .catch((error) => {
-            console.log(error);
-          });
-      }, 500);
+    async getConversations() {
+      await axios
+        .get("/api/chat/")
+        .then((res) => {
+          this.conversations = res.data.conversations;
+          this.pageConversations = res.data.page_conversations
+        })
+        .catch((error) => {
+          console.log(error);
+        });
     },
     async getGroupConversations() {
       await axios
@@ -173,19 +187,6 @@ export default (await import("vue")).defineComponent({
         })
         .catch((error) => console.log(error));
     },
-    submitForm() {
-      axios
-        .post(`/api/chat/${this.activeConversation.id}/send/`, {
-          body: this.body,
-        })
-        .then((res) => {
-          this.activeConversation.messages.push(res.data);
-          this.body = "";
-        })
-        .catch((error) => {
-          console.log(error);
-        });
-    },
   },
   components: {
     RouterLink,
@@ -193,6 +194,7 @@ export default (await import("vue")).defineComponent({
     ChatBox,
     PlusCircleIcon,
     GroupConversationBox,
+    PageConversationBox,
     UserIcon,
     UserGroupIcon,
   },

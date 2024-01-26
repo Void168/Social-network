@@ -2,7 +2,7 @@
   <div @click="$emit('seenMessage')">
     <RouterLink
       class="flex justify-between cursor-pointer"
-      :to="{ name: 'conversation', params: { id: pageConversation.id } }"
+      :to="{ name: 'pageConversation', params: { id: pageConversation.id } }"
     >
       <div
         class="w-full group relative flex flex-col gap-1 px-3 py-2 rounded-lg hover:bg-gray-200 dark:hover:bg-slate-500 duration-100"
@@ -41,7 +41,7 @@
                     >
                       <RouterLink
                         :to="{
-                          name: 'profile',
+                          name: pageStore.pageId ? 'page' : 'profile',
                           params: {
                             id: pageStore.pageId
                               ? pageConversation.user.id
@@ -81,19 +81,23 @@
         <div class="flex sm:justify-between justify-center items-center">
           <div class="flex justify-center items-center gap-3">
             <img
-              :src="pageConversation?.page?.get_avatar"
+              :src="
+                pageStore.pageId
+                  ? pageConversation?.user?.get_avatar
+                  : pageConversation?.page?.get_avatar
+              "
               alt="avatar"
               class="xm:w-14 xm:h-14 h-10 w-10 rounded-full shadow-lg"
             />
             <p
               class="text-xs font-bold dark:text-neutral-300 sm:block hidden"
-              v-if="
-                lastMessage?.seen_by
-                  .map((obj) => obj.created_by.email)
-                  .includes(userStore.user.email) === false
-              "
+              v-if="!lastMessage?.seen_by.id === userStore.user.email"
             >
-              {{ pageConversation?.page?.name }}
+              {{
+                pageStore.pageId
+                  ? pageConversation?.user?.name
+                  : pageConversation?.page?.name
+              }}
             </p>
             <p
               v-else-if="pageConversation?.page?.id !== userStore.user.id"
@@ -102,84 +106,55 @@
               {{ pageConversation?.page?.name }}
             </p>
           </div>
-
           <span
-            v-if="
-              pageConversation?.messages?.length ||
-              pageConversation?.page_messages?.length
-            "
+            v-if="pageMessages?.length"
             class="text-xs text-gray-600 dark:text-neutral-300 sm:block hidden"
-            >{{ lastMessage.created_at_formatted }} trước</span
+            >{{ lastMessage?.created_at_formatted }} trước</span
           >
         </div>
 
         <div class="text-sm sm:block hidden">
-          <div
-            v-if="
-              pageConversation?.messages?.length ||
-              pageConversation?.page_messages?.length
-            "
-            class="flex gap-1 justify-between"
-          >
+          <div v-if="pageMessages?.length" class="flex gap-1 justify-between">
             <div class="flex gap-2 px-2 py-1 w-[50%]">
               <span
                 class="font-semibold"
-                v-if="lastMessage.created_by.id === userStore.user.id"
+                v-if="lastMessage?.created_by?.id === userStore.user.id"
                 >Bạn:
               </span>
               <span
                 v-else-if="
-                  lastMessage.created_by.id !== userStore.user.id &&
+                  lastMessage?.created_by?.id !== userStore.user.id &&
                   lastMessage?.seen_by
                     .map((obj) => obj.created_by.email)
                     .includes(userStore.user.email) === false
                 "
                 class="font-bold text-emerald-500 dark:text-neutral-200"
-                >{{ lastMessage.created_by.name }}:
+                >{{ lastMessage?.created_by?.name }}:
               </span>
               <span class="dark:text-neutral-300" v-else
-                >{{ lastMessage.created_by.name }}:
+                >{{ lastMessage?.created_by?.name }}:
               </span>
-              <div class="flex justify-between w-full">
+              <div
+                class="flex justify-between w-full"
+                v-if="pageMessages?.length"
+              >
                 <p
                   class="truncate font-bold text-emerald-500 dark:text-neutral-200"
-                  v-if="
-                    pageConversation.messages[
-                      pageConversation.messages.length - 1
-                    ]?.seen_by
-                      .map((obj) => obj.created_by.email)
-                      .includes(userStore.user.email) === false ||
-                    pageConversation.page_messages[
-                      pageConversation.page_messages.length - 1
-                    ]?.seen_by
-                      .map((obj) => obj.created_by.email)
-                      .includes(userStore.user.email) === false
-                  "
+                  v-if="checkSeen"
                 >
-                  {{ lastMessage.body }}
+                  {{ lastMessage?.body }}
                 </p>
                 <p class="truncate dark:text-neutral-300" v-else>
-                  {{ lastMessage.body }}
+                  {{ lastMessage?.body }}
                 </p>
               </div>
             </div>
             <span
               class="bg-emerald-500 w-3 h-3 rounded-full shadow-md"
-              v-if="
-                pageConversation.messages[
-                  pageConversation.messages.length - 1
-                ]?.seen_by
-                  .map((obj) => obj.created_by.email)
-                  .includes(userStore.user.email) === false ||
-                pageConversation.page_messages[
-                  pageConversation.page_messages.length - 1
-                ]?.seen_by
-                  .map((obj) => obj.created_by.email)
-                  .includes(userStore.user.email) === false
-              "
+              v-if="checkSeen"
             ></span>
             <span
-              v-if="seen && lastMessage?.created_by?.id === userStore.user.id"
+              v-if="checkSeen && lastMessage?.created_by?.id === userStore.user.id"
             >
               <img
                 :src="pageConversation?.page?.get_avatar"
@@ -240,33 +215,29 @@ export default (await import("vue")).defineComponent({
     };
   },
 
-  data(){
+  data() {
     return {
-        messages: [],
-        pageMessages: [],
-    }
+      pageMessages: this.pageConversation?.page_messages,
+    };
   },
 
   computed: {
-    allMessages(){
-        return this.messages?.concat(this.pageMessages)
-    },
     lastMessage() {
-      return this.allMessages[
-        this.allMessages?.length - 1
-      ];
+      return this.pageConversation?.page_messages?.length
+        ? this.pageConversation?.page_messages[
+            this.pageConversation?.page_messages?.length - 1
+          ]
+        : {};
     },
-    seen() {
-      return this.lastMessage?.seen_by
-        ?.map((user) => user?.created_by?.id)
-        .includes(this.pageConversation?.page?.id);
+    checkSeen() {
+      return this.lastMessage?.seen_by_page
+        ? this.lastMessage?.seen_by_page.id === this.pageConversation?.page?.id
+        : this.lastMessage?.seen_by.id === this.pageConversation?.user?.id;
     },
   },
 
   mounted() {
     this.getPusher();
-    this.messages = this.pageConversation.messages
-    this.pageMessages = this.pageConversation.page_messages
   },
 
   methods: {
@@ -276,9 +247,9 @@ export default (await import("vue")).defineComponent({
       const pusher = new Pusher(import.meta.env.VITE_PUSHER_KEY, {
         cluster: `${import.meta.env.VITE_PUSHER_CLUSTER}`,
       });
-      const channel = pusher.subscribe(`${this.conversation.id}`);
+      const channel = pusher.subscribe(`${this.pageConversation?.id}`);
       channel.bind("message:new", (data) => {
-        this.conversation?.messages.push(JSON.parse(data.message));
+        this.pageMessages?.push(JSON.parse(data.message));
       });
       channel.bind("seen_message", (data) => {
         this.lastMessage = JSON.parse(data.message);

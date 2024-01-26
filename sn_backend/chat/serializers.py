@@ -3,7 +3,7 @@ from rest_framework import serializers
 from account.serializers import UserSerializer
 from page.serializers import PageSerializer
 
-from .models import Conversation, GroupConversation, ConversationMessage, GroupConversationMessage, SeenUser, SeenPage, MessageAttachment, PollOption, GroupPoll, GroupNotification, PageMessageAttachment
+from .models import Conversation, GroupConversation, ConversationMessage, GroupConversationMessage, SeenUser, SeenPage, MessageAttachment, PollOption, GroupPoll, GroupNotification, PageMessageAttachment, PageConversationMessage
 
 class SeenUserSerializer(serializers.ModelSerializer):
     created_by = UserSerializer(read_only=True)
@@ -47,8 +47,8 @@ class PageConversationMessageSerializer(serializers.ModelSerializer):
     attachments = MessageAttachmentSerializer(read_only=True, many=True)
     page_attachments = PageMessageAttachmentSerializer(read_only=True, many=True)
     class Meta:
-        model = ConversationMessage
-        fields = ('id', 'sent_to', 'sent_to_page', 'attachments', 'created_by', 'created_by_page', 'created_at_formatted', 'body', 'seen_by',)
+        model = PageConversationMessage
+        fields = ('id', 'sent_to', 'sent_to_page', 'attachments', 'page_attachments', 'created_by', 'created_by_page', 'created_at_formatted', 'body', 'seen_by','seen_by_page',)
         
 class GroupConversationMessageSerializer(serializers.ModelSerializer):
     sent_to = UserSerializer(read_only=True)
@@ -70,11 +70,10 @@ class ConversationSerializer(serializers.ModelSerializer):
 class PageConversationSerializer(serializers.ModelSerializer):
     user = UserSerializer(read_only=True)
     page = PageSerializer(read_only=True)
-    messages = ConversationMessageSerializer(read_only=True, many=True)
     page_messages = PageConversationMessageSerializer(read_only=True, many=True)
     class Meta:
         model = Conversation
-        fields = ('id', 'user', 'modified_at_formatted','messages','page', 'page_messages',)
+        fields = ('id', 'user', 'modified_at_formatted','page', 'page_messages',)
 
 class GroupConversationSerializer(serializers.ModelSerializer):
     admin = UserSerializer(read_only=True)

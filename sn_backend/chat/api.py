@@ -54,9 +54,8 @@ def conversation_detail(request, pk):
     return JsonResponse(serializer.data, safe=False)
 
 @api_view(['GET'])
-def page_conversation_detail(request, pk, id):
-    current_page = Page.objects.get(id=id)
-    page_conversation = Conversation.objects.filter(page=current_page).get(pk=pk)
+def page_conversation_detail(request, pk):
+    page_conversation = PageConversation.objects.filter(user=request.user).get(pk=pk)
     serializer = PageConversationSerializer(page_conversation)
         
     return JsonResponse(serializer.data, safe=False)
@@ -291,27 +290,24 @@ def page_conversation_send_message(request, pk, id):
         return JsonResponse({'error': 'add something here later!...'})
     
 @api_view(['POST'])
-def user_conversation_send_message_to_page(request, pk, id):
-    user = User.objects.get(id=id)
-    form = MessageForm(request.POST)
+def user_conversation_send_message_to_page(request, id):
+    form = PageMessageForm(request.POST)
     attachment = None
-    attachment_form = MessageForm(request.POST, request.FILES)
+    attachment_form = AttachmentForm(request.POST, request.FILES)
     
-    page_conversation = PageConversation.objects.filter(user=user).get(id=pk)
-    seenUser = seenUser.objects.create(created_by=user)
+    page_conversation = PageConversation.objects.filter(user=request.user).get(id=id)
+    seenUser = SeenUser.objects.create(created_by=request.user)
     
     if attachment_form.is_valid():
         attachment = attachment_form.save(commit=False)
-        attachment.created_by = user
+        attachment.created_by = request.user
         attachment.save()
 
     if form.is_valid():
         message = form.save(commit=False)
-        message.created_by = user
-        message.page_conversation = page_conversation
-
-        sent_to = page_conversation.page
-        message.sent_to = sent_to
+        message.created_by = request.user
+        message.conversation = page_conversation
+        message.sent_to_page = page_conversation.page
                 
         message.save()
         
@@ -319,16 +315,16 @@ def user_conversation_send_message_to_page(request, pk, id):
             message.attachments.add(attachment)
             message.save()
         
-        message.seen_by.add(seenUser)
+        message.seen_by.set([seenUser])
         message.save()
         
-        serializer = ConversationMessageSerializer(message)
+        serializer = PageConversationMessageSerializer(message)
         
         serializer_data = serializer.data
 
         json_data = json.dumps(serializer_data)
         
-        pusher_client.trigger(f'{str(pk)}', 'user_page_message:new', {'message': json_data})
+        pusher_client.trigger(f'{str(id)}', 'user_page_message:new', {'message': json_data})
         
         return JsonResponse(serializer.data, safe=False)
     else:

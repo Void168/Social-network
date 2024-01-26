@@ -10,6 +10,7 @@ import PostView from "../views/PostView.vue";
 import PagePostView from "../views/PagePostView.vue";
 import ChatView from "../views/ChatView.vue";
 import GroupChatView from "../views/GroupChatView.vue";
+import PageChatView from "../views/PageChatView.vue";
 import TrendView from "../views/TrendView.vue";
 import EditProfileView from "../views/EditProfileView.vue";
 import EditPasswordView from "../views/EditPasswordView.vue";
@@ -92,6 +93,11 @@ const router = createRouter({
       path: "/group-chat/:id",
       name: "groupConversation",
       component: GroupChatView,
+    },
+    {
+      path: "/page-chat/:id",
+      name: "pageConversation",
+      component: PageChatView,
     },
     {
       path: "/profile/edit",

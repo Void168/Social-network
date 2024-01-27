@@ -1,4 +1,5 @@
 from django.http import JsonResponse
+import sys
 from datetime import datetime
 from .pusher import pusher_client
 import json
@@ -55,7 +56,7 @@ def conversation_detail(request, pk):
 
 @api_view(['GET'])
 def page_conversation_detail(request, pk):
-    page_conversation = PageConversation.objects.filter(user=request.user).get(pk=pk)
+    page_conversation = PageConversation.objects.get(pk=pk)
     serializer = PageConversationSerializer(page_conversation)
         
     return JsonResponse(serializer.data, safe=False)
@@ -127,9 +128,9 @@ def page_conversation_get_or_create(request, user_pk, id):
 
         page_conversation.save()
 
-    serializer = PageConversationSerializer(page_conversation)
+        serializer = PageConversationSerializer(page_conversation)
     
-    return JsonResponse(serializer.data, safe=False)
+        return JsonResponse(serializer.data, safe=False)
 
 @api_view(['GET'])
 def conversation_get(request, pk):
@@ -250,10 +251,10 @@ def page_conversation_send_message(request, pk, id):
     page = Page.objects.get(id=id)
     form = PageMessageForm(request.POST)
     page_attachment = None
-    page_attachment_form = PageMessageForm(request.POST, request.FILES)
+    page_attachment_form = PageAttachmentForm(request.POST, request.FILES)
     
     page_conversation = PageConversation.objects.filter(page=page).get(id=pk)
-    seenPage = seenPage.objects.create(created_by=page)
+    seenPage = SeenPage.objects.create(created_by=page)
     
     if page_attachment_form.is_valid():
         page_attachment = page_attachment_form.save(commit=False)
@@ -262,8 +263,8 @@ def page_conversation_send_message(request, pk, id):
 
     if form.is_valid():
         page_message = form.save(commit=False)
-        page_message.created_by = page
-        page_message.page_conversation = page_conversation
+        page_message.created_by_page = page
+        page_message.conversation = page_conversation
 
         sent_to = page_conversation.user
         page_message.sent_to = sent_to
@@ -274,7 +275,7 @@ def page_conversation_send_message(request, pk, id):
             page_message.page_attachments.add(page_attachment)
             page_message.save()
         
-        page_message.seen_by.add(seenPage)
+        page_message.seen_by_page = seenPage
         page_message.save()
         
         serializer = PageConversationMessageSerializer(page_message)
@@ -315,16 +316,17 @@ def user_conversation_send_message_to_page(request, id):
             message.attachments.add(attachment)
             message.save()
         
-        message.seen_by.set([seenUser])
+        message.seen_by = seenUser
         message.save()
         
         serializer = PageConversationMessageSerializer(message)
         
         serializer_data = serializer.data
+        print(sys.getsizeof(serializer_data))
 
         json_data = json.dumps(serializer_data)
         
-        pusher_client.trigger(f'{str(id)}', 'user_page_message:new', {'message': json_data})
+        pusher_client.trigger(f'{str(id)}', 'page_message:new', {'message': json_data})
         
         return JsonResponse(serializer.data, safe=False)
     else:
@@ -609,9 +611,9 @@ def set_seen(request, pk):
         return JsonResponse({'message': 'conversation not exists'})
 
 @api_view(['POST'])
-def user_set_seen_page_conversation(request, pk, id):
+def user_set_seen_page_conversation(request, pk):
     user = request.user
-    page_conversation = PageConversation.objects.filter(page=page).get(pk=pk)
+    page_conversation = PageConversation.objects.filter(user=user).get(pk=pk)
     
     seenUser = SeenUser.objects.create(created_by=user)
         
@@ -619,7 +621,7 @@ def user_set_seen_page_conversation(request, pk, id):
     
     if page_messages:
         for page_message in page_messages:
-            if not page_messages.seen_by.all().filter(created_by=user):
+            if not page_message.seen_by == user:
                 page_message.seen_by = seenUser
                 page_message.save()
     
@@ -640,11 +642,11 @@ def page_set_seen_page_conversation(request, pk, id):
     
     seenPage = SeenPage.objects.create(created_by=page)
         
-    page_messages = page_conversation.page_messages.exclude(created_by=page)
+    page_messages = page_conversation.page_messages.exclude(created_by_page=page)
     
     if page_messages:
         for page_message in page_messages:
-            if not page_messages.seen_by_page.all().filter(created_by=page):
+            if not page_message.seen_by_page == page:
                 page_message.seen_by_page = seenPage
                 page_message.save()
     

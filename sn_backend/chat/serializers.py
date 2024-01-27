@@ -1,18 +1,18 @@
 from rest_framework import serializers
 
-from account.serializers import UserSerializer
-from page.serializers import PageSerializer
+from account.serializers import UserSerializer, UserLessSerializer
+from page.serializers import PageSerializer, PageLessSerializer
 
 from .models import Conversation, GroupConversation, ConversationMessage, GroupConversationMessage, SeenUser, SeenPage, MessageAttachment, PollOption, GroupPoll, GroupNotification, PageMessageAttachment, PageConversationMessage
 
 class SeenUserSerializer(serializers.ModelSerializer):
-    created_by = UserSerializer(read_only=True)
+    created_by = UserLessSerializer(read_only=True)
     class Meta:
         model = SeenUser
         fields = ('id', 'created_by', 'created_at_formatted', 'created_at',)
         
 class SeenPageSerializer(serializers.ModelSerializer):
-    created_by = PageSerializer(read_only=True)
+    created_by = PageLessSerializer(read_only=True)
     class Meta:
         model = SeenPage
         fields = ('id', 'created_by', 'created_at_formatted', 'created_at',)
@@ -38,12 +38,12 @@ class ConversationMessageSerializer(serializers.ModelSerializer):
         fields = ('id', 'sent_to', 'attachments', 'created_by', 'created_at_formatted', 'body', 'seen_by',)
         
 class PageConversationMessageSerializer(serializers.ModelSerializer):
-    sent_to = UserSerializer(read_only=True)
-    sent_to_page = PageSerializer(read_only=True)
-    created_by = UserSerializer(read_only=True)
-    created_by_page = PageSerializer(read_only=True)
+    sent_to = UserLessSerializer(read_only=True)
+    sent_to_page = PageLessSerializer(read_only=True)
+    created_by = UserLessSerializer(read_only=True)
+    created_by_page = PageLessSerializer(read_only=True)
     seen_by = SeenUserSerializer(read_only=True)
-    seen_by_page = SeenPageSerializer(read_only=True, many=True)
+    seen_by_page = SeenPageSerializer(read_only=True)
     attachments = MessageAttachmentSerializer(read_only=True, many=True)
     page_attachments = PageMessageAttachmentSerializer(read_only=True, many=True)
     class Meta:
@@ -68,7 +68,7 @@ class ConversationSerializer(serializers.ModelSerializer):
         fields = ('id', 'users', 'modified_at_formatted','messages','theme',)
         
 class PageConversationSerializer(serializers.ModelSerializer):
-    user = UserSerializer(read_only=True)
+    user = UserLessSerializer(read_only=True)
     page = PageSerializer(read_only=True)
     page_messages = PageConversationMessageSerializer(read_only=True, many=True)
     class Meta:

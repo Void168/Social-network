@@ -17,7 +17,7 @@
               alt=""
               class="w-10 h-10 rounded-full"
             />
-            <span class="font-bold">{{ recentConversation?.page?.name }}</span>
+            <span class="font-bold">{{ pageStore.pageId ? recentConversation?.user?.name : recentConversation?.page?.name }}</span>
           </div>
           <span class="font-semibold md:text-base xm:text-sm xs:text-xs"
             >Đang hoạt động</span
@@ -43,7 +43,12 @@
             >
               <div
                 class="flex flex-col w-full mt-2 space-x-3 items-end max-w-md ml-auto justify-end gap-2"
-                v-if="message.created_by?.id == userStore.user.id"
+                v-if="
+                  (message.created_by?.id === userStore.user.id &&
+                    !pageStore.pageId) ||
+                  (message.created_by_page?.id === pageStore.pageId &&
+                    pageStore.pageId)
+                "
               >
                 <div class="flex gap-2">
                   <div>
@@ -79,7 +84,11 @@
                   </div>
                   <div class="flex-shrink-0 h-10 w-10 rounded-full bg-gray-300">
                     <img
-                      :src="message?.created_by?.get_avatar"
+                      :src="
+                        pageStore.pageId
+                          ? message?.created_by_page?.get_avatar
+                          : message?.created_by?.get_avatar
+                      "
                       alt=""
                       class="w-10 h-10 rounded-full"
                     />
@@ -87,51 +96,37 @@
                 </div>
                 <span
                   class="text-xs text-gray-500 dark:text-neutral-200 leading-none"
-                  v-if="
-                    message?.id === pageMessages[pageMessages?.length - 1].id &&
-                    !lastMessage?.seen_by_page.length &&
-                    lastMessage?.created_by.id === userStore.user.id && !pageStore.pageId
-                  "
+                  v-if="!checkPageSeen && !pageStore.pageId && lastMessage?.id === message.id"
                   >Đã gửi
-                  {{
-                    pageMessages[pageMessages?.length - 1].created_at_formatted
-                  }}
+                  {{ lastMessage?.created_at_formatted }}
                   trước</span
                 >
                 <span
                   class="text-xs text-gray-500 dark:text-neutral-200 leading-none"
-                  v-else-if="
-                    message?.id === pageMessages[pageMessages?.length - 1].id &&
-                    !lastMessage?.seen_by.length &&
-                    lastMessage?.created_by_page?.id === pageStore.pageId && pageStore.pageId
-                  "
+                  v-else-if="!checkUserSeen && pageStore.pageId && lastMessage?.id === message.id"
                   >Đã gửi
-                  {{
-                    pageMessages[pageMessages?.length - 1].created_at_formatted
-                  }}
+                  {{ lastMessage?.created_at_formatted }}
                   trước</span
                 >
                 <span
                   class="text-xs text-gray-500 dark:text-neutral-200 leading-none"
-                  v-else-if="
-                    message?.id === pageMessages[pageMessages?.length - 1].id &&
-                    lastMessage?.seen_by.length && lastMessage?.created_by.id === userStore.user.id && pageStore.pageId
-                  "
+                  v-else-if="checkUserSeen && lastMessage?.id === message.id && pageStore.pageId"
                   >Đã xem</span
                 >
                 <span
                   class="text-xs text-gray-500 dark:text-neutral-200 leading-none"
-                  v-else-if="
-                    message?.id === pageMessages[pageMessages?.length - 1]?.id &&
-                    lastMessage?.seen_by_page.length && lastMessage?.created_by_page?.id === pageStore.pageId && !pageStore.pageId
-                  "
+                  v-else-if="checkPageSeen && lastMessage?.id === message.id && !pageStore.pageId"
                   >Đã xem</span
                 >
               </div>
               <div class="flex gap-2" v-else>
                 <div class="flex-shrink-0 h-10 w-10 rounded-full bg-gray-300">
                   <img
-                    :src="message?.created_by?.get_avatar"
+                    :src="
+                      !pageStore.pageId
+                        ? message?.created_by_page?.get_avatar
+                        : message?.created_by?.get_avatar
+                    "
                     alt=""
                     class="w-10 h-10 rounded-full"
                   />
@@ -148,7 +143,21 @@
                   >
                     <p
                       class="bg-gray-200 p-3 rounded-r-lg rounded-bl-lg mt-1 dark:bg-slate-500 dark:border-slate-600 dark:text-neutral-200 max-w-[500px] text-sm font-semibold"
-                      v-if="message?.created_by !== chats[0]?.users[0].name"
+                      v-if="
+                        message?.created_by?.id !== pageStore.pageId &&
+                        pageStore.pageId
+                      "
+                    >
+                      <span class="block break-words whitespace-normal">
+                        {{ message.body }}
+                      </span>
+                    </p>
+                    <p
+                      class="bg-gray-200 p-3 rounded-r-lg rounded-bl-lg mt-1 dark:bg-slate-500 dark:border-slate-600 dark:text-neutral-200 max-w-[500px] text-sm font-semibold"
+                      v-else-if="
+                        message?.created_by?.id !== userStore.user.id &&
+                        !pageStore.pageId
+                      "
                     >
                       <span class="block break-words whitespace-normal">
                         {{ message.body }}
@@ -385,6 +394,18 @@ export default (await import("vue")).defineComponent({
     lastMessage() {
       return this.pageMessages[this.pageMessages?.length - 1];
     },
+    checkPageSeen() {
+      return (
+        this.lastMessage?.seen_by_page?.created_by?.id ===
+        this.recentConversation?.page?.id
+      );
+    },
+    checkUserSeen() {
+      return (
+        this.lastMessage?.seen_by?.created_by?.id ===
+        this.recentConversation?.user?.id
+      );
+    },
   },
   watch: {
     "$route.params.id": {
@@ -415,10 +436,12 @@ export default (await import("vue")).defineComponent({
         // },
         cluster: `${import.meta.env.VITE_PUSHER_CLUSTER}`,
       });
+
       const channel = pusher.subscribe(`${this.$route.params.id}`);
-      channel.bind("message:new", (data) => {
+      channel.bind("page_message:new", (data) => {
         this.pageMessages.push(JSON.parse(data.message));
       });
+
       // channel.bind("pusher:subscription_succeeded", function () {
       //   console.log("Auth went OK!");
       // });
@@ -444,18 +467,19 @@ export default (await import("vue")).defineComponent({
     },
     async getMessages() {
       await axios
-        .get(`/api/chat/page/${this.$route.params.id}/`)
+        .get(`/api/chat/page/${this.$route.params.id}/detail/`)
         .then((res) => {
-          // console.log(res.data);
-          this.recentConversation = res.data;
-          this.pageMessages = this.recentConversation.page_messages;
-          if (
-            this.recentConversation.user.id === this.userStore.user.id &&
-            !this.pageStore.pageId
-          ) {
-            this.receivedUser = this.recentConversation.page;
-          } else {
-            this.receivedUser = this.recentConversation.user;
+          if(res.data){
+            this.recentConversation = res.data;
+            this.pageMessages = this.recentConversation?.page_messages;
+            if (
+              this.recentConversation.user.id === this.userStore.user.id &&
+              !this.pageStore.pageId
+            ) {
+              this.receivedUser = this.recentConversation.page;
+            } else {
+              this.receivedUser = this.recentConversation.user;
+            }
           }
         })
         .catch((error) => {
@@ -493,21 +517,47 @@ export default (await import("vue")).defineComponent({
       }
       formData.append("body", this.body);
 
-      axios
-        .post(`/api/chat/send/page/${this.recentConversation.id}/`, formData, {
-          headers: {
-            "Content-Type": "multipart/form-data",
-          },
-        })
-        .then((res) => {
-          this.scrollToBottom();
-          this.$refs.file.value = null;
-          this.url = null;
-          this.body = "";
-        })
-        .catch((error) => {
-          console.log(error);
-        });
+      if (!this.pageStore.pageId) {
+        axios
+          .post(
+            `/api/chat/send/page/${this.recentConversation.id}/`,
+            formData,
+            {
+              headers: {
+                "Content-Type": "multipart/form-data",
+              },
+            }
+          )
+          .then((res) => {
+            this.scrollToBottom();
+            this.$refs.file.value = null;
+            this.url = null;
+            this.body = "";
+          })
+          .catch((error) => {
+            console.log(error);
+          });
+      } else {
+        axios
+          .post(
+            `/api/chat/page/${this.pageStore.pageId}/send/${this.recentConversation.id}/`,
+            formData,
+            {
+              headers: {
+                "Content-Type": "multipart/form-data",
+              },
+            }
+          )
+          .then((res) => {
+            this.scrollToBottom();
+            this.$refs.file.value = null;
+            this.url = null;
+            this.body = "";
+          })
+          .catch((error) => {
+            console.log(error);
+          });
+      }
     },
   },
   components: {

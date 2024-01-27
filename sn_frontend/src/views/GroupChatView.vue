@@ -175,9 +175,8 @@ export default (await import("vue")).defineComponent({
           console.log(error);
         });
     },
-    getMessages() {
-      setTimeout(() => {
-        axios
+    async getMessages() {
+        await axios
           .get(`/api/chat/group/${this.$route.params.id}/`)
           .then((res) => {
             this.activeConversation = res.data;
@@ -188,19 +187,16 @@ export default (await import("vue")).defineComponent({
           .catch((error) => {
             console.log(error);
           });
-      }, 1500);
     },
-    seenMessage() {
-      setTimeout(() => {
+    async seenMessage() {
         this.$emit("seenMessage", this.activeConversation?.id);
 
-        axios
+       await axios
           .post(`/api/chat/${this.activeConversation?.id}/group_set_seen/`)
           .then((res) => {
             // console.log(res.data);
           })
           .catch((error) => console.log(error));
-      }, 2500);
     },
     expandInfomation() {
       this.isExpand = !this.isExpand;

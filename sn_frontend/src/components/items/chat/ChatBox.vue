@@ -441,9 +441,8 @@ export default (await import("vue")).defineComponent({
       const objDiv = document.getElementById("chatview-container");
       objDiv.scrollTop = objDiv.scrollHeight;
     },
-    getMessages() {
-      setTimeout(() => {
-        axios
+    async getMessages() {
+        await axios
           .get(`/api/chat/${this.$route.params.id}/`)
           .then((res) => {
             this.recentConversation = res.data;
@@ -461,7 +460,6 @@ export default (await import("vue")).defineComponent({
           .catch((error) => {
             console.log(error);
           });
-      }, 1000);
     },
 
     Pick() {

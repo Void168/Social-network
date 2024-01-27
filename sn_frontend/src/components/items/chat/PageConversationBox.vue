@@ -1,8 +1,8 @@
 <template>
-  <div @click="$emit('seenMessage')">
+  <div @click="$emit('seenPageMessage')">
     <RouterLink
       class="flex justify-between cursor-pointer"
-      :to="{ name: 'pageConversation', params: { id: pageConversation.id } }"
+      :to="{ name: 'pageConversation', params: { id: pageConversation?.id } }"
     >
       <div
         class="w-full group relative flex flex-col gap-1 px-3 py-2 rounded-lg hover:bg-gray-200 dark:hover:bg-slate-500 duration-100"
@@ -44,8 +44,8 @@
                           name: pageStore.pageId ? 'page' : 'profile',
                           params: {
                             id: pageStore.pageId
-                              ? pageConversation.user.id
-                              : pageConversation.page.id,
+                              ? pageConversation?.user?.id
+                              : pageConversation?.page?.id,
                           },
                         }"
                       >
@@ -90,20 +90,13 @@
               class="xm:w-14 xm:h-14 h-10 w-10 rounded-full shadow-lg"
             />
             <p
-              class="text-xs font-bold dark:text-neutral-300 sm:block hidden"
-              v-if="!lastMessage?.seen_by.id === userStore.user.email"
+              class="text-sm font-bold dark:text-neutral-300 sm:block hidden"
             >
               {{
                 pageStore.pageId
                   ? pageConversation?.user?.name
                   : pageConversation?.page?.name
               }}
-            </p>
-            <p
-              v-else-if="pageConversation?.page?.id !== userStore.user.id"
-              class="text-sm dark:text-neutral-300 font-bold sm:block hidden"
-            >
-              {{ pageConversation?.page?.name }}
             </p>
           </div>
           <span
@@ -115,49 +108,69 @@
 
         <div class="text-sm sm:block hidden">
           <div v-if="pageMessages?.length" class="flex gap-1 justify-between">
-            <div class="flex gap-2 px-2 py-1 w-[50%]">
+            <div class="flex gap-2 px-2 py-1 w-full">
               <span
                 class="font-semibold"
-                v-if="lastMessage?.created_by?.id === userStore.user.id && !pageStore.pageId"
+                v-if="
+                  lastMessage?.created_by?.id === userStore.user.id &&
+                  !pageStore.pageId
+                "
                 >Bạn:
               </span>
               <span
+                class="font-semibold"
                 v-else-if="
-                  lastMessage?.created_by?.id !== userStore.user.id &&
-                  lastMessage?.seen_by
-                    .map((obj) => obj.created_by.email)
-                    .includes(userStore.user.email) === false
+                  lastMessage?.created_by_page?.id === pageStore.pageId &&
+                  pageStore.pageId
                 "
-                class="font-bold text-emerald-500 dark:text-neutral-200"
-                >{{ lastMessage?.created_by?.name }}:
+                >Bạn:
               </span>
-              <span class="dark:text-neutral-300" v-else
-                >{{ lastMessage?.created_by?.name }}:
+              <span
+                v-else-if="checkUserSeen"
+                class="font-bold text-emerald-500 dark:text-neutral-200 min-w-max"
+                >{{ lastMessage?.created_by_page ? lastMessage?.created_by_page?.name : lastMessage?.created_by?.name }}:
+              </span>
+              <span class="text-emerald-500 dark:text-neutral-300 min-w-max" v-else
+                >{{ lastMessage?.created_by_page ? lastMessage?.created_by_page?.name : lastMessage?.created_by?.name }}:
               </span>
               <div
                 class="flex justify-between w-full"
                 v-if="pageMessages?.length"
               >
                 <p
-                  class="truncate font-bold text-emerald-500 dark:text-neutral-200"
-                  v-if="!checkSeen"
+                  class="truncate text-emerald-500 dark:text-neutral-200"
+                  :class="!checkPageSeen && !pageStore.pageId || !checkUserSeen && pageStore.pageId ? 'font-bold' : ''"
                 >
-                  {{ lastMessage?.body }}
-                </p>
-                <p class="truncate dark:text-neutral-300" v-else>
                   {{ lastMessage?.body }}
                 </p>
               </div>
             </div>
             <span
               class="bg-emerald-500 w-3 h-3 rounded-full shadow-md"
-              v-if="!checkSeen"
+              v-if="!checkUserSeen && pageStore.pageId"
             ></span>
             <span
-              v-if="checkSeen && lastMessage?.created_by?.id === userStore.user.id"
+              class="bg-emerald-500 w-3 h-3 rounded-full shadow-md"
+              v-if="!checkPageSeen && !pageStore.pageId"
+            ></span>
+            <span
+              v-if="
+                checkPageSeen && !pageStore.pageId
+              "
             >
               <img
                 :src="pageConversation?.page?.get_avatar"
+                class="w-4 h-4 rounded-full"
+                alt="seen-avatar"
+              />
+            </span>
+            <span
+              v-if="
+                checkUserSeen && pageStore.pageId
+              "
+            >
+              <img
+                :src="pageConversation?.user?.get_avatar"
                 class="w-4 h-4 rounded-full"
                 alt="seen-avatar"
               />
@@ -229,11 +242,12 @@ export default (await import("vue")).defineComponent({
           ]
         : {};
     },
-    checkSeen() {
-      return this.lastMessage?.seen_by_page
-        ? this.lastMessage?.seen_by_page.id === this.pageConversation?.page?.id
-        : this.lastMessage?.seen_by.id === this.pageConversation?.user?.id;
+    checkUserSeen() {
+      return this.lastMessage?.seen_by?.created_by?.id === this.pageConversation?.user?.id;
     },
+    checkPageSeen(){
+      return this.lastMessage?.seen_by_page?.created_by?.id === this.pageConversation?.page?.id
+    }
   },
 
   mounted() {
@@ -256,10 +270,10 @@ export default (await import("vue")).defineComponent({
       });
     },
     deleteConversation() {
-      this.$emit("deleteConversation", this.pageConversation.id);
+      this.$emit("deleteConversation", this.pageConversation?.id);
 
       axios
-        .delete(`/api/chat/${this.pageConversation.id}/delete/`)
+        .delete(`/api/chat/${this.pageConversation?.id}/delete/`)
         .then((res) => {
           setTimeout(() => {
             this.closeModal();

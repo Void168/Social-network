@@ -201,9 +201,9 @@ export default (await import("vue")).defineComponent({
           });
       } else {
         await axios
-          .get("/api/chat/page/")
+          .get(`/api/chat/page/${this.pageStore.pageId}/`)
           .then((res) => {
-            this.pageConversations = res.data.page_conversations;
+            this.pageConversations = res.data;
           })
           .catch((error) => {
             console.log(error);

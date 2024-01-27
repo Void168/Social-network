@@ -525,16 +525,14 @@ export default (await import("vue")).defineComponent({
         this.listMessages.push(JSON.parse(data.message));
       });
     },
-    getGroupNotifications() {
-      setTimeout(() => {
-        axios
+    async getGroupNotifications() {
+        await axios
           .get(`/api/chat/group/${this.$route.params.id}/get-notifications/`)
           .then((res) => {
             this.notifications = res.data;
           })
           .catch((error) => {
             console.log(error);
-          }, 1000);
       });
     },
     scrollToBottom() {
@@ -563,9 +561,8 @@ export default (await import("vue")).defineComponent({
           }, 1000);
       });
     },
-    getMessages() {
-      setTimeout(() => {
-        axios
+    async getMessages() {
+        await axios
           .get(`/api/chat/group/${this.$route.params.id}/`)
           .then((res) => {
             this.scrollToBottom();
@@ -585,7 +582,6 @@ export default (await import("vue")).defineComponent({
           .catch((error) => {
             console.log(error);
           });
-      }, 1000);
     },
     Pick() {
       document

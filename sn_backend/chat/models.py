@@ -112,8 +112,8 @@ class PageConversationMessage(models.Model):
     created_by = models.ForeignKey(User, related_name='user_sent_messages', on_delete=models.CASCADE, null=True)
     created_by_page = models.ForeignKey(Page, related_name='page_sent_messages', on_delete=models.CASCADE, null=True)
     is_latest_message = models.BooleanField(default=False)
-    seen_by = models.ManyToManyField(SeenUser, related_name='user_seen_message')
-    seen_by_page = models.ManyToManyField(SeenPage, related_name='page_seen_message')
+    seen_by = models.ForeignKey(SeenUser, related_name='user_seen_message', on_delete=models.CASCADE, null=True)
+    seen_by_page = models.ForeignKey(SeenPage, related_name='page_seen_message', on_delete=models.CASCADE, null=True)
     
     def created_at_formatted(self):
         return timesince(self.created_at)

@@ -1,6 +1,9 @@
 <template>
   <div class="max-w-7xl grid grid-cols-3 xl:mx-auto md:mx-8 mx-2 gap-4">
-    <CoverImage class="col-span-3 md:max-h-[400px] sm:max-h-[300px] xs:max-h-[200px] lg:max-h-max" v-bind:user="user" />
+    <CoverImage
+      class="col-span-3 md:max-h-[400px] sm:max-h-[300px] xs:max-h-[200px] lg:max-h-max"
+      v-bind:user="user"
+    />
     <div class="col-span-3 grid grid-cols-3 gap-4 relative">
       <div class="col-span-1 lg:block hidden"></div>
 
@@ -22,7 +25,10 @@
             <RouterLink :to="{ name: 'friends', params: { id: user.id } }">
               <span>Bạn bè</span>
             </RouterLink>
-            <div class="flex gap-2" v-if="user.id === userStore.user.id && !pageStore.pageId">
+            <div
+              class="flex gap-2"
+              v-if="user.id === userStore.user.id && !pageStore.pageId"
+            >
               <span
                 class="bg-rose-400 md:h-6 md:w-6 xs:h-4 xs:w-4 md:text-sm xs:text-xs text-center rounded-full font-semibold flex justify-center items-center"
                 >{{ friendshipRequest.length }}
@@ -68,7 +74,7 @@
             class="dark:text-neutral-200 bg-slate-200 dark:bg-slate-800 md:px-4 md:py-2 p-1 shadow-md rounded-md hover:bg-slate-300 dark:hover:bg-slate-900 transition"
           >
             <span class="md:block hidden">Thông tin liên lạc</span>
-            <PencilSquareIcon class="w-6 md:hidden"/>
+            <PencilSquareIcon class="w-6 md:hidden" />
           </button>
           <ContactModal
             :show="contactIsOpen"
@@ -162,7 +168,11 @@
               </li>
             </ul>
           </div>
-          <RouterLink v-if="user.id === userStore.user.id" to="/profile/edit" class="md:max-w-max xs:w-full">
+          <RouterLink
+            v-if="user.id === userStore.user.id"
+            to="/profile/edit"
+            class="md:max-w-max xs:w-full"
+          >
             <button class="mt-4 btn w-full">Chỉnh sửa chi tiết</button>
           </RouterLink>
           <button
@@ -320,25 +330,25 @@ import {
   MapPinIcon,
   HomeIcon,
   CameraIcon,
-  PencilSquareIcon
+  PencilSquareIcon,
 } from "@heroicons/vue/24/solid";
 
 import { RouterLink } from "vue-router";
 
 import { useUserStore } from "../stores/user";
 import { useToastStore } from "../stores/toast";
-import { usePageStore } from "../stores/page" 
+import { usePageStore } from "../stores/page";
 
 export default {
   setup() {
     const userStore = useUserStore();
     const toastStore = useToastStore();
-    const pageStore = usePageStore()
+    const pageStore = usePageStore();
 
     return {
       userStore,
       toastStore,
-      pageStore
+      pageStore,
     };
   },
   name: "FeedView",
@@ -439,7 +449,7 @@ export default {
       axios
         .get(`/api/user-info/${this.$route.params.id}`)
         .then((res) => {
-          console.log(res.data)
+          console.log(res.data);
           this.partnerId = res.data.user.partner;
           this.getPartnerInfo();
         })
@@ -476,14 +486,27 @@ export default {
     },
 
     sendDirectMessage() {
-      axios
-        .get(`/api/chat/${this.$route.params.id}/get-or-create/`)
-        .then((res) => {
-          this.$router.push("/chat");
-        })
-        .catch((error) => {
-          console.log("error", error);
-        });
+      if (!this.pageStore.pageId) {
+        axios
+          .get(`/api/chat/${this.$route.params.id}/get-or-create/`)
+          .then((res) => {
+            this.$router.push("/chat");
+          })
+          .catch((error) => {
+            console.log("error", error);
+          });
+      } else {
+        axios
+          .get(
+            `/api/chat/${this.$route.params.id}/get-or-create/page/${this.pageStore.pageId}/`
+          )
+          .then((res) => {
+            this.$router.push("/chat");
+          })
+          .catch((error) => {
+            console.log("error", error);
+          });
+      }
     },
     sendFriendshipRequest() {
       axios
@@ -525,7 +548,7 @@ export default {
     },
 
     getFeed() {
-      if(!this.pageStore.pageId){
+      if (!this.pageStore.pageId) {
         axios
           .get(`/api/posts/profile/${this.$route.params.id}/`)
           .then((res) => {
@@ -535,7 +558,7 @@ export default {
             this.can_send_friendship_request =
               res.data.can_send_friendship_request;
             this.posts = res.data.posts.slice(0, this.PostToShow);
-  
+
             // console.log(res.data);
           })
           .catch((error) => {
@@ -543,7 +566,9 @@ export default {
           });
       } else {
         axios
-          .get(`/api/posts/profile/${this.$route.params.id}/${this.pageStore.pageId}/`)
+          .get(
+            `/api/posts/profile/${this.$route.params.id}/${this.pageStore.pageId}/`
+          )
           .then((res) => {
             // console.log(res.data);
             this.postsList = res.data.posts;
@@ -551,7 +576,7 @@ export default {
             this.can_send_friendship_request =
               res.data.can_send_friendship_request;
             this.posts = res.data.posts.slice(0, this.PostToShow);
-  
+
             // console.log(res.data);
           })
           .catch((error) => {

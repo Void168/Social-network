@@ -8,10 +8,10 @@
         class="bg-white border overflow-y-scroll scrollbar-corner-slate-200 scrollbar-thin scrollbar-thumb-slate-400 scrollbar-track-slate-800 border-b border-gray-200 dark:bg-slate-600 dark:border-slate-700 dark:text-neutral-200 rounded-lg px-2"
       >
         <h3 class="sm:text-xl p-3 xm:block hidden sm:text-left text-center">
-          Đoạn hội thoại ({{ conversations.length }})
+          Đoạn hội thoại ({{ pageStore.pageId ? pageConversations.length : conversations.length }})
         </h3>
         <div class="flex justify-center items-center xm:hidden p-3">
-          <UserIcon class="w-6" /> ({{ conversations.length }})
+          <UserIcon class="w-6" /> ({{ pageStore.pageId ? pageConversations.length : conversations.length }})
         </div>
 
         <div class="relative">
@@ -26,13 +26,16 @@
             class="w-full my-2 sm:py-2 sm:px-8 xs:py-1 xs:px-6 border border-gray-200 dark:bg-slate-700 dark:border-slate-800 dark:text-neutral-200 rounded-2xl sm:text-base xs:text-sm"
           />
         </div>
-        <div
-          v-for="conversation in conversations"
-          v-bind:key="conversation.id"
-        >
-          <ConversationBox :conversation="conversation" />
+        <div class="flex flex-col bg-white dark:bg-slate-600 dark:text-neutral-200 rounded-lg px-2" v-if="!pageStore.pageId">
+          <div
+            v-for="conversation in conversations"
+            v-bind:key="conversation.id"
+          >
+            <ConversationBox :conversation="conversation" v-if="!pageStore.pageId"/>
+          </div>
         </div>
         <div
+          v-if="!pageStore.pageId"
           class="flex flex-col bg-white dark:bg-slate-600 dark:text-neutral-200 rounded-lg px-2"
         >
           <h3 class="text-xl p-3 sm:block hidden">
@@ -67,18 +70,21 @@
             />
           </div>
         </div>
-        <h3 class="sm:text-xl p-3 xm:block hidden sm:text-left text-center">
-          Đoạn hội thoại trang ({{ pageConversations.length }})
-        </h3>
-        <div class="flex justify-center items-center xm:hidden p-3">
-          <UserIcon class="w-6" /> ({{ conversations.length }})
-        </div>
-
         <div
-          v-for="pageConversation in pageConversations"
-          v-bind:key="pageConversation.id"
-        >
-          <PageConversationBox :pageConversation="pageConversation"/>
+          class="flex flex-col bg-white dark:bg-slate-600 dark:text-neutral-200 rounded-lg px-2">
+          <h3 class="sm:text-xl p-3 xm:block hidden sm:text-left text-center" v-if="!pageStore.pageId">
+            Đoạn hội thoại trang ({{ pageConversations.length }})
+          </h3>
+          <div class="flex justify-center items-center xm:hidden p-3">
+            <UserIcon class="w-6" /> ({{ pageConversations.length }})
+          </div>
+  
+          <div
+            v-for="pageConversation in pageConversations"
+            v-bind:key="pageConversation.id"
+          >
+            <PageConversationBox :pageConversation="pageConversation"/>
+          </div>
         </div>
       </div>
     </div>
@@ -188,6 +194,15 @@ export default (await import("vue")).defineComponent({
           .get("/api/chat/")
           .then((res) => {
             this.conversations = res.data.conversations;
+            this.pageConversations = res.data.page_conversations;
+          })
+          .catch((error) => {
+            console.log(error);
+          });
+      } else {
+        await axios
+          .get("/api/chat/page/")
+          .then((res) => {
             this.pageConversations = res.data.page_conversations;
           })
           .catch((error) => {

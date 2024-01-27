@@ -101,7 +101,7 @@
             </p>
             <p
               v-else-if="pageConversation?.page?.id !== userStore.user.id"
-              class="text-sm dark:text-neutral-300 font-semibold sm:block hidden"
+              class="text-sm dark:text-neutral-300 font-bold sm:block hidden"
             >
               {{ pageConversation?.page?.name }}
             </p>
@@ -118,7 +118,7 @@
             <div class="flex gap-2 px-2 py-1 w-[50%]">
               <span
                 class="font-semibold"
-                v-if="lastMessage?.created_by?.id === userStore.user.id"
+                v-if="lastMessage?.created_by?.id === userStore.user.id && !pageStore.pageId"
                 >Bạn:
               </span>
               <span
@@ -140,7 +140,7 @@
               >
                 <p
                   class="truncate font-bold text-emerald-500 dark:text-neutral-200"
-                  v-if="checkSeen"
+                  v-if="!checkSeen"
                 >
                   {{ lastMessage?.body }}
                 </p>
@@ -151,7 +151,7 @@
             </div>
             <span
               class="bg-emerald-500 w-3 h-3 rounded-full shadow-md"
-              v-if="checkSeen"
+              v-if="!checkSeen"
             ></span>
             <span
               v-if="checkSeen && lastMessage?.created_by?.id === userStore.user.id"

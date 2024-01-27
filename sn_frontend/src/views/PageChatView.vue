@@ -176,7 +176,6 @@
         //     // console.log(res.data);
         //   })
         //   .catch((error) => console.log(error));
-        console.log('hello')
       },
       async seenGroupMessage() {
         this.$emit("seenMessage", this.activeConversation.id);

@@ -446,7 +446,7 @@ export default (await import("vue")).defineComponent({
       await axios
         .get(`/api/chat/page/${this.$route.params.id}/`)
         .then((res) => {
-          console.log(res.data);
+          // console.log(res.data);
           this.recentConversation = res.data;
           this.pageMessages = this.recentConversation.page_messages;
           if (

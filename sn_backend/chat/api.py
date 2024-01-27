@@ -32,7 +32,7 @@ def conversation_list(request):
 @api_view(['GET'])
 def page_conversation_list(request, id):
     current_page = Page.objects.get(id=id)
-    page_conversations = PageConversation.objects.filter(users__in=list([current_page]))
+    page_conversations = PageConversation.objects.filter(page=current_page)
     
     serializer = PageConversationSerializer(page_conversations, many=True)
         
@@ -607,9 +607,34 @@ def set_seen(request, pk):
         return JsonResponse({'message': serializer.data})
     else:
         return JsonResponse({'message': 'conversation not exists'})
+
+@api_view(['POST'])
+def user_set_seen_page_conversation(request, pk, id):
+    user = request.user
+    page_conversation = PageConversation.objects.filter(page=page).get(pk=pk)
+    
+    seenUser = SeenUser.objects.create(created_by=user)
+        
+    page_messages = page_conversation.page_messages.exclude(created_by=user)
+    
+    if page_messages:
+        for page_message in page_messages:
+            if not page_messages.seen_by.all().filter(created_by=user):
+                page_message.seen_by = seenUser
+                page_message.save()
+    
+        serializer = PageConversationMessageSerializer(page_messages, many=True)
+        serializer_data = serializer.data[-1]
+        json_data = json.dumps(serializer_data)
+            
+        pusher_client.trigger(str(pk), 'page_seen_message', {'message': json_data})
+                
+        return JsonResponse({'message': serializer.data})
+    else:
+        return JsonResponse({'message': 'conversation not exists'})
     
 @api_view(['POST'])
-def page_set_seen(request, pk, id):
+def page_set_seen_page_conversation(request, pk, id):
     page = Page.objects.get(id=id)
     page_conversation = PageConversation.objects.filter(page=page).get(pk=pk)
     
@@ -620,8 +645,8 @@ def page_set_seen(request, pk, id):
     if page_messages:
         for page_message in page_messages:
             if not page_messages.seen_by_page.all().filter(created_by=page):
-                message.seen_by_page.add(seenPage)
-                message.save()
+                page_message.seen_by_page = seenPage
+                page_message.save()
     
         serializer = PageConversationMessageSerializer(page_messages, many=True)
         serializer_data = serializer.data[-1]

@@ -5,6 +5,7 @@ from django.utils.timesince import timesince
 
 from account.models import User
 from page.models import Page
+from group.models import Group
 
 # Create your models here.
 
@@ -130,6 +131,7 @@ class PagePost(models.Model):
 class GroupPost(models.Model):
     id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
     body = models.TextField(blank=True, null=True)
+    group = models.ForeignKey(Group, related_name="group_own", on_delete=models.CASCADE, null=True)
     
     attachments = models.ManyToManyField(PostAttachment, blank=True)
     

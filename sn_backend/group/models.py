@@ -19,11 +19,13 @@ class Member(models.Model):
     id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
     information = models.ForeignKey(User, related_name="member_information", on_delete=models.CASCADE)
     date_join_group = models.DateTimeField(default=timezone.now)
+    last_access = models.DateTimeField(default=timezone.now)
     
 class PageMember(models.Model):
     id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
     information = models.ForeignKey(Page, related_name="page_member_information", on_delete=models.CASCADE)
     date_join_group = models.DateTimeField(default=timezone.now)
+    last_access = models.DateTimeField(default=timezone.now)
 
 class Group(models.Model):
     id= models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
@@ -31,8 +33,7 @@ class Group(models.Model):
     email = models.EmailField(blank=True, default='')
     name = models.CharField(blank=True, max_length=50)
     
-    avatar = models.ImageField(upload_to='avatars', blank=True, null=True)
-    cover_image = models.ImageField(upload_to='cover_images', blank=True, null=True)
+    cover_image = models.ImageField(upload_to='group_cover_images', blank=True, null=True)
     
     biography = models.CharField(blank=True, default='', max_length=255)
     

@@ -1,6 +1,6 @@
 <template>
   <div
-    class="dark:bg-slate-800 dark:text-neutral-200 h-screen grid lg:grid-cols-5 grid-cols-4 relative"
+    class="dark:bg-slate-800 dark:text-neutral-200 grid lg:grid-cols-5 grid-cols-4 relative"
   >
     <div
       class="col-span-1 lg:block hidden dark:bg-slate-800 bg-slate-200 sticky overflow-y-auto scrollbar-corner-slate-200 scrollbar-none hover:scrollbar-thin scrollbar-thumb-slate-400 scrollbar-track-slate-800"
@@ -39,19 +39,31 @@
             :class="activeTab === category.tab ? 'bg-slate-700' : ''"
           >
             <NewspaperIcon
-              class="w-10 p-2 bg-slate-200  rounded-full cursor-pointer duration-75"
+              class="w-10 p-2 bg-slate-200 rounded-full cursor-pointer duration-75"
               v-if="category.tab === 1"
-              :class="activeTab === category.tab ? 'dark:bg-emerald-500' : 'dark:bg-slate-600'"
+              :class="
+                activeTab === category.tab
+                  ? 'dark:bg-emerald-500'
+                  : 'dark:bg-slate-600'
+              "
             />
             <MapIcon
               class="w-10 p-2 bg-slate-200 rounded-full cursor-pointer duration-75"
               v-if="category.tab === 2"
-              :class="activeTab === category.tab ? 'dark:bg-emerald-500' : 'dark:bg-slate-600'"
+              :class="
+                activeTab === category.tab
+                  ? 'dark:bg-emerald-500'
+                  : 'dark:bg-slate-600'
+              "
             />
             <UserGroupIcon
               class="w-10 p-2 bg-slate-200 rounded-full cursor-pointer duration-75"
               v-if="category.tab === 3"
-              :class="activeTab === category.tab ? 'dark:bg-emerald-500' : 'dark:bg-slate-600'"
+              :class="
+                activeTab === category.tab
+                  ? 'dark:bg-emerald-500'
+                  : 'dark:bg-slate-600'
+              "
             />
             <h3 class="font-semibold">{{ category.name }}</h3>
           </li>
@@ -117,16 +129,54 @@
     </div>
 
     <div
-      class="lg:col-span-4 md:col-span-3 col-span-4 dark:bg-slate-900 bg-slate-200 flex flex-col relative h-screen"
+      class="lg:col-span-4 md:col-span-3 col-span-4 dark:bg-slate-900 bg-slate-200 flex flex-col relative items-center pt-6 py-12"
     >
-      Hello
+      <div v-if="activeTab === 1" class="w-[50%]">
+        <div>
+          <h3 class="font-semibold dark:text-neutral-400">Hoạt động gần đây</h3>
+          <div v-for="n in 3" :key="n">
+            <GroupPost />
+          </div>
+        </div>
+      </div>
+      <div v-if="activeTab === 2">
+        <div class="mb-4">
+          <h2 class="text-xl font-bold">Nhóm phổ biến ở gần bạn</h2>
+          <h4>Nhóm mà mọi người tại khu vực của bạn tham gia</h4>
+        </div>
+        <div class="grid grid-cols-4 gap-3">
+          <div v-for="n in 8" :key="n">
+            <DiscoverGroup />
+          </div>
+        </div>
+        <hr class="border-slate-600 my-8" />
+        <h2 class="text-xl font-bold my-8">Gợi ý khác</h2>
+        <div class="grid grid-cols-4 gap-3">
+          <div v-for="n in 8" :key="n">
+            <DiscoverGroup />
+          </div>
+        </div>
+      </div>
+      <div v-if="activeTab === 3" class="w-full px-12">
+        <div class="mb-4">
+          <h3 class="text-lg font-semibold mb-4">Tất cả các nhóm bạn đã tham gia (91)</h3>
+          <div class="grid grid-cols-3 gap-3 w-full">
+          <div v-for="n in 12" :key="n">
+            <YourGroup/>
+          </div>
+        </div>
+        </div>
+      </div>
     </div>
   </div>
 </template>
 
 <script>
 import { useToastStore } from "../stores/toast";
-import { ref } from "vue";
+import GroupPost from "../components/items/group/GroupPost.vue";
+import DiscoverGroup from "../components/items/group/DiscoverGroup.vue";
+import YourGroup from "../components/items/group/YourGroup.vue"
+
 import {
   Cog8ToothIcon,
   NewspaperIcon,
@@ -145,23 +195,26 @@ export default {
     UserGroupIcon,
     PlusIcon,
     MagnifyingGlassIcon,
+    GroupPost,
+    DiscoverGroup,
+    YourGroup,
   },
   setup() {
     const toastStore = useToastStore();
     const categories = [
-        {
-          tab: 1,
-          name: 'Bảng feed của bạn',
-        },
-        {
-          tab: 2,
-          name: 'Khám phá',
-        },
-        {
-          tab: 3,
-          name: 'Nhóm của bạn',
-        }
-      ]
+      {
+        tab: 1,
+        name: "Bảng feed của bạn",
+      },
+      {
+        tab: 2,
+        name: "Khám phá",
+      },
+      {
+        tab: 3,
+        name: "Nhóm của bạn",
+      },
+    ];
 
     return {
       toastStore,
@@ -169,16 +222,16 @@ export default {
     };
   },
 
-  data(){
-    return{
-      activeTab: 1
-    }
+  data() {
+    return {
+      activeTab: 1,
+    };
   },
 
   methods: {
-    getActiveTab(tab){
-      this.activeTab = tab
-    }
-  }
+    getActiveTab(tab) {
+      this.activeTab = tab;
+    },
+  },
 };
 </script>

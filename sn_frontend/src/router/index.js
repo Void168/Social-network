@@ -2,6 +2,7 @@ import { createRouter, createWebHistory } from "vue-router";
 import SignUpView from "../views/SignUpView.vue";
 import LoginView from "../views/LoginView.vue";
 import FeedView from "../views/FeedView.vue";
+import GroupView from "../views/GroupView.vue";
 import SearchView from "../views/SearchView.vue";
 import ProfileView from "../views/ProfileView.vue";
 import ProfileImagesView from "../views/ProfileImagesView.vue";
@@ -38,6 +39,11 @@ const router = createRouter({
       path: "/",
       name: "feed",
       component: FeedView,
+    },
+    {
+      path: "/groups",
+      name: "group",
+      component: GroupView,
     },
     {
       path: "/stories",

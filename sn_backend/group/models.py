@@ -4,6 +4,7 @@ from django.db import models
 from django.utils import timezone
 
 from account.models import User
+from page.models import Page
 # Create your models here.
 class Rule(models.Model):
     id= models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
@@ -13,6 +14,16 @@ class Rule(models.Model):
 class Question(models.Model):
     id= models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
     body = models.TextField(blank=True)
+    
+class Member(models.Model):
+    id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
+    information = models.ForeignKey(User, related_name="member_information", on_delete=models.CASCADE)
+    date_join_group = models.DateTimeField(default=timezone.now)
+    
+class PageMember(models.Model):
+    id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
+    information = models.ForeignKey(Page, related_name="page_member_information", on_delete=models.CASCADE)
+    date_join_group = models.DateTimeField(default=timezone.now)
 
 class Group(models.Model):
     id= models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
@@ -28,7 +39,8 @@ class Group(models.Model):
     admin = models.ForeignKey(User, related_name='group_admin', on_delete=models.CASCADE)
     moderators = models.ManyToManyField(User, related_name='group_moderators')
     
-    members = models.ManyToManyField(User, related_name='group_members')
+    members = models.ManyToManyField(Member, related_name='group_members')
+    page_members = models.ManyToManyField(PageMember, related_name='group_page_members')
     members_count = models.IntegerField(default=0)
     
     is_private_group = models.BooleanField(default=False)

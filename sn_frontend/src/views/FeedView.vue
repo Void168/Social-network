@@ -1,6 +1,6 @@
 <template>
   <div
-    class="grid lg:grid-cols-8 xs:grid-cols-3 gap-4 min-h-screen"
+    class="grid lg:grid-cols-8 xs:grid-cols-3 gap-4 min-h-screen relative"
     id="feed-frame"
   >
     <div class="col-span-2 lg:block hidden">
@@ -16,25 +16,37 @@
             class="flex gap-3 w-full items-center dark:hover:bg-slate-600 cursor-pointer px-4 py-2 rounded-xl"
           >
             <img
-              :src="pageStore.pageId ? pageStore.pageActive.get_avatar : userStore.user.avatar"
+              :src="
+                pageStore.pageId
+                  ? pageStore.pageActive.get_avatar
+                  : userStore.user.avatar
+              "
               alt=""
               class="w-12 h-12 rounded-full"
             />
             <h3 class="dark:text-white font-semibold">
-              {{pageStore.pageId ? pageStore.pageActive.name : userStore.user.name }}
+              {{
+                pageStore.pageId
+                  ? pageStore.pageActive.name
+                  : userStore.user.name
+              }}
             </h3>
           </li>
           <li
             v-for="nav in navigation.slice(0, navigationsShow)"
             :key="nav.icon"
-            class="flex gap-3 w-full items-center dark:hover:bg-slate-600 cursor-pointer px-4 py-2 rounded-xl"
           >
-            <img
-              :src="nav.icon"
-              alt=""
-              class="2xl:w-10 2xl:h-10 w-8 h-8 rounded-full"
-            />
-            <h3 class="dark:text-white font-semibold">{{ nav.name }}</h3>
+            <RouterLink
+              :to="nav.url"
+              class="flex gap-3 w-full items-center dark:hover:bg-slate-600 cursor-pointer px-4 py-2 rounded-xl"
+            >
+              <img
+                :src="nav.icon"
+                alt=""
+                class="2xl:w-10 2xl:h-10 w-8 h-8 rounded-full"
+              />
+              <h3 class="dark:text-white font-semibold">{{ nav.name }}</h3>
+            </RouterLink>
           </li>
           <li
             @click="clickLoadMoreNavigation"
@@ -128,9 +140,9 @@
       }"
       class="main-right ml-auto lg:col-span-2 2xl:w-[80%] sm:col-span-1 sm:block xs:hidden space-y-4 sticky w-full"
     >
-      <PeopleYouMayKnow v-if="!pageStore.pageId"/>
+      <PeopleYouMayKnow v-if="!pageStore.pageId" />
       <Trends />
-      <ChatContainer v-if="!pageStore.pageId"/>
+      <ChatContainer v-if="!pageStore.pageId" />
     </div>
   </div>
 </template>
@@ -153,6 +165,7 @@ import { useToastStore } from "../stores/toast";
 import { usePageStore } from "../stores/page";
 import navigation from "../data/navigationBar";
 import listGroups from "../data/listGroups";
+import { RouterLink } from "vue-router";
 
 export default {
   name: "FeedView",
@@ -166,16 +179,17 @@ export default {
     StoriesContainer,
     ChevronUpIcon,
     ChevronDownIcon,
+    RouterLink,
   },
 
   setup() {
     const userStore = useUserStore();
     const toastStore = useToastStore();
-    const pageStore = usePageStore()
+    const pageStore = usePageStore();
     return {
       userStore,
       toastStore,
-      pageStore
+      pageStore,
     };
   },
 
@@ -208,12 +222,14 @@ export default {
   methods: {
     async getFeed() {
       this.isLoading = true;
-      if(!this.pageStore?.pageId){
+      if (!this.pageStore?.pageId) {
         await axios
           .get("/api/posts/")
           .then((res) => {
             this.postsList = res.data.posts.concat(res.data.page_posts);
-            this.postsList.sort((a, b) => new Date(b.created_at) - new Date(a.created_at))
+            this.postsList.sort(
+              (a, b) => new Date(b.created_at) - new Date(a.created_at)
+            );
             this.posts = this.postsList.slice(0, this.PostToShow);
             this.isLoading = false;
           })
@@ -224,9 +240,9 @@ export default {
         await axios
           .get(`/api/posts/page/${this.pageStore.pageId}`)
           .then((res) => {
-            const posts = res.data.posts
-            const pagePosts = res.data.page_posts
-            this.postsList = posts.concat(pagePosts)
+            const posts = res.data.posts;
+            const pagePosts = res.data.page_posts;
+            this.postsList = posts.concat(pagePosts);
             this.posts = this.postsList.slice(0, this.PostToShow);
             this.isLoading = false;
           })

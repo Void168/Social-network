@@ -45,6 +45,7 @@ class Group(models.Model):
     members_count = models.IntegerField(default=0)
     
     is_private_group = models.BooleanField(default=False)
+    show_group = models.BooleanField(default=False)
     
     today_posts_count = models.IntegerField(default=0)
     

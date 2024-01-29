@@ -50,6 +50,7 @@
           v-model="privacy"
           :website="website"
           class="w-full"
+          :style="''"
         />
       </div>
       <button

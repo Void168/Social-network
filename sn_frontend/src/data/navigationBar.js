@@ -9,7 +9,7 @@ const navigation = [
   {
     name: "Nhóm",
     icon: "https://www.goodfreephotos.com/albums/vector-images/group-of-members-users-icon.png",
-    url: "/groups/feed"
+    url: "/groups"
   },
   {
     name: "Kỷ niệm",

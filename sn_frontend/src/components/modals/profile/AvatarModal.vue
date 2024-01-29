@@ -50,6 +50,7 @@
                   :privacies="privacies"
                   v-model="privacy"
                   class="text-left"
+                  :style="''"
                 />
               </div>
               <div

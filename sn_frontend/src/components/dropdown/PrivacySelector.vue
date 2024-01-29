@@ -2,9 +2,9 @@
   <Listbox v-model="selectedPrivacy">
     <div class="relative mt-1 flex justify-end min-w-max">
       <ListboxButton
-        class="relative flex justify-center w-full cursor-default rounded-lg font-semibold bg-gray-200 dark:bg-slate-800 dark:border-slate-700 dark:text-neutral-200 py-2 pl-3 pr-10 text-left shadow-md focus:outline-none focus-visible:border-indigo-500 focus-visible:ring-2 focus-visible:ring-white/75 focus-visible:ring-offset-2 focus-visible:ring-offset-orange-300 sm:text-sm"
+        class="relative flex justify-center w-full cursor-default rounded-lg font-semibold bg-gray-200 dark:bg-slate-800 dark:border-slate-700 dark:text-neutral-200 py-2 pl-3 pr-10 text-left focus:outline-none focus-visible:border-indigo-500 focus-visible:ring-2 focus-visible:ring-white/75 focus-visible:ring-offset-2 focus-visible:ring-offset-orange-300 sm:text-sm"
       >
-        <span :class="selectedPrivacy ? 'block truncate' : 'block truncate p-2'">{{ selectedPrivacy?.name }}</span>
+        <span class="block truncate">{{ selectedPrivacy?.name || privacies[0].name }}</span>
         <span
           class="pointer-events-none absolute inset-y-0 right-0 flex items-center pr-2"
         >
@@ -18,7 +18,8 @@
         leave-to-class="opacity-0"
       >
         <ListboxOptions
-          class="absolute z-50 mt-1 max-h-60 overflow-auto rounded-md bg-white dark:bg-slate-800 dark:border-slate-700 dark:text-neutral-200 py-1 text-base shadow-lg ring-1 ring-black/5 focus:outline-none sm:text-sm"
+          class="absolute z-50 mt-1 max-h-60 overflow-auto rounded-md bg-white dark:bg-slate-800 dark:text-neutral-200 py-1 text-base shadow-2xl ring-1 ring-black/5 focus:outline-none sm:text-sm"
+          :class=[style]
         >
           <ListboxOption
             v-slot="{ active, selected }"
@@ -87,10 +88,10 @@ export default {
     LockClosedIcon,
   },
   props: {
-    website: Object,
     privacies: Array,
     privacy: Object,
     selection: String,
+    style: String,
   },
 
   data() {

@@ -71,11 +71,16 @@
       </div>
       <div class="p-4">
         <button
+          @click="openCreateGroupModal"
           class="px-4 py-2 w-full flex items-center justify-center gap-2 bg-slate-300 dark:bg-emerald-700/50 dark:hover:bg-emerald-400/50 rounded-lg duration-75"
         >
           <PlusIcon class="w-6 text-emerald-300" />
           <h4 class="font-semibold text-emerald-300">Tạo nhóm mới</h4>
         </button>
+        <CreateGroupModal
+          @closeCreateGroupModal="closeCreateGroupModal"
+          :show="isOpen"
+        />
       </div>
       <hr class="border-slate-600 mx-4" />
       <div class="p-4">
@@ -159,12 +164,14 @@
       </div>
       <div v-if="activeTab === 3" class="w-full px-12">
         <div class="mb-4">
-          <h3 class="text-lg font-semibold mb-4">Tất cả các nhóm bạn đã tham gia (91)</h3>
+          <h3 class="text-lg font-semibold mb-4">
+            Tất cả các nhóm bạn đã tham gia (91)
+          </h3>
           <div class="grid grid-cols-3 gap-3 w-full">
-          <div v-for="n in 12" :key="n">
-            <YourGroup/>
+            <div v-for="n in 12" :key="n">
+              <YourGroup />
+            </div>
           </div>
-        </div>
         </div>
       </div>
     </div>
@@ -175,7 +182,9 @@
 import { useToastStore } from "../stores/toast";
 import GroupPost from "../components/items/group/GroupPost.vue";
 import DiscoverGroup from "../components/items/group/DiscoverGroup.vue";
-import YourGroup from "../components/items/group/YourGroup.vue"
+import YourGroup from "../components/items/group/YourGroup.vue";
+
+import CreateGroupModal from "../components/modals/group/CreateGroupModal.vue";
 
 import {
   Cog8ToothIcon,
@@ -198,6 +207,7 @@ export default {
     GroupPost,
     DiscoverGroup,
     YourGroup,
+    CreateGroupModal,
   },
   setup() {
     const toastStore = useToastStore();
@@ -225,12 +235,19 @@ export default {
   data() {
     return {
       activeTab: 1,
+      isOpen: false,
     };
   },
 
   methods: {
     getActiveTab(tab) {
       this.activeTab = tab;
+    },
+    openCreateGroupModal() {
+      this.isOpen = true;
+    },
+    closeCreateGroupModal() {
+      this.isOpen = false;
     },
   },
 };

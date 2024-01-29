@@ -51,6 +51,7 @@
           v-model="privacy"
           :phoneNumber="phoneNumber"
           class="w-full"
+          :style="''"
         />
       </div>
       <button

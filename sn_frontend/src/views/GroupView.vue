@@ -248,6 +248,11 @@ export default {
     closeCreateGroupModal() {
       this.isOpen = false;
     },
+    getYourGroups(){
+      if(this.activeTab === 3){
+        
+      }
+    }
   },
 };
 </script>

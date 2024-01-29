@@ -1,6 +1,6 @@
 <template>
   <TransitionRoot appear as="template">
-    <Dialog as="div" class="relative z-[100]">
+    <Dialog as="div" class="relative z-50">
       <TransitionChild
         as="template"
         enter="duration-300 ease-out"
@@ -140,7 +140,7 @@
                     :class="
                       isDisabled
                         ? 'dark:bg-slate-500'
-                        : 'dark:bg-emerald-500 hover:bg-emerald-400'
+                        : 'dark:bg-emerald-500 dark:hover:bg-emerald-400 duration-75'
                     "
                   >
                     Tạo
@@ -241,18 +241,18 @@ export default (await import("vue")).defineComponent({
 
   methods: {
     removeAll() {
-      this.body = "";
+      this.name = "";
+      this.isDeviceActive = false;
+      this.isPrivateGroup = false;
+      this.isShowGroup = true;
+      this.privacy = { name: "Công khai" };
+      this.showOption = { name: "Hiển thị" };
     },
     computerActive() {
       this.isDeviceActive = false;
     },
     deviceActive() {
       this.isDeviceActive = true;
-    },
-    submitForm() {
-      let formData = new FormData();
-
-      console.log("hello");
     },
     getPrivacyOption() {
       if (this.privacy.name === "Công khai") {
@@ -288,6 +288,37 @@ export default (await import("vue")).defineComponent({
             console.log(error);
           });
       }
+    },
+    submitForm() {
+      let formData = new FormData();
+
+      formData.append("name", this.name);
+      formData.append("is_private_group", this.isPrivateGroup);
+      formData.append("show_group", this.isShowGroup);
+
+      axios
+        .post("/api/group/create/", formData, {
+          headers: {
+            "Content-Type": "multipart/form-data",
+          },
+        })
+        .then((res) => {
+          console.log(res.data);
+          if (!res.data.error) {
+            this.toastStore.showToast(
+              3500,
+              "Tạo nhóm thành công.",
+              "bg-emerald-500 text-white"
+            );
+          }
+        }).catch((error) => {
+          this.toastStore.showToast(
+            3500,
+            "Tạo nhóm thất bại.",
+            "bg-rose-500 text-white"
+          );
+          console.log(error)
+        });
     },
   },
 });

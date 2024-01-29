@@ -3,7 +3,7 @@
     class="dark:text-slate-200 dark:bg-slate-700 rounded-lg gap-6 p-4 mx-auto"
     :class="isDeviceActive ? 'w-[40%]' : 'w-[70%]'"
   >
-    <div class="flex justify-between items-center w-full">
+    <div class="flex justify-between items-center w-full mb-4">
       <h2 class="text-lg font-semibold">Xem trước trên máy tính</h2>
       <div class="flex gap-3">
         <ComputerDesktopIcon
@@ -28,10 +28,7 @@
         "
       >
         <img
-          :src="
-            coverImageUrl ||
-            'https://th.bing.com/th/id/OIP.o1n4kgruF-5cDCCx7jNYKQHaEo?pid=ImgDet&rs=1'
-          "
+          src="@/assets/default-group-cover-image.jpg"
           alt="default-avatar"
           class="w-full h-full rounded-lg"
         />

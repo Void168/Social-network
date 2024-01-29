@@ -54,12 +54,6 @@ class Group(models.Model):
     
     created_at = models.DateTimeField(default=timezone.now)
     
-    def get_avatar(self):
-        if self.avatar:
-            return 'http://127.0.0.1:8000' + self.avatar.url
-        else: 
-            return 'https://cdn0.iconfinder.com/data/icons/avatar-1-2/512/group-512.png'
-    
     def get_cover_image(self):
         if self.cover_image:
             return 'http://127.0.0.1:8000' + self.cover_image.url

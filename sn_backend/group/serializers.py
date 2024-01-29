@@ -1,22 +1,39 @@
 from rest_framework import serializers
 
-from .models import Group, Rule, Question
-from account.serializers import UserSerializer
+from .models import Group, Rule, Question, Member, PageMember
+from account.serializers import UserSerializer, UserLessSerializer
+from page.serializers import PageSerializer 
 
 class QuestionSerializer(serializers.ModelSerializer):
-    model = Question
-    fields = ('body',)
+    class Meta:
+        model = Question
+        fields = ('body',)
 
 class RuleSerializer(serializers.ModelSerializer):
-    model = Rule
-    fields = ('name','body',)
+    class Meta:
+        model = Rule
+        fields = ('name','body',)
 
+class MemberSerializer(serializers.ModelSerializer):
+    information = UserLessSerializer(read_only=True)
+    class Meta:
+        model = Member
+        fields = ('id','information','date_join_group','last_access',)
+    
+class PageMemberSerializer(serializers.ModelSerializer):
+    model = PageMember
+    class Meta:
+        information = PageSerializer(read_only=True)
+        fields = ('id','information','date_join_group','last_access',)
+    
 class GroupSerializer(serializers.ModelSerializer):
+    members = MemberSerializer(read_only=True, many=True)
+    page_members = PageMemberSerializer(read_only=True, many=True)
+    admin = UserLessSerializer(read_only=True)
+    moderators = UserLessSerializer(read_only=True, many=True)
+    rules = RuleSerializer(read_only=True, many=True)
+    questions = QuestionSerializer(read_only=True, many=True)
+    
     class Meta:
         model = Group
-        members = UserSerializer(read_only=True, many=True)
-        admin = UserSerializer(read_only=True)
-        moderators = UserSerializer(read_only=True, many=True)
-        rules = RuleSerializer(read_only=True, many=True)
-        questions = QuestionSerializer(read_only=True, many=True)
-        fields = ('id', 'name', 'email', 'members','members_count','get_avatar','get_cover_image', 'created_at','admin','moderators', 'biography', 'is_private_group', 'today_posts_count', 'rules','questions',)
+        fields = ('id', 'name', 'email', 'members', 'page_members', 'members_count','get_cover_image', 'created_at','admin','moderators', 'biography', 'is_private_group', 'show_group', 'today_posts_count', 'rules','questions',)

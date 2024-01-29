@@ -33,7 +33,7 @@
             'https://th.bing.com/th/id/OIP.o1n4kgruF-5cDCCx7jNYKQHaEo?pid=ImgDet&rs=1'
           "
           alt="default-avatar"
-          class="w-full h-full"
+          class="w-full h-full rounded-lg"
         />
         <span
           v-if="!avatarUrl"

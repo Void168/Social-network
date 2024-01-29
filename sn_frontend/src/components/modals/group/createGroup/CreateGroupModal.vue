@@ -148,9 +148,16 @@
                 </div>
               </div>
               <div
-                class="lg:col-span-4 col-span-5 flex lg:flex-row flex-col items-center gap-6 lg:py-12 lg:pt-0 py-6"
+                class="lg:col-span-4 col-span-5 flex lg:flex-row flex-col items-center gap-6 w-full"
               >
-                Hello
+                <DisplayGroup
+                  :isDeviceActive="isDeviceActive"
+                  :name="name"
+                  :privacy="privacy"
+                  :showOption="showOption"
+                  @computerActive="computerActive"
+                  @deviceActive="deviceActive"
+                />
               </div>
             </DialogPanel>
           </TransitionChild>
@@ -162,8 +169,8 @@
 
 <script>
 import axios from "axios";
-import { useUserStore } from "../../../stores/user";
-import { useToastStore } from "../../../stores/toast";
+import { useUserStore } from "../../../../stores/user";
+import { useToastStore } from "../../../../stores/toast";
 import {
   TransitionRoot,
   TransitionChild,
@@ -176,9 +183,10 @@ import {
   GlobeAsiaAustraliaIcon,
   LockClosedIcon,
 } from "@heroicons/vue/24/solid";
-import MUILikedInput from "../../input/MUILikedInput.vue";
-import PrivacySelector from "../../dropdown/PrivacySelector.vue";
+import MUILikedInput from "../../../input/MUILikedInput.vue";
+import PrivacySelector from "../../../dropdown/PrivacySelector.vue";
 import Multiselect from "@vueform/multiselect";
+import DisplayGroup from "./DisplayGroup.vue";
 
 export default (await import("vue")).defineComponent({
   components: {
@@ -188,6 +196,7 @@ export default (await import("vue")).defineComponent({
     DialogPanel,
     DialogTitle,
     Multiselect,
+    DisplayGroup,
     XMarkIcon,
     MUILikedInput,
     PrivacySelector,
@@ -213,9 +222,10 @@ export default (await import("vue")).defineComponent({
       caption: "",
       name: "",
       isPrivateGroup: false,
-      isShowGroup: false,
-      privacy: {},
-      showOption: {},
+      isShowGroup: true,
+      isDeviceActive: false,
+      privacy: { name: "Công khai" },
+      showOption: { name: "Hiển thị" },
       privacies: [{ name: "Công khai" }, { name: "Riêng tư" }],
       showOptions: [{ name: "Hiển thị" }, { name: "Ẩn" }],
       value: [],
@@ -233,6 +243,12 @@ export default (await import("vue")).defineComponent({
     removeAll() {
       this.body = "";
     },
+    computerActive() {
+      this.isDeviceActive = false;
+    },
+    deviceActive() {
+      this.isDeviceActive = true;
+    },
     submitForm() {
       let formData = new FormData();
 
@@ -247,9 +263,9 @@ export default (await import("vue")).defineComponent({
     },
     getShowOption() {
       if (this.showOption.name === "Hiển thị") {
-        this.isShowGroup = false;
-      } else {
         this.isShowGroup = true;
+      } else {
+        this.isShowGroup = false;
       }
     },
     getValue(value) {

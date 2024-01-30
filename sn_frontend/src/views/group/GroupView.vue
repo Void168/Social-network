@@ -134,7 +134,7 @@
     </div>
 
     <div
-      class="lg:col-span-4 md:col-span-3 col-span-4 dark:bg-slate-900 bg-slate-200 flex flex-col relative items-center pt-6 py-12"
+      class="lg:col-span-4 md:col-span-3 col-span-4 dark:bg-slate-900 bg-slate-200 flex flex-col relative items-center pt-6 py-12 px-6"
     >
       <div v-if="activeTab === 1" class="w-[50%]">
         <div>
@@ -150,15 +150,15 @@
           <h4>Nhóm mà mọi người tại khu vực của bạn tham gia</h4>
         </div>
         <div class="grid grid-cols-4 gap-3">
-          <div v-for="n in 8" :key="n">
-            <DiscoverGroup />
+          <div v-for="discoverGroup in discoverGroups" :key="discoverGroup.id">
+            <DiscoverGroup :group="discoverGroup"/>
           </div>
         </div>
         <hr class="border-slate-600 my-8" />
         <h2 class="text-xl font-bold my-8">Gợi ý khác</h2>
         <div class="grid grid-cols-4 gap-3">
-          <div v-for="n in 8" :key="n">
-            <DiscoverGroup />
+          <div v-for="discoverGroup in discoverGroups" :key="discoverGroup.id">
+            <DiscoverGroup :group="discoverGroup"/>
           </div>
         </div>
       </div>
@@ -237,17 +237,32 @@ export default {
       activeTab: 1,
       isOpen: false,
       yourGroups: [],
+      discoverGroups: [],
     };
   },
 
   methods: {
     getActiveTab(tab) {
       this.activeTab = tab;
+      if (this.activeTab === 2) {
+        axios
+          .get("/api/group/discover/")
+          .then((res) => {
+            if(!res.data.message){
+              this.discoverGroups = res.data
+            }
+          })
+          .catch((error) => {
+            console.log(error);
+          });
+      }
       if (this.activeTab === 3) {
         axios
           .get("/api/group/your-groups/")
           .then((res) => {
-            this.yourGroups = res.data
+            if(!res.data.message){
+              this.yourGroups = res.data
+            }
           })
           .catch((error) => {
             console.log(error);

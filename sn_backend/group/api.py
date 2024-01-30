@@ -36,17 +36,74 @@ def create_group(request):
     
 @api_view(['GET'])
 def get_your_groups(request):
-    member = Member.objects.get(Q(information=request.user))
-    groups = Group.objects.filter(members__in=list([member]))
-    
-    serializer = GroupSerializer(groups, many=True)
+    try:
+        member = Member.objects.get(Q(information=request.user))
+        groups = Group.objects.filter(members__in=list([member]))
         
-    return JsonResponse(serializer.data, safe=False)
+        serializer = GroupSerializer(groups, many=True)
+            
+        return JsonResponse(serializer.data, safe=False)
+    except Member.DoesNotExist:
+        return JsonResponse({'message': 'No group found'})
 
 @api_view(['GET'])
 def get_group_detail(request, pk):
     group = Group.objects.get(pk=pk)
-    
-    serializer = GroupDetailSerializer(group)
+    try:
+        member = Member.objects.get(Q(information=request.user))
+        serializer = GroupDetailSerializer(group)
+        return JsonResponse(serializer.data, safe=False)
+    except Member.DoesNotExist:
+        serializer = GroupSerializer(group)
+        return JsonResponse(serializer.data, safe=False)
+
+@api_view(['GET'])
+def check_user_in_group(request, pk):
+    group = Group.objects.get(pk=pk)
+    members = Member.objects.filter(Q(information=request.user))
+    if members.count() > 0:
+        for member in members:
+            if member not in group.members.all():
+                return JsonResponse({'message': 'User not in the group'})
+            else:
+                return JsonResponse({'message': 'User joined the group'})
+    else:
+        return JsonResponse({'message': 'User not in the group'})
+
+@api_view(['GET'])
+def get_discover_groups(request):
+    try:
+        member = Member.objects.get(Q(information=request.user))
+        discover_groups = Group.objects.none()
+        friends = request.user.friends.all()
         
-    return JsonResponse(serializer.data, safe=False)
+        for friend in friends:
+            friend_member = Member.objects.get(Q(information=request.user))
+            discover_group = Group.objects.exclude(members__in=list([member])).filter(members__in=list([friend_member]))
+            discover_groups = discover_groups | discover_group
+        
+        serializer = GroupSerializer(discover_groups, many=True)
+        if discover_groups.count() > 0: 
+            return JsonResponse(serializer.data, safe=False)
+        else:
+            return JsonResponse({'message': 'No group found'})
+    except Member.DoesNotExist:
+        discover_groups =  Group.objects.none()
+        friends = request.user.friends.all()
+        friend_member = Member.objects.get(Q(information=friends[1]))
+        for friend in friends:
+            try:
+                friend_member = Member.objects.get(Q(information=friend))
+                discover_group = Group.objects.filter(members__in=list([friend_member]))
+                discover_groups = discover_groups | discover_group
+            except Member.DoesNotExist:
+                pass
+            
+        serializer = GroupSerializer(discover_groups, many=True)
+        
+        if discover_groups.count() > 0: 
+            return JsonResponse(serializer.data, safe=False)
+        else:
+            return JsonResponse({'message': 'No group found'})
+
+        

@@ -14,7 +14,7 @@
       </div>
       <div class="flex justify-between my-8">
         <div class="flex flex-col gap-2">
-          <h1 class="text-2xl">{{ group.name }}</h1>
+          <h1 class="text-2xl font-bold">{{ group.name }}</h1>
           <div class="flex items-center gap-2">
             <GlobeAsiaAustraliaIcon
               v-if="!group.is_private_group"
@@ -30,10 +30,11 @@
             :src="group?.admin?.get_avatar"
             alt=""
             class="w-8 h-8 rounded-full"
+            v-if="isUserInGroup"
           />
         </div>
         <div class="flex flex-col justify-end">
-          <div class="flex gap-4">
+          <div class="flex gap-4" v-if="isUserInGroup">
             <button
               class="flex items-center gap-1 px-4 py-2 font-semibold bg-emerald-500 hover:bg-emerald-400 rounded-lg duration-75"
             >
@@ -46,38 +47,48 @@
               Chia sẻ
             </button>
           </div>
+          <button
+              class="flex items-center gap-1 px-4 py-2 font-semibold bg-emerald-500 hover:bg-emerald-400 rounded-lg duration-75"
+              v-else
+            >
+              <UserPlusIcon class="w-4" />
+              Tham gia nhóm
+            </button>
         </div>
       </div>
       <hr class="border dark:border-slate-600 mx-4" />
       <div class="flex justify-between items-center">
-        <div class="flex items-center">
+        <div class="flex items-center mx-4">
           <RouterLink
             :to="{ name: 'groupdetail', params: { id: group?.id } }"
-            class="font-medium p-4"
+            class="font-medium p-4 flex justify-center"
           >
             Thảo luận
           </RouterLink>
           <RouterLink
-            :to="{ name: 'groupdetail', params: { id: group?.id } }"
-            class="font-medium p-4"
+            :to="{ name: 'groupabout', params: { id: group?.id } }"
+            class="font-medium p-4 flex justify-center"
           >
             Về nhóm
           </RouterLink>
           <RouterLink
+            v-if="isUserInGroup"
             :to="{ name: 'groupdetail', params: { id: group?.id } }"
-            class="font-medium p-4"
+            class="font-medium p-4 flex justify-center"
           >
             Thành viên
           </RouterLink>
           <RouterLink
+            v-if="isUserInGroup"
             :to="{ name: 'groupdetail', params: { id: group?.id } }"
-            class="font-medium p-4"
+            class="font-medium p-4 flex justify-center"
           >
             File Phương Tiện
           </RouterLink>
           <RouterLink
+            v-if="isUserInGroup"
             :to="{ name: 'groupdetail', params: { id: group?.id } }"
-            class="font-medium p-4"
+            class="font-medium p-4 flex justify-center"
           >
             File
           </RouterLink>
@@ -98,6 +109,7 @@ import {
   LockClosedIcon,
   PlusIcon,
   ShareIcon,
+  UserPlusIcon
 } from "@heroicons/vue/24/solid";
 export default (await import("vue")).defineComponent({
   components: {
@@ -106,6 +118,7 @@ export default (await import("vue")).defineComponent({
     LockClosedIcon,
     PlusIcon,
     ShareIcon,
+    UserPlusIcon
   },
   setup() {
     const userStore = useUserStore();
@@ -118,6 +131,7 @@ export default (await import("vue")).defineComponent({
   },
   props: {
     group: Object,
+    isUserInGroup: Boolean
   },
 
   data() {

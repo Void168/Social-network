@@ -1,9 +1,9 @@
 <template>
   <div class="w-full flex flex-col justify-center items-center">
-    <GroupHeader :group="group" />
+    <GroupHeader :group="group" :isUserInGroup="isUserInGroup"/>
     <div class="flex w-[80%] my-4 gap-4 px-4">
       <div class="w-[60%]">
-        <div class="dark:bg-slate-700 rounded-lg px-2">
+        <div class="dark:bg-slate-700 rounded-lg px-2" v-if="isUserInGroup">
           <div class="py-4 flex items-start gap-2 p-2 rounded-lg">
             <div>
               <img
@@ -42,6 +42,11 @@
             </div>
           </div>
         </div>
+        <div v-else class="flex flex-col justify-center items-center dark:bg-slate-700 h-[500px] rounded-lg">
+          <img src="https://th.bing.com/th/id/R.0b658885df48a3649d297aa3cb9b701c?rik=O%2bnowdCCiEHMBw&riu=http%3a%2f%2fwww.freeiconspng.com%2fuploads%2fyellow-lock-icon-1.png&ehk=vmtKzvuDRyuDCuxWRt5bkcNNyst9WtJzTsByLmk4QOI%3d&risl=&pid=ImgRaw&r=0" alt="lock" class="w-40 h-40 shadow-none">
+          <h2 class="font-bold text-xl dark:text-neutral-300">Đây là nhóm riêng tư</h2>
+          <h3 class="text-lg dark:text-neutral-400">Hãy tham gia nhóm này để xem hoặc cùng thảo luận nhé.</h3>
+        </div>
       </div>
       <div
         class="w-[40%] sticky space-y-4"
@@ -50,7 +55,7 @@
           top: `${toastStore.navbarHeight}px`,
         }"
       >
-        <div class="dark:bg-slate-700 rounded-lg p-4 relative">
+        <div class="dark:bg-slate-700 rounded-lg p-4 relative" v-if="isUserInGroup">
           <XMarkIcon class="w-6 top-4 right-4 absolute" />
           <h3 class="font-semibold text-lg">
             Hãy hoàn tất quy trình thiết lập nhóm
@@ -169,6 +174,7 @@ export default (await import("vue")).defineComponent({
   },
   props: {
     group: Object,
+    isUserInGroup: Boolean
   },
   data() {
     return {

@@ -9,12 +9,12 @@
         top: `${toastStore.navbarHeight}px`,
       }"
     >
-      <GroupDetailNavigation :group="group" />
+      <GroupDetailNavigation :group="group" :isUserInGroup="isUserInGroup"/>
     </div>
     <div
       class="lg:col-span-4 md:col-span-3 col-span-4 dark:bg-slate-900 bg-slate-200 flex flex-col relative items-center"
     >
-      <GroupDetail :group="group" />
+      <GroupDetail :group="group" :isUserInGroup="isUserInGroup"/>
     </div>
   </div>
 </template>
@@ -54,19 +54,36 @@ export default {
   data() {
     return {
       group: {},
+      isUserInGroup: false,
     };
   },
 
   mounted() {
-    this.getGroupDetail();
+    this.checkUserInGroup();
   },
 
   methods: {
+    async checkUserInGroup() {
+      await axios
+        .get(`/api/group/check-user/${this.$route.params.id}`)
+        .then((res) => {
+          if(res.data.message === 'User joined the group'){
+            this.isUserInGroup = true
+          } else {
+            this.isUserInGroup = false
+          }
+          this.getGroupDetail()
+        })
+        .catch((error) => {
+          console.log(error);
+        });
+    },
     async getGroupDetail() {
       await axios
         .get(`/api/group/${this.$route.params.id}/`)
         .then((res) => {
           this.group = res.data;
+          console.log(res.data);
         })
         .catch((error) => {
           console.log(error);

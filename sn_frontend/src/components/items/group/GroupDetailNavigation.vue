@@ -19,7 +19,7 @@
         </div>
       </div>
     </div>
-    <div class="p-2 space-y-1 w-full flex flex-col justify-center">
+    <div class="p-2 space-y-1 w-full flex flex-col justify-center" v-if="isUserInGroup">
       <RouterLink
         :to="{ name: 'groupdetail', params: { id: group?.id } }"
         class="flex gap-2 items-center px-4 py-2 dark:hover:bg-slate-700 rounded-lg cursor-pointer duration-75 font-semibold w-full"
@@ -35,7 +35,7 @@
       </RouterLink>
     </div>
     <hr class="border dark:border-slate-700 mx-4" />
-    <div class="p-2">
+    <div class="p-2" v-if="isUserInGroup">
       <Disclosure
         v-slot="{ open }"
         v-for="groupNavigation in groupNavigations"
@@ -101,6 +101,7 @@ export default (await import("vue")).defineComponent({
 
   props: {
     group: Object,
+    isUserInGroup: Boolean
   },
 
   data() {

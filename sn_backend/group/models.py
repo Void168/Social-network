@@ -2,6 +2,7 @@ import uuid
 
 from django.db import models
 from django.utils import timezone
+from django.utils.timesince import timesince
 
 from account.models import User
 from page.models import Page
@@ -53,6 +54,9 @@ class Group(models.Model):
     questions = models.ManyToManyField(Question, related_name='group_quiz')
     
     created_at = models.DateTimeField(default=timezone.now)
+    
+    def created_at_formatted(self):
+        return timesince(self.created_at)
     
     def get_cover_image(self):
         if self.cover_image:

@@ -6,6 +6,7 @@ import GroupView from "../views/GroupView.vue";
 import SearchView from "../views/SearchView.vue";
 import ProfileView from "../views/ProfileView.vue";
 import ProfileImagesView from "../views/ProfileImagesView.vue";
+import GroupDetailView from "../views/GroupDetailView.vue"
 import FriendsView from "../views/FriendsView.vue";
 import PostView from "../views/PostView.vue";
 import PagePostView from "../views/PagePostView.vue";
@@ -79,6 +80,11 @@ const router = createRouter({
       path: "/page/:id",
       name: "page",
       component: PageView,
+    },
+    {
+      path: "/group/:id",
+      name: "groupdetail",
+      component: GroupDetailView,
     },
     {
       path: "/page/:id/users",

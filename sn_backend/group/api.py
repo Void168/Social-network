@@ -9,7 +9,7 @@ from page.serializers import PageSerializer
 # from notification.models import NotificationForPage
 # from notification.utils import create_notification
 
-from .serializers import QuestionSerializer, RuleSerializer, MemberSerializer, PageMemberSerializer, GroupSerializer
+from .serializers import QuestionSerializer, RuleSerializer, MemberSerializer, PageMemberSerializer, GroupSerializer, GroupDetailSerializer
 from .models import Group, Rule, Question, Member, PageMember
 from .forms import GroupCreateForm
 
@@ -36,4 +36,17 @@ def create_group(request):
     
 @api_view(['GET'])
 def get_your_groups(request):
-    return JsonResponse({'error': 'Failed'})
+    member = Member.objects.get(Q(information=request.user))
+    groups = Group.objects.filter(members__in=list([member]))
+    
+    serializer = GroupSerializer(groups, many=True)
+        
+    return JsonResponse(serializer.data, safe=False)
+
+@api_view(['GET'])
+def get_group_detail(request, pk):
+    group = Group.objects.get(pk=pk)
+    
+    serializer = GroupDetailSerializer(group)
+        
+    return JsonResponse(serializer.data, safe=False)

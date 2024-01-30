@@ -4,22 +4,24 @@
   >
     <div class="flex items-center gap-2">
       <img
-        src="https://s3.amazonaws.com/intanibase/iad_screenshots/1951/3523/6thumb.jpg"
+        :src="yourGroup.get_cover_image"
         alt=""
         class="rounded-lg h-20 w-20"
       />
       <div class="flex flex-col space-y-2">
-        <h4 class="font-semibold">Cats</h4>
+        <h4 class="font-semibold">{{ yourGroup.name }}</h4>
         <h5 class="text-sm">Lần truy cập gần đây nhất: 5 giờ trước</h5>
       </div>
     </div>
     <div class="mt-4 flex items-center justify-center gap-2 w-full">
       <div class="flex items-center justify-center w-full">
-        <button
-          class="py-2 w-full dark:bg-slate-800 rounded-lg dark:hover:bg-slate-900 font-semibold duration-75"
-        >
-          Xem nhóm
-        </button>
+        <RouterLink :to="{ name: 'groupdetail', params: { id: yourGroup.id } }" class="w-full">
+          <button
+            class="py-2 w-full dark:bg-slate-800 rounded-lg dark:hover:bg-slate-900 font-semibold duration-75"
+          >
+            Xem nhóm
+          </button>
+        </RouterLink>
         <EllipsisHorizontalIcon class="w-10" />
       </div>
     </div>
@@ -28,9 +30,14 @@
 
 <script>
 import { EllipsisHorizontalIcon } from "@heroicons/vue/24/solid";
+import { RouterLink } from "vue-router";
 export default (await import("vue")).defineComponent({
   components: {
     EllipsisHorizontalIcon,
+    RouterLink,
+  },
+  props: {
+    yourGroup: Object,
   },
 });
 </script>

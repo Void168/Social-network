@@ -165,11 +165,11 @@
       <div v-if="activeTab === 3" class="w-full px-12">
         <div class="mb-4">
           <h3 class="text-lg font-semibold mb-4">
-            Tất cả các nhóm bạn đã tham gia (91)
+            Tất cả các nhóm bạn đã tham gia ({{ yourGroups?.length }})
           </h3>
           <div class="grid grid-cols-3 gap-3 w-full">
-            <div v-for="n in 12" :key="n">
-              <YourGroup />
+            <div v-for="yourGroup in yourGroups" :key="yourGroup.id">
+              <YourGroup :yourGroup="yourGroup"/>
             </div>
           </div>
         </div>
@@ -179,6 +179,7 @@
 </template>
 
 <script>
+import axios from "axios";
 import { useToastStore } from "../stores/toast";
 import GroupPost from "../components/items/group/GroupPost.vue";
 import DiscoverGroup from "../components/items/group/DiscoverGroup.vue";
@@ -235,12 +236,23 @@ export default {
     return {
       activeTab: 1,
       isOpen: false,
+      yourGroups: [],
     };
   },
 
   methods: {
     getActiveTab(tab) {
       this.activeTab = tab;
+      if (this.activeTab === 3) {
+        axios
+          .get("/api/group/your-groups/")
+          .then((res) => {
+            this.yourGroups = res.data
+          })
+          .catch((error) => {
+            console.log(error);
+          });
+      }
     },
     openCreateGroupModal() {
       this.isOpen = true;
@@ -248,11 +260,6 @@ export default {
     closeCreateGroupModal() {
       this.isOpen = false;
     },
-    getYourGroups(){
-      if(this.activeTab === 3){
-        
-      }
-    }
   },
 };
 </script>

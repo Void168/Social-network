@@ -27,6 +27,14 @@ class PageMemberSerializer(serializers.ModelSerializer):
         fields = ('id','information','date_join_group','last_access',)
     
 class GroupSerializer(serializers.ModelSerializer):
+    admin = UserLessSerializer(read_only=True)
+    moderators = UserLessSerializer(read_only=True, many=True)
+    
+    class Meta:
+        model = Group
+        fields = ('id', 'name', 'members_count','get_cover_image', 'created_at','admin','moderators', 'biography', 'is_private_group', 'show_group', 'today_posts_count',)
+        
+class GroupDetailSerializer(serializers.ModelSerializer):
     members = MemberSerializer(read_only=True, many=True)
     page_members = PageMemberSerializer(read_only=True, many=True)
     admin = UserLessSerializer(read_only=True)

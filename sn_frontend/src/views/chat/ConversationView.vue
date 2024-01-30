@@ -83,13 +83,13 @@
 
 <script>
 import axios from "axios";
-import ConversationBox from "../components/items/chat/ConversationBox.vue";
-import GroupConversationBox from "../components/items/chat/GroupConversationBox.vue";
-import ChatBox from "../components/items/chat/ChatBox.vue";
-import PageConversationBox from "../components/items/chat/PageConversationBox.vue";
+import ConversationBox from "../../components/items/chat/ConversationBox.vue";
+import GroupConversationBox from "../../components/items/chat/GroupConversationBox.vue";
+import ChatBox from "../../components/items/chat/ChatBox.vue";
+import PageConversationBox from "../../components/items/chat/PageConversationBox.vue";
 
-import { useUserStore } from "../stores/user";
-import { useToastStore } from "../stores/toast";
+import { useUserStore } from "../../stores/user";
+import { useToastStore } from "../../stores/toast";
 
 import { PlusCircleIcon } from "@heroicons/vue/24/outline";
 import { UserIcon, UserGroupIcon } from "@heroicons/vue/24/solid";

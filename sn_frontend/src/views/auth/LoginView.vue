@@ -66,8 +66,8 @@
 <script>
 import axios from "axios";
 
-import { useUserStore } from "../stores/user";
-import { useToastStore } from "../stores/toast";
+import { useUserStore } from "../../stores/user";
+import { useToastStore } from "../../stores/toast";
 
 export default {
   setup() {

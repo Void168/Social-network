@@ -562,10 +562,10 @@
 <script>
 import axios from "axios";
 import { useToastStore } from "@/stores/toast";
-import { useUserStore } from "../stores/user";
+import { useUserStore } from "../../stores/user";
 import { onMounted, ref } from "vue";
 import { Country, State, City } from "country-state-city";
-import relationshipStatus from "../data/relationshipStatus";
+import relationshipStatus from "../../data/relationshipStatus";
 
 import {
   Listbox,
@@ -586,14 +586,14 @@ import {
   LockClosedIcon,
 } from "@heroicons/vue/24/outline";
 import { CheckIcon, ChevronUpDownIcon } from "@heroicons/vue/20/solid";
-import getUserInfo from "../api/getUserInfo";
-import DeleteRelationshipModal from "../components/modals/profile/DeleteRelationship.vue";
-import SelectCountryForm from "../components/forms/SelectCountryForm.vue";
-import SelectCityForm from "../components/forms/SelectCityForm.vue";
-import SelectStateForm from "../components/forms/SelectStateForm.vue";
-import GenderSelector from "../components/dropdown/GenderSelector.vue";
-import WebsiteItem from "../components/items/profile/WebsiteItem.vue";
-import PhoneNumberItem from "../components/items/profile/PhoneNumberItem.vue";
+import getUserInfo from "../../api/getUserInfo";
+import DeleteRelationshipModal from "../../components/modals/profile/DeleteRelationship.vue";
+import SelectCountryForm from "../../components/forms/SelectCountryForm.vue";
+import SelectCityForm from "../../components/forms/SelectCityForm.vue";
+import SelectStateForm from "../../components/forms/SelectStateForm.vue";
+import GenderSelector from "../../components/dropdown/GenderSelector.vue";
+import WebsiteItem from "../../components/items/profile/WebsiteItem.vue";
+import PhoneNumberItem from "../../components/items/profile/PhoneNumberItem.vue";
 import { RouterLink } from "vue-router";
 
 export default (await import("vue")).defineComponent({

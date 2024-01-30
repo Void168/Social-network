@@ -180,12 +180,12 @@
 
 <script>
 import axios from "axios";
-import { useToastStore } from "../stores/toast";
-import GroupPost from "../components/items/group/GroupPost.vue";
-import DiscoverGroup from "../components/items/group/DiscoverGroup.vue";
-import YourGroup from "../components/items/group/YourGroup.vue";
+import { useToastStore } from "../../stores/toast";
+import GroupPost from "../../components/items/group/GroupPost.vue";
+import DiscoverGroup from "../../components/items/group/DiscoverGroup.vue";
+import YourGroup from "../../components/items/group/YourGroup.vue";
 
-import CreateGroupModal from "../components/modals/group/createGroup/CreateGroupModal.vue";
+import CreateGroupModal from "../../components/modals/group/createGroup/CreateGroupModal.vue";
 import {
   Cog8ToothIcon,
   NewspaperIcon,

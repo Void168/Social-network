@@ -218,7 +218,7 @@ import axios from "axios";
 import { useToastStore } from "@/stores/toast";
 import { TabGroup, TabList, Tab, TabPanels, TabPanel } from "@headlessui/vue";
 
-import { useUserStore } from "../stores/user";
+import { useUserStore } from "../../stores/user";
 
 export default {
   setup() {

@@ -58,7 +58,7 @@
 <script>
 import axios from "axios";
 import { useToastStore } from "@/stores/toast";
-import { useUserStore } from "../stores/user";
+import { useUserStore } from "../../stores/user";
 
 export default (await import("vue")).defineComponent({
   setup() {

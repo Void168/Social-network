@@ -233,16 +233,16 @@
 
 <script>
 import axios from "axios";
-import PostForm from "../components/forms/PostForm.vue";
-import FeedItem from "../components/items/post/FeedItem.vue";
-import CoverImage from "../components/CoverImage.vue";
-import ImageShowcase from "../components/items/profile/ImageShowcase.vue";
-import PageOptionsDropdown from "../components/dropdown/PageOptionsDropdown.vue";
-import SkeletonLoadingPostVue from "../components/loadings/SkeletonLoadingPost.vue";
+import PostForm from "../../components/forms/PostForm.vue";
+import FeedItem from "../../components/items/post/FeedItem.vue";
+import CoverImage from "../../components/CoverImage.vue";
+import ImageShowcase from "../../components/items/profile/ImageShowcase.vue";
+import PageOptionsDropdown from "../../components/dropdown/PageOptionsDropdown.vue";
+import SkeletonLoadingPostVue from "../../components/loadings/SkeletonLoadingPost.vue";
 
-import ContactModal from "../components/modals/profile/ContactModal.vue";
-import AvatarModal from "../components/modals/profile/AvatarModal.vue";
-import UnfollowedModal from "../components/modals/profile/UnfollowedModal.vue";
+import ContactModal from "../../components/modals/profile/ContactModal.vue";
+import AvatarModal from "../../components/modals/profile/AvatarModal.vue";
+import UnfollowedModal from "../../components/modals/profile/UnfollowedModal.vue";
 
 import {
   ClockIcon,
@@ -258,9 +258,9 @@ import {
 
 import { RouterLink } from "vue-router";
 
-import { useUserStore } from "../stores/user";
-import { useToastStore } from "../stores/toast";
-import { usePageStore } from "../stores/page";
+import { useUserStore } from "../../stores/user";
+import { useToastStore } from "../../stores/toast";
+import { usePageStore } from "../../stores/page";
 
 export default {
   setup() {

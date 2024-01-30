@@ -151,10 +151,10 @@ import { useToastStore } from "@/stores/toast";
 import { TabGroup, TabList, Tab, TabPanels, TabPanel } from "@headlessui/vue";
 import { MagnifyingGlassIcon } from "@heroicons/vue/24/outline";
 
-import { useUserStore } from "../stores/user";
+import { useUserStore } from "../../stores/user";
 
-import UserItem from "../components/items/profile/UserItem.vue";
-import PageItem from '../components/items/page/PageItem.vue';
+import UserItem from "../../components/items/profile/UserItem.vue";
+import PageItem from '../../components/items/page/PageItem.vue';
 export default {
   setup() {
     const userStore = useUserStore();

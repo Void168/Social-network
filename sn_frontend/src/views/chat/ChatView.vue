@@ -109,15 +109,15 @@
 <script>
 import axios from "axios";
 
-import { useUserStore } from "../stores/user";
-import { useToastStore } from "../stores/toast";
-import { usePageStore } from "../stores/page";
+import { useUserStore } from "../../stores/user";
+import { useToastStore } from "../../stores/toast";
+import { usePageStore } from "../../stores/page";
 import { RouterLink } from "vue-router";
 
-import ConversationBox from "../components/items/chat/ConversationBox.vue";
-import CreateGroupChatModal from "../components/modals/chat/CreateGroupChatModal.vue";
-import GroupConversationBox from "../components/items/chat/GroupConversationBox.vue";
-import PageConversationBox from "../components/items/chat/PageConversationBox.vue";
+import ConversationBox from "../../components/items/chat/ConversationBox.vue";
+import CreateGroupChatModal from "../../components/modals/chat/CreateGroupChatModal.vue";
+import GroupConversationBox from "../../components/items/chat/GroupConversationBox.vue";
+import PageConversationBox from "../../components/items/chat/PageConversationBox.vue";
 
 import { MagnifyingGlassIcon, PlusCircleIcon } from "@heroicons/vue/24/outline";
 import { UserIcon, UserGroupIcon } from "@heroicons/vue/24/solid";

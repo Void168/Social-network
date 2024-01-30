@@ -104,13 +104,14 @@
 <script>
 import axios from "axios";
 
-import PeopleYouMayKnow from "../components/PeopleYouMayKnow.vue";
-import Trends from "../components/Trends.vue";
-import FeedItem from "../components/items/post/FeedItem.vue";
-import SkeletonLoadingPost from "../components/loadings/SkeletonLoadingPost.vue";
-import CommentItem from "../components/items/post/CommentItem.vue";
-import { useUserStore } from "../stores/user";
-import { usePageStore } from "../stores/page";
+import PeopleYouMayKnow from "../../components/PeopleYouMayKnow.vue";
+import Trends from "../../components/Trends.vue";
+import FeedItem from "../../components/items/post/FeedItem.vue";
+
+import SkeletonLoadingPost from "../../components/loadings/SkeletonLoadingPost.vue";
+import CommentItem from "../../components/items/post/CommentItem.vue";
+import { useUserStore } from "../../stores/user";
+import { usePageStore } from "../../stores/page";
 
 export default {
   name: "PostView",

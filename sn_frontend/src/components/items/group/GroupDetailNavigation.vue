@@ -42,7 +42,7 @@
         :key="groupNavigation.id"
       >
         <DisclosureButton
-          class="flex w-full justify-between rounded-lg dark:bg-slate-800 px-4 py-2 text-left font-medium dark:text-slate-400 dark:hover:bg-slate-700 focus:outline-none focus-visible:ring"
+          class="flex w-full justify-between rounded-lg dark:bg-slate-800 px-4 py-2 text-left font-medium dark:text-neutral-200/70 dark:hover:bg-slate-700 focus:outline-none focus-visible:ring"
         >
           <span>{{ groupNavigation.name }}</span>
           <ChevronUpIcon

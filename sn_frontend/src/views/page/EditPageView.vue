@@ -387,21 +387,21 @@
 <script>
 import axios from "axios";
 import { useToastStore } from "@/stores/toast";
-import { useUserStore } from "../stores/user";
-import { usePageStore } from "../stores/page";
+import { useUserStore } from "../../stores/user";
+import { usePageStore } from "../../stores/page";
 import { onMounted, ref } from "vue";
-import pageTypes from "../data/pageTypes";
+import pageTypes from "../../data/pageTypes";
 import { Country, State } from "country-state-city";
 
 import { PlusCircleIcon } from "@heroicons/vue/20/solid";
-import ChooseTypePage from "../components/dropdown/ChooseTypePage.vue";
-import SelectCountryForm from "../components/forms/SelectCountryForm.vue";
-import SelectStateForm from "../components/forms/SelectStateForm.vue";
-import WebsiteItem from "../components/items/profile/WebsiteItem.vue";
-import PhoneNumberItem from "../components/items/profile/PhoneNumberItem.vue";
+import ChooseTypePage from "../../components/dropdown/ChooseTypePage.vue";
+import SelectCountryForm from "../../components/forms/SelectCountryForm.vue";
+import SelectStateForm from "../../components/forms/SelectStateForm.vue";
+import WebsiteItem from "../../components/items/profile/WebsiteItem.vue";
+import PhoneNumberItem from "../../components/items/profile/PhoneNumberItem.vue";
 import { RouterLink } from "vue-router";
-import AddModeratorsModalVue from "../components/modals/page/AddModeratorsModal.vue";
-import DeletePageModalVue from "../components/modals/page/DeletePageModal.vue";
+import AddModeratorsModalVue from "../../components/modals/page/AddModeratorsModal.vue";
+import DeletePageModalVue from "../../components/modals/page/DeletePageModal.vue";
 // import Map from '../components/map/Map.vue'
 export default {
   components: {

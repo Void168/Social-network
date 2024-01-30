@@ -9,25 +9,28 @@
         top: `${toastStore.navbarHeight}px`,
       }"
     >
-      <GroupDetailNavigation :group="group"/>
+      <GroupDetailNavigation :group="group" />
     </div>
     <div
-      class="lg:col-span-4 md:col-span-3 col-span-4 dark:bg-slate-900 bg-slate-200 flex flex-col relative items-center pt-6 py-12"
-    ></div>
+      class="lg:col-span-4 md:col-span-3 col-span-4 dark:bg-slate-900 bg-slate-200 flex flex-col relative items-center"
+    >
+      <GroupDetail :group="group" />
+    </div>
   </div>
 </template>
 
 <script>
 import axios from "axios";
-import { useUserStore } from "../stores/user";
-import { useToastStore } from "../stores/toast";
+import { useUserStore } from "../../stores/user";
+import { useToastStore } from "../../stores/toast";
 import { RouterLink } from "vue-router";
 import {
   GlobeAsiaAustraliaIcon,
   LockClosedIcon,
   HomeIcon,
 } from "@heroicons/vue/24/solid";
-import GroupDetailNavigation from "../components/items/group/GroupDetailNavigation.vue";
+import GroupDetailNavigation from "../../components/items/group/GroupDetailNavigation.vue";
+import GroupDetail from "../../components/items/group/GroupDetail.vue";
 
 export default {
   name: "groupdetail",
@@ -37,6 +40,7 @@ export default {
     HomeIcon,
     RouterLink,
     GroupDetailNavigation,
+    GroupDetail,
   },
   setup() {
     const userStore = useUserStore();
@@ -71,4 +75,3 @@ export default {
   },
 };
 </script>
-

@@ -102,14 +102,14 @@
 
 <script>
 import axios from "axios";
-import ConversationBox from "../components/items/chat/ConversationBox.vue";
-import GroupConversationBox from "../components/items/chat/GroupConversationBox.vue";
-import PageChatBox from "../components/items/chat/PageChatBox.vue";
-import PageConversationBox from "../components/items/chat/PageConversationBox.vue";
+import ConversationBox from "../../components/items/chat/ConversationBox.vue";
+import GroupConversationBox from "../../components/items/chat/GroupConversationBox.vue";
+import PageChatBox from "../../components/items/chat/PageChatBox.vue";
+import PageConversationBox from "../../components/items/chat/PageConversationBox.vue";
 
-import { useUserStore } from "../stores/user";
-import { useToastStore } from "../stores/toast";
-import { usePageStore } from "../stores/page";
+import { useUserStore } from "../../stores/user";
+import { useToastStore } from "../../stores/toast";
+import { usePageStore } from "../../stores/page";
 
 import { PlusCircleIcon } from "@heroicons/vue/24/outline";
 import { UserIcon, UserGroupIcon } from "@heroicons/vue/24/solid";

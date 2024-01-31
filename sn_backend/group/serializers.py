@@ -1,6 +1,6 @@
 from rest_framework import serializers
 
-from .models import Group, Rule, Question, Member, PageMember
+from .models import Group, Rule, Question, Member, PageMember, JoinGroupRequest
 from account.serializers import UserSerializer, UserLessSerializer
 from page.serializers import PageSerializer 
 
@@ -45,3 +45,10 @@ class GroupDetailSerializer(serializers.ModelSerializer):
     class Meta:
         model = Group
         fields = ('id', 'name', 'email', 'members', 'page_members', 'members_count','get_cover_image', 'created_at','admin','moderators', 'biography', 'is_private_group', 'show_group', 'today_posts_count', 'rules','questions', 'created_at_formatted',)
+
+class JoinGroupRequestSerializer(serializers.ModelSerializer):
+    created_by = UserLessSerializer(read_only=True)
+    created_for = GroupSerializer(read_only=True)
+    class Meta:
+        model = JoinGroupRequest
+        fields = ('id', 'created_by', 'created_for', 'created_at','status',)

@@ -9,8 +9,8 @@ from page.serializers import PageSerializer
 # from notification.models import NotificationForPage
 # from notification.utils import create_notification
 
-from .serializers import QuestionSerializer, RuleSerializer, MemberSerializer, PageMemberSerializer, GroupSerializer, GroupDetailSerializer
-from .models import Group, Rule, Question, Member, PageMember
+from .serializers import QuestionSerializer, RuleSerializer, MemberSerializer, PageMemberSerializer, GroupSerializer, GroupDetailSerializer, JoinGroupRequestSerializer
+from .models import Group, Rule, Question, Member, PageMember, JoinGroupRequest
 from .forms import GroupCreateForm
 
 @api_view(['POST'])
@@ -106,4 +106,45 @@ def get_discover_groups(request):
         else:
             return JsonResponse({'message': 'No group found'})
 
-        
+@api_view(['POST'])
+def join_public_group(request, pk):
+    group = Group.objects.get(pk=pk)
+    
+    member = Member.objects.create(information=request.user)
+    
+    group.members.add(member)
+    group.members_count = group.members_count + 1
+    group.save()
+    
+    return JsonRespone({'message': 'Joined group successfully'})
+
+@api_view(['POST'])
+def send_join_request_private_group(request, pk):
+    current_user = request.user
+    group = Group.objects.get(pk=pk)
+    
+    check1 = JoinGroupRequest.objects.filter(created_for=group).filter(created_by=current_user)
+    
+    check2 = JoinGroupRequest.objects.filter(created_for=group).filter(created_by=current_user).filter(status=JoinGroupRequest.REJECTED)
+
+    if not check1:
+        join_request = JoinGroupRequest.objects.create(created_for=group, created_by=current_user)
+                
+        return JsonResponse({'message': 'Join group request created'})
+    if check2:
+        return JsonResponse({'message': 'Join group request created'})
+    else:
+        return JsonResponse({'message': 'Join group request already sent'})
+
+
+@api_view((['GET']))
+def get_join_group_requests(request, pk):
+    current_user = request.user
+    group = Group.objects.get(pk=pk)
+    
+    requests = []
+    
+    requests = JoinGroupRequest.objects.filter(created_for=group, status=JoinGroupRequest.PENDING)
+
+    serializer = JoinGroupRequestSerializer(requests, many=True)
+    return JsonResponse(serializer.data, safe=False)

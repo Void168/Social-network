@@ -48,12 +48,13 @@
             </button>
           </div>
           <button
-              class="flex items-center gap-1 px-4 py-2 font-semibold bg-emerald-500 hover:bg-emerald-400 rounded-lg duration-75"
-              v-else
-            >
-              <UserPlusIcon class="w-4" />
-              Tham gia nhóm
-            </button>
+            @click="joinGroup"
+            class="flex items-center gap-1 px-4 py-2 font-semibold bg-emerald-500 hover:bg-emerald-400 rounded-lg duration-75"
+            v-else
+          >
+            <UserPlusIcon class="w-4" />
+            Tham gia nhóm
+          </button>
         </div>
       </div>
       <hr class="border dark:border-slate-600 mx-4" />
@@ -100,6 +101,7 @@
 </template>
 
 <script>
+import axios from "axios";
 import { useUserStore } from "../../../stores/user";
 import { useToastStore } from "../../../stores/toast";
 import { RouterLink } from "vue-router";
@@ -109,7 +111,7 @@ import {
   LockClosedIcon,
   PlusIcon,
   ShareIcon,
-  UserPlusIcon
+  UserPlusIcon,
 } from "@heroicons/vue/24/solid";
 export default (await import("vue")).defineComponent({
   components: {
@@ -118,7 +120,7 @@ export default (await import("vue")).defineComponent({
     LockClosedIcon,
     PlusIcon,
     ShareIcon,
-    UserPlusIcon
+    UserPlusIcon,
   },
   setup() {
     const userStore = useUserStore();
@@ -131,7 +133,7 @@ export default (await import("vue")).defineComponent({
   },
   props: {
     group: Object,
-    isUserInGroup: Boolean
+    isUserInGroup: Boolean,
   },
 
   data() {
@@ -154,6 +156,18 @@ export default (await import("vue")).defineComponent({
     },
     openModal() {
       this.isOpen = true;
+    },
+    joinGroup() {
+      if (this.group.is_private_group && !this.isUserInGroup) {
+        axios
+          .post(`/api/group/${this.group?.id}/join/request/`)
+          .then((res) => {
+            console.log(res.data);
+          })
+          .catch((error) => {
+            console.log(error);
+          });
+      }
     },
   },
 });

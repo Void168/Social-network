@@ -2,8 +2,12 @@
   <div class="flex flex-col">
     <div class="p-2">
       <div class="flex items-center gap-2">
-        <RouterLink :to="{name: 'groupdetail', params: {id: group?.id }}">
-          <img :src="group.get_cover_image" alt="" class="rounded-lg h-12 w-12" />
+        <RouterLink :to="{ name: 'groupdetail', params: { id: group?.id } }">
+          <img
+            :src="group.get_cover_image"
+            alt=""
+            class="rounded-lg h-12 w-12"
+          />
         </RouterLink>
         <div class="flex flex-col space-y-2">
           <h4 class="font-semibold">{{ group.name }}</h4>
@@ -21,7 +25,10 @@
         </div>
       </div>
     </div>
-    <div class="p-2 space-y-1 w-full flex flex-col justify-center" v-if="isUserInGroup">
+    <div
+      class="p-2 space-y-1 w-full flex flex-col justify-center"
+      v-if="isUserInGroup"
+    >
       <RouterLink
         :to="{ name: 'groupdetail', params: { id: group?.id } }"
         class="flex gap-2 items-center px-4 py-2 dark:hover:bg-slate-700 rounded-lg cursor-pointer duration-75 font-semibold w-full"
@@ -30,10 +37,11 @@
         <h4>Trang chủ của cộng đồng</h4>
       </RouterLink>
       <RouterLink
-        :to="{ name: 'groupdetail', params: { id: group?.id } }"
-        class="px-4 py-2 dark:hover:bg-slate-700 rounded-lg cursor-pointer duration-75 font-semibold w-full"
+        to="/"
+        class="flex gap-2 items-center px-4 py-2 dark:hover:bg-slate-700 rounded-lg cursor-pointer duration-75 font-semibold w-full"
       >
-        Tổng quan
+        <TableCellsIcon class="w-6" />
+        <h4>Tổng quan</h4>
       </RouterLink>
     </div>
     <hr class="border dark:border-slate-700 mx-4" />
@@ -57,12 +65,18 @@
           v-for="category in groupNavigation.categories"
           :key="category.name"
         >
-        <RouterLink :to="category.url ? {name: `${category.url}`, params: {id: group?.id}} : '/'">
-          <div class="flex flex-col space-y-2">
-            <h3>{{ category.name }}</h3>
-            <h4>{{ category.content }}</h4>
-          </div>
-        </RouterLink>
+          <RouterLink
+            :to="
+              category.url
+                ? { name: `${category.url}`, params: { id: group?.id } }
+                : '/'
+            "
+          >
+            <div class="flex flex-col space-y-2">
+              <h3>{{ category.name }}</h3>
+              <h4>{{ category.content }}</h4>
+            </div>
+          </RouterLink>
         </DisclosurePanel>
       </Disclosure>
     </div>
@@ -81,6 +95,7 @@ import {
   GlobeAsiaAustraliaIcon,
   LockClosedIcon,
   HomeIcon,
+  TableCellsIcon,
 } from "@heroicons/vue/24/solid";
 export default (await import("vue")).defineComponent({
   components: {
@@ -92,6 +107,7 @@ export default (await import("vue")).defineComponent({
     DisclosureButton,
     DisclosurePanel,
     ChevronUpIcon,
+    TableCellsIcon,
   },
   setup() {
     const userStore = useUserStore();
@@ -123,7 +139,7 @@ export default (await import("vue")).defineComponent({
             {
               name: "Yêu cầu làm thành viên",
               content: "",
-              url: 'groupjoinrequest',
+              url: "groupjoinrequest",
             },
             {
               name: "Yêu cầu huy hiệu",
@@ -244,12 +260,12 @@ export default (await import("vue")).defineComponent({
 <style scoped>
 .router-link-active {
   --tw-text-opacity: 1;
-  color: rgb(16 185 129 / var(--tw-text-opacity));
+  color: rgb(52 211 153 / var(--tw-text-opacity));
   background-color: rgb(16 185 129 / 0.3);
 }
 .router-link-active:hover {
   --tw-text-opacity: 1;
   color: rgb(16 185 129 / var(--tw-text-opacity));
-  background-color: rgb(16 185 129 / 0.3);
+  background-color: rgb(16 185 129 / 0.35);
 }
 </style>

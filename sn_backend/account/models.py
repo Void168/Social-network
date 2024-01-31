@@ -3,6 +3,7 @@ import uuid
 from django.contrib.auth.models import AbstractBaseUser, PermissionsMixin, UserManager
 from django.db import models
 from django.utils import timezone
+from django.utils.timesince import timesince
 
 from django.core.validators import RegexValidator
 from django.contrib.auth.validators import UnicodeUsernameValidator
@@ -102,8 +103,12 @@ class User(AbstractBaseUser, PermissionsMixin):
             return 'http://127.0.0.1:8000' + self.cover_image.url
         else: 
             return 'https://th.bing.com/th/id/OIP.o1n4kgruF-5cDCCx7jNYKQHaEo?pid=ImgDet&rs=1'
+        
     def get_displayed_name(self):
         return f"user{self.display_name[:8]}"
+    
+    def date_joined_formatted(self):
+        return timesince(self.date_joined)
     
 class FriendshipRequest(models.Model):
     SENT = 'sent'

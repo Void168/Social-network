@@ -20,7 +20,7 @@ class UserSerializer(serializers.ModelSerializer):
 class UserLessSerializer(serializers.ModelSerializer):
     class Meta:
         model = User
-        fields = ('id', 'name', 'email' ,'get_avatar', 'date_joined',)
+        fields = ('id', 'name', 'email' ,'get_avatar', 'date_joined', 'date_joined_formatted',)
 
 class FriendshipRequestSerializer(serializers.ModelSerializer):
     created_by = UserSerializer(read_only=True)

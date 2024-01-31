@@ -8,6 +8,7 @@ import ProfileView from "../views/profile/ProfileView.vue";
 import ProfileImagesView from "../views/profile/ProfileImagesView.vue";
 import GroupDetailView from "../views/group/GroupDetailView.vue"
 import GroupAboutView from "../views/group/GroupAbout.vue"
+import GroupJoinRequestView from "../views/group/GroupJoinRequestView.vue"
 import FriendsView from "../views/profile/FriendsView.vue";
 import PostView from "../views/post/PostView.vue";
 import PagePostView from "../views/page/PagePostView.vue";
@@ -91,6 +92,11 @@ const router = createRouter({
       path: "/group/:id/about",
       name: "groupabout",
       component: GroupAboutView,
+    },
+    {
+      path: "/group/:id/member-request",
+      name: "groupjoinrequest",
+      component: GroupJoinRequestView,
     },
     {
       path: "/page/:id/users",

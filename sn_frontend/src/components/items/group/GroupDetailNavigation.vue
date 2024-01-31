@@ -55,10 +55,12 @@
           v-for="category in groupNavigation.categories"
           :key="category.name"
         >
+        <RouterLink :to="category.url ? {name: `${category.url}`, params: {id: group?.id}} : '/'">
           <div class="flex flex-col space-y-2">
             <h3>{{ category.name }}</h3>
             <h4>{{ category.content }}</h4>
           </div>
+        </RouterLink>
         </DisclosurePanel>
       </Disclosure>
     </div>
@@ -101,7 +103,7 @@ export default (await import("vue")).defineComponent({
 
   props: {
     group: Object,
-    isUserInGroup: Boolean
+    isUserInGroup: Boolean,
   },
 
   data() {
@@ -119,10 +121,10 @@ export default (await import("vue")).defineComponent({
             {
               name: "Yêu cầu làm thành viên",
               content: "",
-              url: "",
+              url: 'groupjoinrequest',
             },
             {
-              name: "Yêu huy hiệu",
+              name: "Yêu cầu huy hiệu",
               content: "",
               url: "",
             },

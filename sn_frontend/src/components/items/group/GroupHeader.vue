@@ -62,34 +62,34 @@
         <div class="flex items-center mx-4">
           <RouterLink
             :to="{ name: 'groupdetail', params: { id: group?.id } }"
-            class="font-medium p-4 flex justify-center"
+            class="font-medium p-4 flex justify-center dark:hover:bg-slate-600 duration-75"
           >
             Thảo luận
           </RouterLink>
           <RouterLink
             :to="{ name: 'groupabout', params: { id: group?.id } }"
-            class="font-medium p-4 flex justify-center"
+            class="font-medium p-4 flex justify-center dark:hover:bg-slate-600 duration-75"
           >
             Về nhóm
           </RouterLink>
           <RouterLink
             v-if="isUserInGroup"
-            :to="{ name: 'groupdetail', params: { id: group?.id } }"
-            class="font-medium p-4 flex justify-center"
+            :to="{ name: 'groupmembers', params: { id: group?.id } }"
+            class="font-medium p-4 flex justify-center dark:hover:bg-slate-600 duration-75"
           >
             Thành viên
           </RouterLink>
           <RouterLink
             v-if="isUserInGroup"
             :to="{ name: 'groupdetail', params: { id: group?.id } }"
-            class="font-medium p-4 flex justify-center"
+            class="font-medium p-4 flex justify-center dark:hover:bg-slate-600 duration-75"
           >
             File Phương Tiện
           </RouterLink>
           <RouterLink
             v-if="isUserInGroup"
             :to="{ name: 'groupdetail', params: { id: group?.id } }"
-            class="font-medium p-4 flex justify-center"
+            class="font-medium p-4 flex justify-center dark:hover:bg-slate-600 duration-75"
           >
             File
           </RouterLink>

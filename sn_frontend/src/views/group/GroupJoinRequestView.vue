@@ -191,16 +191,31 @@ export default {
   },
 
   mounted() {
-    this.getGroupDetail();
+    this.checkUserInGroup();
   },
 
   methods: {
+    async checkUserInGroup() {
+      await axios
+        .get(`/api/group/check-user/${this.$route.params.id}`)
+        .then((res) => {
+          if (res.data.message === "User joined the group") {
+            this.isUserInGroup = true;
+          } else {
+            this.isUserInGroup = false;
+          }
+          this.getGroupDetail();
+        })
+        .catch((error) => {
+          console.log(error);
+        });
+    },
     async getGroupDetail() {
       await axios
         .get(`/api/group/${this.$route.params.id}/`)
         .then((res) => {
           this.group = res.data;
-          this.getJoinRequests();
+          console.log(res.data);
         })
         .catch((error) => {
           console.log(error);

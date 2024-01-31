@@ -29,11 +29,11 @@
 
 <script>
 import axios from "axios";
-import SkeletionLoadingChatbox from "../components/loadings/SkeletionLoadingChatbox.vue";
 import { useToastStore } from "../stores/toast";
+import SkeletionLoadingChatBox from "./loadings/SkeletionLoadingChatBox.vue";
 export default (await import("vue")).defineComponent({
   components: {
-    SkeletionLoadingChatbox,
+    SkeletionLoadingChatBox,
   },
   setup(){
     const toastStore = useToastStore()

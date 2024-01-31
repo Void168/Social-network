@@ -122,11 +122,17 @@
             </div>
             <div class="flex w-full gap-3">
               <button
+              @click="
+                handleRequest('accepted', request?.created_for?.id, request?.created_by?.id)
+              "
                 class="px-4 py-2 shadow-md bg-emerald-500 rounded-lg font-semibold w-full hover:bg-emerald-400 duration-75"
               >
                 Phê duyệt
               </button>
               <button
+              @click="
+                handleRequest('rejected', request?.created_for?.id, request?.created_by?.id)
+              "
                 class="px-4 py-2 shadow-md bg-rose-500 rounded-lg font-semibold w-full hover:bg-rose-400 duration-75"
               >
                 Từ chối
@@ -209,6 +215,16 @@ export default {
         })
         .catch((error) => {
           console.log(error);
+        });
+    },
+    handleRequest(status, pk, id) {
+      axios
+        .post(`/api/group/${pk}/user/${id}/request/${status}/`)
+        .then((res) => {
+            console.log(res.data)
+        })
+        .catch((error) => {
+          console.log("error", error);
         });
     },
   },

@@ -118,6 +118,18 @@ def join_public_group(request, pk):
     
     return JsonRespone({'message': 'Joined group successfully'})
 
+@api_view((['GET']))
+def get_join_group_requests(request, pk):
+    current_user = request.user
+    group = Group.objects.get(pk=pk)
+    
+    requests = []
+    
+    requests = JoinGroupRequest.objects.filter(created_for=group, status=JoinGroupRequest.PENDING)
+
+    serializer = JoinGroupRequestSerializer(requests, many=True)
+    return JsonResponse(serializer.data, safe=False)
+
 @api_view(['POST'])
 def send_join_request_private_group(request, pk):
     current_user = request.user
@@ -136,15 +148,39 @@ def send_join_request_private_group(request, pk):
     else:
         return JsonResponse({'message': 'Join group request already sent'})
 
-
-@api_view((['GET']))
-def get_join_group_requests(request, pk):
-    current_user = request.user
+@api_view(['POST'])
+def handle_join_request(request, pk, status, id):
+    request_user = User.objects.get(id=id)
     group = Group.objects.get(pk=pk)
     
-    requests = []
-    
-    requests = JoinGroupRequest.objects.filter(created_for=group, status=JoinGroupRequest.PENDING)
+    join_request = JoinGroupRequest.objects.filter(created_for=group).get(created_by=request_user)
+    join_request.status = status
+    join_request.save()
 
-    serializer = JoinGroupRequestSerializer(requests, many=True)
-    return JsonResponse(serializer.data, safe=False)
+    if status == 'accepted':
+        member = Member.objects.create(information=request_user)
+        group.members.add(member)
+        group.members_count = group.members_count + 1
+        group.save()
+        
+        # notification = Notification.objects.create(
+        #     body=f'{sent_user.name} đã đồng ý lời mời kết bạn',
+        #     type_of_notification='accepted_friend_request',
+        #     created_by=request.user,
+        #     created_for=sent_user
+        # )
+        
+        JoinGroupRequest.objects.filter(status='accepted').delete()
+        
+        # serializer_notification = NotificationSerializer(notification)
+        
+        # serializer_data = serializer_notification.data
+
+        # json_data = json.dumps(serializer_data)
+        # pusher_client.trigger(f'{request.user.id}-notification', 'accepted-friendship-notification:new', {'notification': json_data})
+        
+        return JsonResponse({'message': 'Request accepted'})
+    if status == 'rejected':
+        JoinGroupRequest.objects.filter(status='rejected').delete()
+
+        return JsonResponse({'message': 'Request rejected'})

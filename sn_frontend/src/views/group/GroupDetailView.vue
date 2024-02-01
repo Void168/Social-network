@@ -14,7 +14,7 @@
     <div
       class="lg:col-span-4 md:col-span-3 col-span-4 dark:bg-slate-900 bg-slate-200 flex flex-col relative items-center"
     >
-      <GroupHeader :group="group" :isUserInGroup="isUserInGroup" />
+      <GroupHeader :group="group" :isUserInGroup="isUserInGroup" v-if="route.path.includes('about' || 'members' || 'media')"/>
       <router-view :isUserInGroup="isUserInGroup" :group="group"></router-view>
     </div>
   </div>
@@ -24,7 +24,7 @@
 import axios from "axios";
 import { useUserStore } from "../../stores/user";
 import { useToastStore } from "../../stores/toast";
-import { RouterLink } from "vue-router";
+import { RouterLink, useRoute } from "vue-router";
 import {
   GlobeAsiaAustraliaIcon,
   LockClosedIcon,
@@ -45,10 +45,12 @@ export default {
   setup() {
     const userStore = useUserStore();
     const toastStore = useToastStore();
+    const route = useRoute()
 
     return {
       userStore,
       toastStore,
+      route,
     };
   },
   data() {

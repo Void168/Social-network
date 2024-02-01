@@ -205,7 +205,7 @@ export default (await import("vue")).defineComponent({
             {
               name: "Cài đặt nhóm",
               content: "",
-              url: "",
+              url: "groupedit",
             },
             {
               name: "Thêm tính năng",

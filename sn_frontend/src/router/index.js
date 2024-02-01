@@ -11,6 +11,7 @@ import GroupDiscussView from "../views/group/GroupDiscussView.vue"
 import GroupAboutView from "../views/group/GroupAboutView.vue";
 import GroupMembersView from "../views/group/GroupMembersView.vue";
 import GroupJoinRequestView from "../views/group/GroupJoinRequestView.vue";
+import GroupEditView from "../views/group/GroupEditView.vue"
 import FriendsView from "../views/profile/FriendsView.vue";
 import PostView from "../views/post/PostView.vue";
 import PagePostView from "../views/page/PagePostView.vue";
@@ -111,6 +112,11 @@ const router = createRouter({
           path: "member-request",
           component: GroupJoinRequestView,
           name: "groupjoinrequest",
+        },
+        {
+          path: "edit",
+          component: GroupEditView,
+          name: "groupedit",
         },
       ],
     },

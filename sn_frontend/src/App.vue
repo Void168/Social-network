@@ -96,6 +96,22 @@
                 ></path>
               </svg>
             </RouterLink>
+            <RouterLink to="/groups" class="group">
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                fill="none"
+                viewBox="0 0 24 24"
+                stroke-width="1.5"
+                stroke="currentColor"
+                class="w-6 h-6 m-3 group-hover:text-emerald-600 duration-100"
+              >
+                <path
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  d="M18 18.72a9.094 9.094 0 0 0 3.741-.479 3 3 0 0 0-4.682-2.72m.94 3.198.001.031c0 .225-.012.447-.037.666A11.944 11.944 0 0 1 12 21c-2.17 0-4.207-.576-5.963-1.584A6.062 6.062 0 0 1 6 18.719m12 0a5.971 5.971 0 0 0-.941-3.197m0 0A5.995 5.995 0 0 0 12 12.75a5.995 5.995 0 0 0-5.058 2.772m0 0a3 3 0 0 0-4.681 2.72 8.986 8.986 0 0 0 3.74.477m.94-3.197a5.971 5.971 0 0 0-.94 3.197M15 6.75a3 3 0 1 1-6 0 3 3 0 0 1 6 0Zm6 3a2.25 2.25 0 1 1-4.5 0 2.25 2.25 0 0 1 4.5 0Zm-13.5 0a2.25 2.25 0 1 1-4.5 0 2.25 2.25 0 0 1 4.5 0Z"
+                />
+              </svg>
+            </RouterLink>
           </div>
 
           <div class="menu-right">
@@ -124,7 +140,7 @@ import { useUnseenConversationsStore } from "./stores/conversations";
 import { useConnectionStore } from "./stores/connection";
 import { useCurrentStoryStore } from "./stores/currentStory";
 import { useToastStore } from "./stores/toast";
-import { usePageStore } from "./stores/page"
+import { usePageStore } from "./stores/page";
 import { socket } from "./socket";
 import { useRoute } from "vue-router";
 import { computed } from "vue";
@@ -142,7 +158,7 @@ export default {
     const currentStoryStore = useCurrentStoryStore();
     const userStore = useUserStore();
     const toastStore = useToastStore();
-    const pageStore = usePageStore()
+    const pageStore = usePageStore();
     const userNotificationStore = useNotificationStore();
     const userUnseenConversationsStore = useUnseenConversationsStore();
     const isDark = useDark();
@@ -167,11 +183,11 @@ export default {
     };
   },
 
-  data(){
+  data() {
     return {
       height: document.documentElement.clientHeight,
-      width: document.documentElement.clientWidth
-    }
+      width: document.documentElement.clientWidth,
+    };
   },
 
   components: {
@@ -196,26 +212,26 @@ export default {
   },
 
   mounted() {
-    window.addEventListener('resize', this.getDimensions);
-    this.getDimensions()
-    this.pageStore.getPagesList(this.userStore.user.id)
-    this.pageStore.getActivePage()
+    window.addEventListener("resize", this.getDimensions);
+    this.getDimensions();
+    this.pageStore.getPagesList(this.userStore.user.id);
+    this.pageStore.getActivePage();
   },
 
   unmounted() {
-    window.removeEventListener('resize', this.getDimensions);
+    window.removeEventListener("resize", this.getDimensions);
   },
 
   methods: {
     getDimensions() {
       this.height = document.documentElement.clientHeight;
-      this.width = document.documentElement.clientWidth
+      this.width = document.documentElement.clientWidth;
       this.toastStore.setHeight(
         this.height - this.$refs.navbar.clientHeight - 1
       );
-      this.toastStore.setWidth(this.width)
+      this.toastStore.setWidth(this.width);
       this.toastStore.setNavbarHeight(this.$refs.navbar.clientHeight + 1);
-    }
+    },
   },
 };
 </script>

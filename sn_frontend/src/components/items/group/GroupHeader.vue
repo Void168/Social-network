@@ -61,7 +61,7 @@
       <div class="flex justify-between items-center">
         <div class="flex items-center mx-4">
           <RouterLink
-            :to="{ name: 'groupdetail', params: { id: group?.id } }"
+            :to="{ name: 'groupdiscuss', params: { id: group?.id } }"
             class="font-medium p-4 flex justify-center dark:hover:bg-slate-600 duration-75"
           >
             Thảo luận

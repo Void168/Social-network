@@ -9,12 +9,13 @@
         top: `${toastStore.navbarHeight}px`,
       }"
     >
-      <GroupDetailNavigation :group="group" :isUserInGroup="isUserInGroup"/>
+      <GroupDetailNavigation :group="group" :isUserInGroup="isUserInGroup" />
     </div>
     <div
       class="lg:col-span-4 md:col-span-3 col-span-4 dark:bg-slate-900 bg-slate-200 flex flex-col relative items-center"
     >
-      <GroupDetail :group="group" :isUserInGroup="isUserInGroup" />
+      <GroupHeader :group="group" :isUserInGroup="isUserInGroup" />
+      <router-view :isUserInGroup="isUserInGroup" :group="group"></router-view>
     </div>
   </div>
 </template>
@@ -30,8 +31,7 @@ import {
   HomeIcon,
 } from "@heroicons/vue/24/solid";
 import GroupDetailNavigation from "../../components/items/group/GroupDetailNavigation.vue";
-import GroupDetail from "../../components/items/group/GroupDetail.vue";
-
+import GroupHeader from "../../components/items/group/GroupHeader.vue";
 export default {
   name: "groupdetail",
   components: {
@@ -40,7 +40,7 @@ export default {
     HomeIcon,
     RouterLink,
     GroupDetailNavigation,
-    GroupDetail,
+    GroupHeader,
   },
   setup() {
     const userStore = useUserStore();

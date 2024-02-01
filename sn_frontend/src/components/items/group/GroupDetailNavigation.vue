@@ -61,7 +61,7 @@
           />
         </DisclosureButton>
         <DisclosurePanel
-          class="px-4 py-2 text-sm dark:text-neutral-200 font-medium"
+          class="px-4 py-2 text-sm dark:text-neutral-200 font-medium dark:hover:bg-slate-700 duration-75 rounded-lg"
           v-for="category in groupNavigation.categories"
           :key="category.name"
         >
@@ -72,7 +72,7 @@
                 : '/'
             "
           >
-            <div class="flex flex-col space-y-2">
+            <div class="flex flex-col">
               <h3>{{ category.name }}</h3>
               <h4>{{ category.content }}</h4>
             </div>

@@ -6,10 +6,11 @@ import GroupView from "../views/group/GroupView.vue";
 import SearchView from "../views/SearchView.vue";
 import ProfileView from "../views/profile/ProfileView.vue";
 import ProfileImagesView from "../views/profile/ProfileImagesView.vue";
-import GroupDetailView from "../views/group/GroupDetailView.vue"
-import GroupAboutView from "../views/group/GroupAbout.vue"
-import GroupMembersView from "../views/group/GroupMembersView.vue"
-import GroupJoinRequestView from "../views/group/GroupJoinRequestView.vue"
+import GroupDetailView from "../views/group/GroupDetailView.vue";
+import GroupDiscussView from "../views/group/GroupDiscussView.vue"
+import GroupAboutView from "../views/group/GroupAboutView.vue";
+import GroupMembersView from "../views/group/GroupMembersView.vue";
+import GroupJoinRequestView from "../views/group/GroupJoinRequestView.vue";
 import FriendsView from "../views/profile/FriendsView.vue";
 import PostView from "../views/post/PostView.vue";
 import PagePostView from "../views/page/PagePostView.vue";
@@ -22,9 +23,9 @@ import EditPasswordView from "../views/profile/EditPasswordView.vue";
 import NotificationsView from "../views/NotificationsView.vue";
 import ConversationView from "../views/chat/ConversationView.vue";
 import StoryView from "../views/StoryView.vue";
-import PageView from "../views/page/PageView.vue"
-import EditPageView from "../views/page/EditPageView.vue"
-import PageUsersView from "../views/page/PageUsersView.vue"
+import PageView from "../views/page/PageView.vue";
+import EditPageView from "../views/page/EditPageView.vue";
+import PageUsersView from "../views/page/PageUsersView.vue";
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
@@ -85,24 +86,33 @@ const router = createRouter({
       component: PageView,
     },
     {
-      path: "/group/:id",
-      name: "groupdetail",
+      path: "/groups/:id",
       component: GroupDetailView,
-    },
-    {
-      path: "/group/:id/about",
-      name: "groupabout",
-      component: GroupAboutView,
-    },
-    {
-      path: "/group/:id/members",
-      name: "groupmembers",
-      component: GroupMembersView,
-    },
-    {
-      path: "/group/:id/member-request",
-      name: "groupjoinrequest",
-      component: GroupJoinRequestView,
+      props: true,
+      redirect: {name: "groupdiscuss"},
+      name: 'groupdetail',
+      children: [
+        {
+          path: "/groups/:id/",
+          component: GroupDiscussView,
+          name: "groupdiscuss",
+        },
+        {
+          path: "about",
+          component: GroupAboutView,
+          name: "groupabout",
+        },
+        {
+          path: "members",
+          component: GroupMembersView,
+          name: "groupmembers",
+        },
+        {
+          path: "member-request",
+          component: GroupJoinRequestView,
+          name: "groupjoinrequest",
+        },
+      ],
     },
     {
       path: "/page/:id/users",

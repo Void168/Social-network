@@ -1,6 +1,5 @@
 <template>
   <div class="w-full flex flex-col justify-center items-center">
-    <GroupHeader :group="group" :isUserInGroup="isUserInGroup"/>
     <div class="flex w-[80%] my-4 gap-4 px-4">
       <div class="w-[60%]">
         <div class="dark:bg-slate-700 rounded-lg px-2" v-if="isUserInGroup">
@@ -89,7 +88,7 @@
         </div>
         <div class="dark:bg-slate-700 rounded-lg p-4">
           <h2 class="text-xl font-bold">Giới thiệu</h2>
-          <div class="flex gap-2" v-if="group.is_privacy_group">
+          <div class="flex gap-2" v-if="group?.is_privacy_group">
             <div class="flex flex-col justify-start">
                 <GlobeAsiaAustraliaIcon class="w-6"/>
             </div>
@@ -108,13 +107,13 @@
             </div>
           </div>
           <div class="flex gap-2">
-            <div class="flex flex-col justify-start" v-if="group.show_group">
+            <div class="flex flex-col justify-start" v-if="group?.show_group">
                 <EyeIcon class="w-6"/>
             </div>
             <div class="flex flex-col justify-start" v-else>
                 <EyeSlashIcon class="w-6"/>
             </div>
-            <div v-if="group.show_group">
+            <div v-if="group?.show_group">
                 <h3 class="font-semibold">Hiển thị</h3>
                 <h4>Ai cũng có thể tìm thấy nhóm này.</h4>
             </div>
@@ -130,11 +129,11 @@
 </template>
 
 <script>
-import { useUserStore } from "../../../stores/user";
-import { useToastStore } from "../../../stores/toast";
+import { useUserStore } from "../../stores/user";
+import { useToastStore } from "../../stores/toast";
 import { RouterLink } from "vue-router";
 
-import GroupHeader from "./GroupHeader.vue";
+import GroupHeader from "../../components/items/group/GroupHeader.vue";
 
 import {
   GlobeAsiaAustraliaIcon,
@@ -148,7 +147,8 @@ import {
   PencilSquareIcon,
   EyeIcon
 } from "@heroicons/vue/24/solid";
-export default (await import("vue")).defineComponent({
+export default {
+  name: 'groupdiscuss',
   components: {
     RouterLink,
     GlobeAsiaAustraliaIcon,
@@ -182,5 +182,5 @@ export default (await import("vue")).defineComponent({
       step: 0,
     };
   },
-});
+};
 </script>

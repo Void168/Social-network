@@ -202,7 +202,6 @@ def set_relationship(request):
     else: 
         return JsonResponse({'message':'Failed'})
 
-
 @api_view(['POST'])
 def send_relationship_request(request, pk):
     user = User.objects.get(pk=pk)

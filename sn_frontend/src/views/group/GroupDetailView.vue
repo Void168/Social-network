@@ -14,7 +14,7 @@
     <div
       class="lg:col-span-4 md:col-span-3 col-span-4 dark:bg-slate-900 bg-slate-200 flex flex-col relative items-center"
     >
-      <GroupHeader :group="group" :isUserInGroup="isUserInGroup" v-if="route.path.includes('about' || 'members' || 'media')"/>
+      <GroupHeader :group="group" :isUserInGroup="isUserInGroup" v-if="route.name === 'groupdiscuss' || route.name === 'groupabout' || route.name === 'groupmembers'"/>
       <router-view :isUserInGroup="isUserInGroup" :group="group"></router-view>
     </div>
   </div>

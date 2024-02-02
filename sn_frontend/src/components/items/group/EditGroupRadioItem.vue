@@ -25,6 +25,7 @@
         @getOption="getOption"
         @click="$emit('getOption', option)"
         @toggle="$emit('toggle')"
+        @submit="$emit('submit')"
       />
     </div>
   </div>
@@ -32,7 +33,7 @@
 
 <script>
 import { PencilIcon } from "@heroicons/vue/20/solid";
-import CustomListRadio from "../../input/CustomListRadio.vue";
+import CustomListRadio from "../../input/CustomListRadioButton.vue";
 
 export default (await import("vue")).defineComponent({
   components:{

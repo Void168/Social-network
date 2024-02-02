@@ -36,6 +36,7 @@
         Hủy
       </button>
       <button
+        @click="$emit('submit')"
         class="px-4 py-2 font-medium rounded-lg"
         :class="'text-emerald-500 dark:bg-slate-700 dark:hover:bg-slate-600 duration-75'"
       >

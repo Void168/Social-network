@@ -12,4 +12,5 @@ urlpatterns = [
     path('<uuid:pk>/get-join-request/', api.get_join_group_requests, name='get_join_group_requests'),
     path('<uuid:pk>/get-friends/', api.get_friends_in_group, name='get_friends_in_group'),
     path('<uuid:pk>/user/<uuid:id>/request/<str:status>/', api.handle_join_request, name='handle_join_request'),
+    path('<uuid:pk>/info/', api.change_group_info, name='change_group_info'),
 ]

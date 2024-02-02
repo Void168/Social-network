@@ -12,7 +12,7 @@ from page.serializers import PageSerializer
 
 from .serializers import QuestionSerializer, RuleSerializer, MemberSerializer, PageMemberSerializer, GroupSerializer, GroupDetailSerializer, JoinGroupRequestSerializer
 from .models import Group, Rule, Question, Member, PageMember, JoinGroupRequest
-from .forms import GroupCreateForm
+from .forms import GroupCreateForm, GroupInfoForm
 
 @api_view(['POST'])
 def create_group(request):
@@ -104,8 +104,6 @@ def get_friends_in_group(request, pk):
     except Member.DoesNotExist:
         return JsonResponse({'message': 'No friends found'})
         
-    
-
 @api_view(['GET'])
 def get_discover_groups(request):
     try:
@@ -221,3 +219,17 @@ def handle_join_request(request, pk, status, id):
         JoinGroupRequest.objects.filter(status='rejected').delete()
 
         return JsonResponse({'message': 'Request rejected'})
+
+@api_view(['POST'])
+def change_group_info(request, pk):
+    group = Group.objects.get(pk=pk)
+    form = GroupInfoForm(data=request.POST, instance=group)
+    
+    if form.is_valid() and group.admin == request.user:
+        group = form.save()
+        
+        serializer = GroupSerializer(group)
+
+        return JsonResponse(serializer.data, safe=False)
+    else:
+        return JsonResponse({'error': 'Failed'})

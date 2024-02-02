@@ -33,7 +33,7 @@ class Group(models.Model):
     
     email = models.EmailField(blank=True, default='')
     name = models.CharField(blank=True, max_length=50)
-    
+    website = models.CharField(blank=True, max_length=255)
     cover_image = models.ImageField(upload_to='group_cover_images', blank=True, null=True)
     
     biography = models.CharField(blank=True, default='', max_length=255)
@@ -47,9 +47,15 @@ class Group(models.Model):
     
     is_private_group = models.BooleanField(default=False)
     show_group = models.BooleanField(default=False)
+    anyone_can_join = models.BooleanField(default=True)
+    anonymous_post = models.BooleanField(default=False)
+    anyone_can_post = models.BooleanField(default=True)
+    pending_post = models.BooleanField(default=False)
+    anyone_can_poll = models.BooleanField(default=True)
     
     today_posts_count = models.IntegerField(default=0)
     
+    ban_list = models.ManyToManyField(Member, related_name='ban_list')
     rules = models.ManyToManyField(Rule, related_name='group_rules')
     questions = models.ManyToManyField(Question, related_name='group_quiz')
     

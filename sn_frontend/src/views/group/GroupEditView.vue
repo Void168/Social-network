@@ -12,15 +12,16 @@
           "
         >
           <h3 class="text-lg font-semibold">Tên và mô tả</h3>
+          <!-- {{ group }} -->
           <PencilIcon
             @click="toggleEditName"
             v-if="!isNameOpen"
             class="w-8 dark:text-neutral-400 cursor-pointer p-1 rounded-full hover:dark:bg-slate-600 duration-75"
           />
           <div v-else class="w-full space-y-2">
-            <MUILikedInput :placeholder="'Tên'" v-model="group.name" />
+            <MUILikedInput :placeholder="'Tên'" v-model="group.name"/>
             <textarea
-              v-model="biography"
+              v-model="group.biography"
               class="p-4 w-full bg-gray-100 rounded-lg resize-none border"
               cols="30"
               rows="4"
@@ -34,6 +35,7 @@
                 Hủy
               </button>
               <button
+                @click="submitNameForm"
                 :disabled="name === group.name && biography === ''"
                 class="px-4 py-2 font-medium rounded-lg"
                 :class="
@@ -201,11 +203,12 @@
 </template>
 
 <script>
+import axios from "axios";
 import { PencilIcon } from "@heroicons/vue/20/solid";
 import { useRoute } from "vue-router";
 import { useUserStore } from "../../stores/user";
 import MUILikedInput from "../../components/input/MUILikedInput.vue";
-import CustomListRadio from "../../components/input/CustomListRadio.vue";
+import CustomListRadio from "../../components/input/CustomListRadioButton.vue";
 import EditGroupRadioItem from "../../components/items/group/EditGroupRadioItem.vue";
 
 import selection from "../../data/selection";
@@ -336,6 +339,28 @@ export default {
         this.pollOption = false;
       }
     },
+    submitNameForm() {
+      let formData = new FormData();
+
+      formData.append("name", this.group.name);
+      formData.append("biography", this.group.biography);
+
+      axios.post(`/api/group/${this.group.id}/info/`, formData, {
+        headers: {
+          "Content-Type": "multipart/form-data",
+        },
+      }).then((res) => {
+        console.log(res.data)
+      }).catch((error) => {
+        console.log((error))
+      });
+    },
+    submitShowForm() {},
+    submitRequestForm() {},
+    submitAnonymousForm() {},
+    submitPostForm() {},
+    submitPendingForm() {},
+    submitPollForm() {},
   },
 };
 </script>

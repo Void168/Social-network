@@ -3,183 +3,112 @@
     <div class="w-full dark:bg-slate-800 rounded-lg p-4">
       <h1 class="font-bold text-2xl">Thiết lập nhóm</h1>
       <div class="my-4">
-        <div>
-          <div
-            class="flex"
-            :class="
-              isNameOpen
-                ? 'flex-col justify-start items-start gap-2'
-                : 'items-center justify-between'
-            "
-          >
-            <h3 class="text-lg font-semibold">Tên và mô tả</h3>
-            <PencilIcon
-              @click="toggleEditName"
-              v-if="!isNameOpen"
-              class="w-8 dark:text-neutral-400 cursor-pointer p-1 rounded-full hover:dark:bg-slate-600 duration-75"
-            />
-            <div v-else class="w-full space-y-2">
-              <MUILikedInput :placeholder="'Tên'" v-model="group.name" />
-              <textarea
-                v-model="biography"
-                class="p-4 w-full bg-gray-100 rounded-lg resize-none border"
-                cols="30"
-                rows="4"
-                placeholder="Mô tả về nhóm"
-              ></textarea>
-              <div class="flex justify-end items-center gap-2">
-                <button
-                  @click="toggleEditName"
-                  class="px-4 py-2 font-medium text-emerald-500 dark:bg-slate-700 dark:hover:bg-slate-600 duration-75 rounded-lg"
-                >
-                  Hủy
-                </button>
-                <button
-                  :disabled="name === group.name && biography === ''"
-                  class="px-4 py-2 font-medium rounded-lg"
-                  :class="
-                    name === group.name && biography === ''
-                      ? 'text-neutral-400 bg-slate-600 cursor-not-allowed'
-                      : 'text-emerald-500 dark:bg-slate-700 dark:hover:bg-slate-600 duration-75'
-                  "
-                >
-                  Lưu
-                </button>
-              </div>
-            </div>
-          </div>
-          <hr class="border border-slate-700 my-4" />
-        </div>
-        <div>
-          <div
-            class="flex"
-            :class="
-              isShowOpen
-                ? 'flex-col justify-start items-start gap-2'
-                : 'items-center justify-between'
-            "
-          >
-            <div class="space-y-1">
-              <h3 class="text-lg font-semibold">Ẩn nhóm</h3>
-              <h5 class="text-sm" v-if="!isShowOpen">
-                {{ group?.show_group ? "Ẩn" : "Hiên thị" }}
-              </h5>
-            </div>
-            <PencilIcon
-              v-if="!isShowOpen"
-              @click="toggleEditShow"
-              class="w-8 dark:text-neutral-400 cursor-pointer p-1 rounded-full hover:dark:bg-slate-600 duration-75"
-            />
-            <div v-else class="w-full space-y-2">
-              <div
-                v-for="showSelection in showSelections"
-                :key="showSelection.id"
-                class="p-2 flex justify-between items-center dark:hover:bg-slate-700 rounded-lg duration-75 cursor-pointer"
-                @click="getShowOption(showSelection)"
+        <div
+          class="flex"
+          :class="
+            isNameOpen
+              ? 'flex-col justify-start items-start gap-2'
+              : 'items-center justify-between'
+          "
+        >
+          <h3 class="text-lg font-semibold">Tên và mô tả</h3>
+          <PencilIcon
+            @click="toggleEditName"
+            v-if="!isNameOpen"
+            class="w-8 dark:text-neutral-400 cursor-pointer p-1 rounded-full hover:dark:bg-slate-600 duration-75"
+          />
+          <div v-else class="w-full space-y-2">
+            <MUILikedInput :placeholder="'Tên'" v-model="group.name" />
+            <textarea
+              v-model="biography"
+              class="p-4 w-full bg-gray-100 rounded-lg resize-none border"
+              cols="30"
+              rows="4"
+              placeholder="Mô tả về nhóm"
+            ></textarea>
+            <div class="flex justify-end items-center gap-2">
+              <button
+                @click="toggleEditName"
+                class="px-4 py-2 font-medium text-emerald-500 dark:bg-slate-700 dark:hover:bg-slate-600 duration-75 rounded-lg"
               >
-                <div class="flex gap-2 items-center">
-                  <EyeIcon
-                    class="w-10 p-2 rounded-full bg-slate-600"
-                    v-if="showSelection.id === 1"
-                  />
-                  <EyeSlashIcon
-                    class="w-10 p-2 rounded-full bg-slate-600"
-                    v-else
-                  />
-                  <div class="flex flex-col gap-1">
-                    <h4 class="font-medium">{{ showSelection.name }}</h4>
-                    <h5 class="text-sm">{{ showSelection.content }}</h5>
-                  </div>
-                </div>
-                <div class="relative w-10 h-10 rounded-full dark:bg-slate-600">
-                  <span
-                    class="absolute w-5 h-5 bg-emerald-500 rounded-full top-[10px] left-[10px]"
-                    v-if="showOption && showSelection.id === 1"
-                  ></span>
-                  <span
-                    class="absolute w-5 h-5 bg-emerald-500 rounded-full top-[10px] left-[10px]"
-                    v-if="!showOption && showSelection.id === 2"
-                  ></span>
-                </div>
-              </div>
-              <div class="flex justify-end items-center gap-2">
-                <button
-                  @click="toggleEditShow"
-                  class="px-4 py-2 font-medium text-emerald-500 dark:bg-slate-700 dark:hover:bg-slate-600 duration-75 rounded-lg"
-                >
-                  Hủy
-                </button>
-                <button
-                  :disabled="name === group.name && biography === ''"
-                  class="px-4 py-2 font-medium rounded-lg"
-                  :class="
-                    name === group.name && biography === ''
-                      ? 'text-neutral-400 bg-slate-600 cursor-not-allowed'
-                      : 'text-emerald-500 dark:bg-slate-700 dark:hover:bg-slate-600 duration-75'
-                  "
-                >
-                  Lưu
-                </button>
-              </div>
+                Hủy
+              </button>
+              <button
+                :disabled="name === group.name && biography === ''"
+                class="px-4 py-2 font-medium rounded-lg"
+                :class="
+                  name === group.name && biography === ''
+                    ? 'text-neutral-400 bg-slate-600 cursor-not-allowed'
+                    : 'text-emerald-500 dark:bg-slate-700 dark:hover:bg-slate-600 duration-75'
+                "
+              >
+                Lưu
+              </button>
             </div>
           </div>
-          <hr class="border border-slate-700 my-4" />
         </div>
-        <div>
-          <div class="flex items-center justify-between">
-            <div class="space-y-1">
-              <h3 class="text-lg font-semibold">Vị trí</h3>
-              <h5 class="text-sm">
-                {{ group?.show_group ? "Ẩn" : "Hiên thị" }}
-              </h5>
-            </div>
-            <PencilIcon
-              class="w-8 dark:text-neutral-400 cursor-pointer p-1 rounded-full hover:dark:bg-slate-600 duration-75"
-            />
+        <hr class="border border-slate-700 my-4" />
+        <EditGroupRadioItem
+          :name="'Ẩn nhóm'"
+          :group="group"
+          :isOpen="isShowOpen"
+          :options="showSelections"
+          :selectedOption="showOption"
+          @getOption="getShowOption"
+          @toggle="toggleEditShow"
+        />
+        <hr class="border border-slate-700 my-4" />
+        <div class="flex items-center justify-between">
+          <div class="space-y-1">
+            <h3 class="text-lg font-semibold">Vị trí</h3>
+            <h5 class="text-sm">
+              {{ group?.show_group ? "Ẩn" : "Hiên thị" }}
+            </h5>
           </div>
-          <hr class="border border-slate-700 my-4" />
+          <PencilIcon
+            class="w-8 dark:text-neutral-400 cursor-pointer p-1 rounded-full hover:dark:bg-slate-600 duration-75"
+          />
         </div>
-        <div>
-          <div
-            class="flex"
-            :class="
-              isUrlOpen
-                ? 'flex-col justify-start items-start gap-2'
-                : 'items-center justify-between'
-            "
-          >
-            <div class="space-y-1">
-              <h3 class="text-lg font-semibold">Địa chỉ web</h3>
-              <h5 class="text-sm" v-if="!isUrlOpen">
-                {{ baseUrl + route.path.slice(0, route.path.length - 5) }}
-              </h5>
-            </div>
-            <PencilIcon
-              v-if="!isUrlOpen"
-              @click="toggleWebShow"
-              class="w-8 dark:text-neutral-400 cursor-pointer p-1 rounded-full hover:dark:bg-slate-600 duration-75"
-            />
-            <div v-else class="w-full space-y-4">
-              <MUILikedInput :placeholder="'Tên'" v-model="url" />
-              <div class="flex justify-end items-center gap-2">
-                <button
-                  @click="toggleWebShow"
-                  class="px-4 py-2 font-medium text-emerald-500 dark:bg-slate-700 dark:hover:bg-slate-600 duration-75 rounded-lg"
-                >
-                  Hủy
-                </button>
-                <button
-                  :disabled="name === group.name && biography === ''"
-                  class="px-4 py-2 font-medium rounded-lg"
-                  :class="
-                    name === group.name && biography === ''
-                      ? 'text-neutral-400 bg-slate-600 cursor-not-allowed'
-                      : 'text-emerald-500 dark:bg-slate-700 dark:hover:bg-slate-600 duration-75'
-                  "
-                >
-                  Lưu
-                </button>
-              </div>
+        <hr class="border border-slate-700 my-4" />
+        <div
+          class="flex"
+          :class="
+            isUrlOpen
+              ? 'flex-col justify-start items-start gap-2'
+              : 'items-center justify-between'
+          "
+        >
+          <div class="space-y-1">
+            <h3 class="text-lg font-semibold">Địa chỉ web</h3>
+            <h5 class="text-sm" v-if="!isUrlOpen">
+              {{ baseUrl + route.path.slice(0, route.path.length - 5) }}
+            </h5>
+          </div>
+          <PencilIcon
+            v-if="!isUrlOpen"
+            @click="toggleWebShow"
+            class="w-8 dark:text-neutral-400 cursor-pointer p-1 rounded-full hover:dark:bg-slate-600 duration-75"
+          />
+          <div v-else class="w-full space-y-4">
+            <MUILikedInput :placeholder="'Tên'" v-model="url" />
+            <div class="flex justify-end items-center gap-2">
+              <button
+                @click="toggleWebShow"
+                class="px-4 py-2 font-medium text-emerald-500 dark:bg-slate-700 dark:hover:bg-slate-600 duration-75 rounded-lg"
+              >
+                Hủy
+              </button>
+              <button
+                :disabled="name === group.name && biography === ''"
+                class="px-4 py-2 font-medium rounded-lg"
+                :class="
+                  name === group.name && biography === ''
+                    ? 'text-neutral-400 bg-slate-600 cursor-not-allowed'
+                    : 'text-emerald-500 dark:bg-slate-700 dark:hover:bg-slate-600 duration-75'
+                "
+              >
+                Lưu
+              </button>
             </div>
           </div>
         </div>
@@ -188,79 +117,16 @@
     <div class="w-full dark:bg-slate-800 rounded-lg p-4">
       <h1 class="font-bold text-2xl">Quản lý thành viên</h1>
       <div class="my-4">
-        <div
-            class="flex"
-            :class="
-              isRequestOpen
-                ? 'flex-col justify-start items-start gap-2'
-                : 'items-center justify-between'
-            "
-          >
-            <div class="space-y-1">
-              <h3 class="text-lg font-semibold">Ai có thể tham gia nhóm</h3>
-              <h5 class="text-sm" v-if="!isRequestOpen">
-                Chỉ trang cá nhân
-              </h5>
-            </div>
-            <PencilIcon
-              v-if="!isRequestOpen"
-              @click="toggleRequestShow"
-              class="w-8 dark:text-neutral-400 cursor-pointer p-1 rounded-full hover:dark:bg-slate-600 duration-75"
-            />
-            <div v-else class="w-full space-y-2">
-              <div
-                v-for="requestSelection in requestSelections"
-                :key="requestSelection.id"
-                class="p-2 flex justify-between items-center dark:hover:bg-slate-700 rounded-lg duration-75 cursor-pointer"
-                @click="getRequestOption(requestSelection)"
-              >
-                <div class="flex gap-2 items-center">
-                  <EyeIcon
-                    class="w-10 p-2 rounded-full bg-slate-600"
-                    v-if="requestSelection.id === 1"
-                  />
-                  <EyeSlashIcon
-                    class="w-10 p-2 rounded-full bg-slate-600"
-                    v-else
-                  />
-                  <div class="flex flex-col gap-1">
-                    <h4 class="font-medium">{{ requestSelection.name }}</h4>
-                    <h5 class="text-sm">{{ requestSelection.content }}</h5>
-                  </div>
-                </div>
-                <div class="relative w-10 h-10 rounded-full dark:bg-slate-600">
-                  <span
-                    class="absolute w-5 h-5 bg-emerald-500 rounded-full top-[10px] left-[10px]"
-                    v-if="requestOption && requestSelection.id === 1"
-                  ></span>
-                  <span
-                    class="absolute w-5 h-5 bg-emerald-500 rounded-full top-[10px] left-[10px]"
-                    v-if="!requestOption && requestSelection.id === 2"
-                  ></span>
-                </div>
-              </div>
-              <div class="flex justify-end items-center gap-2">
-                <button
-                  @click="toggleRequestShow"
-                  class="px-4 py-2 font-medium text-emerald-500 dark:bg-slate-700 dark:hover:bg-slate-600 duration-75 rounded-lg"
-                >
-                  Hủy
-                </button>
-                <button
-                  :disabled="name === group.name && biography === ''"
-                  class="px-4 py-2 font-medium rounded-lg"
-                  :class="
-                    name === group.name && biography === ''
-                      ? 'text-neutral-400 bg-slate-600 cursor-not-allowed'
-                      : 'text-emerald-500 dark:bg-slate-700 dark:hover:bg-slate-600 duration-75'
-                  "
-                >
-                  Lưu
-                </button>
-              </div>
-            </div>
-          </div>
-          <hr class="border border-slate-700 my-4" />
+        <EditGroupRadioItem
+          :name="'Ai có thể tham gia nhóm'"
+          :group="group"
+          :isOpen="isRequestOpen"
+          :options="requestSelections"
+          :selectedOption="requestOption"
+          @getOption="getRequestOption"
+          @toggle="toggleRequestShow"
+        />
+        <hr class="border border-slate-700 my-4" />
         <div v-if="userStore.user.id === group?.admin?.id">
           <div class="flex items-center justify-between">
             <div class="space-y-1">
@@ -290,175 +156,45 @@
     <div class="w-full dark:bg-slate-800 rounded-lg p-4">
       <h1 class="font-bold text-2xl">Quản lý nội dung thảo luận</h1>
       <div class="my-4">
-        <div
-            class="flex"
-            :class="
-              isAnonymousOpen
-                ? 'flex-col justify-start items-start gap-2'
-                : 'items-center justify-between'
-            "
-          >
-            <div class="space-y-1">
-              <h3 class="text-lg font-semibold">Đăng ẩn danh</h3>
-              <h5 class="text-sm" v-if="!isAnonymousOpen">
-                Tắt
-              </h5>
-            </div>
-            <PencilIcon
-              v-if="!isAnonymousOpen"
-              @click="toggleAnonymousShow"
-              class="w-8 dark:text-neutral-400 cursor-pointer p-1 rounded-full hover:dark:bg-slate-600 duration-75"
-            />
-            <div v-else class="w-full space-y-2">
-              <div
-                v-for="anonymousSelection in onOffSelections"
-                :key="anonymousSelection.id"
-                class="p-2 flex justify-between items-center dark:hover:bg-slate-700 rounded-lg duration-75 cursor-pointer"
-                @click="getAnonymousOption(anonymousSelection)"
-              >
-                <div class="flex gap-2 items-center">
-                  <EyeIcon
-                    class="w-10 p-2 rounded-full bg-slate-600"
-                    v-if="anonymousSelection.id === 1"
-                  />
-                  <EyeSlashIcon
-                    class="w-10 p-2 rounded-full bg-slate-600"
-                    v-else
-                  />
-                  <div class="flex flex-col gap-1">
-                    <h4 class="font-medium">{{ anonymousSelection.name }}</h4>
-                    <h5 class="text-sm">{{ anonymousSelection.content }}</h5>
-                  </div>
-                </div>
-                <div class="relative w-10 h-10 rounded-full dark:bg-slate-600">
-                  <span
-                    class="absolute w-5 h-5 bg-emerald-500 rounded-full top-[10px] left-[10px]"
-                    v-if="anonymousOption && anonymousSelection.id === 1"
-                  ></span>
-                  <span
-                    class="absolute w-5 h-5 bg-emerald-500 rounded-full top-[10px] left-[10px]"
-                    v-if="!anonymousOption && anonymousSelection.id === 2"
-                  ></span>
-                </div>
-              </div>
-              <div class="flex justify-end items-center gap-2">
-                <button
-                  @click="toggleAnonymousShow"
-                  class="px-4 py-2 font-medium text-emerald-500 dark:bg-slate-700 dark:hover:bg-slate-600 duration-75 rounded-lg"
-                >
-                  Hủy
-                </button>
-                <button
-                  :disabled="name === group.name && biography === ''"
-                  class="px-4 py-2 font-medium rounded-lg"
-                  :class="
-                    name === group.name && biography === ''
-                      ? 'text-neutral-400 bg-slate-600 cursor-not-allowed'
-                      : 'text-emerald-500 dark:bg-slate-700 dark:hover:bg-slate-600 duration-75'
-                  "
-                >
-                  Lưu
-                </button>
-              </div>
-            </div>
-          </div>
-          <hr class="border border-slate-700 my-4" />
-          <div
-            class="flex"
-            :class="
-              isWhoCanPostOpen
-                ? 'flex-col justify-start items-start gap-2'
-                : 'items-center justify-between'
-            "
-          >
-            <div class="space-y-1">
-              <h3 class="text-lg font-semibold">Ai có thể đăng</h3>
-              <h5 class="text-sm" v-if="!isWhoCanPostOpen">
-                Bất cứ ai trong nhóm
-              </h5>
-            </div>
-            <PencilIcon
-              v-if="!isWhoCanPostOpen"
-              @click="toggleWhoCanPostShow"
-              class="w-8 dark:text-neutral-400 cursor-pointer p-1 rounded-full hover:dark:bg-slate-600 duration-75"
-            />
-            <div v-else class="w-full space-y-2">
-              <div
-                v-for="whoCanSelection in postSelections"
-                :key="whoCanSelection.id"
-                class="p-2 flex justify-between items-center dark:hover:bg-slate-700 rounded-lg duration-75 cursor-pointer"
-                @click="getWhoCanPostOption(whoCanSelection)"
-              >
-                <div class="flex gap-2 items-center">
-                  <EyeIcon
-                    class="w-10 p-2 rounded-full bg-slate-600"
-                    v-if="whoCanSelection.id === 1"
-                  />
-                  <EyeSlashIcon
-                    class="w-10 p-2 rounded-full bg-slate-600"
-                    v-else
-                  />
-                  <div class="flex flex-col gap-1">
-                    <h4 class="font-medium">{{ whoCanSelection.name }}</h4>
-                    <h5 class="text-sm">{{ whoCanSelection.content }}</h5>
-                  </div>
-                </div>
-                <div class="relative w-10 h-10 rounded-full dark:bg-slate-600">
-                  <span
-                    class="absolute w-5 h-5 bg-emerald-500 rounded-full top-[10px] left-[10px]"
-                    v-if="whoCanPostOption && whoCanSelection.id === 1"
-                  ></span>
-                  <span
-                    class="absolute w-5 h-5 bg-emerald-500 rounded-full top-[10px] left-[10px]"
-                    v-if="!whoCanPostOption && whoCanSelection.id === 2"
-                  ></span>
-                </div>
-              </div>
-              <div class="flex justify-end items-center gap-2">
-                <button
-                  @click="toggleWhoCanPostShow"
-                  class="px-4 py-2 font-medium text-emerald-500 dark:bg-slate-700 dark:hover:bg-slate-600 duration-75 rounded-lg"
-                >
-                  Hủy
-                </button>
-                <button
-                  :disabled="name === group.name && biography === ''"
-                  class="px-4 py-2 font-medium rounded-lg"
-                  :class="
-                    name === group.name && biography === ''
-                      ? 'text-neutral-400 bg-slate-600 cursor-not-allowed'
-                      : 'text-emerald-500 dark:bg-slate-700 dark:hover:bg-slate-600 duration-75'
-                  "
-                >
-                  Lưu
-                </button>
-              </div>
-            </div>
-          </div>
-          <hr class="border border-slate-700 my-4" />
-        <div>
-          <div class="flex items-center justify-between">
-            <div class="space-y-1">
-              <h3 class="text-lg font-semibold">Cần phê duyệt bài viết</h3>
-            </div>
-            <PencilIcon
-              class="w-8 dark:text-neutral-400 cursor-pointer p-1 rounded-full hover:dark:bg-slate-600 duration-75"
-            />
-          </div>
-        </div>
+        <EditGroupRadioItem
+          :name="'Đăng ẩn danh'"
+          :group="group"
+          :isOpen="isAnonymousOpen"
+          :options="onOffSelections"
+          :selectedOption="anonymousOption"
+          @getOption="getAnonymousOption"
+          @toggle="toggleAnonymousShow"
+        />
         <hr class="border border-slate-700 my-4" />
-        <div>
-          <div class="flex items-center justify-between">
-            <div class="space-y-1">
-              <h3 class="text-lg font-semibold">
-                Ai có thể tham gia cuộc thảo luận
-              </h3>
-            </div>
-            <PencilIcon
-              class="w-8 dark:text-neutral-400 cursor-pointer p-1 rounded-full hover:dark:bg-slate-600 duration-75"
-            />
-          </div>
-        </div>
+        <EditGroupRadioItem
+          :name="'Ai có thể đăng'"
+          :group="group"
+          :isOpen="isWhoCanPostOpen"
+          :options="postSelections"
+          :selectedOption="whoCanPostOption"
+          @getOption="getWhoCanPostOption"
+          @toggle="toggleWhoCanPostShow"
+        />
+        <hr class="border border-slate-700 my-4" />
+        <EditGroupRadioItem
+          :name="'Cần phê duyệt bài viết'"
+          :group="group"
+          :isOpen="isPendingPostOpen"
+          :options="onOffSelections"
+          :selectedOption="pendingPostOption"
+          @getOption="getPendingPostOption"
+          @toggle="togglePendingPostShow"
+        />
+        <hr class="border border-slate-700 my-4" />
+        <EditGroupRadioItem
+          :name="'Ai có thể tham gia cuộc thảo luận'"
+          :group="group"
+          :isOpen="isPollOpen"
+          :options="postSelections"
+          :selectedOption="pollOption"
+          @getOption="getPollOption"
+          @toggle="togglePollShow"
+        />
       </div>
     </div>
   </div>
@@ -469,8 +205,10 @@ import { PencilIcon } from "@heroicons/vue/20/solid";
 import { useRoute } from "vue-router";
 import { useUserStore } from "../../stores/user";
 import MUILikedInput from "../../components/input/MUILikedInput.vue";
-import ListRadioButton from '../../components/input/ListRadioButton.vue';
+import CustomListRadio from "../../components/input/CustomListRadio.vue";
+import EditGroupRadioItem from "../../components/items/group/EditGroupRadioItem.vue";
 
+import selection from "../../data/selection";
 import { EyeIcon, EyeSlashIcon } from "@heroicons/vue/24/solid";
 
 export default {
@@ -480,7 +218,8 @@ export default {
     MUILikedInput,
     EyeIcon,
     EyeSlashIcon,
-    ListRadioButton,
+    CustomListRadio,
+    EditGroupRadioItem,
   },
   setup() {
     const route = useRoute();
@@ -502,67 +241,25 @@ export default {
       name: this.group.name,
       biography: this.group.biography,
       isShowOpen: false,
-      showSelections: [
-        {
-          id: 1,
-          name: "Hiển thị",
-          content: "Ai cũng có thể tìm thấy nhóm này.",
-        },
-        {
-          id: 2,
-          name: "Ẩn",
-          content: "Chỉ thành viên mới tìm thấy nhóm này.",
-        },
-      ],
+      showSelections: selection.showSelections,
       showOption: this.group.show_group,
       isUrlOpen: false,
       url: `http://localhost:5173/groups/${this.group.id}`,
       isRequestOpen: false,
-      requestSelections: [
-      {
-          id: 1,
-          name: "Trang cá nhân và trang",
-          content: "Cho phép cả Trang và trang cá nhân yêu cầu tham gia nhóm.",
-        },
-        {
-          id: 2,
-          name: "Chỉ trang cá nhân",
-          content: "Chỉ cho phép trang cá nhân tham gia nhóm.",
-        },
-      ],
+      requestSelections: selection.requestSelections,
       requestOption: false,
       isAddModeratorOpen: false,
       isBanListOpen: false,
       isAnonymousOpen: false,
-      onOffSelections: [
-      {
-          id: 1,
-          name: "Bật",
-          content: "Bật chức năng",
-        },
-        {
-          id: 2,
-          name: "Tắt",
-          content: "Tắt chức năng",
-        },
-      ],
+      onOffSelections: selection.onOffSelections,
       anonymousOption: false,
       isWhoCanPostOpen: false,
-      postSelections: [
-          {
-              id: 1,
-              name: "Bất cứ ai trong nhóm",
-              content: "",
-            },
-            {
-                id: 2,
-                name: "Chỉ chủ nhóm và quản trị viên",
-                content: "",
-            },
-        ],
-    whoCanPostOption: false,
+      postSelections: selection.postSelections,
+      whoCanPostOption: false,
       isPendingPostOpen: false,
+      pendingPostOption: false,
       isPollOpen: false,
+      pollOption: false,
     };
   },
 
@@ -577,17 +274,25 @@ export default {
     toggleWebShow() {
       this.isUrlOpen = !this.isUrlOpen;
     },
-    toggleRequestShow(){
-        this.isRequestOpen = !this.isRequestOpen;
-        this.requestOption = false
+    toggleRequestShow() {
+      this.isRequestOpen = !this.isRequestOpen;
+      this.requestOption = false;
     },
-    toggleAnonymousShow(){
-        this.isAnonymousOpen = !this.isAnonymousOpen;
-        this.anonymousOption = false
+    toggleAnonymousShow() {
+      this.isAnonymousOpen = !this.isAnonymousOpen;
+      this.anonymousOption = false;
     },
-    toggleWhoCanPostShow(){
-        this.isWhoCanPostOpen = !this.isWhoCanPostOpen;
-        this.whoCanPostOption = false
+    toggleWhoCanPostShow() {
+      this.isWhoCanPostOpen = !this.isWhoCanPostOpen;
+      this.whoCanPostOption = false;
+    },
+    togglePendingPostShow() {
+      this.isPendingPostOpen = !this.isPendingPostOpen;
+      this.pendingPostOption = false;
+    },
+    togglePollShow() {
+      this.isPollOpen = !this.isPollOpen;
+      this.pollOption = false;
     },
     getShowOption(data) {
       if (data.name === "Hiển thị") {
@@ -615,6 +320,20 @@ export default {
         this.whoCanPostOption = true;
       } else {
         this.whoCanPostOption = false;
+      }
+    },
+    getPendingPostOption(data) {
+      if (data.name === "Bật") {
+        this.pendingPostOption = true;
+      } else {
+        this.pendingPostOption = false;
+      }
+    },
+    getPollOption(data) {
+      if (data.name === "Bất cứ ai trong nhóm") {
+        this.pollOption = true;
+      } else {
+        this.pollOption = false;
       }
     },
   },

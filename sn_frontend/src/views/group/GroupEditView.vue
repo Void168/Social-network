@@ -12,14 +12,13 @@
           "
         >
           <h3 class="text-lg font-semibold">Tên và mô tả</h3>
-          <!-- {{ group }} -->
           <PencilIcon
             @click="toggleEditName"
             v-if="!isNameOpen"
             class="w-8 dark:text-neutral-400 cursor-pointer p-1 rounded-full hover:dark:bg-slate-600 duration-75"
           />
           <div v-else class="w-full space-y-2">
-            <MUILikedInput :placeholder="'Tên'" v-model="group.name"/>
+            <MUILikedInput :placeholder="'Tên'" v-model="group.name" />
             <textarea
               v-model="group.biography"
               class="p-4 w-full bg-gray-100 rounded-lg resize-none border"
@@ -58,6 +57,7 @@
           :selectedOption="showOption"
           @getOption="getShowOption"
           @toggle="toggleEditShow"
+          @submit="submitShowForm"
         />
         <hr class="border border-slate-700 my-4" />
         <div class="flex items-center justify-between">
@@ -127,6 +127,7 @@
           :selectedOption="requestOption"
           @getOption="getRequestOption"
           @toggle="toggleRequestShow"
+          @submit="submitRequestForm"
         />
         <hr class="border border-slate-700 my-4" />
         <div v-if="userStore.user.id === group?.admin?.id">
@@ -166,6 +167,7 @@
           :selectedOption="anonymousOption"
           @getOption="getAnonymousOption"
           @toggle="toggleAnonymousShow"
+          @submit="submitAnonymousForm"
         />
         <hr class="border border-slate-700 my-4" />
         <EditGroupRadioItem
@@ -176,6 +178,7 @@
           :selectedOption="whoCanPostOption"
           @getOption="getWhoCanPostOption"
           @toggle="toggleWhoCanPostShow"
+          @submit="submitPostForm"
         />
         <hr class="border border-slate-700 my-4" />
         <EditGroupRadioItem
@@ -186,6 +189,7 @@
           :selectedOption="pendingPostOption"
           @getOption="getPendingPostOption"
           @toggle="togglePendingPostShow"
+          @submit="submitPendingForm"
         />
         <hr class="border border-slate-700 my-4" />
         <EditGroupRadioItem
@@ -196,6 +200,7 @@
           :selectedOption="pollOption"
           @getOption="getPollOption"
           @toggle="togglePollShow"
+          @submit="submitPollForm"
         />
       </div>
     </div>
@@ -207,6 +212,7 @@ import axios from "axios";
 import { PencilIcon } from "@heroicons/vue/20/solid";
 import { useRoute } from "vue-router";
 import { useUserStore } from "../../stores/user";
+import { useToastStore } from "../../stores/toast";
 import MUILikedInput from "../../components/input/MUILikedInput.vue";
 import CustomListRadio from "../../components/input/CustomListRadioButton.vue";
 import EditGroupRadioItem from "../../components/items/group/EditGroupRadioItem.vue";
@@ -227,10 +233,12 @@ export default {
   setup() {
     const route = useRoute();
     const userStore = useUserStore();
+    const toastStore = useToastStore();
 
     return {
       route,
       userStore,
+      toastStore,
     };
   },
   props: {
@@ -246,24 +254,36 @@ export default {
       isShowOpen: false,
       showSelections: selection.showSelections,
       showOption: this.group.show_group,
+      showOptionName: "",
       isUrlOpen: false,
       url: `http://localhost:5173/groups/${this.group.id}`,
       isRequestOpen: false,
       requestSelections: selection.requestSelections,
-      requestOption: false,
+      requestOptionName: "",
+      requestOption: this.group.anyone_can_join,
       isAddModeratorOpen: false,
       isBanListOpen: false,
       isAnonymousOpen: false,
       onOffSelections: selection.onOffSelections,
-      anonymousOption: false,
+      anonymousOptionName: "",
+      anonymousOption: this.group.anonymous_post,
       isWhoCanPostOpen: false,
       postSelections: selection.postSelections,
-      whoCanPostOption: false,
+      whoCanPostOptionName: "",
+      whoCanPostOption: this.group.anyone_can_post,
       isPendingPostOpen: false,
-      pendingPostOption: false,
+      pendingPostOption: this.group.pending_post,
       isPollOpen: false,
-      pollOption: false,
+      pollOption:  this.group.anyone_can_poll,
     };
+  },
+
+  beforeUpdate() {
+
+  },
+
+  beforeMount() {
+    console.log(this.group);
   },
 
   methods: {
@@ -279,25 +299,26 @@ export default {
     },
     toggleRequestShow() {
       this.isRequestOpen = !this.isRequestOpen;
-      this.requestOption = false;
+      this.requestOption = this.group.anyone_can_join;
     },
     toggleAnonymousShow() {
       this.isAnonymousOpen = !this.isAnonymousOpen;
-      this.anonymousOption = false;
+      this.anonymousOption = this.group.anonymous_post;
     },
     toggleWhoCanPostShow() {
       this.isWhoCanPostOpen = !this.isWhoCanPostOpen;
-      this.whoCanPostOption = false;
+      this.whoCanPostOption = this.group.anyone_can_post;
     },
     togglePendingPostShow() {
       this.isPendingPostOpen = !this.isPendingPostOpen;
-      this.pendingPostOption = false;
+      this.pendingPostOption = this.group.pending_post;
     },
     togglePollShow() {
       this.isPollOpen = !this.isPollOpen;
-      this.pollOption = false;
+      this.pendingPostOption = this.group.anyone_can_poll;
     },
     getShowOption(data) {
+      this.showOptionName = data.name;
       if (data.name === "Hiển thị") {
         this.showOption = true;
       } else {
@@ -305,6 +326,7 @@ export default {
       }
     },
     getRequestOption(data) {
+    this.requestOptionName = data.name;
       if (data.name === "Trang cá nhân và trang") {
         this.requestOption = true;
       } else {
@@ -312,6 +334,7 @@ export default {
       }
     },
     getAnonymousOption(data) {
+      this.anonymousOptionName = data.name;
       if (data.name === "Bật") {
         this.anonymousOption = true;
       } else {
@@ -319,6 +342,7 @@ export default {
       }
     },
     getWhoCanPostOption(data) {
+      this.whoCanPostOptionName = data.name;
       if (data.name === "Bất cứ ai trong nhóm") {
         this.whoCanPostOption = true;
       } else {
@@ -345,22 +369,154 @@ export default {
       formData.append("name", this.group.name);
       formData.append("biography", this.group.biography);
 
-      axios.post(`/api/group/${this.group.id}/info/`, formData, {
-        headers: {
-          "Content-Type": "multipart/form-data",
-        },
-      }).then((res) => {
-        console.log(res.data)
-      }).catch((error) => {
-        console.log((error))
-      });
+      axios
+        .post(`/api/group/${this.group.id}/info/`, formData, {
+          headers: {
+            "Content-Type": "multipart/form-data",
+          },
+        })
+        .then((res) => {
+          console.log(res.data);
+        })
+        .catch((error) => {
+          console.log(error);
+        });
     },
-    submitShowForm() {},
-    submitRequestForm() {},
-    submitAnonymousForm() {},
-    submitPostForm() {},
-    submitPendingForm() {},
-    submitPollForm() {},
+    submitShowForm() {
+      axios
+        .post(`/api/group/${this.group?.id}/show-group/`, {
+          show_group: this.showOption,
+        })
+        .then((res) => {
+          this.isShowOpen = false;
+          this.toastStore.showToast(
+            3500,
+            "Đã lưu thông tin chỉnh sửa.",
+            "bg-emerald-500 text-white"
+          );
+        })
+        .catch((error) => {
+          console.log(error);
+          this.toastStore.showToast(
+            3500,
+            "Chỉnh sửa thất bại.",
+            "bg-rose-500 text-white"
+          );
+        });
+    },
+    submitRequestForm() {
+      axios
+        .post(`/api/group/${this.group?.id}/request-join-group/`, {
+          anyone_can_join: this.requestOption,
+        })
+        .then((res) => {
+          this.isRequestOpen = false;
+          this.toastStore.showToast(
+            3500,
+            "Đã lưu thông tin chỉnh sửa.",
+            "bg-emerald-500 text-white"
+          );
+        })
+        .catch((error) => {
+          console.log(error);
+          this.toastStore.showToast(
+            3500,
+            "Chỉnh sửa thất bại.",
+            "bg-rose-500 text-white"
+          );
+        });
+    },
+    submitAnonymousForm() {
+      axios
+        .post(`/api/group/${this.group?.id}/set-anonymous-post/`, {
+          anonymous_post: this.anonymousOption,
+        })
+        .then((res) => {
+          this.isAnonymousOpen = false;
+          this.toastStore.showToast(
+            3500,
+            "Đã lưu thông tin chỉnh sửa.",
+            "bg-emerald-500 text-white"
+          );
+        })
+        .catch((error) => {
+          console.log(error);
+          this.toastStore.showToast(
+            3500,
+            "Chỉnh sửa thất bại.",
+            "bg-rose-500 text-white"
+          );
+        });
+    },
+    submitPostForm() {
+      axios
+        .post(`/api/group/${this.group?.id}/set-anyone-post/`, {
+          anyone_can_post: this.whoCanPostOption,
+        })
+        .then((res) => {
+          // console.log(res.data)
+          this.isWhoCanPostOpen = false;
+          this.toastStore.showToast(
+            3500,
+            "Đã lưu thông tin chỉnh sửa.",
+            "bg-emerald-500 text-white"
+          );
+        })
+        .catch((error) => {
+          console.log(error);
+          this.toastStore.showToast(
+            3500,
+            "Chỉnh sửa thất bại.",
+            "bg-rose-500 text-white"
+          );
+        });
+    },
+    submitPendingForm() {
+      axios
+        .post(`/api/group/${this.group?.id}/set-pending-post/`, {
+          pending_post: this.pendingPostOption,
+        })
+        .then((res) => {
+          console.log(res.data)
+          this.isPendingPostOpen = false;
+          this.toastStore.showToast(
+            3500,
+            "Đã lưu thông tin chỉnh sửa.",
+            "bg-emerald-500 text-white"
+          );
+        })
+        .catch((error) => {
+          console.log(error);
+          this.toastStore.showToast(
+            3500,
+            "Chỉnh sửa thất bại.",
+            "bg-rose-500 text-white"
+          );
+        });
+    },
+    submitPollForm() {
+      axios
+        .post(`/api/group/${this.group?.id}/set-anyone-poll/`, {
+          anyone_can_poll: this.pollOption,
+        })
+        .then((res) => {
+          // console.log(res.data)
+          this.isPollOpen = false;
+          this.toastStore.showToast(
+            3500,
+            "Đã lưu thông tin chỉnh sửa.",
+            "bg-emerald-500 text-white"
+          );
+        })
+        .catch((error) => {
+          console.log(error);
+          this.toastStore.showToast(
+            3500,
+            "Chỉnh sửa thất bại.",
+            "bg-rose-500 text-white"
+          );
+        });
+    },
   },
 };
 </script>

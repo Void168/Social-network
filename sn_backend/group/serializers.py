@@ -44,7 +44,7 @@ class GroupDetailSerializer(serializers.ModelSerializer):
     
     class Meta:
         model = Group
-        fields = ('id', 'name', 'email', 'members', 'page_members', 'members_count','get_cover_image', 'created_at','admin','moderators', 'biography', 'is_private_group', 'show_group', 'today_posts_count', 'rules','questions', 'created_at_formatted',)
+        fields = ('id', 'name', 'email', 'members', 'page_members', 'members_count','get_cover_image', 'created_at','admin','moderators', 'biography', 'is_private_group', 'show_group', 'anyone_can_join', 'anonymous_post', 'anyone_can_post', 'pending_post', 'anyone_can_poll', 'today_posts_count', 'rules','questions', 'created_at_formatted',)
 
 class JoinGroupRequestSerializer(serializers.ModelSerializer):
     created_by = UserLessSerializer(read_only=True)

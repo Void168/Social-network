@@ -10,7 +10,7 @@
     <div class="space-y-1">
       <h3 class="text-lg font-semibold">{{ name }}</h3>
       <h5 class="text-sm" v-if="!isOpen">
-        {{ option.content || options[0]?.content }}
+        {{ selectedOption ? options[0]?.content : options[1]?.content }}
       </h5>
     </div>
     <PencilIcon

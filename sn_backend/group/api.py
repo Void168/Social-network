@@ -228,8 +228,80 @@ def change_group_info(request, pk):
     if form.is_valid() and group.admin == request.user:
         group = form.save()
         
-        serializer = GroupSerializer(group)
+        serializer = GroupDetailSerializer(group)
 
         return JsonResponse(serializer.data, safe=False)
     else:
         return JsonResponse({'error': 'Failed'})
+    
+@api_view(['POST'])
+def set_show_group(request, pk):
+    group = Group.objects.get(pk=pk)
+    show_group = request.data.get('show_group')
+    
+    group.show_group = show_group
+    group.save()
+
+    serializer = GroupDetailSerializer(group)
+
+    return JsonResponse(serializer.data, safe=False)
+
+@api_view(['POST'])
+def set_request_join_group(request, pk):
+    group = Group.objects.get(pk=pk)
+    anyone_can_join = request.data.get('anyone_can_join')
+    
+    group.anyone_can_join = anyone_can_join
+    group.save()
+
+    serializer = GroupDetailSerializer(group)
+
+    return JsonResponse(serializer.data, safe=False)
+
+@api_view(['POST'])
+def set_anonymous_post(request, pk):
+    group = Group.objects.get(pk=pk)
+    anonymous_post = request.data.get('anonymous_post')
+    
+    group.anonymous_post = anonymous_post
+    group.save()
+
+    serializer = GroupDetailSerializer(group)
+
+    return JsonResponse(serializer.data, safe=False)
+
+@api_view(['POST'])
+def set_anyone_can_post(request, pk):
+    group = Group.objects.get(pk=pk)
+    anyone_can_post = request.data.get('anyone_can_post')
+    
+    group.anyone_can_post = anyone_can_post
+    group.save()
+
+    serializer = GroupDetailSerializer(group)
+
+    return JsonResponse(serializer.data, safe=False)
+
+@api_view(['POST'])
+def set_pending_post(request, pk):
+    group = Group.objects.get(pk=pk)
+    pending_post = request.data.get('pending_post')
+    
+    group.pending_post = pending_post
+    group.save()
+
+    serializer = GroupDetailSerializer(group)
+
+    return JsonResponse(serializer.data, safe=False)
+
+@api_view(['POST'])
+def set_anyone_can_poll(request, pk):
+    group = Group.objects.get(pk=pk)
+    anyone_can_poll = request.data.get('anyone_can_poll')
+    
+    group.anyone_can_poll = anyone_can_poll
+    group.save()
+
+    serializer = GroupDetailSerializer(group)
+
+    return JsonResponse(serializer.data, safe=False)

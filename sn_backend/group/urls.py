@@ -13,4 +13,10 @@ urlpatterns = [
     path('<uuid:pk>/get-friends/', api.get_friends_in_group, name='get_friends_in_group'),
     path('<uuid:pk>/user/<uuid:id>/request/<str:status>/', api.handle_join_request, name='handle_join_request'),
     path('<uuid:pk>/info/', api.change_group_info, name='change_group_info'),
+    path('<uuid:pk>/show-group/', api.set_show_group, name='set_show_group'),
+    path('<uuid:pk>/request-join-group/', api.set_request_join_group, name='set_request_join_group'),
+    path('<uuid:pk>/set-anonymous-post/', api.set_anonymous_post, name='set_anonymous_post'),
+    path('<uuid:pk>/set-anyone-post/', api.set_anyone_can_post, name='set_anyone_can_post'),
+    path('<uuid:pk>/set-pending-post/', api.set_pending_post, name='set_pending_post'),
+    path('<uuid:pk>/set-anyone-poll/', api.set_anyone_can_poll, name='set_anyone_can_poll'),
 ]

@@ -64,6 +64,15 @@ export default {
     this.checkUserInGroup();
   },
 
+  // watch: {
+  //   group: {
+  //     handler: function () {
+  //       this.getGroupDetail();
+  //     },
+  //     deep: true,
+  //   },
+  // },
+
   methods: {
     async checkUserInGroup() {
       await axios

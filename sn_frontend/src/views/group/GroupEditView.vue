@@ -151,10 +151,7 @@
         <div v-if="userStore.user.id === group?.admin?.id">
           <div class="flex items-center justify-between">
             <div class="space-y-1">
-              <h3 class="text-lg font-semibold">Thêm quản trị viên</h3>
-              <h5 class="text-sm">
-                {{ group?.show_group ? "Ẩn" : "Hiên thị" }}
-              </h5>
+              <h3 class="text-lg font-semibold">Quản trị viên</h3>
             </div>
             <PencilIcon
               @click="openAddModeratorsModal"
@@ -167,8 +164,15 @@
               @closeModal="closeAddModeratorsModal"
             />
           </div>
-          <hr class="border border-slate-700 my-4" />
+          <div v-for="moderator in group?.moderators" :key="moderator?.id" class="flex justify-between items-center my-4">
+            <div class="flex gap-2 items-center px-4">
+              <img :src="moderator?.information?.get_avatar" alt="moderator-avatar" class="w-10 h-10 rounded-full">
+              <h4 class="font-semibold">{{ moderator?.information?.name }}</h4>
+            </div>
+            <ModeratorDropDown :moderator="moderator" @removeModerator="removeModerator(moderator)"/>
+          </div>
         </div>
+        <hr class="border border-slate-700 my-4" />
         <div>
           <div class="flex items-center justify-between">
             <div class="space-y-1">
@@ -242,9 +246,10 @@ import MUILikedInput from "../../components/input/MUILikedInput.vue";
 import CustomListRadio from "../../components/input/CustomListRadioButton.vue";
 import EditGroupRadioItem from "../../components/items/group/EditGroupRadioItem.vue";
 
+import ModeratorDropDown from "../../components/dropdown/ModeratorDropDown.vue";
 import AddModeratorsModal from "../../components/modals/group/editGroup/AddModeratorsModal.vue";
 import selection from "../../data/selection";
-import { EyeIcon, EyeSlashIcon } from "@heroicons/vue/24/solid";
+import { EyeIcon, EyeSlashIcon, EllipsisHorizontalIcon } from "@heroicons/vue/24/solid";
 
 export default {
   name: "groupedit",
@@ -253,9 +258,11 @@ export default {
     MUILikedInput,
     EyeIcon,
     EyeSlashIcon,
+    EllipsisHorizontalIcon,
     CustomListRadio,
     EditGroupRadioItem,
     AddModeratorsModal,
+    ModeratorDropDown
   },
   setup() {
     const route = useRoute();
@@ -413,6 +420,24 @@ export default {
           }
         }
       });
+    },
+    removeModerator(moderator){
+      axios.post(`/api/group/${this.group.id}/remove-moderator/${moderator.id}/`).then((res) => {
+        if(res.data.message){
+          this.toastStore.showToast(
+            3500,
+            `Đã hủy tư cách của ${moderator.information.name}.`,
+            "bg-emerald-500 text-white"
+          );
+        } 
+      }).catch((error) => {
+        console.log(error)
+        this.toastStore.showToast(
+            3500,
+            "Thao tác thất bại",
+            "bg-emerald-500 text-white"
+          );
+      })
     },
     submitNameForm() {
       let formData = new FormData();

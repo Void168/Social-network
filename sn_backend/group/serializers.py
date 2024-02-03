@@ -38,7 +38,7 @@ class GroupDetailSerializer(serializers.ModelSerializer):
     members = MemberSerializer(read_only=True, many=True)
     page_members = PageMemberSerializer(read_only=True, many=True)
     admin = UserLessSerializer(read_only=True)
-    moderators = UserLessSerializer(read_only=True, many=True)
+    moderators = MemberSerializer(read_only=True, many=True)
     rules = RuleSerializer(read_only=True, many=True)
     questions = QuestionSerializer(read_only=True, many=True)
     

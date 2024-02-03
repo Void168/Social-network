@@ -341,3 +341,19 @@ def group_add_moderators(request, pk):
     serializer = GroupDetailSerializer(group)
     
     return JsonResponse({'message':'moderators update', 'group': serializer.data})
+
+@api_view(['POST'])
+def remove_moderator(request, pk, id):
+    group = Group.objects.get(pk=pk)
+    moderator = Member.objects.get(id=id)
+    
+    if request.user == group.admin:
+        group.moderators.remove(moderator)
+        
+        group.save()
+        
+        serializer = GroupDetailSerializer(group)
+        
+        return JsonResponse({'message':'moderator removed', 'group': serializer.data})
+    else:
+        return JsonResponse({'error':"You don't have permission to do that"})

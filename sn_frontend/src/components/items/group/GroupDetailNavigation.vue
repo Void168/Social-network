@@ -2,7 +2,7 @@
   <div class="flex flex-col">
     <div class="p-2">
       <div class="flex items-center gap-2">
-        <RouterLink :to="{ name: 'groupdetail', params: { id: group?.id } }">
+        <RouterLink :to="{ name: 'groupdetail', params: { id: group?.id } }" class="rounded-lg">
           <img
             :src="group.get_cover_image"
             alt=""

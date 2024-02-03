@@ -14,7 +14,15 @@
     <div
       class="lg:col-span-4 md:col-span-3 col-span-4 dark:bg-slate-900 bg-slate-200 flex flex-col relative items-center"
     >
-      <GroupHeader :group="group" :isUserInGroup="isUserInGroup" v-if="route.name === 'groupdiscuss' || route.name === 'groupabout' || route.name === 'groupmembers'"/>
+      <GroupHeader
+        :group="group"
+        :isUserInGroup="isUserInGroup"
+        v-if="
+          route.name === 'groupdiscuss' ||
+          route.name === 'groupabout' ||
+          route.name === 'groupmembers'
+        "
+      />
       <router-view :isUserInGroup="isUserInGroup" :group="group"></router-view>
     </div>
   </div>
@@ -45,7 +53,7 @@ export default {
   setup() {
     const userStore = useUserStore();
     const toastStore = useToastStore();
-    const route = useRoute()
+    const route = useRoute();
 
     return {
       userStore,
@@ -58,6 +66,14 @@ export default {
       group: {},
       isUserInGroup: false,
     };
+  },
+
+  computed: {
+    check() {
+      return this.group.members
+        .map((member) => member.information)
+        .map((info) => info.id).includes(this.userStore.user.id);
+    },
   },
 
   beforeMount() {

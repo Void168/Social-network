@@ -1,6 +1,6 @@
 from django.forms import ModelForm
 
-from .models import Post, PostAttachment, PagePost, PagePostAttachment
+from .models import Post, PostAttachment, PagePost, PagePostAttachment, MemberPostAttachment
 
 class PostForm(ModelForm):
     class Meta:
@@ -12,6 +12,11 @@ class PagePostForm(ModelForm):
         model = PagePost
         fields = ('body', 'is_avatar_post',)
         
+class GroupPostForm(ModelForm):
+    class Meta:
+        model = Post
+        fields = ('body',)
+        
 class AttachmentForm(ModelForm):
     class Meta:
         model = PostAttachment
@@ -20,6 +25,11 @@ class AttachmentForm(ModelForm):
 class PageAttachmentForm(ModelForm):
     class Meta:
         model = PagePostAttachment
+        fields = ('image',)
+        
+class MemberAttachmentForm(ModelForm):
+    class Meta:
+        model = MemberPostAttachment
         fields = ('image',)
 
 class PostToForm(ModelForm):

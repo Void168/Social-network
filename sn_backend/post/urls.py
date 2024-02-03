@@ -24,6 +24,7 @@ urlpatterns = [
     path('profile/<uuid:id>/attachments/', api.post_attachment_list_profile, name='post_attachment_list_profile'),
     path('page/<uuid:id>/attachments/', api.page_post_attachment_list_profile, name='page_post_attachment_list_profile'),
     path('create/', api.post_create, name='post_create'),
+    path('create/group/<uuid:pk>/', api.group_post_create, name='group_post_create'),
     path('page/<uuid:pk>/create/', api.page_post_create, name='page_post_create'),
     path('created-to/<uuid:id>/', api.post_created_to, name='post_created_to'),
     path('trends/', api.get_trends, name='get_trends'),

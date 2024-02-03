@@ -55,7 +55,7 @@ def get_your_groups(request):
 def get_group_detail(request, pk):
     group = Group.objects.get(pk=pk)
     try:
-        member = Member.objects.get(Q(information=request.user))
+        member = Member.objects.filter(Q(information=request.user))
         serializer = GroupDetailSerializer(group)
         return JsonResponse(serializer.data, safe=False)
     except Member.DoesNotExist:
@@ -68,10 +68,11 @@ def check_user_in_group(request, pk):
     members = Member.objects.filter(Q(information=request.user))
     if members.count() > 0:
         for member in members:
-            if member not in group.members.all():
-                return JsonResponse({'message': 'User not in the group'})
-            else:
+            if member in group.members.all():
                 return JsonResponse({'message': 'User joined the group'})
+            else:
+                return JsonResponse({'message': 'User not in the group'})
+                continue
     else:
         return JsonResponse({'message': 'User not in the group'})
 

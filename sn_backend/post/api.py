@@ -12,7 +12,7 @@ from account.serializers import UserSerializer, FriendshipRequest
 from notification.models import NotificationForPage
 from notification.utils import create_notification
 
-from .forms import PostForm, AttachmentForm, PageAttachmentForm, PagePostForm
+from .forms import PostForm, AttachmentForm, PageAttachmentForm, PagePostForm, MemberAttachmentForm
 from .models import Post, Comment, Like, Trend, PagePost, PageComment, PageLike
 from .serializers import PostSerializer, PostDetailSerializer, CommentSerializer, TrendSerializer, LikeSerializer, PagePostSerializer, PageLikeSerializer, PageCommentSerializer, PagePostDetailSerializer
 from notification.serializers import NotificationSerializer, NotificationForPageSerializer
@@ -505,3 +505,38 @@ def get_trends(request):
     serializer = TrendSerializer(Trend.objects.all(), many=True)
 
     return JsonResponse(serializer.data, safe=False)
+
+@api_view(['POST'])
+def group_post_create(request, pk):
+    group = Group.objects.get(pk=pk)
+    members = Member.objects.filter(members__in=list([request.user]))
+    current_member = Member.objects.none()
+    group_members = group.members.all()
+    for member in members:
+        if member in group_members:
+            current_member = member
+        else:
+            pass
+    
+    form = GroupPostForm(request.POST)
+    member_attachment = None
+    member_attachment_form = MemberAttachmentForm(request.POST, request.FILES)
+
+    if member_attachment_form.is_valid():
+        member_attachment = member_attachment_form.save(commit=False)
+        member_attachment.created_by = current_member
+        member_attachment.save()
+
+    if form.is_valid():
+        group_post = form.save(commit=False)
+        group_post.created_by = current_member
+        group_post.save()
+
+        if member_attachment:
+            group_post.attachments.add(member_attachment)
+
+        serializer = GroupPostSerializer(group_post)
+
+        return JsonResponse(serializer.data, safe=False)
+    else:
+        return JsonResponse({'error': 'add something here later!...'})

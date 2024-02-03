@@ -1,9 +1,9 @@
 from rest_framework import serializers
 
-from account.serializers import UserSerializer
+from account.serializers import UserSerializer, UserLessSerializer
 from page.serializers import PageSerializer
-
-from .models import Post, PostAttachment, Comment, Trend, Like, PageLike, PageComment
+from group.serializers import MemberSerializer
+from .models import Post, PostAttachment, Comment, Trend, Like, PageLike, PageComment, MemberComment, MemberLike
 
 class PostAttachmentSerializer(serializers.ModelSerializer):
     class Meta:
@@ -11,7 +11,7 @@ class PostAttachmentSerializer(serializers.ModelSerializer):
         fields = ('id', 'get_image',)
 
 class LikeSerializer(serializers.ModelSerializer):
-    created_by = UserSerializer(read_only=True)
+    created_by = UserLessSerializer(read_only=True)
     class Meta:
         model = Like
         fields = ('id', 'created_by',)
@@ -28,10 +28,22 @@ class PageLikeSerializer(serializers.ModelSerializer):
         model = PageLike
         fields = ('id', 'created_by',)
         
+class MemberLikeSerializer(serializers.ModelSerializer):
+    created_by = MemberSerializer(read_only=True)
+    class Meta:
+        model = MemberLike
+        fields = ('id', 'created_by',)
+        
 class PageCommentSerializer(serializers.ModelSerializer):
     created_by = PageSerializer(read_only=True)
     class Meta:
         model = PageComment
+        fields = ('id','body','created_by', 'created_at_formatted', 'created_at', 'tags',)
+        
+class MemberCommentSerializer(serializers.ModelSerializer):
+    created_by = MemberSerializer(read_only=True)
+    class Meta:
+        model = MemberComment
         fields = ('id','body','created_by', 'created_at_formatted', 'created_at', 'tags',)
         
 class PostSerializer(serializers.ModelSerializer):
@@ -56,6 +68,15 @@ class PagePostSerializer(serializers.ModelSerializer):
     class Meta:
         model = Post
         fields = ('id', 'body','is_avatar_post', 'likes_count', 'comments_count', 'comments', 'page_comments', 'created_by', 'created_at_formatted', 'created_at', 'attachments','likes', 'page_likes',)  
+        
+class GroupPostSerializer(serializers.ModelSerializer):
+    created_by = UserSerializer(read_only=True)
+    attachments = PostAttachmentSerializer(read_only=True, many=True)
+    likes = LikeSerializer(read_only=True, many=True)
+    comments = MemberCommentSerializer(read_only=True, many=True)
+    class Meta:
+        model = Post
+        fields = ('id', 'body', 'likes_count', 'comments_count', 'comments', 'created_by', 'created_at_formatted', 'created_at', 'attachments', 'likes',)  
         
 class PostDetailSerializer(serializers.ModelSerializer):
     created_by = UserSerializer(read_only=True)

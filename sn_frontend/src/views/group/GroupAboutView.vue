@@ -5,7 +5,7 @@
         <h3 class="font-semibold text-lg">Giới thiệu về nhóm này</h3>
         <hr class="border my-6 border-slate-600" />
         <h4>{{ group?.biography }}</h4>
-        <div class="flex gap-2" v-if="group.is_privacy_group">
+        <div class="flex gap-2" v-if="group.is_private_group">
           <div class="flex flex-col justify-start">
             <GlobeAsiaAustraliaIcon class="w-6 py-1" />
           </div>

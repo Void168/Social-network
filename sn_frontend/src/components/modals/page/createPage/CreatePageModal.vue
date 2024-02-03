@@ -70,6 +70,7 @@
                     <MUILikedInput
                       :placeholder="'Tên trang (bắt buộc)'"
                       v-model="name"
+                      :type="'text'"
                     />
                     <h4 class="text-xs">
                       Dùng tên doanh nghiệp/thương hiệu/tổ chức của bạn hoặc tên
@@ -122,21 +123,24 @@
                     >
                       <div class="my-2 h-[550px] space-y-4 px-4">
                         <h2 class="mb-2 text-lg">Thông tin liên hệ</h2>
-                        <MUILikedInput :placeholder="'Email'" v-model="email" />
+                        <MUILikedInput :placeholder="'Email'" v-model="email" :type="'email'"/>
                         <MUILikedInput
                           :placeholder="'Số điện thoại'"
                           v-model="phone"
+                          :type="'text'"
                         />
                         <h2 class="mb-2 text-xl">Vị trí</h2>
                         <MUILikedInput
                           :placeholder="'Địa chỉ'"
                           v-model="address"
+                          :type="'text'"
                         />
                         <MUILikedInput
                           :placeholder="'Thành phố/Thị xã'"
                           v-model="location"
+                          :type="'text'"
                         />
-                        <MUILikedInput :placeholder="'Mã zip'" />
+                        <MUILikedInput :placeholder="'Mã zip'" :type="'text'"/>
                         <div>
                           <h2 class="font-semibold text-lg">Giờ mở cửa</h2>
                           <h3 class="text-sm">

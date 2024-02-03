@@ -6,7 +6,9 @@
       @focus="focusIn"
       @focusout="focusOut"
       :value="modelValue"
+      :type="type"
       @input="$emit('update:modelValue', $event.target.value)"
+      required
     />
     <span
       class="absolute left-4 text-xs top-1 text-emerald-400"
@@ -21,6 +23,7 @@ export default {
   props: {
     placeholder: String,
     modelValue: String,
+    type: String,
   },
   emits: ['update:modelValue'],
   data(){

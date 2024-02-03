@@ -60,7 +60,7 @@
                     </div>
                   </div>
                   <div class="px-4 space-y-4">
-                    <MUILikedInput :placeholder="'Tên nhóm'" v-model="name" />
+                    <MUILikedInput :placeholder="'Tên nhóm'" v-model="name" :type="'text'"/>
                     <div class="flex flex-col gap-2">
                       <div class="flex items-center gap-2">
                         <h4>Chọn quyền riêng tư</h4>

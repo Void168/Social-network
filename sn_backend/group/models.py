@@ -39,7 +39,7 @@ class Group(models.Model):
     biography = models.CharField(blank=True, default='', max_length=255)
     
     admin = models.ForeignKey(User, related_name='group_admin', on_delete=models.CASCADE)
-    moderators = models.ManyToManyField(User, related_name='group_moderators')
+    moderators = models.ManyToManyField(Member, related_name='group_moderators')
     
     members = models.ManyToManyField(Member, related_name='group_members')
     page_members = models.ManyToManyField(PageMember, related_name='group_page_members')

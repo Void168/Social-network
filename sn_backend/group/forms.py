@@ -11,3 +11,8 @@ class GroupInfoForm(ModelForm):
     class Meta:
         model = Group
         fields = ('name','biography',)
+        
+class GroupWebsiteForm(ModelForm):
+    class Meta:
+        model = Group
+        fields = ('website',)

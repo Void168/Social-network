@@ -179,7 +179,7 @@
                     </RouterLink>
                 </div>
               </div>
-              <div v-else class="flex items-center justify-center">
+              <div class="flex items-center justify-center mt-4">
                 <button
                   @click="openAddModeratorsModal"
                   class="flex gap-2 items-center justify-center md:w-[50%] w-full px-4 py-2 bg-slate-200 dark:hover:bg-slate-800 dark:bg-slate-700 rounded-xl shadow-md font-semibold hover:bg-slate-500 hover:text-neutral-200 transition"
@@ -503,7 +503,10 @@ export default {
             const obj = {};
             obj["label"] = friend.name;
             obj["value"] = friend.id;
-            this.options.push(obj);
+
+            if(this.options.length < filteredFiends.length){
+              this.options.push(obj);
+            }
           });
         })
         .catch((error) => {

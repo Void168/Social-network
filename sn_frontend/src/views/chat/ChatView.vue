@@ -220,7 +220,10 @@ export default (await import("vue")).defineComponent({
               const obj = {};
               obj["label"] = friend.name;
               obj["value"] = friend.id;
+              
+              if(!this.options.includes(obj)){
               this.options.push(obj);
+            }
             });
           })
           .catch((error) => {

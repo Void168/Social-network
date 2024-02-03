@@ -12,7 +12,7 @@ from page.serializers import PageSerializer
 
 from .serializers import QuestionSerializer, RuleSerializer, MemberSerializer, PageMemberSerializer, GroupSerializer, GroupDetailSerializer, JoinGroupRequestSerializer
 from .models import Group, Rule, Question, Member, PageMember, JoinGroupRequest
-from .forms import GroupCreateForm, GroupInfoForm
+from .forms import GroupCreateForm, GroupInfoForm, GroupWebsiteForm
 
 @api_view(['POST'])
 def create_group(request):
@@ -235,6 +235,20 @@ def change_group_info(request, pk):
         return JsonResponse({'error': 'Failed'})
     
 @api_view(['POST'])
+def change_group_website(request, pk):
+    group = Group.objects.get(pk=pk)
+    form = GroupWebsiteForm(data=request.POST, instance=group)
+    
+    if form.is_valid() and group.admin == request.user:
+        group = form.save()
+        
+        serializer = GroupDetailSerializer(group)
+
+        return JsonResponse(serializer.data, safe=False)
+    else:
+        return JsonResponse({'error': 'Failed'})
+    
+@api_view(['POST'])
 def set_show_group(request, pk):
     group = Group.objects.get(pk=pk)
     show_group = request.data.get('show_group')
@@ -305,3 +319,25 @@ def set_anyone_can_poll(request, pk):
     serializer = GroupDetailSerializer(group)
 
     return JsonResponse(serializer.data, safe=False)
+
+@api_view(['POST'])
+def group_add_moderators(request, pk):
+    # other_user_id =request.data.get('otherUser')
+    
+    list_moderators_id = request.data.get('moderators')
+    members = Member.objects.filter(Q(id__in=list(list_moderators_id)))
+    group = Group.objects.get(pk=pk)
+    
+    for member in members:
+        group.moderators.add(member)
+    
+    # if other_user_id != "":
+    #     other_user = User.objects.get(id=other_user_id)
+    
+    #     group_conversation.users.add(other_user)
+    
+    group.save()
+    
+    serializer = GroupDetailSerializer(group)
+    
+    return JsonResponse({'message':'moderators update', 'group': serializer.data})

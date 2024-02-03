@@ -18,7 +18,11 @@
             class="w-8 dark:text-neutral-400 cursor-pointer p-1 rounded-full hover:dark:bg-slate-600 duration-75"
           />
           <div v-else class="w-full space-y-2">
-            <MUILikedInput :placeholder="'Tên'" v-model="group.name" />
+            <MUILikedInput
+              :placeholder="'Tên'"
+              v-model="group.name"
+              :type="'text'"
+            />
             <textarea
               v-model="group.biography"
               class="p-4 w-full bg-gray-100 rounded-lg resize-none border"
@@ -83,7 +87,9 @@
           <div class="space-y-1">
             <h3 class="text-lg font-semibold">Địa chỉ web</h3>
             <h5 class="text-sm" v-if="!isUrlOpen">
-              {{ baseUrl + route.path.slice(0, route.path.length - 5) }}
+              {{
+                baseUrl + route.path.slice(0, route.path.length - 5) || this.url
+              }}
             </h5>
           </div>
           <PencilIcon
@@ -92,26 +98,38 @@
             class="w-8 dark:text-neutral-400 cursor-pointer p-1 rounded-full hover:dark:bg-slate-600 duration-75"
           />
           <div v-else class="w-full space-y-4">
-            <MUILikedInput :placeholder="'Tên'" v-model="url" />
-            <div class="flex justify-end items-center gap-2">
-              <button
-                @click="toggleWebShow"
-                class="px-4 py-2 font-medium text-emerald-500 dark:bg-slate-700 dark:hover:bg-slate-600 duration-75 rounded-lg"
-              >
-                Hủy
-              </button>
-              <button
-                :disabled="name === group.name && biography === ''"
-                class="px-4 py-2 font-medium rounded-lg"
-                :class="
-                  name === group.name && biography === ''
-                    ? 'text-neutral-400 bg-slate-600 cursor-not-allowed'
-                    : 'text-emerald-500 dark:bg-slate-700 dark:hover:bg-slate-600 duration-75'
-                "
-              >
-                Lưu
-              </button>
-            </div>
+            <form
+              action="
+            "
+              :onSubmit="submitWebForm"
+            >
+              <MUILikedInput
+                :placeholder="'Địa chỉ website của nhóm'"
+                v-model="url"
+                :type="'url'"
+              />
+              <div class="flex justify-end items-center gap-2">
+                <button
+                  @click="toggleWebShow"
+                  class="px-4 py-2 font-medium text-emerald-500 dark:bg-slate-700 dark:hover:bg-slate-600 duration-75 rounded-lg"
+                >
+                  Hủy
+                </button>
+                <!-- @click="submitWebForm" -->
+                <button
+                  type="submit"
+                  :disabled="name === group.name && biography === ''"
+                  class="px-4 py-2 font-medium rounded-lg"
+                  :class="
+                    name === group.name && biography === ''
+                      ? 'text-neutral-400 bg-slate-600 cursor-not-allowed'
+                      : 'text-emerald-500 dark:bg-slate-700 dark:hover:bg-slate-600 duration-75'
+                  "
+                >
+                  Lưu
+                </button>
+              </div>
+            </form>
           </div>
         </div>
       </div>
@@ -139,7 +157,14 @@
               </h5>
             </div>
             <PencilIcon
+              @click="openAddModeratorsModal"
               class="w-8 dark:text-neutral-400 cursor-pointer p-1 rounded-full hover:dark:bg-slate-600 duration-75"
+            />
+            <AddModeratorsModal
+              :group="group"
+              :options="moderatorOptions"
+              :show="isAddModeratorsOpen"
+              @closeModal="closeAddModeratorsModal"
             />
           </div>
           <hr class="border border-slate-700 my-4" />
@@ -217,6 +242,7 @@ import MUILikedInput from "../../components/input/MUILikedInput.vue";
 import CustomListRadio from "../../components/input/CustomListRadioButton.vue";
 import EditGroupRadioItem from "../../components/items/group/EditGroupRadioItem.vue";
 
+import AddModeratorsModal from "../../components/modals/group/editGroup/AddModeratorsModal.vue";
 import selection from "../../data/selection";
 import { EyeIcon, EyeSlashIcon } from "@heroicons/vue/24/solid";
 
@@ -229,6 +255,7 @@ export default {
     EyeSlashIcon,
     CustomListRadio,
     EditGroupRadioItem,
+    AddModeratorsModal,
   },
   setup() {
     const route = useRoute();
@@ -256,12 +283,13 @@ export default {
       showOption: this.group.show_group,
       showOptionName: "",
       isUrlOpen: false,
-      url: `http://localhost:5173/groups/${this.group.id}`,
+      url: this.group.website,
       isRequestOpen: false,
       requestSelections: selection.requestSelections,
       requestOptionName: "",
       requestOption: this.group.anyone_can_join,
-      isAddModeratorOpen: false,
+      isAddModeratorsOpen: false,
+      moderatorOptions: [],
       isBanListOpen: false,
       isAnonymousOpen: false,
       onOffSelections: selection.onOffSelections,
@@ -274,13 +302,11 @@ export default {
       isPendingPostOpen: false,
       pendingPostOption: this.group.pending_post,
       isPollOpen: false,
-      pollOption:  this.group.anyone_can_poll,
+      pollOption: this.group.anyone_can_poll,
     };
   },
 
-  beforeUpdate() {
-
-  },
+  beforeUpdate() {},
 
   beforeMount() {
     console.log(this.group);
@@ -326,7 +352,7 @@ export default {
       }
     },
     getRequestOption(data) {
-    this.requestOptionName = data.name;
+      this.requestOptionName = data.name;
       if (data.name === "Trang cá nhân và trang") {
         this.requestOption = true;
       } else {
@@ -363,6 +389,31 @@ export default {
         this.pollOption = false;
       }
     },
+    closeAddModeratorsModal() {
+      this.isAddModeratorsOpen = false;
+    },
+    openAddModeratorsModal() {
+      this.isAddModeratorsOpen = true;
+
+      const moderatorsId = this.group.moderators.map(
+        (moderator) => moderator.id
+      );
+      const filteredMembers = this.group.members.filter(
+        (member) => !moderatorsId.includes(member.id)
+      );
+      filteredMembers.forEach((member) => {
+        if (member.information.id !== this.group.admin.id) {
+          const obj = {};
+          obj["label"] = member?.information?.name;
+          obj["value"] = member?.id;
+          obj["icon"] = member?.information?.get_avatar;
+
+          if (this.moderatorOptions.length < filteredMembers.length) {
+            this.moderatorOptions.push(obj);
+          }
+        }
+      });
+    },
     submitNameForm() {
       let formData = new FormData();
 
@@ -376,11 +427,57 @@ export default {
           },
         })
         .then((res) => {
-          console.log(res.data);
+          this.isNameOpen = false;
+          this.toastStore.showToast(
+            3500,
+            "Đã lưu thông tin chỉnh sửa.",
+            "bg-emerald-500 text-white"
+          );
         })
         .catch((error) => {
           console.log(error);
+          this.toastStore.showToast(
+            3500,
+            "Chỉnh sửa thất bại.",
+            "bg-rose-500 text-white"
+          );
         });
+    },
+    submitWebForm() {
+      let formData = new FormData();
+
+      if (this.url !== "") {
+        formData.append("website", this.url);
+
+        axios
+          .post(`/api/group/${this.group.id}/website/`, formData, {
+            headers: {
+              "Content-Type": "multipart/form-data",
+            },
+          })
+          .then((res) => {
+            this.isUrlOpen = false;
+            this.toastStore.showToast(
+              3500,
+              "Đã lưu thông tin chỉnh sửa.",
+              "bg-emerald-500 text-white"
+            );
+          })
+          .catch((error) => {
+            console.log(error);
+            this.toastStore.showToast(
+              3500,
+              "Chỉnh sửa thất bại.",
+              "bg-rose-500 text-white"
+            );
+          });
+      } else {
+        this.toastStore.showToast(
+          3500,
+          "Hãy nhập địa chỉ website hợp lệ.",
+          "bg-rose-500 text-white"
+        );
+      }
     },
     submitShowForm() {
       axios
@@ -477,7 +574,7 @@ export default {
           pending_post: this.pendingPostOption,
         })
         .then((res) => {
-          console.log(res.data)
+          console.log(res.data);
           this.isPendingPostOpen = false;
           this.toastStore.showToast(
             3500,

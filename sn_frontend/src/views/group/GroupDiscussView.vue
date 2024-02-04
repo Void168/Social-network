@@ -43,7 +43,7 @@
                 class="flex items-center font-medium justify-center gap-2 py-2 w-full rounded-lg dark:hover:bg-slate-800 cursor-pointer duration-75"
               >
                 <label for="doc">
-                  <span class="xm:text-base text-xs flex gap-2"
+                  <span class="xm:text-base text-xs flex gap-2 cursor-pointer"
                     ><PhotoIcon class="w-6 text-emerald-500" />Ảnh/Video</span
                   >
                   <input
@@ -64,6 +64,7 @@
               </div>
             </div>
             <button
+              @click="submitForm"
               class="w-full mb-4 font-semibold"
               :class="
                 !body
@@ -77,14 +78,24 @@
           </div>
           <div class="flex items-center gap-2 text-emerald-500 font-bold">
             Bài viết mới nhất
-            <ChevronDownIcon class="w-5"/> 
+            <ChevronDownIcon class="w-5" />
           </div>
-          <div class="dark:bg-slate-700 rounded-lg px-4 h-80 flex flex-col justify-center items-center" v-if="!groupPosts.length">
-            <h2 class="text-xl font-semibold">Nhóm chưa có bài viết nào.</h2> 
-            <h3 class="text-lg font-semibold">Hãy đăng bài để cùng nhau thảo luận nhé.</h3> 
+          <div
+            class="dark:bg-slate-700 rounded-lg px-4 h-80 flex flex-col justify-center items-center"
+            v-if="!groupPosts.length"
+          >
+            <h2 class="text-xl font-semibold">Nhóm chưa có bài viết nào.</h2>
+            <h3 class="text-lg font-semibold">
+              Hãy đăng bài để cùng nhau thảo luận nhé.
+            </h3>
           </div>
-          <div class="dark:bg-slate-700 rounded-lg px-4" v-else>
-            Hello
+          <div
+            class="dark:bg-slate-700 rounded-lg px-4"
+            v-else
+            v-for="groupPost in groupPosts"
+            :key="groupPost.id"
+          >
+            <GroupPost :post="groupPost" :group="group"/>
           </div>
         </div>
         <div
@@ -204,12 +215,13 @@
 </template>
 
 <script>
+import axios from "axios";
 import { useUserStore } from "../../stores/user";
 import { useToastStore } from "../../stores/toast";
 import { RouterLink } from "vue-router";
 
 import GroupHeader from "../../components/items/group/GroupHeader.vue";
-
+import GroupPost from "../../components/items/post/GroupPost.vue";
 import {
   GlobeAsiaAustraliaIcon,
   LockClosedIcon,
@@ -222,7 +234,7 @@ import {
   PencilIcon,
   PencilSquareIcon,
   EyeIcon,
-  ChevronDownIcon
+  ChevronDownIcon,
 } from "@heroicons/vue/24/solid";
 export default {
   name: "groupdiscuss",
@@ -241,6 +253,7 @@ export default {
     PencilSquareIcon,
     EyeIcon,
     ChevronDownIcon,
+    GroupPost,
   },
   setup() {
     const userStore = useUserStore();
@@ -260,8 +273,12 @@ export default {
       body: "",
       step: 0,
       urlPost: null,
-      groupPosts: []
+      groupPosts: [],
     };
+  },
+
+  mounted() {
+    this.getGroupPostsList();
   },
 
   methods: {
@@ -271,6 +288,38 @@ export default {
     onFileChange(e) {
       const file = e.target.files[0];
       this.urlPost = URL.createObjectURL(file);
+    },
+    async getGroupPostsList() {
+      await axios
+        .get(`/api/posts/group/${this.$route.params.id}/`)
+        .then((res) => {
+          this.groupPosts = res.data
+        })
+        .catch((error) => {
+          console.log(error);
+        });
+    },
+    submitForm() {
+      let formData = new FormData();
+      formData.append("image", this.$refs.file.files[0]);
+      formData.append("body", this.body);
+
+      axios
+        .post(`/api/posts/create/group/${this.group.id}/`, formData, {
+          headers: {
+            "Content-Type": "multipart/form-data",
+          },
+        })
+        .then((res) => {
+          console.log("data", res.data);
+          this.body = "";
+          this.$refs.file.value = null;
+          this.urlPost = null;
+          this.groupPosts.unshift(res.data);
+        })
+        .catch((error) => {
+          console.log("error", error);
+        });
     },
   },
 };

@@ -8,13 +8,14 @@ from rest_framework.decorators import api_view, authentication_classes, permissi
 
 from account.models import User
 from page.models import Page
+from group.models import Group, Member
 from account.serializers import UserSerializer, FriendshipRequest
 from notification.models import NotificationForPage
 from notification.utils import create_notification
 
-from .forms import PostForm, AttachmentForm, PageAttachmentForm, PagePostForm, MemberAttachmentForm
-from .models import Post, Comment, Like, Trend, PagePost, PageComment, PageLike
-from .serializers import PostSerializer, PostDetailSerializer, CommentSerializer, TrendSerializer, LikeSerializer, PagePostSerializer, PageLikeSerializer, PageCommentSerializer, PagePostDetailSerializer
+from .forms import PostForm, AttachmentForm, PageAttachmentForm, PagePostForm, MemberAttachmentForm, GroupPostForm
+from .models import Post, Comment, Like, Trend, PagePost, PageComment, PageLike, GroupPost
+from .serializers import PostSerializer, PostDetailSerializer, CommentSerializer, TrendSerializer, LikeSerializer, PagePostSerializer, PageLikeSerializer, PageCommentSerializer, PagePostDetailSerializer, GroupPostSerializer
 from notification.serializers import NotificationSerializer, NotificationForPageSerializer
 
 # Create your views here.
@@ -509,7 +510,7 @@ def get_trends(request):
 @api_view(['POST'])
 def group_post_create(request, pk):
     group = Group.objects.get(pk=pk)
-    members = Member.objects.filter(members__in=list([request.user]))
+    members = Member.objects.filter(Q(information=request.user))
     current_member = Member.objects.none()
     group_members = group.members.all()
     for member in members:
@@ -530,6 +531,7 @@ def group_post_create(request, pk):
     if form.is_valid():
         group_post = form.save(commit=False)
         group_post.created_by = current_member
+        group_post.group = group
         group_post.save()
 
         if member_attachment:
@@ -540,3 +542,13 @@ def group_post_create(request, pk):
         return JsonResponse(serializer.data, safe=False)
     else:
         return JsonResponse({'error': 'add something here later!...'})
+    
+@api_view(['GET'])
+def get_group_post_list(request, pk):
+    group = Group.objects.get(pk=pk)
+    
+    group_posts = GroupPost.objects.filter(Q(group=group))
+    
+    serializer = GroupPostSerializer(group_posts, many=True)
+    
+    return JsonResponse(serializer.data, safe=False)

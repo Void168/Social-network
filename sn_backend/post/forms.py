@@ -1,6 +1,6 @@
 from django.forms import ModelForm
 
-from .models import Post, PostAttachment, PagePost, PagePostAttachment, MemberPostAttachment
+from .models import Post, PostAttachment, PagePost, PagePostAttachment, MemberPostAttachment, GroupPost
 
 class PostForm(ModelForm):
     class Meta:
@@ -14,7 +14,7 @@ class PagePostForm(ModelForm):
         
 class GroupPostForm(ModelForm):
     class Meta:
-        model = Post
+        model = GroupPost
         fields = ('body',)
         
 class AttachmentForm(ModelForm):

@@ -70,7 +70,7 @@ class PagePostSerializer(serializers.ModelSerializer):
         fields = ('id', 'body','is_avatar_post', 'likes_count', 'comments_count', 'comments', 'page_comments', 'created_by', 'created_at_formatted', 'created_at', 'attachments','likes', 'page_likes',)  
         
 class GroupPostSerializer(serializers.ModelSerializer):
-    created_by = UserSerializer(read_only=True)
+    created_by = MemberSerializer(read_only=True)
     attachments = PostAttachmentSerializer(read_only=True, many=True)
     likes = LikeSerializer(read_only=True, many=True)
     comments = MemberCommentSerializer(read_only=True, many=True)

@@ -91,10 +91,10 @@
             class="w-6 h-6 text-rose-500 cursor-pointer"
             v-if="!pageStore.pageId && checkUserLike"
           />
-          <HeartLike
+          <!-- <HeartLike
             class="w-6 h-6 text-rose-500 cursor-pointer"
             v-else-if="pageStore.pageId && checkPageLike"
-          />
+          /> -->
           <HeartLike
             class="w-6 h-6 text-rose-500 cursor-pointer"
             v-else-if="isLike"
@@ -263,14 +263,14 @@ export default (await import("vue")).defineComponent({
   computed: {
     checkUserLike() {
       return this.post?.likes
-        ?.map((like) => like?.created_by?.id)
+        ?.map((like) => like?.created_by?.information?.id)
         .includes(this.userStore.user.id);
     },
-    checkPageLike() {
-      return this.post?.page_likes
-        ?.map((like) => like?.created_by?.id)
-        .includes(this.pageStore.pageId);
-    },
+    // checkPageLike() {
+    //   return this.post?.page_likes
+    //     ?.map((like) => like?.created_by?.information?.id)
+    //     .includes(this.pageStore.pageId);
+    // },
   },
 
   mounted() {
@@ -281,16 +281,16 @@ export default (await import("vue")).defineComponent({
     like() {
       const is_like = this.post.likes
         .map((like) => like.created_by)
-        .map((created_by) => created_by.id);
+        .map((created_by) => created_by?.information?.id);
       if (is_like.includes(this.userStore.user.id)) {
         this.isLike = true;
       }
     },
     likePost(id) {
-      if (!this.post.created_by.is_page) {
         axios
-          .post(`/api/posts/${id}/like/`)
+          .post(`/api/posts/${id}/group/${this.group.id}/like/`)
           .then((res) => {
+            console.log(res.data)
             if (res.data.message !== "post already liked") {
               this.post.likes_count += 1;
               this.isLike = true;
@@ -299,32 +299,6 @@ export default (await import("vue")).defineComponent({
           .catch((error) => {
             console.log(error);
           });
-      }
-      if (this.post.created_by.is_page && this.pageStore.pageId) {
-        axios
-          .post(`/api/posts/page/${this.pageStore.pageId}/${id}/like-by-page/`)
-          .then((res) => {
-            if (res.data.message !== "post already liked") {
-              this.post.likes_count += 1;
-              this.isLike = true;
-            }
-          })
-          .catch((error) => {
-            console.log(error);
-          });
-      } else {
-        axios
-          .post(`/api/posts/${id}/like-by-user/`)
-          .then((res) => {
-            if (res.data.message !== "post already liked") {
-              this.post.likes_count += 1;
-              this.isLike = true;
-            }
-          })
-          .catch((error) => {
-            console.log(error);
-          });
-      }
     },
     deletePost() {
       this.$emit("deletePost", this.post.id);

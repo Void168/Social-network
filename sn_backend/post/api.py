@@ -14,8 +14,8 @@ from notification.models import NotificationForPage
 from notification.utils import create_notification
 
 from .forms import PostForm, AttachmentForm, PageAttachmentForm, PagePostForm, MemberAttachmentForm, GroupPostForm
-from .models import Post, Comment, Like, Trend, PagePost, PageComment, PageLike, GroupPost
-from .serializers import PostSerializer, PostDetailSerializer, CommentSerializer, TrendSerializer, LikeSerializer, PagePostSerializer, PageLikeSerializer, PageCommentSerializer, PagePostDetailSerializer, GroupPostSerializer
+from .models import Post, Comment, Like, Trend, PagePost, PageComment, PageLike, GroupPost, MemberLike
+from .serializers import PostSerializer, PostDetailSerializer, CommentSerializer, TrendSerializer, LikeSerializer, PagePostSerializer, PageLikeSerializer, PageCommentSerializer, PagePostDetailSerializer, GroupPostSerializer, MemberLikeSerializer
 from notification.serializers import NotificationSerializer, NotificationForPageSerializer
 
 # Create your views here.
@@ -552,3 +552,40 @@ def get_group_post_list(request, pk):
     serializer = GroupPostSerializer(group_posts, many=True)
     
     return JsonResponse(serializer.data, safe=False)
+
+@api_view(['POST'])
+def group_post_like(request, pk, id):
+    group_post = GroupPost.objects.get(pk=pk)
+    group = Group.objects.get(id=id)
+    members = Member.objects.filter(Q(information=request.user))
+    current_member = Member.objects.none()
+    group_members = group.members.all()
+    for member in members:
+        if member in group_members:
+            current_member = member
+        else:
+            pass
+    
+    member_like = MemberLike.objects.create(created_by=current_member)
+    if not group_post.likes.filter(created_by=current_member):
+        group_post = GroupPost.objects.get(pk=pk)
+        group_post.likes_count = group_post.likes_count + 1
+        group_post.likes.add(member_like)
+        group_post.save()
+        
+        # notification = create_notification(request, 'post_like', post_id=post.id)
+        
+        # serializer_notification = NotificationSerializer(notification)
+        
+        # serializer_data = serializer_notification.data
+
+        # json_data = json.dumps(serializer_data)
+                
+        # pusher_client.trigger(f'{request.user.id}-notification', 'like-notification:new', {'notification': json_data})
+    
+        
+        serializer = MemberLikeSerializer(member_like)
+        
+        return JsonResponse(serializer.data, safe=False)
+    else:
+        return JsonResponse({'message': 'post already liked'})

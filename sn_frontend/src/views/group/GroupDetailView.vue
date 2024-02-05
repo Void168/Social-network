@@ -83,7 +83,7 @@ export default {
   },
 
   beforeMount() {
-    this.checkUserInGroup();
+    this.getGroupDetail();
   },
 
   // watch: {
@@ -98,7 +98,7 @@ export default {
   methods: {
     async checkUserInGroup() {
       await axios
-        .get(`/api/group/check-user/${this.$route.params.id}`)
+        .get(`/api/group/check-user/${this.group.id}`)
         .then((res) => {
           if (res.data.message === "User joined the group") {
             this.isUserInGroup = true;
@@ -106,7 +106,6 @@ export default {
           } else {
             this.isUserInGroup = false;
           }
-          this.getGroupDetail();
         })
         .catch((error) => {
           console.log(error);
@@ -117,6 +116,7 @@ export default {
         .get(`/api/group/${this.$route.params.id}/`)
         .then((res) => {
           this.group = res.data;
+          this.checkUserInGroup()
         })
         .catch((error) => {
           console.log(error);

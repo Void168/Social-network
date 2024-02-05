@@ -40,7 +40,7 @@
         <UserGroupIcon class="w-6" v-if="group.is_private_group" />
         <GlobeAsiaAustraliaIcon class="w-6" v-else />
         <div class="relative group">
-          <RouterLink :to="{ name: 'postview', params: { id: post.id } }">
+          <RouterLink :to="{ name: 'grouppost', params: { postid: post.id } }">
             <p
               class="text-gray-600 dark:text-neutral-200 md:block hidden group-hover:underline"
             >
@@ -89,7 +89,7 @@
         <div class="flex items-center space-x-2">
           <HeartLike
             class="w-6 h-6 text-rose-500 cursor-pointer"
-            v-if="isLike"
+            v-if="checkMemberLike || isLike"
           />
           <HeartLike
             v-else
@@ -119,8 +119,8 @@
 
           <RouterLink
             :to="{
-              name: post.created_by.is_page ? 'pagepostview' : 'postview',
-              params: { id: post.id },
+              name: 'grouppost',
+              params: { postid: post.id },
             }"
             class="text-gray-500 text-xs dark:text-neutral-200"
             >{{ post?.comments_count }} bình luận</RouterLink
@@ -255,31 +255,14 @@ export default (await import("vue")).defineComponent({
   },
 
   computed: {
-    checkUserLike() {
+    checkMemberLike() {
       return this.post.likes
         .map((like) => like.created_by)
-        .map((created_by) => created_by?.information?.id);
+        .map((created_by) => created_by?.information?.id).includes(this.userStore.user.id);
     },
-    // checkPageLike() {
-    //   return this.post?.page_likes
-    //     ?.map((like) => like?.created_by?.information?.id)
-    //     .includes(this.pageStore.pageId);
-    // },
-  },
-
-  mounted() {
-    this.like();
   },
 
   methods: {
-    like() {
-      const is_like = this.post.likes
-        .map((like) => like.created_by)
-        .map((created_by) => created_by?.information?.id);
-      if (is_like.includes(this.userStore.user.id)) {
-        this.isLike = true;
-      }
-    },
     likePost(id) {
         axios
           .post(`/api/posts/${id}/group/${this.group.id}/like/`)

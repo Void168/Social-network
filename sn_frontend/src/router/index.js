@@ -9,6 +9,7 @@ import ProfileImagesView from "../views/profile/ProfileImagesView.vue";
 import GroupDetailView from "../views/group/GroupDetailView.vue";
 import GroupDiscussView from "../views/group/GroupDiscussView.vue"
 import GroupAboutView from "../views/group/GroupAboutView.vue";
+import GroupPostView from "../views/group/GroupPostView.vue";
 import GroupMembersView from "../views/group/GroupMembersView.vue";
 import GroupJoinRequestView from "../views/group/GroupJoinRequestView.vue";
 import GroupEditView from "../views/group/GroupEditView.vue"
@@ -117,6 +118,11 @@ const router = createRouter({
           path: "edit",
           component: GroupEditView,
           name: "groupedit",
+        },
+        {
+          path: "post/:postid",
+          component: GroupPostView,
+          name: "grouppost",
         },
       ],
     },

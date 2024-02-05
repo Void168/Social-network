@@ -14,8 +14,8 @@ from notification.models import NotificationForPage
 from notification.utils import create_notification
 
 from .forms import PostForm, AttachmentForm, PageAttachmentForm, PagePostForm, MemberAttachmentForm, GroupPostForm
-from .models import Post, Comment, Like, Trend, PagePost, PageComment, PageLike, GroupPost, MemberLike
-from .serializers import PostSerializer, PostDetailSerializer, CommentSerializer, TrendSerializer, LikeSerializer, PagePostSerializer, PageLikeSerializer, PageCommentSerializer, PagePostDetailSerializer, GroupPostSerializer, MemberLikeSerializer
+from .models import Post, Comment, Like, Trend, PagePost, PageComment, PageLike, GroupPost, MemberLike, MemberComment
+from .serializers import PostSerializer, PostDetailSerializer, CommentSerializer, TrendSerializer, LikeSerializer, PagePostSerializer, PageLikeSerializer, PageCommentSerializer, PagePostDetailSerializer, GroupPostSerializer, MemberLikeSerializer, MemberCommentSerializer
 from notification.serializers import NotificationSerializer, NotificationForPageSerializer
 
 # Create your views here.
@@ -104,6 +104,15 @@ def page_post_detail(request, pk):
     
     return JsonResponse({
         'page_post': PagePostDetailSerializer(page_post).data
+    })
+
+@api_view(['GET'])
+def group_post_detail(request, pk):
+        
+    group_post = GroupPost.objects.get(pk=pk)
+    
+    return JsonResponse({
+        'post': GroupPostSerializer(group_post).data
     })
 
 @api_view(['GET'])
@@ -444,6 +453,49 @@ def page_post_create_comment_by_page(request, pk, id):
         )
     
     serializer = PageCommentSerializer(page_comment)
+    
+    return JsonResponse(serializer.data, safe=False)
+
+@api_view(['POST'])
+def group_post_create_comment(request, pk, id):
+    members = Member.objects.filter(Q(information=request.user))
+    current_member = Member.objects.none()
+    group = Group.objects.get(id=id)
+    group_members = group.members.all()
+    for member in members:
+        if member in group_members:
+            current_member = member
+        else:
+            pass
+        
+    group_post = GroupPost.objects.get(pk=pk)
+    group_post_comment = MemberComment.objects.create(body=request.data.get('body'), tags=request.data.get('tags'), created_by=current_member)
+
+    group_post.comments.add(group_post_comment)
+    group_post.comments_count = group_post.comments_count + 1
+    group_post.save()
+    
+    # notification = create_notification(request, 'post_comment', post_id=post.id)
+    
+    # if len(comment.tags) > 0:
+    #     notification_tag = create_notification(request, 'tag_comment', post_id=post.id, comment_id=comment.id)
+        
+        # serializer_notification_tag_comment = NotificationSerializer(notification_tag)
+        
+        # serializer_tag_comment_data = serializer_notification_tag_comment.data
+
+        # json_tag_data = json.dumps(serializer_tag_comment_data)
+        # pusher_client.trigger(f'{request.user.id}-notification', 'tag-comment-notification:new', {'notification': json_tag_data})
+    
+    # serializer_notification = NotificationSerializer(notification)
+        
+    # serializer_data = serializer_notification.data
+
+    # json_data = json.dumps(serializer_data)
+                
+    # pusher_client.trigger(f'{request.user.id}-notification', 'comment-notification:new', {'notification': json_data})
+    
+    serializer = MemberCommentSerializer(group_post_comment)
     
     return JsonResponse(serializer.data, safe=False)
 

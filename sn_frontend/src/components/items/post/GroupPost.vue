@@ -89,15 +89,7 @@
         <div class="flex items-center space-x-2">
           <HeartLike
             class="w-6 h-6 text-rose-500 cursor-pointer"
-            v-if="!pageStore.pageId && checkUserLike"
-          />
-          <!-- <HeartLike
-            class="w-6 h-6 text-rose-500 cursor-pointer"
-            v-else-if="pageStore.pageId && checkPageLike"
-          /> -->
-          <HeartLike
-            class="w-6 h-6 text-rose-500 cursor-pointer"
-            v-else-if="isLike"
+            v-if="isLike"
           />
           <HeartLike
             v-else
@@ -239,12 +231,14 @@ export default (await import("vue")).defineComponent({
   props: {
     post: Object,
     group: Object,
+    currentMember: Object,
   },
 
   data() {
     return {
       isOpen: false,
       isLike: false,
+      
     };
   },
 
@@ -262,9 +256,9 @@ export default (await import("vue")).defineComponent({
 
   computed: {
     checkUserLike() {
-      return this.post?.likes
-        ?.map((like) => like?.created_by?.information?.id)
-        .includes(this.userStore.user.id);
+      return this.post.likes
+        .map((like) => like.created_by)
+        .map((created_by) => created_by?.information?.id);
     },
     // checkPageLike() {
     //   return this.post?.page_likes

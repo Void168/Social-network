@@ -23,7 +23,11 @@
           route.name === 'groupmembers'
         "
       />
-      <router-view :isUserInGroup="isUserInGroup" :group="group"></router-view>
+      <router-view
+        :isUserInGroup="isUserInGroup"
+        :group="group"
+        :currentMember="currentMember"
+      ></router-view>
     </div>
   </div>
 </template>
@@ -65,6 +69,7 @@ export default {
     return {
       group: {},
       isUserInGroup: false,
+      currentMember: {},
     };
   },
 
@@ -72,7 +77,8 @@ export default {
     check() {
       return this.group.members
         .map((member) => member.information)
-        .map((info) => info.id).includes(this.userStore.user.id);
+        .map((info) => info.id)
+        .includes(this.userStore.user.id);
     },
   },
 
@@ -96,6 +102,7 @@ export default {
         .then((res) => {
           if (res.data.message === "User joined the group") {
             this.isUserInGroup = true;
+            this.getCurrentMember();
           } else {
             this.isUserInGroup = false;
           }
@@ -110,6 +117,16 @@ export default {
         .get(`/api/group/${this.$route.params.id}/`)
         .then((res) => {
           this.group = res.data;
+        })
+        .catch((error) => {
+          console.log(error);
+        });
+    },
+    async getCurrentMember() {
+      axios
+        .get(`/api/group/get-current-member/${this.$route.params.id}/`)
+        .then((res) => {
+          this.currentMember = res.data;
         })
         .catch((error) => {
           console.log(error);

@@ -72,7 +72,7 @@ class PagePostSerializer(serializers.ModelSerializer):
 class GroupPostSerializer(serializers.ModelSerializer):
     created_by = MemberSerializer(read_only=True)
     attachments = PostAttachmentSerializer(read_only=True, many=True)
-    likes = LikeSerializer(read_only=True, many=True)
+    likes = MemberLikeSerializer(read_only=True, many=True)
     comments = MemberCommentSerializer(read_only=True, many=True)
     class Meta:
         model = Post

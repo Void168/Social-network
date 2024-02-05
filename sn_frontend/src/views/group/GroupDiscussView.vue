@@ -95,7 +95,7 @@
             v-for="groupPost in groupPosts"
             :key="groupPost.id"
           >
-            <GroupPost :post="groupPost" :group="group"/>
+            <GroupPost :post="groupPost" :group="group" :currentMember="currentMember"/>
           </div>
         </div>
         <div
@@ -267,6 +267,7 @@ export default {
   props: {
     group: Object,
     isUserInGroup: Boolean,
+    currentMember: Object
   },
   data() {
     return {

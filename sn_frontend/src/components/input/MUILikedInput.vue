@@ -1,7 +1,7 @@
 <template>
   <div class="relative">
     <input
-      class="p-4 w-full bg-gray-100 dark:bg-slate-800 rounded-lg resize-none border dark:border-slate-600"
+      class="p-4 w-full bg-gray-100 dark:bg-slate-800 rounded-lg resize-none border dark:border-slate-600 dark:text-neutral-200"
       :placeholder="isFocus ? '' : `${placeholder}`"
       @focus="focusIn"
       @focusout="focusOut"

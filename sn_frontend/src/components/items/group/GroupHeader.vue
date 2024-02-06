@@ -81,14 +81,14 @@
           </RouterLink>
           <RouterLink
             v-if="isUserInGroup"
-            :to="{ name: 'groupdetail', params: { id: group?.id } }"
+            :to="{ name: 'groupmedia', params: { id: group?.id } }"
             class="font-medium p-4 flex justify-center dark:hover:bg-slate-600 duration-75"
           >
             File Phương Tiện
           </RouterLink>
           <RouterLink
             v-if="isUserInGroup"
-            :to="{ name: 'groupdetail', params: { id: group?.id } }"
+            :to="{ name: 'groupfile', params: { id: group?.id } }"
             class="font-medium p-4 flex justify-center dark:hover:bg-slate-600 duration-75"
           >
             File

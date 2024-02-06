@@ -1,6 +1,6 @@
 from django.forms import ModelForm
 
-from .models import Group
+from .models import Group, Question
 
 class GroupCreateForm(ModelForm):
     class Meta:
@@ -16,3 +16,8 @@ class GroupWebsiteForm(ModelForm):
     class Meta:
         model = Group
         fields = ('website',)
+        
+class GroupQuestionForm(ModelForm):
+    class Meta:
+        model = Question
+        fields = ('body',)

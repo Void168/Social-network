@@ -20,8 +20,8 @@
         v-on:click="openModal"
       ></button>
       <img
-        :src="groupPost.attachments[0].get_image"
-        class="xl:h-32 lg:h-24 sm:h-48 xm:h-32 xs:h-24 cursor-pointer"
+        :src="groupPost?.attachments[0]?.get_image"
+        class="xl:h-36 lg:h-24 sm:h-48 xm:h-32 xs:h-24 cursor-pointer"
         :class="[
           index == 0 ? 'rounded-tl-md' : '',
           index == 1 ? 'rounded-tr-md' : '',

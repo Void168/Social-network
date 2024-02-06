@@ -9,6 +9,9 @@ import ProfileImagesView from "../views/profile/ProfileImagesView.vue";
 import GroupDetailView from "../views/group/GroupDetailView.vue";
 import GroupDiscussView from "../views/group/GroupDiscussView.vue"
 import GroupAboutView from "../views/group/GroupAboutView.vue";
+import GroupMediaView from "../views/group/GroupMediaView.vue"
+import GroupFileView from "../views/group/GroupFileView.vue"
+import GroupQuestionView from "../views/group/GroupQuestionView.vue"
 import GroupPostView from "../views/group/GroupPostView.vue";
 import GroupMembersView from "../views/group/GroupMembersView.vue";
 import GroupJoinRequestView from "../views/group/GroupJoinRequestView.vue";
@@ -105,9 +108,24 @@ const router = createRouter({
           name: "groupabout",
         },
         {
+          path: "media",
+          component: GroupMediaView,
+          name: "groupmedia",
+        },
+        {
+          path: "files",
+          component: GroupFileView,
+          name: "groupfile",
+        },
+        {
           path: "members",
           component: GroupMembersView,
           name: "groupmembers",
+        },
+        {
+          path: "membership-questions",
+          component: GroupQuestionView,
+          name: "groupquestion",
         },
         {
           path: "member-request",

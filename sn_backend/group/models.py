@@ -15,6 +15,11 @@ class Rule(models.Model):
 class Question(models.Model):
     id= models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
     body = models.TextField(blank=True)
+
+class Answer(models.Model):
+    id= models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
+    question = models.ForeignKey(Question, related_name="question", on_delete=models.CASCADE)
+    body = models.TextField(blank=True)
     
 class Member(models.Model):
     id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
@@ -85,6 +90,7 @@ class JoinGroupRequest(models.Model):
     created_for = models.ForeignKey(Group, related_name='received_joingrouprequests', on_delete=models.CASCADE)
     created_at = models.DateTimeField(auto_now_add=True)
     created_by = models.ForeignKey(User, related_name='created_joingrouprequests', on_delete=models.CASCADE)
+    answers = models.ManyToManyField(Answer, related_name="answers")
     status = models.CharField(max_length=20, choices=STATUS_CHOICES, default=PENDING)
     
     def created_at_formatted(self):

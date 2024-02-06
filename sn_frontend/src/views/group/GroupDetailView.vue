@@ -20,7 +20,9 @@
         v-if="
           route.name === 'groupdiscuss' ||
           route.name === 'groupabout' ||
-          route.name === 'groupmembers'
+          route.name === 'groupmembers' ||
+          route.name === 'groupmedia' ||
+          route.name === 'groupfile'
         "
       />
       <router-view

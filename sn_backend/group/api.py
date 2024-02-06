@@ -10,9 +10,9 @@ from page.serializers import PageSerializer
 # from notification.models import NotificationForPage
 # from notification.utils import create_notification
 
-from .serializers import QuestionSerializer, RuleSerializer, MemberSerializer, PageMemberSerializer, GroupSerializer, GroupDetailSerializer, JoinGroupRequestSerializer
+from .serializers import QuestionSerializer, RuleSerializer, MemberSerializer, PageMemberSerializer, GroupSerializer, GroupDetailSerializer, JoinGroupRequestSerializer, QuestionSerializer
 from .models import Group, Rule, Question, Member, PageMember, JoinGroupRequest
-from .forms import GroupCreateForm, GroupInfoForm, GroupWebsiteForm
+from .forms import GroupCreateForm, GroupInfoForm, GroupWebsiteForm, GroupQuestionForm
 
 @api_view(['POST'])
 def create_group(request):
@@ -372,3 +372,51 @@ def remove_moderator(request, pk, id):
         return JsonResponse({'message':'moderator removed', 'group': serializer.data})
     else:
         return JsonResponse({'error':"You don't have permission to do that"})
+    
+@api_view(['POST'])
+def kick_member(request, pk, id):
+    group = Group.objects.get(pk=pk)
+    user = User.objects.get(id=id)
+    members = Member.objects.filter(Q(information=user))
+    
+    for member in members:
+        if member in group.members.all():
+            group.members.remove(member)
+            group.members_count = group.members_count - 1
+            group.save()
+            
+            return JsonResponse({'message': 'Member has been kicked'})
+        else:
+            continue
+        
+@api_view(['POST'])
+def leave_group(request, pk):
+    group = Group.objects.get(pk=pk)
+    members = Member.objects.filter(Q(information=request.user))
+    
+    for member in members:
+        if member in group.members.all():
+            group.members.remove(member)
+            group.members_count = group.members_count - 1
+            group.save()
+            
+            return JsonResponse({'message': 'Leaved group'})
+        else:
+            continue
+
+@api_view(['POST'])
+def create_questions(request, pk):
+    group = Group.objects.get(pk=pk)
+    form = GroupQuestionForm(request.POST)
+    
+    if form.is_valid():
+        question = form.save(commit=False)
+        group.questions.add(question)
+        
+        group.save()
+
+        serializer = QuestionSerializer(question)
+
+        return JsonResponse(serializer.data, safe=False)
+    else:
+        return JsonResponse({'error': 'Failed'})

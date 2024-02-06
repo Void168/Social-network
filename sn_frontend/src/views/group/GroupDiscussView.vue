@@ -95,7 +95,11 @@
             v-for="groupPost in groupPosts"
             :key="groupPost.id"
           >
-            <GroupPost :post="groupPost" :group="group" :currentMember="currentMember"/>
+            <GroupPost
+              :post="groupPost"
+              :group="group"
+              :currentMember="currentMember"
+            />
           </div>
         </div>
         <div
@@ -211,8 +215,22 @@
         </div>
         <div class="dark:bg-slate-700 rounded-lg p-4 space-y-2">
           <h3 class="font-semibold text-lg">File phương tiện mới đây</h3>
-          <div v-for="image in groupImages.slice(0, 4)" :key="image.id" class="grid grid-cols-2">
-            <GroupImageShowcase :groupPost="image" :index="groupImages.indexOf(image)"/>
+          <div
+            v-for="image in groupImages.slice(0, 4)"
+            :key="image.id"
+            class="grid grid-cols-2"
+          >
+            <GroupImageShowcase
+              :groupPost="image"
+              :index="groupImages.indexOf(image)"
+            />
+          </div>
+          <div
+            class="w-full flex justify-center items-center rounded-lg py-2 dark:bg-slate-600 cursor-pointer dark:hover:bg-slate-500 duration-75"
+          >
+            <RouterLink :to="{name: 'groupmedia', params: {id: group.id}}" class="font-semibold">
+              Xem tất cả
+            </RouterLink>
           </div>
         </div>
       </div>
@@ -276,7 +294,7 @@ export default {
   props: {
     group: Object,
     isUserInGroup: Boolean,
-    currentMember: Object
+    currentMember: Object,
   },
   data() {
     return {
@@ -290,7 +308,7 @@ export default {
 
   mounted() {
     this.getGroupPostsList();
-    this.getGroupImage()
+    this.getGroupImage();
   },
 
   methods: {
@@ -305,13 +323,13 @@ export default {
       await axios
         .get(`/api/posts/group/${this.$route.params.id}/`)
         .then((res) => {
-          this.groupPosts = res.data
+          this.groupPosts = res.data;
         })
         .catch((error) => {
           console.log(error);
         });
     },
-    async getGroupImage(){
+    async getGroupImage() {
       await axios
         .get(`/api/posts/group/${this.$route.params.id}/attachments/`)
         .then((res) => {

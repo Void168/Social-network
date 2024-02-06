@@ -149,7 +149,7 @@ export default (await import("vue")).defineComponent({
             {
               name: "Câu hỏi chọn thành viên",
               content: "",
-              url: "",
+              url: "groupquestion",
             },
             {
               name: "Bài viết đang chờ",

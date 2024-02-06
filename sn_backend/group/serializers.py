@@ -1,6 +1,6 @@
 from rest_framework import serializers
 
-from .models import Group, Rule, Question, Member, PageMember, JoinGroupRequest
+from .models import Group, Rule, Question, Member, PageMember, JoinGroupRequest, Question
 from account.serializers import UserSerializer, UserLessSerializer
 from page.serializers import PageSerializer 
 
@@ -52,3 +52,8 @@ class JoinGroupRequestSerializer(serializers.ModelSerializer):
     class Meta:
         model = JoinGroupRequest
         fields = ('id', 'created_by', 'created_for', 'created_at','status', 'created_at_formatted',)
+
+class QuestionSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Question
+        fields = ('id', 'body',)

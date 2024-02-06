@@ -305,11 +305,10 @@ def post_created_to(request, id):
         
 @api_view(['POST'])
 def post_like(request,pk):
-    post =Post.objects.get(pk=pk)
+    post = Post.objects.get(pk=pk)
     like = Like.objects.create(created_by=request.user)
     
     if not post.likes.filter(created_by=request.user):
-        post = Post.objects.get(pk=pk)
         post.likes_count = post.likes_count + 1
         post.likes.add(like)
         post.save()
@@ -329,7 +328,13 @@ def post_like(request,pk):
         
         return JsonResponse(serializer.data, safe=False)
     else:
-        return JsonResponse({'message': 'post already liked'})
+        post.likes_count = post.likes_count - 1
+        post.likes.remove(like)
+        post.save()
+        
+        serializer = LikeSerializer(like)
+        
+        return JsonResponse(serializer.data, safe=False)
 
 @api_view(['POST'])
 def page_post_like_by_user(request, pk):
@@ -610,17 +615,19 @@ def group_post_like(request, pk, id):
     group_post = GroupPost.objects.get(pk=pk)
     group = Group.objects.get(id=id)
     members = Member.objects.filter(Q(information=request.user))
-    current_member = Member.objects.none()
     group_members = group.members.all()
+    current_member = Member.objects.none()
+    
+    member_like = MemberLike.objects.none()
     for member in members:
         if member in group_members:
             current_member = member
         else:
             pass
     
-    member_like = MemberLike.objects.create(created_by=current_member)
-    if not group_post.likes.filter(created_by=current_member):
-        group_post = GroupPost.objects.get(pk=pk)
+    current_like = group_post.likes.filter(created_by__in=[current_member])
+    if not current_like:
+        member_like = MemberLike.objects.create(created_by=current_member)
         group_post.likes_count = group_post.likes_count + 1
         group_post.likes.add(member_like)
         group_post.save()
@@ -638,6 +645,10 @@ def group_post_like(request, pk, id):
         
         serializer = MemberLikeSerializer(member_like)
         
-        return JsonResponse(serializer.data, safe=False)
+        return JsonResponse({ 'message': 'Liked', 'data':serializer.data }, safe=False)
     else:
-        return JsonResponse({'message': 'post already liked'})
+        group_post.likes_count = group_post.likes_count - 1
+        group_post.likes.remove(current_like[0])
+        group_post.save()
+                
+        return JsonResponse({ 'message': 'Disliked'})

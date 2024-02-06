@@ -89,10 +89,11 @@
         <div class="flex items-center space-x-2">
           <HeartLike
             class="w-6 h-6 text-rose-500 cursor-pointer"
-            v-if="checkMemberLike || isLike"
+            v-if="checkLike || isLike"
+            @click="likePost(post.id)"
           />
           <HeartLike
-            v-else
+            v-else-if="!checkLike || !isLike"
             @click="likePost(post.id)"
             class="w-6 h-6 cursor-pointer text-gray-400 hover:text-rose-500 transition-colors duration-75"
           />
@@ -165,7 +166,8 @@
                 class="py-1"
                 v-if="
                   userStore.user.id === post.created_by.id ||
-                  pageStore.pageId === post.created_by.id
+                  pageStore.pageId === post.created_by.id ||
+                  userStore.user.id === post.created_by.information.id
                 "
               >
                 <MenuItem v-slot="{ active }" @click="openModal">
@@ -238,7 +240,7 @@ export default (await import("vue")).defineComponent({
     return {
       isOpen: false,
       isLike: false,
-      
+      checkLike: false,
     };
   },
 
@@ -254,23 +256,37 @@ export default (await import("vue")).defineComponent({
     };
   },
 
-  computed: {
-    checkMemberLike() {
-      return this.post.likes
-        .map((like) => like.created_by)
-        .map((created_by) => created_by?.information?.id).includes(this.userStore.user.id);
-    },
+  // computed: {
+  //   checkMemberLike() {
+  //     return this.post.likes
+  //       .map((like) => like.created_by)
+  //       .map((created_by) => created_by?.information?.id).includes(this.userStore.user.id);
+  //   },
+  // },
+
+  beforeUpdate(){
+    this.checkMemberLike()
   },
 
   methods: {
+    checkMemberLike() {
+      this.checkLike = this.post.likes
+        .map((like) => like.created_by)
+        .map((created_by) => created_by?.information?.id).includes(this.userStore.user.id);
+        
+      console.log(this.checkLike)
+    },
     likePost(id) {
         axios
           .post(`/api/posts/${id}/group/${this.group.id}/like/`)
           .then((res) => {
             console.log(res.data)
-            if (res.data.message !== "post already liked") {
+            if (res.data.message === "Liked") {
               this.post.likes_count += 1;
               this.isLike = true;
+            } else {
+              this.post.likes_count -= 1;
+              this.isLike = false;
             }
           })
           .catch((error) => {
@@ -279,10 +295,8 @@ export default (await import("vue")).defineComponent({
     },
     deletePost() {
       this.$emit("deletePost", this.post.id);
-
-      if (!this.post.created_by.is_page) {
         axios
-          .delete(`/api/posts/${this.post.id}/delete/`)
+          .delete(`/api/posts/group/${this.post.id}/delete/`)
           .then((res) => {
             setTimeout(() => {
               this.closeModal();
@@ -301,34 +315,10 @@ export default (await import("vue")).defineComponent({
               "bg-rose-500 text-white"
             );
           });
-      } else {
-        axios
-          .delete(
-            `/api/posts/page/${this.pageStore.pageId}/${this.post.id}/delete/`
-          )
-          .then((res) => {
-            setTimeout(() => {
-              this.closeModal();
-            }, 1000);
-            this.toastStore.showToast(
-              5000,
-              "Bài viết đã được xóa",
-              "bg-emerald-500 text-white"
-            );
-          })
-          .catch((error) => {
-            console.log(error);
-            this.toastStore.showToast(
-              5000,
-              "Xóa bài viết thất bại",
-              "bg-rose-500 text-white"
-            );
-          });
-      }
     },
     reportPost() {
       axios
-        .post(`/api/posts/${this.post.id}/report/`)
+        .post(`/api/posts/group/${this.post.id}/report/`)
         .then((res) => {
           // console.log(res.data);
           this.toastStore.showToast(

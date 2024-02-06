@@ -1,10 +1,10 @@
 <template>
     <SkeletonLoadingPost v-if="isLoading"/>
-    <div class="max-w-7xl mx-auto flex justify-center items-center gap-4" v-else>
+    <div class="max-w-7xl mx-auto flex justify-center items-center gap-4 my-6" v-else>
       <div class="space-y-4 xl:w-6/12 md:w-8/12 mx-2 md:mx-0">
         <div
           v-if="groupPost.id"
-          class="p-4 bg-white border border-gray-200 rounded-lg mt-4 shadow-md dark:bg-slate-600 dark:border-slate-700 dark:text-neutral-200"
+          class="p-4 bg-white border border-gray-200 rounded-lg shadow-md dark:bg-slate-600 dark:border-slate-700 dark:text-neutral-200"
         >
           <GroupPost :post="groupPost" :group="group" :currentMember="currentMember" />
         </div>
@@ -85,7 +85,7 @@
             v-for="comment in allComments.slice(0, lastComment)"
             v-bind:key="comment?.id"
           >
-            <CommentItem v-bind:comment="comment" />
+            <MemberCommentItem :comment="comment" :post="groupPost"/>
           </div>
           <div class="flex justify-end">
             <button
@@ -110,7 +110,7 @@
   
 
   import SkeletonLoadingPost from "../../components/loadings/SkeletonLoadingPost.vue";
-  import CommentItem from "../../components/items/post/CommentItem.vue";
+  import MemberCommentItem from "../../components/items/group/MemberCommentItem.vue";
   import { useUserStore } from "../../stores/user";
   import { usePageStore } from "../../stores/page";
   
@@ -120,7 +120,7 @@
       PeopleYouMayKnow,
       Trends,
       GroupPost,
-      CommentItem,
+      MemberCommentItem,
       SkeletonLoadingPost,
     },
   
@@ -171,7 +171,7 @@
         );
       },
       allComments(){
-        return this.groupPost?.comments.concat(this.groupPost?.page_comments)
+        return this.groupPost?.comments
       }
     },
   

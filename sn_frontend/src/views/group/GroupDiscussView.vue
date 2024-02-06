@@ -209,6 +209,12 @@
             </div>
           </div>
         </div>
+        <div class="dark:bg-slate-700 rounded-lg p-4 space-y-2">
+          <h3 class="font-semibold text-lg">File phương tiện mới đây</h3>
+          <div v-for="image in groupImages.slice(0, 4)" :key="image.id" class="grid grid-cols-2">
+            <GroupImageShowcase :groupPost="image" :index="groupImages.indexOf(image)"/>
+          </div>
+        </div>
       </div>
     </div>
   </div>
@@ -222,6 +228,8 @@ import { RouterLink } from "vue-router";
 
 import GroupHeader from "../../components/items/group/GroupHeader.vue";
 import GroupPost from "../../components/items/post/GroupPost.vue";
+import GroupImageShowcase from "../../components/items/group/GroupImageShowcase.vue";
+
 import {
   GlobeAsiaAustraliaIcon,
   LockClosedIcon,
@@ -254,6 +262,7 @@ export default {
     EyeIcon,
     ChevronDownIcon,
     GroupPost,
+    GroupImageShowcase,
   },
   setup() {
     const userStore = useUserStore();
@@ -275,11 +284,13 @@ export default {
       step: 0,
       urlPost: null,
       groupPosts: [],
+      groupImages: [],
     };
   },
 
   mounted() {
     this.getGroupPostsList();
+    this.getGroupImage()
   },
 
   methods: {
@@ -298,6 +309,16 @@ export default {
         })
         .catch((error) => {
           console.log(error);
+        });
+    },
+    async getGroupImage(){
+      await axios
+        .get(`/api/posts/group/${this.$route.params.id}/attachments/`)
+        .then((res) => {
+          this.groupImages = res.data;
+        })
+        .catch((error) => {
+          console.log("error", error);
         });
     },
     submitForm() {

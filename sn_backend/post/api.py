@@ -215,6 +215,21 @@ def page_post_attachment_list_profile(request, id):
 
     return JsonResponse(serializer.data, safe=False)
 
+@api_view(['GET'])
+def group_post_attachment_list_profile(request, pk):
+    group = Group.objects.get(pk=pk)
+    group_posts = GroupPost.objects.all()
+    # receivedPosts = Post.objects.filter(post_to=id)
+    group_post_attachments = []
+    
+    for group_post in group_posts:
+        if group_post.attachments.count() > 0:
+            group_post_attachments.append(group_post)
+        
+    serializer = GroupPostSerializer(group_post_attachments, many=True)
+
+    return JsonResponse(serializer.data, safe=False)
+
 @api_view(['POST'])
 def post_create(request):
     form = PostForm(request.POST)

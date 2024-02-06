@@ -273,14 +273,11 @@ export default (await import("vue")).defineComponent({
       this.checkLike = this.post.likes
         .map((like) => like.created_by)
         .map((created_by) => created_by?.information?.id).includes(this.userStore.user.id);
-        
-      console.log(this.checkLike)
     },
     likePost(id) {
         axios
           .post(`/api/posts/${id}/group/${this.group.id}/like/`)
           .then((res) => {
-            console.log(res.data)
             if (res.data.message === "Liked") {
               this.post.likes_count += 1;
               this.isLike = true;

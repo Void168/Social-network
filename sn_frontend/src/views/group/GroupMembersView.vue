@@ -46,25 +46,45 @@
           Chủ nhóm & quản trị viên &middot;
           {{ 1 + group?.moderators?.length }}
         </h3>
-        <div class="flex justify-between items-center px-4 py-2">
-          <div class="flex items-center gap-2">
-            <img
-              :src="group?.admin?.get_avatar"
-              alt="admin-avatar"
-              class="w-16 h-16 rounded-full"
-            />
-            <div>
-              <h3 class="font-semibold">{{ group?.admin?.name }}</h3>
-              <h4 class="text-sm">Chủ nhóm</h4>
+        <div class="flex flex-col gap-2">
+          <div class="flex justify-between items-center px-4 py-2">
+            <div class="flex items-center gap-2">
+              <img
+                :src="group?.admin?.get_avatar"
+                alt="admin-avatar"
+                class="w-16 h-16 rounded-full"
+              />
+              <div>
+                <h3 class="font-semibold">{{ group?.admin?.name }}</h3>
+                <h4 class="text-sm">Chủ nhóm</h4>
+              </div>
             </div>
           </div>
-          <button
-            v-if="group?.admin?.id !== userStore.user.id"
-            class="flex gap-2 items-center px-4 py-2 rounded-lg dark:bg-slate-800 dark:hover:bg-slate-600 duration-75 font-medium"
-          >
-            <UserPlusIcon class="w-6" />
-            Thêm bạn bè
-          </button>
+          <div class="flex items-center justify-between">
+            <div
+              v-for="moderator in group?.moderators"
+              :key="moderator.id"
+              class="px-4 py-2 flex items-center gap-2"
+            >
+              <img
+                :src="moderator?.information?.get_avatar"
+                alt="admin-avatar"
+                class="w-16 h-16 rounded-full shadow-lg"
+              />
+              <div>
+                <h3 class="font-semibold">
+                  {{ moderator?.information?.name }}
+                </h3>
+                <h4 class="text-sm">Quản trị viên</h4>
+              </div>
+            </div>
+            <button
+              class="flex gap-2 items-center px-4 py-2 rounded-lg dark:bg-slate-800 dark:hover:bg-slate-600 duration-75 font-medium"
+            >
+              <UserPlusIcon class="w-6" />
+              Thêm bạn bè
+            </button>
+          </div>
         </div>
       </div>
       <hr class="border my-4 dark:border-slate-600" />
@@ -73,8 +93,12 @@
           Bạn bè &middot;
           {{ 1 + group?.moderators?.length }}
         </h3>
-        <div class="flex justify-between items-center px-4 py-2">
-          <div v-for="friend in friends.slice(0, 3)" :key="friend.id">
+        <div class="flex flex-col px-4 py-2">
+          <div
+            v-for="friend in friends.slice(0, 3)"
+            :key="friend.id"
+            class="flex justify-between items-center px-4 py-2"
+          >
             <RouterLink
               :to="{
                 name: 'profile',
@@ -94,13 +118,13 @@
                 <h4 class="text-sm">Làm việc tại</h4>
               </div>
             </RouterLink>
+            <button
+              class="flex gap-2 items-center px-4 py-2 rounded-lg dark:bg-slate-800 dark:hover:bg-slate-600 duration-75 font-medium"
+            >
+              <ChatBubbleLeftEllipsisIcon class="w-6" />
+              Nhắn tin
+            </button>
           </div>
-          <button
-            class="flex gap-2 items-center px-4 py-2 rounded-lg dark:bg-slate-800 dark:hover:bg-slate-600 duration-75 font-medium"
-          >
-            <ChatBubbleLeftEllipsisIcon class="w-6" />
-            Nhắn tin
-          </button>
         </div>
         <button
           v-if="friends.length > 3"
@@ -151,44 +175,41 @@
           Xem tất cả
         </button>
       </div>
-      <div>
-        <h3 class="text-lg font-semibold">Mới vào nhóm</h3>
-        <h5 class="text-xs">
-          Danh sách này bao gồm những người đã tham gia nhóm và những người đang
-          xem trước nhóm. Bất kỳ người nào được mời và được phê duyệt đều có thể
-          xem trước nội dung trong nhóm.
-        </h5>
+      <div class="my-4">
+        <div class="my-4">
+          <h3 class="text-lg font-semibold">Mới vào nhóm</h3>
+          <h5 class="text-xs">
+            Danh sách này bao gồm những người đã tham gia nhóm và những người
+            đang xem trước nhóm. Bất kỳ người nào được mời và được phê duyệt đều
+            có thể xem trước nội dung trong nhóm.
+          </h5>
+        </div>
         <div class="flex flex-col justify-between items-center px-4 py-2 gap-2">
           <div
-            v-for="n in 3"
-            :key="n"
+            v-for="member in group.members"
+            :key="member.id"
             class="w-full flex justify-between items-center"
           >
             <RouterLink
               :to="{
                 name: 'profile',
-                params: { id: friends[0]?.information?.id },
+                params: { id: member?.information?.id },
               }"
               class="flex items-center gap-2"
             >
               <img
-                :src="friends[0]?.information?.get_avatar"
+                :src="member?.information?.get_avatar"
                 alt="admin-avatar"
                 class="w-16 h-16 rounded-full"
               />
               <div>
                 <h3 class="font-semibold">
-                  {{ friends[0]?.information?.name }}
+                  {{ member?.information?.name }}
                 </h3>
                 <h4 class="text-sm">Làm việc tại</h4>
               </div>
             </RouterLink>
-            <button
-              class="flex gap-2 items-center px-4 py-2 rounded-lg dark:bg-slate-800 dark:hover:bg-slate-600 duration-75 font-medium"
-            >
-              <UserPlusIcon class="w-6" />
-              Thêm bạn bè
-            </button>
+            <GroupMemberDropdown :member="member" :group="group" @removeMember="removeMember"/>
           </div>
         </div>
       </div>
@@ -212,6 +233,7 @@ import {
 } from "@heroicons/vue/24/solid";
 import GroupDetailNavigation from "../../components/items/group/GroupDetailNavigation.vue";
 import GroupHeader from "../../components/items/group/GroupHeader.vue";
+import GroupMemberDropdown from "../../components/dropdown/GroupMemberDropdown.vue";
 
 export default {
   name: "groupmembers",
@@ -226,6 +248,7 @@ export default {
     RouterLink,
     GroupDetailNavigation,
     GroupHeader,
+    GroupMemberDropdown,
   },
   setup() {
     const userStore = useUserStore();
@@ -287,6 +310,19 @@ export default {
           console.log(error);
         });
     },
+    removeMember(member){
+      axios.post(`/api/group/${this.group.id}/kick/${member.id}/`).then((res) => {
+        if(res.data.message){
+          this.toastStore.showToast(
+            3500,
+            `Đã xóa ${member.name} khỏi nhóm.`,
+            "bg-emerald-500 text-white"
+          );
+        }
+      }).catch((error) => {
+        console.log(error)
+      })
+    }
   },
 };
 </script>

@@ -208,7 +208,8 @@ export default {
         .get(`/api/group/${this.$route.params.id}/`)
         .then((res) => {
           this.group = res.data;
-          console.log(res.data);
+          // console.log(res.data);
+          this.getJoinRequests()
         })
         .catch((error) => {
           console.log(error);
@@ -219,7 +220,7 @@ export default {
         .get(`/api/group/${this.group?.id}/get-join-request/`)
         .then((res) => {
           this.requests = res.data;
-          //   console.log(res.data)
+            // console.log(res.data)
         })
         .catch((error) => {
           console.log(error);

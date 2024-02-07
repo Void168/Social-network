@@ -26,12 +26,21 @@
               &middot; {{ group.members_count }} thành viên
             </h4>
           </div>
-          <img
-            :src="group?.admin?.get_avatar"
-            alt=""
-            class="w-8 h-8 rounded-full"
-            v-if="isUserInGroup"
-          />
+          <div class="flex gap-1 items-center">
+            <img
+              :src="group?.admin?.get_avatar"
+              alt=""
+              class="w-8 h-8 rounded-full"
+              v-if="isUserInGroup"
+            />
+            <div v-for="moderator in group?.moderators" :key="moderator.id">
+              <img
+                :src="moderator?.information?.get_avatar"
+                alt="admin-avatar"
+                class="w-8 h-8 rounded-full shadow-lg"
+              />
+            </div>
+          </div>
         </div>
         <div class="flex flex-col justify-end">
           <div class="flex gap-4" v-if="isUserInGroup">

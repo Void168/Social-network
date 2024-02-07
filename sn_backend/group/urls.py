@@ -19,6 +19,7 @@ urlpatterns = [
     path('<uuid:pk>/website/', api.change_group_website, name='change_group_website'),
     path('<uuid:pk>/show-group/', api.set_show_group, name='set_show_group'),
     path('<uuid:pk>/request-join-group/', api.set_request_join_group, name='set_request_join_group'),
+    path('<uuid:pk>/kick/<uuid:id>/', api.kick_member, name='kick_member'),
     path('<uuid:pk>/set-anonymous-post/', api.set_anonymous_post, name='set_anonymous_post'),
     path('<uuid:pk>/set-anyone-post/', api.set_anyone_can_post, name='set_anyone_can_post'),
     path('<uuid:pk>/set-pending-post/', api.set_pending_post, name='set_pending_post'),

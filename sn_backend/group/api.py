@@ -121,33 +121,34 @@ def get_friends_in_group(request, pk):
         
 @api_view(['GET'])
 def get_discover_groups(request):
-    try:
-        members = Member.objects.filter(Q(information=request.user))
-        discover_groups = Group.objects.none()
-        friends = request.user.friends.all()
-        
+    members = Member.objects.filter(Q(information=request.user))
+    friends = request.user.friends.all()
+    discover_groups = Group.objects.none()
+    if members:
         for friend in friends:
             friend_members = Member.objects.filter(Q(information=friend))
-            for friend_member in friend_members:
-                for member in members:
-                    discover_group = Group.objects.exclude(members__in=list([member])).filter(members__in=list([friend_member]))
-                    discover_groups = discover_groups | discover_group
+            if friend_members:
+                for friend_member in friend_members:
+                    for member in members:
+                        discover_group = Group.objects.exclude(members__in=list([member])).filter(members__in=list([friend_member]))
+                        discover_groups = discover_groups | discover_group
+            else:
+                continue
         
-        serializer = GroupSerializer(discover_groups, many=True)
+        serializer = GroupSerializer(discover_groups.distinct(), many=True)
         if discover_groups.count() > 0: 
             return JsonResponse(serializer.data, safe=False)
         else:
             return JsonResponse({'message': 'No groups found'})
-    except Member.DoesNotExist:
-        discover_groups =  Group.objects.none()
-        friends = request.user.friends.all()
+    else:
         for friend in friends:
-            try:
-                friend_member = Member.objects.get(Q(information=friend))
-                discover_group = Group.objects.filter(members__in=list([friend_member]))
-                discover_groups = discover_groups | discover_group
-            except Member.DoesNotExist:
-                pass
+            friend_members = Member.objects.filter(Q(information=friend))
+            if friend_members:
+                for friend_member in friend_members:
+                    discover_group = Group.objects.filter(members__in=list([friend_member]))
+                    discover_groups = discover_groups | discover_group
+            else:
+                continue
             
         serializer = GroupSerializer(discover_groups.distinct(), many=True)
         

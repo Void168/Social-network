@@ -89,11 +89,11 @@
         <div class="flex items-center space-x-2">
           <HeartLike
             class="w-6 h-6 text-rose-500 cursor-pointer"
-            v-if="checkLike || isLike"
+            v-if="checkLike && isLike || isLike"
             @click="likePost(post.id)"
           />
           <HeartLike
-            v-else-if="!checkLike || !isLike"
+            v-else-if="!checkLike && !isLike || !isLike"
             @click="likePost(post.id)"
             class="w-6 h-6 cursor-pointer text-gray-400 hover:text-rose-500 transition-colors duration-75"
           />
@@ -256,15 +256,11 @@ export default (await import("vue")).defineComponent({
     };
   },
 
-  // computed: {
-  //   checkMemberLike() {
-  //     return this.post.likes
-  //       .map((like) => like.created_by)
-  //       .map((created_by) => created_by?.information?.id).includes(this.userStore.user.id);
-  //   },
-  // },
-
   beforeUpdate(){
+    this.checkMemberLike()
+  },
+
+  mounted(){
     this.checkMemberLike()
   },
 

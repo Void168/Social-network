@@ -254,6 +254,7 @@ export default {
             if(!res.data.message){
               this.discoverGroups = res.data
             }
+            console.log(res.data)
           })
           .catch((error) => {
             console.log(error);

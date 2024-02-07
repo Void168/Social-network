@@ -73,6 +73,13 @@
             alt="admin-avatar"
             class="w-8 h-8 rounded-full shadow-lg"
           />
+          <div v-for="moderator in group?.moderators" :key="moderator.id">
+            <img
+            :src="moderator?.information?.get_avatar"
+            alt="admin-avatar"
+            class="w-8 h-8 rounded-full shadow-lg"
+          />
+          </div>
         </div>
         <div class="flex gap-1 my-2">
           <h4>{{ group?.admin?.name }} là chủ nhóm</h4>

@@ -31,8 +31,8 @@
               :src="group?.admin?.get_avatar"
               alt=""
               class="w-8 h-8 rounded-full"
-              v-if="isUserInGroup"
             />
+            <!-- v-if="isUserInGroup" -->
             <div v-for="moderator in group?.moderators" :key="moderator.id">
               <img
                 :src="moderator?.information?.get_avatar"
@@ -54,6 +54,13 @@
             >
               <ShareIcon class="w-4" />
               Chia sẻ
+            </button>
+            <button
+              @click="leaveGroup"
+              class="flex items-center gap-1 px-4 py-2 font-semibold dark:bg-slate-800 bg-slate-300 dark:hover:bg-slate-900 rounded-lg duration-75"
+            >
+              <UserMinusIcon class="w-4" />
+              Rời nhóm
             </button>
           </div>
           <button
@@ -121,6 +128,7 @@ import {
   PlusIcon,
   ShareIcon,
   UserPlusIcon,
+  UserMinusIcon,
 } from "@heroicons/vue/24/solid";
 export default (await import("vue")).defineComponent({
   components: {
@@ -130,6 +138,7 @@ export default (await import("vue")).defineComponent({
     PlusIcon,
     ShareIcon,
     UserPlusIcon,
+    UserMinusIcon,
   },
   setup() {
     const userStore = useUserStore();
@@ -177,6 +186,16 @@ export default (await import("vue")).defineComponent({
             console.log(error);
           });
       }
+    },
+    leaveGroup() {
+      axios
+        .post(`/api/group/${this.$route.params.id}/leave/`)
+        .then((res) => {
+          console.log(res.data);
+        })
+        .catch((error) => {
+          console.log(error);
+        });
     },
   },
 });

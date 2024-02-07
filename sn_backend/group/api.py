@@ -383,6 +383,7 @@ def kick_member(request, pk, id):
     for member in members:
         if member in group.members.all():
             group.members.remove(member)
+            member.delete()
             group.members_count = group.members_count - 1
             group.save()
             
@@ -398,6 +399,7 @@ def leave_group(request, pk):
     for member in members:
         if member in group.members.all():
             group.members.remove(member)
+            member.delete()
             group.members_count = group.members_count - 1
             group.save()
             

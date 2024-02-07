@@ -7,7 +7,7 @@
             <div class="py-4 flex items-start gap-2 p-2 rounded-lg">
               <div>
                 <img
-                  :src="group?.admin?.get_avatar"
+                  :src="currentMember?.information?.get_avatar"
                   alt="admin-avatar"
                   class="w-10 h-10 rounded-full"
                 />

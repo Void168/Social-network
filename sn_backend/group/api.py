@@ -65,13 +65,13 @@ def get_group_detail(request, pk):
 @api_view(['GET'])
 def get_current_member(request, pk):
     group = Group.objects.get(pk=pk)
-    member = Member.objects.filter(Q(information=request.user))
+    members = Member.objects.filter(Q(information=request.user))
     
     group_members = group.members.all()
-    if member.count() > 0:
-        for group_member in group_members:
-            if group_member in group_members:
-                serializer = MemberSerializer(group_member)
+    if members.count() > 0:
+        for member in members:
+            if member in group_members:
+                serializer = MemberSerializer(member)
                 return JsonResponse(serializer.data, safe=False)
             else:
                 continue

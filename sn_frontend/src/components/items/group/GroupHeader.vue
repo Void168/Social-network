@@ -12,7 +12,7 @@
           Chọn ảnh
         </button>
       </div>
-      <div class="flex justify-between my-8">
+      <div class="flex justify-between my-8 mx-4">
         <div class="flex flex-col gap-2">
           <h1 class="text-2xl font-bold">{{ group.name }}</h1>
           <div class="flex items-center gap-2">
@@ -74,8 +74,8 @@
         </div>
       </div>
       <hr class="border dark:border-slate-600 mx-4" />
-      <div class="flex justify-between items-center">
-        <div class="flex items-center mx-4">
+      <div class="flex justify-between items-center mx-4">
+        <div class="flex items-center">
           <RouterLink
             :to="{ name: 'groupdiscuss', params: { id: group?.id } }"
             class="font-medium p-4 flex justify-center dark:hover:bg-slate-600 duration-75"
@@ -110,7 +110,16 @@
             File
           </RouterLink>
         </div>
-        <div></div>
+        <div class="flex items-center gap-2">
+          <MagnifyingGlassIcon
+            @click="openModal"
+            class="w-10 p-2 rounded-lg dark:bg-slate-800 dark:hover:bg-slate-800/70 duration-75 cursor-pointer"
+          />
+          <SearchModal :show="isOpen" @closeModal="closeModal" :groupName="group.name"/>
+          <EllipsisHorizontalIcon
+            class="w-10 p-2 rounded-lg dark:bg-slate-800 dark:hover:bg-slate-800/70 duration-75 cursor-pointer"
+          />
+        </div>
       </div>
     </div>
   </div>
@@ -129,7 +138,10 @@ import {
   ShareIcon,
   UserPlusIcon,
   UserMinusIcon,
+  EllipsisHorizontalIcon,
+  MagnifyingGlassIcon,
 } from "@heroicons/vue/24/solid";
+import SearchModal from "../../modals/group/SearchModal.vue";
 export default (await import("vue")).defineComponent({
   components: {
     RouterLink,
@@ -139,6 +151,9 @@ export default (await import("vue")).defineComponent({
     ShareIcon,
     UserPlusIcon,
     UserMinusIcon,
+    EllipsisHorizontalIcon,
+    MagnifyingGlassIcon,
+    SearchModal,
   },
   setup() {
     const userStore = useUserStore();

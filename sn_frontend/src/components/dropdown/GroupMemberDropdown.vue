@@ -63,7 +63,7 @@
             v-slot="{ active }"
             @click="
               member?.information?.id !== group?.admin?.id
-                ? $emit('removeMember', member?.information)
+                ? $emit('removeMember', member)
                 : $emit('leaveGroup')
             "
           >

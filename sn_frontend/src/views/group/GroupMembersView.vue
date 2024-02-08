@@ -315,7 +315,7 @@ export default {
         if(res.data.message){
           this.toastStore.showToast(
             3500,
-            `Đã xóa ${member.name} khỏi nhóm.`,
+            `Đã xóa ${member?.information?.name} khỏi nhóm.`,
             "bg-emerald-500 text-white"
           );
         }

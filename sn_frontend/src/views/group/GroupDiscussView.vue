@@ -7,7 +7,11 @@
             <div class="py-4 flex items-start gap-2 p-2 rounded-lg">
               <div>
                 <img
-                  :src="currentMember?.information?.get_avatar"
+                  :src="
+                    isAnonymous
+                      ? 'https://cdn-icons-png.flaticon.com/512/350/350351.png'
+                      : currentMember?.information?.get_avatar
+                  "
                   alt="admin-avatar"
                   class="w-10 h-10 rounded-full"
                 />
@@ -34,7 +38,9 @@
             <hr class="mx-4 border dark:border-slate-600" />
             <div class="flex justify-center items-center gap-2 px-4 py-2">
               <div
+                @click="activateAnonymous"
                 class="flex items-center font-medium justify-center gap-2 py-2 w-full rounded-lg dark:hover:bg-slate-800 cursor-pointer duration-75"
+                :class="isAnonymous ? 'dark:bg-slate-800 bg-slate-400' : ''"
               >
                 <EyeSlashIcon class="w-6 text-sky-500" />
                 Bài viết ẩn danh
@@ -228,7 +234,10 @@
           <div
             class="w-full flex justify-center items-center rounded-lg py-2 dark:bg-slate-600 cursor-pointer dark:hover:bg-slate-500 duration-75"
           >
-            <RouterLink :to="{name: 'groupmedia', params: {id: group.id}}" class="font-semibold">
+            <RouterLink
+              :to="{ name: 'groupmedia', params: { id: group.id } }"
+              class="font-semibold"
+            >
               Xem tất cả
             </RouterLink>
           </div>
@@ -303,6 +312,7 @@ export default {
       urlPost: null,
       groupPosts: [],
       groupImages: [],
+      isAnonymous: false,
     };
   },
 
@@ -312,6 +322,9 @@ export default {
   },
 
   methods: {
+    activateAnonymous() {
+      this.isAnonymous = !this.isAnonymous;
+    },
     removeImage() {
       this.urlPost = null;
     },
@@ -323,7 +336,14 @@ export default {
       await axios
         .get(`/api/posts/group/${this.$route.params.id}/`)
         .then((res) => {
-          this.groupPosts = res.data;
+          const publicPosts = res.data.publicPosts
+          const anonymousPosts = res.data.anonymousPosts
+          const allPosts = publicPosts.concat(anonymousPosts) 
+
+          this.groupPosts = allPosts.sort((a,b) => {
+            new Date(b.created_at) - new Date(a.created_at)
+          })
+          console.log(this.groupPosts)
         })
         .catch((error) => {
           console.log(error);
@@ -343,23 +363,25 @@ export default {
       let formData = new FormData();
       formData.append("image", this.$refs.file.files[0]);
       formData.append("body", this.body);
+      formData.append("is_anonymous", this.isAnonymous);
 
-      axios
-        .post(`/api/posts/create/group/${this.group.id}/`, formData, {
-          headers: {
-            "Content-Type": "multipart/form-data",
-          },
-        })
-        .then((res) => {
-          console.log("data", res.data);
-          this.body = "";
-          this.$refs.file.value = null;
-          this.urlPost = null;
-          this.groupPosts.unshift(res.data);
-        })
-        .catch((error) => {
-          console.log("error", error);
-        });
+        axios
+          .post(`/api/posts/create/group/${this.group.id}/`, formData, {
+            headers: {
+              "Content-Type": "multipart/form-data",
+            },
+          })
+          .then((res) => {
+            // console.log("data", res.data);
+            this.body = "";
+            this.isAnonymous = false;
+            this.$refs.file.value = null;
+            this.urlPost = null;
+            this.groupPosts.unshift(res.data);
+          })
+          .catch((error) => {
+            console.log("error", error);
+          });
     },
   },
 };

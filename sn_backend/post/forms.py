@@ -15,7 +15,7 @@ class PagePostForm(ModelForm):
 class GroupPostForm(ModelForm):
     class Meta:
         model = GroupPost
-        fields = ('body',)
+        fields = ('body', 'is_anonymous',)
         
 class AttachmentForm(ModelForm):
     class Meta:

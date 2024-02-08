@@ -15,7 +15,7 @@ from notification.utils import create_notification
 
 from .forms import PostForm, AttachmentForm, PageAttachmentForm, PagePostForm, MemberAttachmentForm, GroupPostForm
 from .models import Post, Comment, Like, Trend, PagePost, PageComment, PageLike, GroupPost, MemberLike, MemberComment
-from .serializers import PostSerializer, PostDetailSerializer, CommentSerializer, TrendSerializer, LikeSerializer, PagePostSerializer, PageLikeSerializer, PageCommentSerializer, PagePostDetailSerializer, GroupPostSerializer, MemberLikeSerializer, MemberCommentSerializer
+from .serializers import PostSerializer, PostDetailSerializer, CommentSerializer, TrendSerializer, LikeSerializer, PagePostSerializer, PageLikeSerializer, PageCommentSerializer, PagePostDetailSerializer, GroupPostSerializer, MemberLikeSerializer, MemberCommentSerializer, AnonymousGroupPostSerializer
 from notification.serializers import NotificationSerializer, NotificationForPageSerializer
 
 # Create your views here.
@@ -592,6 +592,7 @@ def group_post_create(request, pk):
             pass
     
     form = GroupPostForm(request.POST)
+    
     member_attachment = None
     member_attachment_form = MemberAttachmentForm(request.POST, request.FILES)
 
@@ -609,9 +610,14 @@ def group_post_create(request, pk):
         if member_attachment:
             group_post.attachments.add(member_attachment)
 
-        serializer = GroupPostSerializer(group_post)
+        if group_post.is_anonymous:
+            serializer = GroupPostSerializer(group_post)
+            
+            return JsonResponse(serializer.data, safe=False)
+        else:
+            serializer = AnonymousGroupPostSerializer(group_post)
 
-        return JsonResponse(serializer.data, safe=False)
+            return JsonResponse(serializer.data, safe=False)
     else:
         return JsonResponse({'error': 'add something here later!...'})
     
@@ -619,11 +625,19 @@ def group_post_create(request, pk):
 def get_group_post_list(request, pk):
     group = Group.objects.get(pk=pk)
     
-    group_posts = GroupPost.objects.filter(Q(group=group))
+    group_posts = GroupPost.objects.filter(Q(group=group, is_anonymous=False))
+    
+    anonymous_group_posts = GroupPost.objects.filter(Q(group=group, is_anonymous=True))
     
     serializer = GroupPostSerializer(group_posts, many=True)
     
-    return JsonResponse(serializer.data, safe=False)
+    anonymous_serializer = AnonymousGroupPostSerializer(anonymous_group_posts, many=True)
+    
+    return JsonResponse(
+        {
+            'publicPosts': serializer.data,
+            'anonymousPosts': anonymous_serializer.data
+        }, safe=False)
 
 @api_view(['POST'])
 def group_post_like(request, pk, id):
@@ -667,3 +681,6 @@ def group_post_like(request, pk, id):
         group_post.save()
                 
         return JsonResponse({ 'message': 'Disliked'})
+    
+def create_anonymous_post(request, pk):
+    return JsonResponse({ 'message': 'Disliked'})

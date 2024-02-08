@@ -120,7 +120,6 @@ export default {
         .get(`/api/group/get-current-member/${this.$route.params.id}/`)
         .then((res) => {
           this.currentMember = res.data;
-          console.log(res.data)
         })
         .catch((error) => {
           console.log(error);

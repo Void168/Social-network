@@ -172,6 +172,7 @@ class GroupPost(models.Model):
     
     reported_by_members = models.ManyToManyField(Member, blank=True)
     
+    is_anonymous = models.BooleanField(default=False)
     created_at = models.DateTimeField(auto_now_add=True)
     created_by = models.ForeignKey(Member, related_name='group_posts', on_delete=models.CASCADE)
     

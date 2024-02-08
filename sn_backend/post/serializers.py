@@ -3,7 +3,7 @@ from rest_framework import serializers
 from account.serializers import UserSerializer, UserLessSerializer
 from page.serializers import PageSerializer
 from group.serializers import MemberSerializer
-from .models import Post, PostAttachment, Comment, Trend, Like, PageLike, PageComment, MemberComment, MemberLike
+from .models import Post, PostAttachment, Comment, Trend, Like, PageLike, PageComment, MemberComment, MemberLike, GroupPost, PagePost
 
 class PostAttachmentSerializer(serializers.ModelSerializer):
     class Meta:
@@ -66,7 +66,7 @@ class PagePostSerializer(serializers.ModelSerializer):
     page_likes = PageLikeSerializer(read_only=True, many=True)
     page_comments = PageCommentSerializer(read_only=True, many=True)
     class Meta:
-        model = Post
+        model = PagePost
         fields = ('id', 'body','is_avatar_post', 'likes_count', 'comments_count', 'comments', 'page_comments', 'created_by', 'created_at_formatted', 'created_at', 'attachments','likes', 'page_likes',)  
         
 class GroupPostSerializer(serializers.ModelSerializer):
@@ -75,8 +75,16 @@ class GroupPostSerializer(serializers.ModelSerializer):
     likes = MemberLikeSerializer(read_only=True, many=True)
     comments = MemberCommentSerializer(read_only=True, many=True)
     class Meta:
-        model = Post
-        fields = ('id', 'body', 'likes_count', 'comments_count', 'comments', 'created_by', 'created_at_formatted', 'created_at', 'attachments', 'likes',)  
+        model = GroupPost
+        fields = ('id', 'body', 'likes_count', 'comments_count', 'comments', 'created_by', 'created_at_formatted', 'created_at', 'attachments', 'likes','is_anonymous',)  
+        
+class AnonymousGroupPostSerializer(serializers.ModelSerializer):
+    attachments = PostAttachmentSerializer(read_only=True, many=True)
+    likes = MemberLikeSerializer(read_only=True, many=True)
+    comments = MemberCommentSerializer(read_only=True, many=True)
+    class Meta:
+        model = GroupPost
+        fields = ('id', 'body', 'likes_count', 'comments_count', 'comments', 'created_at_formatted', 'created_at', 'attachments', 'likes', 'is_anonymous',)  
         
 class PostDetailSerializer(serializers.ModelSerializer):
     created_by = UserSerializer(read_only=True)
@@ -97,7 +105,7 @@ class PagePostDetailSerializer(serializers.ModelSerializer):
     page_likes = PageLikeSerializer(read_only=True, many=True)
     page_comments = PageCommentSerializer(read_only=True, many=True)
     class Meta:
-        model = Post
+        model = PagePost
         fields = ('id', 'body', 'likes_count', 'likes','comments_count', 'created_by','is_private','only_me', 'created_at_formatted','comments','attachments','page_likes','page_comments',)
 
 class TrendSerializer(serializers.ModelSerializer):

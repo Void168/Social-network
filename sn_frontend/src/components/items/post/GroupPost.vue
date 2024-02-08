@@ -3,23 +3,27 @@
     <div class="mb-2 flex items-center justify-between">
       <div class="flex items-center space-x-6 p-4">
         <img
-          :src="post.created_by.information.get_avatar"
+          :src="!post?.is_anonymous ? post?.created_by?.information?.get_avatar : 'https://cdn-icons-png.flaticon.com/512/350/350351.png'"
           class="w-12 h-12 rounded-full"
         />
 
         <div class="flex gap-1 items-center flex-wrap">
-          <strong class="group">
+          <strong class="group" v-if="!post.is_anonymous">
             <RouterLink
               :to="{
-                name: post.created_by.is_page ? 'page' : 'profile',
-                params: { id: post.created_by.information.id },
+                name: post?.created_by?.is_page ? 'page' : 'profile',
+                params: { id: post?.created_by?.information?.id },
               }"
-              >{{ post.created_by.information.name }}</RouterLink
+              >{{ post.created_by?.information?.name }}</RouterLink
             >
             <TooltipProfileVue
-              :user="post.created_by.information"
+              :user="post?.created_by?.information"
               class="hidden md:group-hover:block lg:left-[-150px] md:left-0"
             />
+          </strong>
+
+          <strong class="group" v-else>
+            Người tham gia ẩn danh
           </strong>
 
           <div class="md:hidden items-center gap-2 flex">

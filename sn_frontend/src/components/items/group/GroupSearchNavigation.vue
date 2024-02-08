@@ -65,15 +65,15 @@
         </div>
         <div class="flex justify-between items-center">
           <h4>Người đăng</h4>
-          <ChevronDownIcon class="w-8"/>
+          <ChevronDownIcon class="w-8" />
         </div>
         <div class="flex justify-between items-center">
           <h4>Vị trí được gắn thẻ</h4>
-          <ChevronDownIcon class="w-8"/>
+          <ChevronDownIcon class="w-8" />
         </div>
         <div class="flex justify-between items-center">
           <h4>Ngày đăng</h4>
-          <ChevronDownIcon class="w-8"/>
+          <ChevronDownIcon class="w-8" />
         </div>
       </div>
     </div>
@@ -84,8 +84,13 @@
 import { useUserStore } from "../../../stores/user";
 import { useToastStore } from "../../../stores/toast";
 import { RouterLink, useRoute } from "vue-router";
+import axios from "axios";
 
-import { ChevronUpIcon, MagnifyingGlassIcon, ChevronDownIcon } from "@heroicons/vue/20/solid";
+import {
+  ChevronUpIcon,
+  MagnifyingGlassIcon,
+  ChevronDownIcon,
+} from "@heroicons/vue/20/solid";
 import { Switch } from "@headlessui/vue";
 
 import {
@@ -109,12 +114,12 @@ export default (await import("vue")).defineComponent({
   setup() {
     const userStore = useUserStore();
     const toastStore = useToastStore();
-    const route = useRoute()
-    
+    const route = useRoute();
+
     return {
       userStore,
       toastStore,
-      route
+      route,
     };
   },
 
@@ -126,12 +131,31 @@ export default (await import("vue")).defineComponent({
   data() {
     return {
       enabled: false,
-      query: ""
+      query: "",
     };
   },
 
-  mounted(){
-    this.query = this.route.query.query
-  }
+  mounted() {
+    this.query = this.route.query.query;
+  },
+
+  methods: {
+    submitForm() {
+      axios
+        .post(`/api/search/group/${this.group.id}/`, {
+          query: this.query,
+        })
+        .then((res) => {
+            
+          this.$router.push(
+            `/groups/${this.group.id}/search/?query=${this.query}`
+          );
+          console.log(res.data)
+        })
+        .catch((error) => {
+          console.log("error:", error);
+        });
+    },
+  },
 });
 </script>

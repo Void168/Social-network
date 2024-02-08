@@ -169,9 +169,10 @@
               <div
                 class="py-1"
                 v-if="
-                  userStore.user.id === post.created_by.id ||
-                  pageStore.pageId === post.created_by.id ||
-                  userStore.user.id === post.created_by.information.id
+                  userStore.user.id === post?.created_by?.id ||
+                  pageStore.pageId === post?.created_by?.id ||
+                  userStore.user.id === post?.created_by?.information?.id ||
+                  group.admin.id === userStore.user.id
                 "
               >
                 <MenuItem v-slot="{ active }" @click="openModal">

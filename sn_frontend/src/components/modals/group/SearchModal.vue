@@ -46,13 +46,15 @@
                   <MagnifyingGlassIcon
                     class="absolute top-[18px] left-2 sm:w-6 sm:h-6 xs:w-3 xs:h-3 dark:text-neutral-400"
                   />
-                  <input
-                    @keyup="getQuery"
-                    ref="input"
-                    type="text"
-                    placeholder="Tìm kiếm trong nhóm này"
-                    class="w-full my-2 sm:py-2 sm:px-8 xs:py-1 xs:px-6 border border-gray-200 dark:bg-slate-700 dark:border-slate-800 dark:text-neutral-200 rounded-2xl sm:text-base xs:text-sm"
-                  />
+                  <form v-on:submit.prevent="submitForm">
+                    <input
+                      v-model="query"
+                      ref="input"
+                      type="text"
+                      placeholder="Tìm kiếm trong nhóm này"
+                      class="w-full my-2 sm:py-2 sm:px-8 xs:py-1 xs:px-6 border border-gray-200 dark:bg-slate-700 dark:border-slate-800 dark:text-neutral-200 rounded-2xl sm:text-base xs:text-sm"
+                    />
+                  </form>
                 </div>
               </div>
               <div class="my-4 flex justify-between gap-2 items-center">
@@ -84,7 +86,7 @@
                 <h4 class="font-semibold">Bạn đang tìm gì à?</h4>
                 <h5 class="text-center text-sm">
                   Tìm kiếm bài viết, bình luận hoặc thành viên trong
-                  {{ groupName }}.
+                  {{ group.name }}.
                 </h5>
               </div>
             </DialogPanel>
@@ -119,11 +121,32 @@ export default (await import("vue")).defineComponent({
   },
   props: {
     isOpen: Boolean,
-    groupName: String,
+    group: Object,
+  },
+
+  data() {
+    return{
+      query: "",
+    }
   },
 
   methods: {
-    getQuery() {},
+    submitForm(){
+      // axios
+      //   .post("/api/search/asdfafd", {
+      //     query: this.query,
+      //   })
+      //   .then((res) => {
+          this.$router.push(`/groups/${this.group.id}/search/?query=${this.query}`);
+      //     this.users = res.data.users;
+      //     const page_posts = res.data.page_posts
+      //     this.posts = res.data.posts.concat(page_posts);
+      //     this.pages = res.data.pages
+      //   })
+      //   .catch((error) => {
+      //     console.log("error:", error);
+      //   });
+    }
   },
 });
 </script>

@@ -2,7 +2,7 @@
   <div class="flex justify-center items-center w-full mx-auto bg-slate-700">
     <div class="flex flex-col w-[80%]">
       <div
-        class="relative justify-end h-[500px] bg-cover bg-no-repeat"
+        class="relative justify-end h-[500px] bg-cover bg-no-repeat rounded-b-lg"
         :style="bgImage"
       >
         <button
@@ -115,7 +115,7 @@
             @click="openModal"
             class="w-10 p-2 rounded-lg dark:bg-slate-800 dark:hover:bg-slate-800/70 duration-75 cursor-pointer"
           />
-          <SearchModal :show="isOpen" @closeModal="closeModal" :groupName="group.name"/>
+          <SearchModal :show="isOpen" @closeModal="closeModal" :group="group" />
           <EllipsisHorizontalIcon
             class="w-10 p-2 rounded-lg dark:bg-slate-800 dark:hover:bg-slate-800/70 duration-75 cursor-pointer"
           />

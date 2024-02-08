@@ -9,7 +9,8 @@
         top: `${toastStore.navbarHeight}px`,
       }"
     >
-      <GroupDetailNavigation :group="group" :isUserInGroup="isUserInGroup" />
+      <GroupSearchNavigation v-if="route.name === 'groupsearch'" :group="group" :isUserInGroup="isUserInGroup" />
+      <GroupDetailNavigation :group="group" :isUserInGroup="isUserInGroup" v-else/>
     </div>
     <div
       class="lg:col-span-4 md:col-span-3 col-span-4 dark:bg-slate-900 bg-slate-200 flex flex-col relative items-center"
@@ -45,6 +46,7 @@ import {
   HomeIcon,
 } from "@heroicons/vue/24/solid";
 import GroupDetailNavigation from "../../components/items/group/GroupDetailNavigation.vue";
+import GroupSearchNavigation from "../../components/items/group/GroupSearchNavigation.vue";
 import GroupHeader from "../../components/items/group/GroupHeader.vue";
 export default {
   name: "groupdetail",
@@ -54,6 +56,7 @@ export default {
     HomeIcon,
     RouterLink,
     GroupDetailNavigation,
+    GroupSearchNavigation,
     GroupHeader,
   },
   setup() {

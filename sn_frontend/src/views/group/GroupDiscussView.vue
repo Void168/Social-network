@@ -135,7 +135,7 @@
       >
         <div
           class="dark:bg-slate-700 rounded-lg p-4 relative"
-          v-if="isUserInGroup"
+          v-if="isUserInGroup && group?.admin?.id === userStore.user.id"
         >
           <XMarkIcon class="w-6 top-4 right-4 absolute" />
           <h3 class="font-semibold text-lg">
@@ -340,9 +340,10 @@ export default {
           const anonymousPosts = res.data.anonymousPosts
           const allPosts = publicPosts.concat(anonymousPosts) 
 
-          this.groupPosts = allPosts.sort((a,b) => {
-            new Date(b.created_at) - new Date(a.created_at)
-          })
+          this.groupPosts = allPosts.sort(
+              (a, b) => new Date(b.created_at) - new Date(a.created_at)
+            );
+            this.posts = this
           console.log(this.groupPosts)
         })
         .catch((error) => {

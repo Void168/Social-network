@@ -4,6 +4,7 @@ import LoginView from "../views/auth/LoginView.vue";
 import FeedView from "../views/FeedView.vue";
 import GroupView from "../views/group/GroupView.vue";
 import SearchView from "../views/SearchView.vue";
+import GroupSearchView from "../views/group/GroupSearchView.vue"
 import ProfileView from "../views/profile/ProfileView.vue";
 import ProfileImagesView from "../views/profile/ProfileImagesView.vue";
 import GroupDetailView from "../views/group/GroupDetailView.vue";
@@ -136,6 +137,11 @@ const router = createRouter({
           path: "edit",
           component: GroupEditView,
           name: "groupedit",
+        },
+        {
+          path: "search",
+          component: GroupSearchView,
+          name: "groupsearch",
         },
         {
           path: "post/:postid",

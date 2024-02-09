@@ -112,10 +112,10 @@
         </div>
         <div class="flex items-center gap-2">
           <MagnifyingGlassIcon
-            @click="openModal"
+            @click="$emit('openModal')"
             class="w-10 p-2 rounded-lg dark:bg-slate-800 dark:hover:bg-slate-800/70 duration-75 cursor-pointer"
           />
-          <SearchModal :show="isOpen" @closeModal="closeModal" :group="group" />
+          
           <EllipsisHorizontalIcon
             class="w-10 p-2 rounded-lg dark:bg-slate-800 dark:hover:bg-slate-800/70 duration-75 cursor-pointer"
           />
@@ -141,7 +141,6 @@ import {
   EllipsisHorizontalIcon,
   MagnifyingGlassIcon,
 } from "@heroicons/vue/24/solid";
-import SearchModal from "../../modals/group/SearchModal.vue";
 export default (await import("vue")).defineComponent({
   components: {
     RouterLink,
@@ -153,7 +152,6 @@ export default (await import("vue")).defineComponent({
     UserMinusIcon,
     EllipsisHorizontalIcon,
     MagnifyingGlassIcon,
-    SearchModal,
   },
   setup() {
     const userStore = useUserStore();
@@ -169,12 +167,13 @@ export default (await import("vue")).defineComponent({
     isUserInGroup: Boolean,
   },
 
+  
   data() {
     return {
       isOpen: false,
     };
   },
-
+  
   computed: {
     bgImage() {
       return {
@@ -184,12 +183,6 @@ export default (await import("vue")).defineComponent({
   },
 
   methods: {
-    closeModal() {
-      this.isOpen = false;
-    },
-    openModal() {
-      this.isOpen = true;
-    },
     joinGroup() {
       if (this.group.is_private_group && !this.isUserInGroup) {
         axios

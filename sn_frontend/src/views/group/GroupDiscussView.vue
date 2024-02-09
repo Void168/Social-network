@@ -344,7 +344,7 @@ export default {
               (a, b) => new Date(b.created_at) - new Date(a.created_at)
             );
             this.posts = this
-          console.log(this.groupPosts)
+          // console.log(this.groupPosts)
         })
         .catch((error) => {
           console.log(error);

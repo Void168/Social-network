@@ -3,10 +3,13 @@
     <div class="mb-2 flex items-center justify-between">
       <div class="flex items-center space-x-6 p-4">
         <img
-          :src="!post?.is_anonymous ? post?.created_by?.information?.get_avatar : 'https://cdn-icons-png.flaticon.com/512/350/350351.png'"
+          :src="
+            !post?.is_anonymous
+              ? post?.created_by?.information?.get_avatar
+              : 'https://cdn-icons-png.flaticon.com/512/350/350351.png'
+          "
           class="w-12 h-12 rounded-full"
         />
-
         <div class="flex gap-1 items-center flex-wrap">
           <strong class="group" v-if="!post.is_anonymous">
             <RouterLink
@@ -22,12 +25,9 @@
             />
           </strong>
 
-          <strong class="group" v-else>
-            Người tham gia ẩn danh
-          </strong>
-
+          <strong class="group" v-else> Người tham gia ẩn danh </strong>
           <div class="md:hidden items-center gap-2 flex">
-            <UserGroupIcon class="w-6" v-if="group.is_private_group" />
+            <UserGroupIcon class="w-6" v-if="group?.is_private_group" />
             <GlobeAsiaAustraliaIcon class="w-6" v-else />
             <div class="relative group md:hidden">
               <p
@@ -41,7 +41,7 @@
         </div>
       </div>
       <div class="p-4 md:flex items-center gap-2 hidden">
-        <UserGroupIcon class="w-6" v-if="group.is_private_group" />
+        <UserGroupIcon class="w-6" v-if="group?.is_private_group" />
         <GlobeAsiaAustraliaIcon class="w-6" v-else />
         <div class="relative group">
           <RouterLink :to="{ name: 'grouppost', params: { postid: post.id } }">
@@ -93,11 +93,11 @@
         <div class="flex items-center space-x-2">
           <HeartLike
             class="w-6 h-6 text-rose-500 cursor-pointer"
-            v-if="checkLike && isLike || isLike"
+            v-if="checkLike || isLike"
             @click="likePost(post.id)"
           />
           <HeartLike
-            v-else-if="!checkLike && !isLike || !isLike"
+            v-else-if="!checkLike || isLike"
             @click="likePost(post.id)"
             class="w-6 h-6 cursor-pointer text-gray-400 hover:text-rose-500 transition-colors duration-75"
           />
@@ -172,7 +172,7 @@
                   userStore.user.id === post?.created_by?.id ||
                   pageStore.pageId === post?.created_by?.id ||
                   userStore.user.id === post?.created_by?.information?.id ||
-                  group.admin.id === userStore.user.id
+                  group?.admin?.id === userStore.user.id
                 "
               >
                 <MenuItem v-slot="{ active }" @click="openModal">
@@ -261,58 +261,60 @@ export default (await import("vue")).defineComponent({
     };
   },
 
-  beforeUpdate(){
-    this.checkMemberLike()
-  },
+  // beforeMount() {
+  //   this.checkMemberLike();
+  // },
 
-  mounted(){
-    this.checkMemberLike()
+  mounted() {
+    this.checkMemberLike();
   },
 
   methods: {
     checkMemberLike() {
       this.checkLike = this.post.likes
         .map((like) => like.created_by)
-        .map((created_by) => created_by?.information?.id).includes(this.userStore.user.id);
+        .map((created_by) => created_by?.information?.id)
+        .includes(this.userStore.user.id);
     },
     likePost(id) {
-        axios
-          .post(`/api/posts/${id}/group/${this.group.id}/like/`)
-          .then((res) => {
-            if (res.data.message === "Liked") {
-              this.post.likes_count += 1;
-              this.isLike = true;
-            } else {
-              this.post.likes_count -= 1;
-              this.isLike = false;
-            }
-          })
-          .catch((error) => {
-            console.log(error);
-          });
+      axios
+        .post(`/api/posts/${id}/group/${this.group.id}/like/`)
+        .then((res) => {
+          if (res.data.message === "Liked") {
+            this.post.likes_count += 1;
+            this.isLike = true;
+          } else {
+            this.post.likes_count -= 1;
+            this.isLike = false;
+          }
+          this.checkMemberLike();
+        })
+        .catch((error) => {
+          console.log(error);
+        });
     },
     deletePost() {
       this.$emit("deletePost", this.post.id);
-        axios
-          .delete(`/api/posts/group/${this.post.id}/delete/`)
-          .then((res) => {
-            setTimeout(() => {
-              this.closeModal();
-            }, 1000);
-            this.toastStore.showToast(
-              5000,
-              "Bài viết đã được xóa",
-              "bg-emerald-500 text-white"
-            );
-          })
-          .catch((error) => {
-            console.log(error);
-            this.toastStore.showToast(
-              5000,
-              "Xóa bài viết thất bại",
-              "bg-rose-500 text-white"
-            );
-          });
+      axios
+        .delete(`/api/posts/group/${this.post.id}/delete/`)
+        .then((res) => {
+          setTimeout(() => {
+            this.closeModal();
+          }, 1000);
+          this.toastStore.showToast(
+            5000,
+            "Bài viết đã được xóa",
+            "bg-emerald-500 text-white"
+          );
+        })
+        .catch((error) => {
+          console.log(error);
+          this.toastStore.showToast(
+            5000,
+            "Xóa bài viết thất bại",
+            "bg-rose-500 text-white"
+          );
+        });
     },
     reportPost() {
       axios

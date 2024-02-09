@@ -8,7 +8,7 @@ from account.serializers import UserSerializer
 from group.models import Group, Member
 from page.models import Page
 from post.models import Post, PagePost, GroupPost
-from post.serializers import PostSerializer, PagePostSerializer, GroupPostSerializer
+from post.serializers import PostSerializer, PagePostSerializer, GroupPostSerializer, AnonymousGroupPostSerializer
 from page.serializers import PageSerializer
 from group.serializers import MemberSerializer
 
@@ -64,11 +64,15 @@ def search_group(request, pk):
     members = Member.objects.filter(information__name__contains=query)
     members_serializer = MemberSerializer(members, many=True)
         
-    group_posts = GroupPost.objects.filter(Q(body__icontains=query, created_by__in=list(member_ids)) | Q(created_by__in=list(members), is_anonymous=False))
+    group_posts = GroupPost.objects.filter(Q(body__icontains=query, created_by__in=list(member_ids), is_anonymous=False) | Q(created_by__in=list(members), is_anonymous=False))
     
     group_posts_serializer = GroupPostSerializer(group_posts, many=True)
+    
+    group_posts = GroupPost.objects.filter(Q(body__icontains=query, is_anonymous=True))
+    anonymous_group_posts_serializer = AnonymousGroupPostSerializer(group_posts, many=True)
     
     return JsonResponse({
         'members': members_serializer.data,
         'groupPosts': group_posts_serializer.data,
+        'anonymousPosts':anonymous_group_posts_serializer.data
     }, safe=False)

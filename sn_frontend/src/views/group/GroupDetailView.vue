@@ -9,7 +9,7 @@
         top: `${toastStore.navbarHeight}px`,
       }"
     >
-      <GroupSearchNavigation v-if="route.name === 'groupsearch'" :group="group" :isUserInGroup="isUserInGroup" />
+      <GroupSearchNavigation v-if="route.name === 'groupsearch'" :group="group" :isUserInGroup="isUserInGroup" @getQuery="getQuery" />
       <GroupDetailNavigation :group="group" :isUserInGroup="isUserInGroup" v-else/>
     </div>
     <div
@@ -18,6 +18,7 @@
       <GroupHeader
         :group="group"
         :isUserInGroup="isUserInGroup"
+        @openModal="openModal"
         v-if="
           route.name === 'groupdiscuss' ||
           route.name === 'groupabout' ||
@@ -26,10 +27,12 @@
           route.name === 'groupfile'
         "
       />
+      <SearchModal :show="isOpen" @closeModal="closeModal" :group="group" @getQuery="getQuery" />
       <router-view
         :isUserInGroup="isUserInGroup"
         :group="group"
         :currentMember="currentMember"
+        :query="query"
       ></router-view>
     </div>
   </div>
@@ -48,6 +51,7 @@ import {
 import GroupDetailNavigation from "../../components/items/group/GroupDetailNavigation.vue";
 import GroupSearchNavigation from "../../components/items/group/GroupSearchNavigation.vue";
 import GroupHeader from "../../components/items/group/GroupHeader.vue";
+import SearchModal from "../../components/modals/group/SearchModal.vue";
 export default {
   name: "groupdetail",
   components: {
@@ -58,6 +62,7 @@ export default {
     GroupDetailNavigation,
     GroupSearchNavigation,
     GroupHeader,
+    SearchModal,
   },
   setup() {
     const userStore = useUserStore();
@@ -75,6 +80,8 @@ export default {
       group: {},
       isUserInGroup: false,
       currentMember: {},
+      query: "",
+      isOpen: false,
     };
   },
 
@@ -87,11 +94,17 @@ export default {
     },
   },
 
-  beforeMount() {
+  created() {
     this.getGroupDetail();
   },
 
   methods: {
+    closeModal() {
+      this.isOpen = false;
+    },
+    openModal() {
+      this.isOpen = true;
+    },
     async checkUserInGroup() {
       await axios
         .get(`/api/group/check-user/${this.group.id}`)
@@ -128,6 +141,10 @@ export default {
           console.log(error);
         });
     },
+    getQuery(query){
+      this.query = query
+      
+    }
   },
 };
 </script>

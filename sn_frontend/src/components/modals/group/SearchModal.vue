@@ -46,7 +46,7 @@
                   <MagnifyingGlassIcon
                     class="absolute top-[18px] left-2 sm:w-6 sm:h-6 xs:w-3 xs:h-3 dark:text-neutral-400"
                   />
-                  <form v-on:submit.prevent="submitForm">
+                  <form v-on:submit.prevent="submitForm" @keyup.enter="[$emit('getQuery', query), $emit('closeModal')]">
                     <input
                       v-model="query"
                       ref="input"
@@ -132,20 +132,9 @@ export default (await import("vue")).defineComponent({
 
   methods: {
     submitForm(){
-      // axios
-      //   .post("/api/search/asdfafd", {
-      //     query: this.query,
-      //   })
-      //   .then((res) => {
-          this.$router.push(`/groups/${this.group.id}/search/?query=${this.query}`);
-      //     this.users = res.data.users;
-      //     const page_posts = res.data.page_posts
-      //     this.posts = res.data.posts.concat(page_posts);
-      //     this.pages = res.data.pages
-      //   })
-      //   .catch((error) => {
-      //     console.log("error:", error);
-      //   });
+      if(this.query !== ''){
+        this.$router.push(`/groups/${this.group.id}/search?query=${this.query}`);
+      }
     }
   },
 });

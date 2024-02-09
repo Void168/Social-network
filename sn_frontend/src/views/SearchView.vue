@@ -162,7 +162,7 @@ export default {
           const page_posts = res.data.page_posts
           this.posts = res.data.posts.concat(page_posts);
           this.pages = res.data.pages
-          console.log(page_posts)
+          // console.log(page_posts)
         })
         .catch((error) => {
           console.log("error:", error);

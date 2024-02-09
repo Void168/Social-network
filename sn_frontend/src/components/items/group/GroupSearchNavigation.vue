@@ -18,7 +18,7 @@
         <MagnifyingGlassIcon
           class="absolute top-[18px] left-2 sm:w-6 sm:h-6 xs:w-3 xs:h-3 dark:text-neutral-400"
         />
-        <form v-on:submit.prevent="submitForm">
+        <form v-on:submit.prevent="submitForm" @keyup.enter="$emit('getQuery', query)">
           <input
             v-model="query"
             ref="input"
@@ -114,12 +114,13 @@ export default (await import("vue")).defineComponent({
   setup() {
     const userStore = useUserStore();
     const toastStore = useToastStore();
-    const route = useRoute();
+    const route = useRoute()
+    const queryString = route.query.query
 
     return {
       userStore,
       toastStore,
-      route,
+      queryString
     };
   },
 
@@ -131,30 +132,17 @@ export default (await import("vue")).defineComponent({
   data() {
     return {
       enabled: false,
-      query: "",
+      query: "" || this.queryString
     };
-  },
-
-  mounted() {
-    this.query = this.route.query.query;
   },
 
   methods: {
     submitForm() {
-      axios
-        .post(`/api/search/group/${this.group.id}/`, {
-          query: this.query,
-        })
-        .then((res) => {
-            
-          this.$router.push(
-            `/groups/${this.group.id}/search/?query=${this.query}`
-          );
-          console.log(res.data)
-        })
-        .catch((error) => {
-          console.log("error:", error);
-        });
+      if (this.query !== "") {
+        this.$router.push(
+          `/groups/${this.group.id}/search?query=${this.query}`
+        );
+      }
     },
   },
 });

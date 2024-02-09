@@ -11,7 +11,7 @@ from page.serializers import PageSerializer
 # from notification.utils import create_notification
 
 from .serializers import QuestionSerializer, RuleSerializer, MemberSerializer, PageMemberSerializer, GroupSerializer, GroupDetailSerializer, JoinGroupRequestSerializer, QuestionSerializer
-from .models import Group, Rule, Question, Member, PageMember, JoinGroupRequest
+from .models import Group, Rule, Question, Member, PageMember, JoinGroupRequest, Answer
 from .forms import GroupCreateForm, GroupInfoForm, GroupWebsiteForm, GroupQuestionForm
 
 @api_view(['POST'])
@@ -423,6 +423,53 @@ def create_questions(request, pk):
         return JsonResponse(serializer.data, safe=False)
     else:
         return JsonResponse({'error': 'Failed'})
+    
+@api_view(['POST'])
+def create_answer(request, pk):
+    group = Group.objects.get(pk=pk)
+    questions = Question.objects.filter(created_by=group)
+    join_request = JoinGroupRequest.objects.get(Q(created_by=request.user, created_for=group))
+    
+    answer1 = request.data.get('answer1')
+    answer2 = request.data.get('answer2')
+    answer3 = request.data.get('answer3')
+    
+    if questions.count() > 0:
+        question1 = questions[0]
+        if questions.count() > 1:
+            question2 = questions[1]
+            if questions.count() > 2:
+                question3 = questions[2]
+                
+    if answer1 and question1:
+        answer_1 = Answer.objects.create(
+            body=answer1,
+            created_by=request.user,
+            question=question1
+        )
+        join_request.answers.add(answer_1)
+        
+    if answer2 and question2:
+        answer_2 = Answer.objects.create(
+            body=answer2,
+            created_by=request.user,
+            question=question2
+        )
+        join_request.answers.add(answer_2)
+        
+    if answer3 and question3:
+        answer_3 = Answer.objects.create(
+            body=answer3,
+            created_by=request.user,
+            question=question3
+        )
+        join_request.answers.add(answer_3)
+        
+    join_request.save()
+    
+    serializer = JoinGroupRequestSerializer(join_request)
+    
+    return JsonResponse(serializer.data, safe=False)
 
 @api_view(['GET'])
 def get_group_questions(request, pk):

@@ -71,6 +71,12 @@
             <UserPlusIcon class="w-4" />
             Tham gia nhóm
           </button>
+          <ListQuestionModal
+            :show="isQuestionOpen"
+            @closeQuestionModal="closeQuestionModal"
+            :group="group"
+            :questions="questions"
+          />
         </div>
       </div>
       <hr class="border dark:border-slate-600 mx-4" />
@@ -115,7 +121,7 @@
             @click="$emit('openModal')"
             class="w-10 p-2 rounded-lg dark:bg-slate-800 dark:hover:bg-slate-800/70 duration-75 cursor-pointer"
           />
-          
+
           <EllipsisHorizontalIcon
             class="w-10 p-2 rounded-lg dark:bg-slate-800 dark:hover:bg-slate-800/70 duration-75 cursor-pointer"
           />
@@ -130,6 +136,7 @@ import axios from "axios";
 import { useUserStore } from "../../../stores/user";
 import { useToastStore } from "../../../stores/toast";
 import { RouterLink } from "vue-router";
+import ListQuestionModal from "../../modals/group/ListQuestionModal.vue";
 
 import {
   GlobeAsiaAustraliaIcon,
@@ -152,6 +159,7 @@ export default (await import("vue")).defineComponent({
     UserMinusIcon,
     EllipsisHorizontalIcon,
     MagnifyingGlassIcon,
+    ListQuestionModal,
   },
   setup() {
     const userStore = useUserStore();
@@ -167,13 +175,14 @@ export default (await import("vue")).defineComponent({
     isUserInGroup: Boolean,
   },
 
-  
   data() {
     return {
       isOpen: false,
+      isQuestionOpen: false,
+      questions: [],
     };
   },
-  
+
   computed: {
     bgImage() {
       return {
@@ -182,13 +191,33 @@ export default (await import("vue")).defineComponent({
     },
   },
 
+  mounted() {
+    this.getGroupQuestions();
+  },
+
   methods: {
+    closeQuestionModal() {
+      this.isQuestionOpen = false;
+    },
+    async getGroupQuestions() {
+      await axios
+        .get(`/api/group/${this.$route.params.id}/get-questions/`)
+        .then((res) => {
+          this.questions = res.data;
+        })
+        .catch((error) => {
+          console.log(error);
+        });
+    },
     joinGroup() {
       if (this.group.is_private_group && !this.isUserInGroup) {
         axios
           .post(`/api/group/${this.group?.id}/join/request/`)
           .then((res) => {
             console.log(res.data);
+            if (this.questions?.length) {
+              this.isQuestionOpen = true;
+            }
           })
           .catch((error) => {
             console.log(error);

@@ -88,7 +88,7 @@
             class="w-16 h-[60px] rounded-full"
           />
         </div>
-        <div class="flex justify-between items-center w-full">
+        <div class="flex justify-between items-start w-full">
           <div class="flex flex-col space-y-2 w-full">
             <div>
               <h3 class="font-semibold text-lg">
@@ -97,6 +97,7 @@
               <h4 class="dark:text-neutral-400">
                 Đã yêu cầu khoảng {{ request?.created_at_formatted }} trước
               </h4>
+              
             </div>
             <div class="flex gap-3 items-center">
               <ClockIcon class="text-neutral-400 w-6 h-6" />
@@ -104,6 +105,14 @@
                 Tham gia Social Network từ
                 {{ request?.created_by?.date_joined_formatted }} trước
               </h4>
+            </div>
+            <div v-if="request.answers.length">
+              <div v-for="answer in request.answers" :key="answer.id">
+                <div class="px-4">
+                  <h4 class="font-semibold">{{ answer?.question?.body }}</h4>
+                  <h4 class="text-neutral-400">{{ answer?.body }}</h4>
+                </div>
+              </div>
             </div>
           </div>
           <div class="flex w-full gap-3">
@@ -134,7 +143,7 @@
             <EllipsisHorizontalIcon
               class="w-24 p-1 shadow-md dark:bg-slate-800 rounded-lg font-semibold dark:hover:bg-slate-600 duration-75 cursor-pointer"
             />
-          </div>
+          </div>     
         </div>
       </div>
     </div>
@@ -220,7 +229,7 @@ export default {
         .get(`/api/group/${this.group?.id}/get-join-request/`)
         .then((res) => {
           this.requests = res.data;
-            // console.log(res.data)
+            console.log(res.data)
         })
         .catch((error) => {
           console.log(error);

@@ -21,6 +21,7 @@ urlpatterns = [
     path('<uuid:pk>/create-question/', api.create_questions, name='create_questions'),
     path('<uuid:pk>/get-questions/', api.get_group_questions, name='get_group_questions'),
     path('<uuid:pk>/update-question/', api.update_group_question, name='update_group_question'),
+    path('<uuid:pk>/answer/', api.create_answer, name='create_answer'),
     path('<uuid:pk>/delete-question/', api.delete_group_question, name='delete_group_question'),
     path('<uuid:pk>/request-join-group/', api.set_request_join_group, name='set_request_join_group'),
     path('<uuid:pk>/kick/<uuid:id>/', api.kick_member, name='kick_member'),

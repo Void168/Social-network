@@ -54,6 +54,7 @@ class JoinGroupRequestSerializer(serializers.ModelSerializer):
         fields = ('id', 'created_by', 'created_for', 'created_at','status', 'created_at_formatted',)
 
 class QuestionSerializer(serializers.ModelSerializer):
+    created_by = GroupSerializer(read_only=True)
     class Meta:
         model = Question
-        fields = ('id', 'body',)
+        fields = ('id', 'body', 'created_by',)

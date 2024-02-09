@@ -7,19 +7,6 @@ from django.utils.timesince import timesince
 from account.models import User
 from page.models import Page
 # Create your models here.
-class Rule(models.Model):
-    id= models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
-    name = models.CharField(blank=True, max_length=50)
-    body = models.TextField(blank=True)
-
-class Question(models.Model):
-    id= models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
-    body = models.TextField(blank=True)
-
-class Answer(models.Model):
-    id= models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
-    question = models.ForeignKey(Question, related_name="question", on_delete=models.CASCADE)
-    body = models.TextField(blank=True)
     
 class Member(models.Model):
     id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
@@ -61,8 +48,6 @@ class Group(models.Model):
     today_posts_count = models.IntegerField(default=0)
     
     ban_list = models.ManyToManyField(Member, related_name='ban_list')
-    rules = models.ManyToManyField(Rule, related_name='group_rules')
-    questions = models.ManyToManyField(Question, related_name='group_quiz')
     
     created_at = models.DateTimeField(default=timezone.now)
     
@@ -74,6 +59,23 @@ class Group(models.Model):
             return 'http://127.0.0.1:8000' + self.cover_image.url
         else: 
             return 'https://th.bing.com/th/id/OIP.o1n4kgruF-5cDCCx7jNYKQHaEo?pid=ImgDet&rs=1'
+
+class Rule(models.Model):
+    id= models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
+    name = models.CharField(blank=True, max_length=50)
+    created_by = models.ForeignKey(Group, related_name='group_rules', on_delete=models.CASCADE, null=True)
+    body = models.TextField(blank=True)
+
+class Question(models.Model):
+    id= models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
+    created_by = models.ForeignKey(Group, related_name='group_quiz', on_delete=models.CASCADE, null=True)
+    body = models.TextField(blank=True)
+
+class Answer(models.Model):
+    id= models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
+    created_by = models.ForeignKey(User, related_name='created_answer', on_delete=models.CASCADE, null=True)
+    question = models.ForeignKey(Question, related_name="answer_question", on_delete=models.CASCADE)
+    body = models.TextField(blank=True)
 
 class JoinGroupRequest(models.Model):
     PENDING = 'pending'
@@ -95,3 +97,4 @@ class JoinGroupRequest(models.Model):
     
     def created_at_formatted(self):
         return timesince(self.created_at)
+

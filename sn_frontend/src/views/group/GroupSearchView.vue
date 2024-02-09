@@ -92,7 +92,7 @@ export default {
           this.groupPosts.sort(
             (a, b) => new Date(b.created_at) - new Date(a.created_at)
           );
-          console.log(this.route.query.query);
+          // console.log(this.route.query.query);
         })
         .catch((error) => {
           console.log("error:", error);

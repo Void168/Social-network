@@ -414,12 +414,41 @@ def create_questions(request, pk):
     
     if form.is_valid():
         question = form.save(commit=False)
-        group.questions.add(question)
+        question.created_by = group
         
-        group.save()
+        question.save()
 
         serializer = QuestionSerializer(question)
 
         return JsonResponse(serializer.data, safe=False)
     else:
         return JsonResponse({'error': 'Failed'})
+
+@api_view(['GET'])
+def get_group_questions(request, pk):
+    group = Group.objects.get(pk=pk)
+
+    questions = Question.objects.filter(created_by=group)
+
+    serializer = QuestionSerializer(questions, many=True)
+
+    return JsonResponse(serializer.data, safe=False)
+
+@api_view(['POST'])
+def update_group_question(request, pk):
+    question = Question.objects.get(pk=pk)
+    form = GroupQuestionForm(request.POST, instance=question)
+    
+    if form.is_valid():
+        form.save()
+        
+    serializer = QuestionSerializer(question)
+        
+    return JsonResponse({'message': 'Question updated', 'question': serializer.data})
+
+@api_view(['POST'])
+def delete_group_question(request, pk):
+    question = Question.objects.get(pk=pk)
+    question.delete()
+
+    return JsonResponse({'message': 'Question deleted'})

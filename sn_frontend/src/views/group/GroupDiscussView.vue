@@ -41,6 +41,7 @@
                 @click="activateAnonymous"
                 class="flex items-center font-medium justify-center gap-2 py-2 w-full rounded-lg dark:hover:bg-slate-800 cursor-pointer duration-75"
                 :class="isAnonymous ? 'dark:bg-slate-800 bg-slate-400' : ''"
+                v-if="group.anonymous_post"
               >
                 <EyeSlashIcon class="w-6 text-sky-500" />
                 Bài viết ẩn danh
@@ -64,6 +65,7 @@
               </div>
               <div
                 class="flex items-center font-medium justify-center gap-2 py-2 w-full rounded-lg dark:hover:bg-slate-800 cursor-pointer duration-75"
+                v-if="group.anyone_can_poll"
               >
                 <HandRaisedIcon class="w-6 text-amber-600" />
                 Thăm dò ý kiến
@@ -135,9 +137,9 @@
       >
         <div
           class="dark:bg-slate-700 rounded-lg p-4 relative"
-          v-if="isUserInGroup && group?.admin?.id === userStore.user.id"
+          v-if="isUserInGroup && group?.admin?.id === userStore.user.id && isSettingOpen"
         >
-          <XMarkIcon class="w-6 top-4 right-4 absolute" />
+          <XMarkIcon class="w-6 top-4 right-4 absolute" @click="closeSetting"/>
           <h3 class="font-semibold text-lg">
             Hãy hoàn tất quy trình thiết lập nhóm
           </h3>
@@ -313,6 +315,7 @@ export default {
       groupPosts: [],
       groupImages: [],
       isAnonymous: false,
+      isSettingOpen: true
     };
   },
 
@@ -322,6 +325,9 @@ export default {
   },
 
   methods: {
+    closeSetting(){
+      this.isSettingOpen = false
+    },
     activateAnonymous() {
       this.isAnonymous = !this.isAnonymous;
     },
@@ -344,7 +350,7 @@ export default {
               (a, b) => new Date(b.created_at) - new Date(a.created_at)
             );
             this.posts = this
-          // console.log(this.groupPosts)
+          console.log(res.data)
         })
         .catch((error) => {
           console.log(error);
@@ -378,7 +384,9 @@ export default {
             this.isAnonymous = false;
             this.$refs.file.value = null;
             this.urlPost = null;
-            this.groupPosts.unshift(res.data);
+            if(!this.group.pending_post){
+              this.groupPosts.unshift(res.data);
+            }
           })
           .catch((error) => {
             console.log("error", error);

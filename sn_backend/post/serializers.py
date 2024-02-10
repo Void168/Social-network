@@ -76,7 +76,7 @@ class GroupPostSerializer(serializers.ModelSerializer):
     comments = MemberCommentSerializer(read_only=True, many=True)
     class Meta:
         model = GroupPost
-        fields = ('id', 'body', 'likes_count', 'comments_count', 'comments', 'created_by', 'created_at_formatted', 'created_at', 'attachments', 'likes','is_anonymous',)  
+        fields = ('id', 'body', 'likes_count', 'comments_count', 'comments', 'created_by', 'created_at_formatted', 'created_at', 'attachments', 'likes','is_anonymous', 'pending',)  
         
 class AnonymousGroupPostSerializer(serializers.ModelSerializer):
     attachments = PostAttachmentSerializer(read_only=True, many=True)

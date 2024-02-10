@@ -27,7 +27,7 @@
     </div>
     <div
       class="p-2 space-y-1 w-full flex flex-col justify-center"
-      v-if="isUserInGroup"
+      v-if="isUserInGroup && group.admin.id === userStore.user.id"
     >
       <RouterLink
         :to="{ name: 'groupdetail', params: { id: group?.id } }"
@@ -45,7 +45,7 @@
       </RouterLink>
     </div>
     <hr class="border dark:border-slate-700 mx-4" />
-    <div class="p-2" v-if="isUserInGroup">
+    <div class="p-2" v-if="isUserInGroup && group.admin.id === userStore.user.id">
       <Disclosure
         v-slot="{ open }"
         v-for="groupNavigation in groupNavigations"
@@ -154,7 +154,7 @@ export default (await import("vue")).defineComponent({
             {
               name: "Bài viết đang chờ",
               content: "",
-              url: "",
+              url: "grouppendingpost",
             },
             {
               name: "Có thể là spam",

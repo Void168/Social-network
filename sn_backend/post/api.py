@@ -3,7 +3,8 @@ from django.http import JsonResponse
 
 from .pusher import pusher_client
 import json
-
+from django.utils.timesince import timesince
+from datetime import datetime, timezone, timedelta
 from rest_framework.decorators import api_view, authentication_classes, permission_classes
 
 from account.models import User
@@ -605,6 +606,11 @@ def group_post_create(request, pk):
         group_post = form.save(commit=False)
         group_post.created_by = current_member
         group_post.group = group
+        if group.anyone_can_post:
+            group_post.pending = True
+        else:
+            group_post.pending = False
+            
         group_post.save()
 
         if member_attachment:
@@ -623,11 +629,15 @@ def group_post_create(request, pk):
     
 @api_view(['GET'])
 def get_group_post_list(request, pk):
+    
     group = Group.objects.get(pk=pk)
+
+    admin_member = Member.objects.get(information=group.admin)
+    moderators = group.moderators.all()
     
-    group_posts = GroupPost.objects.filter(Q(group=group, is_anonymous=False))
+    group_posts = GroupPost.objects.filter(Q(group=group, is_anonymous=False, pending=False) | Q(group=group, created_by=admin_member, is_anonymous=False) | Q(group=group, created_by__in=moderators, is_anonymous=False))
     
-    anonymous_group_posts = GroupPost.objects.filter(Q(group=group, is_anonymous=True))
+    anonymous_group_posts = GroupPost.objects.filter(Q(group=group, is_anonymous=True, pending=False))
     
     serializer = GroupPostSerializer(group_posts, many=True)
     
@@ -681,6 +691,39 @@ def group_post_like(request, pk, id):
         group_post.save()
                 
         return JsonResponse({ 'message': 'Disliked'})
+
+@api_view((['GET']))
+def get_pending_posts(request, pk):
+    group = Group.objects.get(pk=pk)
     
-def create_anonymous_post(request, pk):
-    return JsonResponse({ 'message': 'Disliked'})
+    admin_member = Member.objects.get(information=group.admin)
+    moderators = group.moderators.all()
+    
+    pending_posts = []
+    
+    pending_posts = GroupPost.objects.filter(Q(group=group, pending=True)).exclude(Q(created_by=admin_member) | Q(created_by__in=moderators))
+
+    serializer = GroupPostSerializer(pending_posts, many=True)
+    return JsonResponse(serializer.data, safe=False)
+
+@api_view(['POST'])
+def handle_pending_post(request, pk, status, id):
+    group = Group.objects.get(pk=pk)
+    pending_post = GroupPost.objects.get(id=id)
+    
+    timezone_offset = 7.0
+    tzinfo = timezone(timedelta(hours=timezone_offset))
+    current_time = datetime.now(tzinfo)
+
+    if status == 'accepted':
+        pending_post.pending = False
+        pending_post.created_at = current_time
+        pending_post.created_at_formatted = timesince(current_time)
+        
+        pending_post.save()
+                
+        return JsonResponse({'message': 'Post accepted'})
+    if status == 'rejected':
+        pending_post.delete()
+
+        return JsonResponse({'message': 'Post rejected'})

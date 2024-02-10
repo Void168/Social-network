@@ -2,15 +2,16 @@
   <div class="flex justify-center items-center w-full mx-auto bg-slate-700">
     <div class="flex flex-col w-[80%]">
       <div
-        class="relative justify-end h-[500px] bg-cover bg-no-repeat rounded-b-lg"
+        class="relative justify-end h-[500px] bg-cover bg-center bg-no-repeat rounded-b-lg bg-fit w-full"
         :style="bgImage"
       >
         <button
-          @click="openModal"
+          @click="openCoverImageModal"
           class="bg-gray-200 text-white bg-opacity-20 px-4 py-2 rounded-lg absolute right-4 bottom-4 hover:bg-opacity-70 transition-colors shadow-lg"
         >
           Chọn ảnh
         </button>
+        <GroupCoverImageModal :show="isCoverImageOpen" @closeCoverImageModal="closeCoverImageModal"/>
       </div>
       <div class="flex justify-between my-8 mx-4">
         <div class="flex flex-col gap-2">
@@ -137,6 +138,7 @@ import { useUserStore } from "../../../stores/user";
 import { useToastStore } from "../../../stores/toast";
 import { RouterLink } from "vue-router";
 import ListQuestionModal from "../../modals/group/ListQuestionModal.vue";
+import GroupCoverImageModal from "../../modals/group/GroupCoverImageModal.vue";
 
 import {
   GlobeAsiaAustraliaIcon,
@@ -159,6 +161,7 @@ export default (await import("vue")).defineComponent({
     UserMinusIcon,
     EllipsisHorizontalIcon,
     MagnifyingGlassIcon,
+    GroupCoverImageModal,
     ListQuestionModal,
   },
   setup() {
@@ -179,6 +182,7 @@ export default (await import("vue")).defineComponent({
     return {
       isOpen: false,
       isQuestionOpen: false,
+      isCoverImageOpen: false,
       questions: [],
     };
   },
@@ -198,6 +202,12 @@ export default (await import("vue")).defineComponent({
   methods: {
     closeQuestionModal() {
       this.isQuestionOpen = false;
+    },
+    openCoverImageModal(){
+      this.isCoverImageOpen = true
+    },
+    closeCoverImageModal(){
+      this.isCoverImageOpen = false
     },
     async getGroupQuestions() {
       await axios

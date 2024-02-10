@@ -12,7 +12,7 @@ from page.serializers import PageSerializer
 
 from .serializers import QuestionSerializer, RuleSerializer, MemberSerializer, PageMemberSerializer, GroupSerializer, GroupDetailSerializer, JoinGroupRequestSerializer, QuestionSerializer
 from .models import Group, Rule, Question, Member, PageMember, JoinGroupRequest, Answer
-from .forms import GroupCreateForm, GroupInfoForm, GroupWebsiteForm, GroupQuestionForm
+from .forms import GroupCreateForm, GroupInfoForm, GroupWebsiteForm, GroupQuestionForm, GroupCoverImageForm
 
 @api_view(['POST'])
 def create_group(request):
@@ -50,6 +50,19 @@ def get_your_groups(request):
         return JsonResponse(serializer.data, safe=False)
     except Member.DoesNotExist:
         return JsonResponse({'message': 'No group found'})
+
+@api_view(['POST'])
+def edit_group_cover_image(request, pk):
+    group = Group.objects.get(pk=pk)
+    
+    form = GroupCoverImageForm(request.POST, request.FILES, instance=group)
+    
+    if form.is_valid:
+        form.save()
+    
+    serializer = GroupSerializer(group)
+    
+    return JsonResponse({'message': 'group cover image updated'})
 
 @api_view(['GET'])
 def get_group_detail(request, pk):

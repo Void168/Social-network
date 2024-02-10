@@ -21,3 +21,8 @@ class GroupQuestionForm(ModelForm):
     class Meta:
         model = Question
         fields = ('body',)
+
+class GroupCoverImageForm(ModelForm):
+    class Meta:
+        model = Group
+        fields = ('cover_image',)

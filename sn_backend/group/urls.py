@@ -8,6 +8,7 @@ urlpatterns = [
     path('check-user/<uuid:pk>/', api.check_user_in_group, name='check_user_in_group'),
     path('get-current-member/<uuid:pk>/', api.get_current_member, name='get_current_member'),
     path('<uuid:pk>/', api.get_group_detail, name='get_group_detail'),
+    path('<uuid:pk>/edit-cover-image/', api.edit_group_cover_image, name='edit_group_cover_image'),
     path('public/<uuid:pk>/join/', api.join_public_group, name='join_public_group'),
     path('<uuid:pk>/join/request/', api.send_join_request_private_group, name='send_join_request_private_group'),
     path('<uuid:pk>/get-join-request/', api.get_join_group_requests, name='get_join_group_requests'),

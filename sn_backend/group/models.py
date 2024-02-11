@@ -14,6 +14,9 @@ class Member(models.Model):
     date_join_group = models.DateTimeField(default=timezone.now)
     last_access = models.DateTimeField(default=timezone.now)
     
+    def last_access_formatted(self):
+        return timesince(self.last_access)
+    
 class PageMember(models.Model):
     id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
     information = models.ForeignKey(Page, related_name="page_member_information", on_delete=models.CASCADE)

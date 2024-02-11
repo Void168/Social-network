@@ -12,6 +12,7 @@ urlpatterns = [
     path('public/<uuid:pk>/join/', api.join_public_group, name='join_public_group'),
     path('<uuid:pk>/join/request/', api.send_join_request_private_group, name='send_join_request_private_group'),
     path('<uuid:pk>/get-join-request/', api.get_join_group_requests, name='get_join_group_requests'),
+    path('<uuid:pk>/last-access/', api.update_last_access, name='update_last_access'),
     path('<uuid:pk>/add-moderators/', api.group_add_moderators, name='group_add_moderators'),
     path('<uuid:pk>/remove-moderator/<uuid:id>/', api.remove_moderator, name='remove_moderator'),
     path('<uuid:pk>/get-friends/', api.get_friends_in_group, name='get_friends_in_group'),

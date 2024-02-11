@@ -18,7 +18,7 @@ class MemberSerializer(serializers.ModelSerializer):
     information = UserLessSerializer(read_only=True)
     class Meta:
         model = Member
-        fields = ('id','information','date_join_group','last_access',)
+        fields = ('id','information','date_join_group','last_access', 'last_access_formatted',)
     
 class PageMemberSerializer(serializers.ModelSerializer):
     model = PageMember

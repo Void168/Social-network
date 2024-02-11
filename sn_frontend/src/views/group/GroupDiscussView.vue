@@ -137,14 +137,14 @@
       >
         <div
           class="dark:bg-slate-700 rounded-lg p-4 relative"
-          v-if="isUserInGroup && group?.admin?.id === userStore.user.id && isSettingOpen"
+          v-if="isUserInGroup && group?.admin?.id === userStore.user.id && isSettingOpen && step < 4"
         >
           <XMarkIcon class="w-6 top-4 right-4 absolute" @click="closeSetting"/>
           <h3 class="font-semibold text-lg">
             Hãy hoàn tất quy trình thiết lập nhóm
           </h3>
           <h4 class="font-semibold">
-            Đã hoàn thành <span class="text-emerald-400">0/4</span> bước
+            Đã hoàn thành <span class="text-emerald-400">{{ step }}/4</span> bước
           </h4>
           <h4 class="text-neutral-400">
             Tiếp tục thêm các thông tin chính và bắt đầu tương tác với cộng đồng
@@ -160,18 +160,21 @@
             </div>
             <div
               class="flex items-center gap-2 p-2 dark:hover:bg-slate-800 duration-75 cursor-pointer font-semibold rounded-lg"
+              :class="group.get_cover_image !== 'https://th.bing.com/th/id/OIP.o1n4kgruF-5cDCCx7jNYKQHaEo?pid=ImgDet&rs=1' ? 'text-emerald-400' : ''"
             >
               <PhotoIcon class="w-8 rounded-full p-1 bg-slate-600" />
               <h3 class="text-lg">Thêm ảnh bìa</h3>
             </div>
             <div
               class="flex items-center gap-2 p-2 dark:hover:bg-slate-800 duration-75 cursor-pointer font-semibold rounded-lg"
+              :class="group.biography !== '' ? 'text-emerald-400' : ''"
             >
               <PencilIcon class="w-8 rounded-full p-1 bg-slate-600" />
               <h3 class="text-lg">Thêm phần mô tả</h3>
             </div>
             <div
               class="flex items-center gap-2 p-2 dark:hover:bg-slate-800 duration-75 cursor-pointer font-semibold rounded-lg"
+              :class="groupPosts ? 'text-emerald-400' : ''"
             >
               <PencilSquareIcon class="w-8 rounded-full p-1 bg-slate-600" />
               <h3 class="text-lg">Tạo bài viết</h3>
@@ -322,9 +325,21 @@ export default {
   mounted() {
     this.getGroupPostsList();
     this.getGroupImage();
+    this.getSteps()
   },
 
   methods: {
+    getSteps(){
+      if(this.group.biography !== ''){
+        this.step += 1
+      }
+      if(this.group.get_cover_image !== 'https://th.bing.com/th/id/OIP.o1n4kgruF-5cDCCx7jNYKQHaEo?pid=ImgDet&rs=1'){
+        this.step += 1
+      }
+      if(this.groupPosts){
+        this.step += 1
+      }
+    },
     closeSetting(){
       this.isSettingOpen = false
     },

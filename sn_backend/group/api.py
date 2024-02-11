@@ -3,6 +3,9 @@ from django.http import JsonResponse
 from rest_framework.decorators import api_view
 from django.db.models import Count
 
+from django.utils.timesince import timesince
+from datetime import datetime, timezone, timedelta
+
 from account.models import User
 from page.models import Page
 from account.serializers import UserSerializer
@@ -512,3 +515,30 @@ def delete_group_question(request, pk):
     question.delete()
 
     return JsonResponse({'message': 'Question deleted'})
+
+@api_view(['POST'])
+def update_last_access(request, pk):
+    group = Group.objects.get(pk=pk)
+    
+    members = Member.objects.filter(information=request.user)
+    
+    group_members = group.members.all()
+    
+    current_member = Member.objects.none()
+    
+    if members.count() > 0:
+        for member in members:
+            if member in group_members:
+                current_member = member
+            else:
+                continue
+            
+    timezone_offset = 7.0
+    tzinfo = timezone(timedelta(hours=timezone_offset))
+    current_time = datetime.now(tzinfo)
+
+    current_member.last_access = current_time
+    current_member.last_access_formatted = timesince(current_time)
+    current_member.save()
+    
+    return JsonResponse({'message': 'Access group'}) 

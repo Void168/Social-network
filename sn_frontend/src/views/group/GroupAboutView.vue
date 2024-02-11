@@ -75,10 +75,10 @@
           />
           <div v-for="moderator in group?.moderators" :key="moderator.id">
             <img
-            :src="moderator?.information?.get_avatar"
-            alt="admin-avatar"
-            class="w-8 h-8 rounded-full shadow-lg"
-          />
+              :src="moderator?.information?.get_avatar"
+              alt="admin-avatar"
+              class="w-8 h-8 rounded-full shadow-lg"
+            />
           </div>
         </div>
         <div class="flex gap-1 my-2">
@@ -113,6 +113,27 @@
         <div class="flex gap-2">
           <UserGroupIcon class="w-6" />
           <h4>Ngày tạo: {{ group?.created_at_formatted }} trước</h4>
+        </div>
+      </div>
+      <div
+        class="dark:bg-slate-700 rounded-lg p-4 space-y-4"
+        v-if="rules.length"
+      >
+        <h3 class="text-lg font-semibold">Quy tắc nhóm của quản trị viên</h3>
+        <hr class="my-4 border dark:border-slate-600" />
+        <div v-for="rule in rules" :key="rule.id" class="flex gap-4">
+          <div>
+            <div class="flex gap-4">
+              <span class="font-semibold">
+                {{ rules.indexOf(rule) + 1 }}
+              </span>
+              <div class="flex flex-col space-y-2">
+                <h3 class="font-semibold">{{ rule.name }}</h3>
+                <h5 class="text-sm text-neutral-400">{{ rule.body }}</h5>
+              </div>
+            </div>
+            <hr class="my-4 border dark:border-slate-600" />
+          </div>
         </div>
       </div>
     </div>
@@ -165,11 +186,13 @@ export default {
     return {
       group: {},
       isUserInGroup: false,
+      rules: [],
     };
   },
 
   mounted() {
     this.checkUserInGroup();
+    this.getRules();
   },
 
   methods: {
@@ -194,6 +217,16 @@ export default {
         .then((res) => {
           this.group = res.data;
           // console.log(res.data);
+        })
+        .catch((error) => {
+          console.log(error);
+        });
+    },
+    async getRules() {
+      axios
+        .get(`/api/group/${this.$route.params.id}/get-rules/`)
+        .then((res) => {
+          this.rules = res.data;
         })
         .catch((error) => {
           console.log(error);

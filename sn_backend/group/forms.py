@@ -1,6 +1,6 @@
 from django.forms import ModelForm
 
-from .models import Group, Question
+from .models import Group, Question, Rule
 
 class GroupCreateForm(ModelForm):
     class Meta:
@@ -26,3 +26,8 @@ class GroupCoverImageForm(ModelForm):
     class Meta:
         model = Group
         fields = ('cover_image',)
+
+class GroupRuleForm(ModelForm):
+    class Meta:
+        model = Rule
+        fields = ('name','body',)

@@ -12,7 +12,7 @@ class QuestionSerializer(serializers.ModelSerializer):
 class RuleSerializer(serializers.ModelSerializer):
     class Meta:
         model = Rule
-        fields = ('name','body',)
+        fields = ('id','name','body',)
 
 class MemberSerializer(serializers.ModelSerializer):
     information = UserLessSerializer(read_only=True)
@@ -45,9 +45,7 @@ class GroupDetailSerializer(serializers.ModelSerializer):
     class Meta:
         model = Group
         fields = ('id', 'name', 'email', 'website', 'members', 'page_members', 'members_count','get_cover_image', 'created_at','admin','moderators', 'biography', 'is_private_group', 'show_group', 'anyone_can_join', 'anonymous_post', 'anyone_can_post', 'pending_post', 'anyone_can_poll', 'today_posts_count', 'rules','questions', 'created_at_formatted',)
-
-
-
+        
 class QuestionSerializer(serializers.ModelSerializer):
     created_by = GroupSerializer(read_only=True)
     class Meta:

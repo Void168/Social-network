@@ -174,7 +174,7 @@ export default (await import("vue")).defineComponent({
             {
               name: "Quy tắc nhóm",
               content: "",
-              url: "",
+              url: "grouprules",
             },
             {
               name: "Nội dung bị thành viên báo cáo",

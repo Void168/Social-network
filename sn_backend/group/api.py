@@ -15,7 +15,7 @@ from page.serializers import PageSerializer
 
 from .serializers import QuestionSerializer, RuleSerializer, MemberSerializer, PageMemberSerializer, GroupSerializer, GroupDetailSerializer, JoinGroupRequestSerializer, QuestionSerializer
 from .models import Group, Rule, Question, Member, PageMember, JoinGroupRequest, Answer
-from .forms import GroupCreateForm, GroupInfoForm, GroupWebsiteForm, GroupQuestionForm, GroupCoverImageForm
+from .forms import GroupCreateForm, GroupInfoForm, GroupWebsiteForm, GroupQuestionForm, GroupCoverImageForm, GroupRuleForm
 
 @api_view(['POST'])
 def create_group(request):
@@ -542,3 +542,37 @@ def update_last_access(request, pk):
     current_member.save()
     
     return JsonResponse({'message': 'Access group'}) 
+
+@api_view(['POST'])
+def create_rule(request, pk):
+    group = Group.objects.get(pk=pk)
+    form = GroupRuleForm(request.POST)
+    
+    if form.is_valid():
+        rule = form.save(commit=False)
+        rule.created_by = group
+        
+        rule.save()
+
+        serializer = RuleSerializer(rule)
+
+        return JsonResponse({'message': 'Created rule', 'rule': serializer.data}, safe=False)
+    else:
+        return JsonResponse({'error': 'Failed'})
+    
+@api_view(['GET'])
+def get_rules(request, pk):
+    group = Group.objects.get(pk=pk)
+    
+    rules = Rule.objects.filter(Q(created_by=group))
+    
+    serializer = RuleSerializer(rules, many=True)
+    
+    return JsonResponse(serializer.data, safe=False)
+
+@api_view(['POST'])
+def delete_rule(request, pk):
+    rule = Rule.objects.get(pk=pk)
+    rule.delete()
+    
+    return JsonResponse({'message': 'Rule deleted'})

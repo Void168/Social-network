@@ -9,8 +9,17 @@
         top: `${toastStore.navbarHeight}px`,
       }"
     >
-      <GroupSearchNavigation v-if="route.name === 'groupsearch'" :group="group" :isUserInGroup="isUserInGroup" @getQuery="getQuery" />
-      <GroupDetailNavigation :group="group" :isUserInGroup="isUserInGroup" v-else/>
+      <GroupSearchNavigation
+        v-if="route.name === 'groupsearch'"
+        :group="group"
+        :isUserInGroup="isUserInGroup"
+        @getQuery="getQuery"
+      />
+      <GroupDetailNavigation
+        :group="group"
+        :isUserInGroup="isUserInGroup"
+        v-else
+      />
     </div>
     <div
       class="lg:col-span-4 md:col-span-3 col-span-4 dark:bg-slate-900 bg-slate-200 flex flex-col relative items-center"
@@ -27,7 +36,12 @@
           route.name === 'groupfile'
         "
       />
-      <SearchModal :show="isOpen" @closeModal="closeModal" :group="group" @getQuery="getQuery" />
+      <SearchModal
+        :show="isOpen"
+        @closeModal="closeModal"
+        :group="group"
+        @getQuery="getQuery"
+      />
       <router-view
         :isUserInGroup="isUserInGroup"
         :group="group"
@@ -95,7 +109,7 @@ export default {
   },
 
   created() {
-    this.getGroupDetail();
+    this.checkUserInGroup();
   },
 
   methods: {
@@ -107,14 +121,15 @@ export default {
     },
     async checkUserInGroup() {
       await axios
-        .get(`/api/group/check-user/${this.group.id}`)
+        .get(`/api/group/check-user/${this.$route.params.id}/`)
         .then((res) => {
+          console.log(res.data);
           if (res.data.message === "User joined the group") {
             this.isUserInGroup = true;
-            this.getCurrentMember();
           } else {
             this.isUserInGroup = false;
           }
+          this.getGroupDetail();
         })
         .catch((error) => {
           console.log(error);
@@ -125,7 +140,8 @@ export default {
         .get(`/api/group/${this.$route.params.id}/`)
         .then((res) => {
           this.group = res.data;
-          this.checkUserInGroup()
+          this.getCurrentMember();
+          console.log(res.data);
         })
         .catch((error) => {
           console.log(error);
@@ -136,15 +152,15 @@ export default {
         .get(`/api/group/get-current-member/${this.$route.params.id}/`)
         .then((res) => {
           this.currentMember = res.data;
+          console.log(res.data)
         })
         .catch((error) => {
           console.log(error);
         });
     },
-    getQuery(query){
-      this.query = query
-      
-    }
+    getQuery(query) {
+      this.query = query;
+    },
   },
 };
 </script>

@@ -86,11 +86,13 @@ def get_current_member(request, pk):
     group_members = group.members.all()
     if members.count() > 0:
         for member in members:
-            if member in group_members:
+            if member not in group_members:
+                continue
+            else:
                 serializer = MemberSerializer(member)
                 return JsonResponse(serializer.data, safe=False)
-            else:
-                continue
+    else:
+        return JsonResponse({'message': 'User not in the group'})
 
 @api_view(['GET'])
 def check_user_in_group(request, pk):
@@ -98,11 +100,12 @@ def check_user_in_group(request, pk):
     members = Member.objects.filter(Q(information=request.user))
     if members.count() > 0:
         for member in members:
-            if member in group.members.all():
-                return JsonResponse({'message': 'User joined the group'})
-            else:
-                return JsonResponse({'message': 'User not in the group'})
+            if member not in group.members.all():
                 continue
+            else:
+                # return JsonResponse({'message': 'User not in the group'})
+                return JsonResponse({'message': 'User joined the group'})
+                break
     else:
         return JsonResponse({'message': 'User not in the group'})
 

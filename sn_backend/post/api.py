@@ -219,7 +219,7 @@ def page_post_attachment_list_profile(request, id):
 @api_view(['GET'])
 def group_post_attachment_list_profile(request, pk):
     group = Group.objects.get(pk=pk)
-    group_posts = GroupPost.objects.all()
+    group_posts = GroupPost.objects.filter(group=group)
     # receivedPosts = Post.objects.filter(post_to=id)
     group_post_attachments = []
     
@@ -632,22 +632,31 @@ def get_group_post_list(request, pk):
     
     group = Group.objects.get(pk=pk)
 
-    admin_member = Member.objects.get(information=group.admin)
+    admin_member = Member.objects.filter(Q(information=group.admin))
     moderators = group.moderators.all()
     
-    group_posts = GroupPost.objects.filter(Q(group=group, is_anonymous=False, pending=False) | Q(group=group, created_by=admin_member, is_anonymous=False) | Q(group=group, created_by__in=moderators, is_anonymous=False))
+    group_posts = GroupPost.objects.filter(Q(group=group, is_anonymous=False, pending=False) | Q(group=group, created_by__in=admin_member, is_anonymous=False))
     
-    anonymous_group_posts = GroupPost.objects.filter(Q(group=group, is_anonymous=True, pending=False))
+    if moderators.count() > 0:
+        group_posts = GroupPost.objects.filter(Q(group=group, is_anonymous=False, pending=False) | Q(group=group, created_by__in=admin_member, is_anonymous=False) | Q(group=group, created_by__in=moderators, is_anonymous=False))
     
-    serializer = GroupPostSerializer(group_posts, many=True)
-    
-    anonymous_serializer = AnonymousGroupPostSerializer(anonymous_group_posts, many=True)
-    
-    return JsonResponse(
-        {
-            'publicPosts': serializer.data,
-            'anonymousPosts': anonymous_serializer.data
-        }, safe=False)
+    if group_posts.count() > 0:
+        anonymous_group_posts = GroupPost.objects.filter(Q(group=group, is_anonymous=True, pending=False))
+        
+        serializer = GroupPostSerializer(group_posts, many=True)
+        
+        anonymous_serializer = AnonymousGroupPostSerializer(anonymous_group_posts, many=True)
+        
+        return JsonResponse(
+            {
+                'publicPosts': serializer.data,
+                'anonymousPosts': anonymous_serializer.data
+            }, safe=False)
+    else:
+        return JsonResponse(
+            {
+                'message': 'No posts found'
+            })
 
 @api_view(['POST'])
 def group_post_like(request, pk, id):

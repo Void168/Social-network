@@ -3,7 +3,7 @@ from rest_framework import serializers
 from account.serializers import UserSerializer, UserLessSerializer
 from page.serializers import PageSerializer
 from group.serializers import MemberSerializer
-from .models import Post, PostAttachment, Comment, Trend, Like, PageLike, PageComment, MemberComment, MemberLike, GroupPost, PagePost
+from .models import Post, PostAttachment, Comment, Trend, Like, PageLike, PageComment, MemberComment, MemberLike, GroupPost, PagePost, PollOption, GroupPostPoll
 
 class PostAttachmentSerializer(serializers.ModelSerializer):
     class Meta:
@@ -45,6 +45,13 @@ class MemberCommentSerializer(serializers.ModelSerializer):
     class Meta:
         model = MemberComment
         fields = ('id','body','created_by', 'created_at_formatted', 'created_at', 'tags',)
+
+class PollOptionSerializer(serializers.ModelSerializer):
+    created_by = MemberSerializer(read_only=True)
+    vote_by = MemberSerializer(read_only=True, many=True)
+    class Meta:
+        model = PollOption
+        fields = ('id', 'body', 'created_by', 'allow_add_option', 'multiple_options', 'vote_by',)  
         
 class PostSerializer(serializers.ModelSerializer):
     created_by = UserSerializer(read_only=True)
@@ -85,6 +92,19 @@ class AnonymousGroupPostSerializer(serializers.ModelSerializer):
     class Meta:
         model = GroupPost
         fields = ('id', 'body', 'likes_count', 'comments_count', 'comments', 'created_at_formatted', 'created_at', 'attachments', 'likes', 'is_anonymous',)  
+        
+class GroupPostPollSerializer(serializers.ModelSerializer):
+    created_by = MemberSerializer(read_only=True)
+    options = PollOptionSerializer(read_only=True, many=True)
+    class Meta:
+        model = GroupPost
+        fields = ('id', 'body', 'created_by', 'created_at_formatted', 'created_at', 'options','is_anonymous', 'pending',)  
+        
+class AnonymousGroupPostPollSerializer(serializers.ModelSerializer):
+    options = PollOptionSerializer(read_only=True, many=True)
+    class Meta:
+        model = GroupPost
+        fields = ('id', 'body', 'created_at_formatted', 'created_at', 'options', 'is_anonymous',)  
         
 class PostDetailSerializer(serializers.ModelSerializer):
     created_by = UserSerializer(read_only=True)

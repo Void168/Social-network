@@ -163,7 +163,7 @@ class GroupPost(models.Model):
     group = models.ForeignKey(Group, related_name="group_own", on_delete=models.CASCADE, null=True)
     
     attachments = models.ManyToManyField(MemberPostAttachment, blank=True)
-        
+    
     likes = models.ManyToManyField(MemberLike, blank=True)
     likes_count = models.IntegerField(default=0)
     
@@ -175,6 +175,36 @@ class GroupPost(models.Model):
     is_anonymous = models.BooleanField(default=False)
     created_at = models.DateTimeField(auto_now_add=True)
     created_by = models.ForeignKey(Member, related_name='group_posts', on_delete=models.CASCADE)
+    
+    pending = models.BooleanField(default=True)
+    
+    class Meta:
+        ordering = ('-created_at',)
+    
+    def created_at_formatted(self):
+        return timesince(self.created_at)
+
+class PollOption(models.Model):
+    id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
+    body = models.TextField(blank=True, null=True)
+    created_by = models.ForeignKey(Member, related_name="create_poll", on_delete=models.CASCADE)
+    vote_by = models.ManyToManyField(Member, related_name="vote_by")
+
+class GroupPostPoll(models.Model):
+    id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
+    body = models.TextField(blank=True, null=True)
+    group = models.ForeignKey(Group, related_name="group_own_poll", on_delete=models.CASCADE, null=True)
+    
+    options = models.ManyToManyField(PollOption, blank=True)
+    
+    reported_by_members = models.ManyToManyField(Member, blank=True)
+    
+    allow_add_option = models.BooleanField(default=True)
+    multiple_options = models.BooleanField(default=True)
+    
+    is_anonymous = models.BooleanField(default=False)
+    created_at = models.DateTimeField(auto_now_add=True)
+    created_by = models.ForeignKey(Member, related_name='group_post_polls', on_delete=models.CASCADE)
     
     pending = models.BooleanField(default=True)
     

@@ -16,7 +16,9 @@
                   class="w-10 h-10 rounded-full"
                 />
               </div>
+              <GroupPollForm :group="group" v-if="isPollOpen" />
               <textarea
+                v-else
                 v-model="body"
                 class="p-4 w-full bg-gray-100 rounded-lg resize-none"
                 cols="30"
@@ -47,6 +49,7 @@
                 Bài viết ẩn danh
               </div>
               <div
+                v-if="!isPollOpen"
                 class="flex items-center font-medium justify-center gap-2 py-2 w-full rounded-lg dark:hover:bg-slate-800 cursor-pointer duration-75"
               >
                 <label for="doc">
@@ -65,6 +68,8 @@
               </div>
               <div
                 class="flex items-center font-medium justify-center gap-2 py-2 w-full rounded-lg dark:hover:bg-slate-800 cursor-pointer duration-75"
+                :class="isPollOpen ? 'bg-slate-800' : ''"
+                @click="createPollOpen"
                 v-if="group.anyone_can_poll"
               >
                 <HandRaisedIcon class="w-6 text-amber-600" />
@@ -80,6 +85,7 @@
                   : 'btn'
               "
               :disabled="!body"
+              v-if="!isPollOpen"
             >
               Đăng bài viết
             </button>
@@ -90,7 +96,7 @@
           </div>
           <div
             class="dark:bg-slate-700 rounded-lg px-4 h-80 flex flex-col justify-center items-center"
-            v-if="!groupPosts.length"
+            v-if="!groupPosts?.length"
           >
             <h2 class="text-xl font-semibold">Nhóm chưa có bài viết nào.</h2>
             <h3 class="text-lg font-semibold">
@@ -200,7 +206,7 @@
         </div>
         <div class="dark:bg-slate-700 rounded-lg p-4">
           <h2 class="text-xl font-bold">Giới thiệu</h2>
-          <div class="flex gap-2" v-if="group?.is_private_group">
+          <div class="flex gap-2" v-if="!group?.is_private_group">
             <div class="flex flex-col justify-start">
               <GlobeAsiaAustraliaIcon class="w-6" />
             </div>
@@ -279,6 +285,7 @@ import { RouterLink } from "vue-router";
 import GroupHeader from "../../components/items/group/GroupHeader.vue";
 import GroupPost from "../../components/items/post/GroupPost.vue";
 import GroupImageShowcase from "../../components/items/group/GroupImageShowcase.vue";
+import GroupPollForm from "../../components/forms/GroupPollForm.vue";
 
 import {
   GlobeAsiaAustraliaIcon,
@@ -313,6 +320,7 @@ export default {
     ChevronDownIcon,
     GroupPost,
     GroupImageShowcase,
+    GroupPollForm,
   },
   setup() {
     const userStore = useUserStore();
@@ -337,6 +345,7 @@ export default {
       groupImages: [],
       isAnonymous: false,
       isSettingOpen: true,
+      isPollOpen: false,
     };
   },
 
@@ -348,24 +357,29 @@ export default {
 
   methods: {
     getSteps() {
-      if (this.group.biography !== "") {
-        this.step += 1;
-      }
-      if (
-        this.group.get_cover_image !==
-        "https://th.bing.com/th/id/OIP.o1n4kgruF-5cDCCx7jNYKQHaEo?pid=ImgDet&rs=1"
-      ) {
-        this.step += 1;
-      }
-      if (this.groupPosts) {
-        this.step += 1;
-      }
+      setTimeout(() => {
+        if (this.group.biography !== "") {
+          this.step += 1;
+        }
+        if (
+          this.group.get_cover_image !==
+          "https://th.bing.com/th/id/OIP.o1n4kgruF-5cDCCx7jNYKQHaEo?pid=ImgDet&rs=1"
+        ) {
+          this.step += 1;
+        }
+        if (this.groupPosts) {
+          this.step += 1;
+        }
+      }, 500);
     },
     closeSetting() {
       this.isSettingOpen = false;
     },
     activateAnonymous() {
       this.isAnonymous = !this.isAnonymous;
+    },
+    createPollOpen() {
+      this.isPollOpen = !this.isPollOpen;
     },
     removeImage() {
       this.urlPost = null;
@@ -380,9 +394,9 @@ export default {
         .then((res) => {
           const publicPosts = res.data.publicPosts;
           const anonymousPosts = res.data.anonymousPosts;
-          const allPosts = publicPosts.concat(anonymousPosts);
+          const allPosts = publicPosts?.concat(anonymousPosts);
 
-          this.groupPosts = allPosts.sort(
+          this.groupPosts = allPosts?.sort(
             (a, b) => new Date(b.created_at) - new Date(a.created_at)
           );
           this.posts = this;

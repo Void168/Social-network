@@ -62,6 +62,7 @@
           :option="option"
           @voteOption="voteOption"
           :totalVote="totalVote"
+          :voteCount="option.vote_by.length"
         />
       </div>
     </div>
@@ -209,9 +210,9 @@ export default (await import("vue")).defineComponent({
     this.getTotalVote();
   },
 
-  updated() {
-    this.getTotalVote();
-  },
+  // updated() {
+  //   this.getTotalVote();
+  // },
 
   methods: {
     deletePost() {
@@ -282,8 +283,10 @@ export default (await import("vue")).defineComponent({
         .then((res) => {
           if (res.data.message === "Remove vote") {
             this.totalVote -= 1;
+            option.vote_by.length -= 1
           } else {
             this.totalVote += 1;
+            option.vote_by.length += 1
           }
           // console.log(this.totalVote)
         })

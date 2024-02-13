@@ -156,6 +156,7 @@
             :key="poll.id"
           >
             <GroupPostPoll
+              :key="updateKey"
               :poll="poll"
               :group="group"
               :currentMember="currentMember"
@@ -433,9 +434,9 @@ export default {
     this.getGroupPostPollsList();
   },
 
-  beforeUpdate(){
-    this.forceUpdate()
-  },
+  // beforeUpdate(){
+  //   this.getGroupPostPollsList()
+  // },
 
   methods: {
     forceUpdate(){
@@ -504,7 +505,7 @@ export default {
           .get(`/api/posts/group/${this.$route.params.id}/poll/`)
           .then((res) => {
             this.polls = res.data;
-            this.$forceUpdate()
+            this.forceUpdate()
             console.log(res.data)
           })
           .catch((error) => {

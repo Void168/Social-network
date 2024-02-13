@@ -1,10 +1,17 @@
 <template>
-  <div
-    class="relative rounded-lg border dark:border-slate-500 cursor-pointer"
-  >
+  <div class="relative rounded-lg border dark:border-slate-500 cursor-pointer">
     <div @click="$emit('voteOption', option)">
       <div class="relative flex items-center gap-4 p-4 w-full" @click="vote">
-        <div class="absolute z-10 bg-emerald-500/20 h-full left-0" :style="{width: `${option.votes_count/totalVote * 100}%`}"/>        
+        <div
+          class="absolute z-10 bg-emerald-500/20 h-full left-0"
+          :style="{
+            width: `${
+              totalVote > 0
+                ? Math.round((voteCount / totalVote) * 100, 0)
+                : 0
+            }%`,
+          }"
+        />
         <div class="relative w-6 h-6 border dark:border-slate-500 rounded-md">
           <CheckIcon
             v-if="isVote"
@@ -15,7 +22,13 @@
       </div>
     </div>
     <div class="absolute right-1 top-4 flex gap-2 items-center">
-      <h3 class="text-emerald-500 font-semibold">{{ Math.round(option.votes_count/totalVote * 100, 0) || 0}}%</h3>
+      <h3 class="text-emerald-500 font-semibold">
+        {{
+          totalVote > 0
+            ? Math.round((voteCount / totalVote) * 100, 0)
+            : 0
+        }}%
+      </h3>
       <ChevronRightIcon class="w-4" />
     </div>
   </div>
@@ -31,7 +44,8 @@ export default (await import("vue")).defineComponent({
   },
   props: {
     option: Object,
-    totalVote: Number
+    totalVote: Number,
+    voteCount: Number
   },
 
   data() {
@@ -40,12 +54,12 @@ export default (await import("vue")).defineComponent({
     };
   },
 
-  mounted(){
-    this.checkVote()
+  mounted() {
+    this.checkVote();
   },
 
-  updated(){
-    this.checkVote()
+  updated() {
+    this.checkVote();
   },
 
   methods: {
@@ -54,14 +68,12 @@ export default (await import("vue")).defineComponent({
     },
     async checkVote() {
       await axios
-        .get(
-          `/api/posts/group/poll/option/${this.option.id}/check-vote/`
-        )
+        .get(`/api/posts/group/poll/option/${this.option.id}/check-vote/`)
         .then((res) => {
-          if(res.data.message === 'voted'){
-            this.isVote = true
+          if (res.data.message === "voted") {
+            this.isVote = true;
           } else {
-            this.isVote = false
+            this.isVote = false;
           }
         })
         .catch((error) => {

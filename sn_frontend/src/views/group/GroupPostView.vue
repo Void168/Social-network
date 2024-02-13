@@ -125,7 +125,7 @@ import GroupPost from "../../components/items/post/GroupPost.vue";
 
 import { XMarkIcon } from "@heroicons/vue/24/solid";
 import SkeletonLoadingPost from "../../components/loadings/SkeletonLoadingPost.vue";
-import MemberCommentItem from "../../components/items/group/MemberCommentItem.vue";
+import MemberCommentItem from "../../components/items/group/post/MemberCommentItem.vue";
 import { useUserStore } from "../../stores/user";
 import { usePageStore } from "../../stores/page";
 

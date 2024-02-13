@@ -16,7 +16,11 @@
                   class="w-10 h-10 rounded-full"
                 />
               </div>
-              <GroupPollForm :group="group" v-if="isPollOpen" />
+              <GroupPollForm
+                :group="group"
+                v-if="isPollOpen"
+                :isAnonymous="isAnonymous"
+              />
               <textarea
                 v-else
                 v-model="body"
@@ -90,13 +94,38 @@
               Đăng bài viết
             </button>
           </div>
-          <div class="flex items-center gap-2 text-emerald-500 font-bold">
-            Bài viết mới nhất
-            <ChevronDownIcon class="w-5" />
+          <div class="flex items-center justify-between">
+            <div class="flex items-center gap-2 text-emerald-500 font-bold">
+              Bài viết mới nhất
+              <ChevronDownIcon class="w-5" />
+            </div>
+            <div class="flex gap-2 items-center">
+              <div
+                @click="togglePostTab"
+                :class="
+                  defaultTab ? 'dark:bg-emerald-600' : 'dark:bg-slate-700'
+                "
+                class="px-4 py-2 font-semibold rounded-lg dark:hover:bg-emerald-600 duration-75 cursor-pointer"
+              >
+                Bài viết
+              </div>
+              <div
+                @click="togglePollTab"
+                :class="
+                  !defaultTab ? 'dark:bg-emerald-600' : 'dark:bg-slate-700'
+                "
+                class="px-4 py-2 font-semibold dark:bg-slate-700 rounded-lg dark:hover:bg-emerald-600 duration-75 cursor-pointer"
+              >
+                Cuộc thảo luận
+              </div>
+            </div>
           </div>
           <div
             class="dark:bg-slate-700 rounded-lg px-4 h-80 flex flex-col justify-center items-center"
-            v-if="!groupPosts?.length"
+            v-if="
+              (!groupPosts?.length && defaultTab) ||
+              groupStore.setDefaultTab === 1
+            "
           >
             <h2 class="text-xl font-semibold">Nhóm chưa có bài viết nào.</h2>
             <h3 class="text-lg font-semibold">
@@ -105,7 +134,10 @@
           </div>
           <div
             class="dark:bg-slate-700 rounded-lg px-4"
-            v-else
+            v-else-if="
+              (groupPosts?.length && defaultTab) ||
+              groupStore.setDefaultTab === 1
+            "
             v-for="groupPost in groupPosts"
             :key="groupPost.id"
           >
@@ -114,6 +146,31 @@
               :group="group"
               :currentMember="currentMember"
             />
+          </div>
+          <div
+            class="dark:bg-slate-700 rounded-lg px-4"
+            v-else-if="
+              (polls?.length && !defaultTab) || groupStore.setDefaultTab === 2
+            "
+            v-for="poll in polls"
+            :key="poll.id"
+          >
+            <GroupPostPoll
+              :poll="poll"
+              :group="group"
+              :currentMember="currentMember"
+            />
+          </div>
+          <div
+            class="dark:bg-slate-700 rounded-lg px-4 h-80 flex flex-col justify-center items-center"
+            v-else-if="
+              (!polls?.length && !defaultTab) || groupStore.setDefaultTab === 2
+            "
+          >
+            <h2 class="text-xl font-semibold">Nhóm chưa cuộc thảo luận nào.</h2>
+            <h3 class="text-lg font-semibold">
+              Hãy tạo cuộc thăm dò ý kiến để cùng nhau thảo luận nhé.
+            </h3>
           </div>
         </div>
         <div
@@ -280,10 +337,12 @@
 import axios from "axios";
 import { useUserStore } from "../../stores/user";
 import { useToastStore } from "../../stores/toast";
+import { useGroupStore } from "../../stores/group";
 import { RouterLink } from "vue-router";
 
 import GroupHeader from "../../components/items/group/GroupHeader.vue";
 import GroupPost from "../../components/items/post/GroupPost.vue";
+import GroupPostPoll from "../../components/items/group/poll/GroupPostPoll.vue";
 import GroupImageShowcase from "../../components/items/group/GroupImageShowcase.vue";
 import GroupPollForm from "../../components/forms/GroupPollForm.vue";
 
@@ -321,14 +380,17 @@ export default {
     GroupPost,
     GroupImageShowcase,
     GroupPollForm,
+    GroupPostPoll,
   },
   setup() {
     const userStore = useUserStore();
     const toastStore = useToastStore();
+    const groupStore = useGroupStore();
 
     return {
       userStore,
       toastStore,
+      groupStore,
     };
   },
   props: {
@@ -343,19 +405,50 @@ export default {
       urlPost: null,
       groupPosts: [],
       groupImages: [],
+      polls: [],
       isAnonymous: false,
       isSettingOpen: true,
       isPollOpen: false,
+      defaultTab: true,
+      updateKey: 0
     };
   },
+
+  // watch: {
+  //   polls: {
+  //     handler(newVal) {
+  //       if (newVal) {
+  //         this.getGroupPostPollsList();
+  //       }
+  //     },
+  //     deep: true,
+  //     immediate: true
+  //   },
+  // },
 
   mounted() {
     this.getGroupPostsList();
     this.getGroupImage();
     this.getSteps();
+    this.getGroupPostPollsList();
+  },
+
+  beforeUpdate(){
+    this.forceUpdate()
   },
 
   methods: {
+    forceUpdate(){
+      this.updateKey += 1;
+    },
+    togglePostTab() {
+      this.defaultTab = true;
+      this.groupStore.setDefaultTab(1);
+    },
+    togglePollTab() {
+      this.defaultTab = false;
+      this.groupStore.setDefaultTab(2);
+    },
     getSteps() {
       setTimeout(() => {
         if (this.group.biography !== "") {
@@ -399,12 +492,24 @@ export default {
           this.groupPosts = allPosts?.sort(
             (a, b) => new Date(b.created_at) - new Date(a.created_at)
           );
-          this.posts = this;
           console.log(res.data);
         })
         .catch((error) => {
           console.log(error);
         });
+    },
+    async getGroupPostPollsList() {
+      await 
+        axios
+          .get(`/api/posts/group/${this.$route.params.id}/poll/`)
+          .then((res) => {
+            this.polls = res.data;
+            this.$forceUpdate()
+            console.log(res.data)
+          })
+          .catch((error) => {
+            console.log(error);
+          });
     },
     async getGroupImage() {
       await axios

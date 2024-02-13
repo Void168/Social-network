@@ -24,7 +24,7 @@
               <MUILikedInput
                 :placeholder="`Lựa chọn ${n}`"
                 class="w-full"
-                v-model="option[n - 1]"
+                v-model="options[n - 1]"
               />
               <XMarkIcon
                 v-if="amount > 2"
@@ -83,11 +83,11 @@
       @click="submitForm"
       class="w-full my-4 font-semibold py-2 rounded-lg duration-75"
       :class="
-        option.includes('') || !title
+        options.includes('') || !title
           ? 'dark:bg-slate-600 text-neutral-400'
           : 'dark:bg-emerald-400 text-slate-700'
       "
-      :disabled="option.includes('') || !title"
+      :disabled="options.includes('') || !title"
     >
       Đăng bài viết
     </button>
@@ -129,11 +129,12 @@ export default {
   },
   props: {
     group: Object,
+    isAnonymous: Boolean,
   },
   data() {
     return {
       title: "",
-      option: [],
+      options: [],
       amount: 2,
       isSettingOpen: false,
       isMultipleOptions: true,
@@ -147,7 +148,7 @@ export default {
     },
     removeOption(index) {
       this.amount -= 1;
-      this.option.splice(index, 1);
+      this.options.splice(index, 1);
     },
     openSetting() {
       this.isSettingOpen = !this.isSettingOpen;
@@ -159,31 +160,17 @@ export default {
       this.isAddOptions = !this.isAddOptions;
     },
     submitForm() {
-      // console.log("submitForm", this.body);
-
-      let formData = new FormData();
-      formData.append("image", this.$refs.file.files[0]);
-      formData.append("body", this.body);
-
-      formData.append("is_private", this.is_private);
-      formData.append("only_me", this.only_me);
       axios
-        .post("/api/posts/create/", formData, {
-          headers: {
-            "Content-Type": "multipart/form-data",
-          },
+        .post(`/api/posts/create-poll/group/${this.group.id}/`, {
+          body: this.title,
+          options: this.options,
+          allow_add_option: this.isAddOptions,
+          multiple_options: this.isMultipleOptions,
+          is_anonymous: this.isAnonymous
         })
         .then((res) => {
           // console.log("data", res.data);
           this.body = "";
-          this.$refs.file.value = null;
-          this.is_private = false;
-          this.only_me = false;
-          this.urlPost = null;
-
-          if (this.user) {
-            this.user.posts_count += 1;
-          }
         })
         .catch((error) => {
           console.log("error", error);

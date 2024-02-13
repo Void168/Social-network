@@ -51,7 +51,7 @@ class PollOptionSerializer(serializers.ModelSerializer):
     vote_by = MemberSerializer(read_only=True, many=True)
     class Meta:
         model = PollOption
-        fields = ('id', 'body', 'created_by', 'allow_add_option', 'multiple_options', 'vote_by',)  
+        fields = ('id', 'body', 'created_by', 'vote_by', 'votes_count',)  
         
 class PostSerializer(serializers.ModelSerializer):
     created_by = UserSerializer(read_only=True)
@@ -97,14 +97,14 @@ class GroupPostPollSerializer(serializers.ModelSerializer):
     created_by = MemberSerializer(read_only=True)
     options = PollOptionSerializer(read_only=True, many=True)
     class Meta:
-        model = GroupPost
-        fields = ('id', 'body', 'created_by', 'created_at_formatted', 'created_at', 'options','is_anonymous', 'pending',)  
+        model = GroupPostPoll
+        fields = ('id', 'body', 'created_by', 'created_at_formatted', 'created_at', 'allow_add_option', 'multiple_options', 'options','is_anonymous', 'pending',)  
         
 class AnonymousGroupPostPollSerializer(serializers.ModelSerializer):
     options = PollOptionSerializer(read_only=True, many=True)
     class Meta:
-        model = GroupPost
-        fields = ('id', 'body', 'created_at_formatted', 'created_at', 'options', 'is_anonymous',)  
+        model = GroupPostPoll
+        fields = ('id', 'body', 'created_at_formatted', 'created_at', 'options', 'is_anonymous', 'allow_add_option', 'multiple_options',)  
         
 class PostDetailSerializer(serializers.ModelSerializer):
     created_by = UserSerializer(read_only=True)

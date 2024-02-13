@@ -261,9 +261,9 @@ import {
   LockClosedIcon,
 } from "@heroicons/vue/24/outline";
 import { HeartIcon as HeartLike } from "@heroicons/vue/24/solid";
-import { useUserStore } from "../../../stores/user";
-import { useToastStore } from "../../../stores/toast";
-import { usePageStore } from "../../../stores/page";
+import { useUserStore } from "../../../../stores/user";
+import { useToastStore } from "../../../../stores/toast";
+import { usePageStore } from "../../../../stores/page";
 // import DeletePostModal from "../../modals/post/DeletePostModal.vue";
 // import CreatedAtTooltip from "./Tooltip/CreatedAtTooltip.vue";
 // import PrivacyTooltip from "./Tooltip/PrivacyTooltip.vue";

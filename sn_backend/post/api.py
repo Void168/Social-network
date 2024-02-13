@@ -15,7 +15,7 @@ from notification.models import NotificationForPage
 from notification.utils import create_notification
 
 from .forms import PostForm, AttachmentForm, PageAttachmentForm, PagePostForm, MemberAttachmentForm, GroupPostForm
-from .models import Post, Comment, Like, Trend, PagePost, PageComment, PageLike, GroupPost, MemberLike, MemberComment
+from .models import Post, Comment, Like, Trend, PagePost, PageComment, PageLike, GroupPost, MemberLike, MemberComment, GroupPostPoll, PollOption
 from .serializers import PostSerializer, PostDetailSerializer, CommentSerializer, TrendSerializer, LikeSerializer, PagePostSerializer, PageLikeSerializer, PageCommentSerializer, PagePostDetailSerializer, GroupPostSerializer, MemberLikeSerializer, MemberCommentSerializer, AnonymousGroupPostSerializer, GroupPostPollSerializer, AnonymousGroupPostPollSerializer
 from notification.serializers import NotificationSerializer, NotificationForPageSerializer
 
@@ -736,3 +736,111 @@ def handle_pending_post(request, pk, status, id):
         pending_post.delete()
 
         return JsonResponse({'message': 'Post rejected'})
+    
+@api_view(['POST'])
+def group_post_poll_create(request, pk):
+    group = Group.objects.get(pk=pk)
+    members = Member.objects.filter(Q(information=request.user))
+    current_member = Member.objects.none()
+    group_members = group.members.all()
+    for member in members:
+        if member in group_members:
+            current_member = member
+        else:
+            pass
+    body = request.data.get('body')
+    options = request.data.get('options')
+    allow_add_option = request.data.get('allow_add_option')
+    multiple_options = request.data.get('multiple_options')
+    is_anonymous = request.data.get('is_anonymous')
+    
+    group_post_poll = GroupPostPoll.objects.create(
+        created_by=current_member,
+        group=group,
+        body=body,
+        allow_add_option=allow_add_option,
+        multiple_options=multiple_options,
+        is_anonymous=is_anonymous
+    )
+    
+    for option_value in options:
+        # print(option_value)
+        option = PollOption.objects.create(
+            body=option_value,
+            created_by=current_member
+        )
+        
+        group_post_poll.options.add(option)
+    
+        group_post_poll.save()
+
+    if group_post_poll.is_anonymous:
+        serializer = AnonymousGroupPostPollSerializer(group_post_poll)
+            
+        return JsonResponse(serializer.data, safe=False)
+    else:
+        serializer = GroupPostPollSerializer(group_post_poll)
+
+        return JsonResponse(serializer.data, safe=False)
+
+@api_view(['GET'])
+def get_group_post_poll(request, pk):
+    group = Group.objects.get(pk=pk)
+    
+    # group_post_polls = GroupPostPoll.objects.filter(group=group)
+    group_post_polls = GroupPostPoll.objects.all()
+    
+    serializer = GroupPostPollSerializer(group_post_polls, many=True)
+
+    return JsonResponse(serializer.data, safe=False)
+
+@api_view(['POST'])
+def vote_poll(request, pk, id):
+    option = PollOption.objects.get(pk=pk)
+    
+    members = Member.objects.filter(Q(information=request.user))
+    current_member = Member.objects.none()
+    group = Group.objects.get(id=id)
+    group_members = group.members.all()
+    for member in members:
+        if member in group_members:
+            current_member = member
+        else:
+            pass
+    if current_member not in option.vote_by.all():
+        option.vote_by.add(current_member)
+        option.votes_count = option.votes_count + 1
+        option.save()
+        
+        return JsonResponse({'message': 'voted'})
+    else:
+        option.vote_by.remove(current_member)
+        option.votes_count = option.votes_count - 1
+        option.save()
+        
+        return JsonResponse({'message': 'Remove vote'})
+
+@api_view(['GET'])
+def check_vote(request, pk):
+    option = PollOption.objects.get(pk=pk)
+    if option.vote_by.all():
+        for member in option.vote_by.all():
+            if member.information == request.user:
+                return JsonResponse({'message': 'voted'})
+            else:
+                return JsonResponse({'message': 'Not voted yet'})
+    else:
+        return JsonResponse({'message': 'Not voted yet'})
+    
+@api_view(['DELETE'])
+def delete_poll(request, pk):
+    group_post_polls = GroupPostPoll.objects.get(pk=pk)
+    
+    if group_post_polls.created_by.information == request.user:
+        group_post_polls.delete()
+
+        return JsonResponse({'message': 'Poll deleted'})
+    else:
+        return JsonResponse({'message': 'Delete poll failed'})
+
+

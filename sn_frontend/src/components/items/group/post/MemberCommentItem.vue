@@ -80,11 +80,11 @@
 <script>
 import axios from "axios";
 import { RouterLink } from "vue-router";
-import TooltipProfile from "../profile/TooltipProfile.vue";
-import CommentDropDownVue from "../../dropdown/CommentDropDown.vue";
-import { useUserStore } from "../../../stores/user";
-import { useToastStore } from "../../../stores/toast";
-import { usePageStore } from "../../../stores/page";
+import TooltipProfile from "../../profile/TooltipProfile.vue";
+import CommentDropDownVue from "../../../dropdown/CommentDropDown.vue";
+import { useUserStore } from "../../../../stores/user";
+import { useToastStore } from "../../../../stores/toast";
+import { usePageStore } from "../../../../stores/page";
 export default (await import("vue")).defineComponent({
   setup() {
     const userStore = useUserStore();

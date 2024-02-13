@@ -5,11 +5,15 @@ export const useGroupStore = defineStore({
 
   state: () => ({
     groupQuery: localStorage.getItem("groupQuery"),
+    defaultTab: 1
   }),
 
   actions: {
     setQuery(query) {
         this.groupQuery = localStorage.setItem('groupQuery', query)
+    },
+    setDefaultTab(tab) {
+        this.tab = tab
     },
   },
 });

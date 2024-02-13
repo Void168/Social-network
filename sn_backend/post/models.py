@@ -189,6 +189,7 @@ class PollOption(models.Model):
     body = models.TextField(blank=True, null=True)
     created_by = models.ForeignKey(Member, related_name="create_poll", on_delete=models.CASCADE)
     vote_by = models.ManyToManyField(Member, related_name="vote_by")
+    votes_count = models.IntegerField(default=0)
 
 class GroupPostPoll(models.Model):
     id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
@@ -206,7 +207,7 @@ class GroupPostPoll(models.Model):
     created_at = models.DateTimeField(auto_now_add=True)
     created_by = models.ForeignKey(Member, related_name='group_post_polls', on_delete=models.CASCADE)
     
-    pending = models.BooleanField(default=True)
+    pending = models.BooleanField(default=False)
     
     class Meta:
         ordering = ('-created_at',)

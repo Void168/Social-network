@@ -1,7 +1,7 @@
 <template>
   <div class="w-full flex flex-col justify-center items-center">
     <div class="flex w-[80%] my-4 gap-4 px-4">
-      <div class="w-[60%]">
+      <div class="w-[60%]" id="feed-frame">
         <div v-if="isUserInGroup" class="flex flex-col space-y-4">
           <div class="dark:bg-slate-700 rounded-lg px-4">
             <div class="py-4 flex items-start gap-2 p-2 rounded-lg">
@@ -114,7 +114,7 @@
                 :class="
                   !defaultTab ? 'dark:bg-emerald-600' : 'dark:bg-slate-700'
                 "
-                class="px-4 py-2 font-semibold dark:bg-slate-700 rounded-lg dark:hover:bg-emerald-600 duration-75 cursor-pointer"
+                class="px-4 py-2 font-semibold rounded-lg dark:hover:bg-emerald-600 duration-75 cursor-pointer"
               >
                 Cuộc thảo luận
               </div>
@@ -133,19 +133,33 @@
             </h3>
           </div>
           <div
-            class="dark:bg-slate-700 rounded-lg px-4"
             v-else-if="
               (groupPosts?.length && defaultTab) ||
               groupStore.setDefaultTab === 1
             "
-            v-for="groupPost in groupPosts"
-            :key="groupPost.id"
           >
-            <GroupPost
-              :post="groupPost"
-              :group="group"
-              :currentMember="currentMember"
-            />
+            <SkeletonLoadingPost v-if="isLoading" />
+            <div v-else>
+              <div
+                class="dark:bg-slate-700 rounded-lg px-4"
+                v-for="groupPost in groupPosts"
+                :key="groupPost.id"
+              >
+                <GroupPost
+                  :post="groupPost"
+                  :group="group"
+                  :currentMember="currentMember"
+                />
+              </div>
+              <SkeletonLoadingPost
+                v-if="allPosts.length !== groupPosts.length"
+                v-show="!loadMore"
+              />
+
+              <div v-else class="flex justify-center items-center h-48">
+                <p class="text-xl font-semibold">Đã tải hết bài viết</p>
+              </div>
+            </div>
           </div>
           <div
             class="dark:bg-slate-700 rounded-lg px-4"
@@ -346,6 +360,7 @@ import GroupPost from "../../components/items/post/GroupPost.vue";
 import GroupPostPoll from "../../components/items/group/poll/GroupPostPoll.vue";
 import GroupImageShowcase from "../../components/items/group/GroupImageShowcase.vue";
 import GroupPollForm from "../../components/forms/GroupPollForm.vue";
+import SkeletonLoadingPost from "../../components/loadings/SkeletonLoadingPost.vue";
 
 import {
   GlobeAsiaAustraliaIcon,
@@ -382,6 +397,7 @@ export default {
     GroupImageShowcase,
     GroupPollForm,
     GroupPostPoll,
+    SkeletonLoadingPost,
   },
   setup() {
     const userStore = useUserStore();
@@ -405,41 +421,34 @@ export default {
       step: 0,
       urlPost: null,
       groupPosts: [],
+      allPosts: [],
       groupImages: [],
       polls: [],
       isAnonymous: false,
       isSettingOpen: true,
       isPollOpen: false,
       defaultTab: true,
-      updateKey: 0
+      updateKey: 0,
+      loadMore: false,
+      PostToShow: 5,
+      isLoading: false,
     };
   },
-
-  // watch: {
-  //   polls: {
-  //     handler(newVal) {
-  //       if (newVal) {
-  //         this.getGroupPostPollsList();
-  //       }
-  //     },
-  //     deep: true,
-  //     immediate: true
-  //   },
-  // },
 
   mounted() {
     this.getGroupPostsList();
     this.getGroupImage();
     this.getSteps();
     this.getGroupPostPollsList();
+    window.addEventListener("scroll", this.infinateScroll);
   },
 
-  // beforeUpdate(){
-  //   this.getGroupPostPollsList()
-  // },
+  beforeDestroy() {
+    window.removeEventListener("scroll", this.infinateScroll);
+  },
 
   methods: {
-    forceUpdate(){
+    forceUpdate() {
       this.updateKey += 1;
     },
     togglePostTab() {
@@ -483,34 +492,35 @@ export default {
       this.urlPost = URL.createObjectURL(file);
     },
     async getGroupPostsList() {
+      this.isLoading = true;
       await axios
         .get(`/api/posts/group/${this.$route.params.id}/`)
         .then((res) => {
           const publicPosts = res.data.publicPosts;
           const anonymousPosts = res.data.anonymousPosts;
-          const allPosts = publicPosts?.concat(anonymousPosts);
-
-          this.groupPosts = allPosts?.sort(
+          this.allPosts = publicPosts?.concat(anonymousPosts);
+          this.groupPosts = this.allPosts?.sort(
             (a, b) => new Date(b.created_at) - new Date(a.created_at)
           );
-          console.log(res.data);
+          this.groupPosts = this.allPosts.slice(0, this.PostToShow);
+
+          this.isLoading = false;
+          // console.log(res.data);
         })
         .catch((error) => {
           console.log(error);
         });
     },
     async getGroupPostPollsList() {
-      await 
-        axios
-          .get(`/api/posts/group/${this.$route.params.id}/poll/`)
-          .then((res) => {
-            this.polls = res.data;
-            this.forceUpdate()
-            console.log(res.data)
-          })
-          .catch((error) => {
-            console.log(error);
-          });
+      await axios
+        .get(`/api/posts/group/${this.$route.params.id}/poll/`)
+        .then((res) => {
+          this.polls = res.data;
+          console.log(res.data);
+        })
+        .catch((error) => {
+          console.log(error);
+        });
     },
     async getGroupImage() {
       await axios
@@ -547,6 +557,26 @@ export default {
         .catch((error) => {
           console.log("error", error);
         });
+    },
+    infinateScroll() {
+      const frame = document.getElementById("feed-frame");
+      let height = frame.scrollHeight;
+      let scrollY = window.scrollY;
+
+      if (height < scrollY + 100) {
+        setTimeout(() => {
+          this.loadMore = true;
+        }, 1000);
+        if (this.loadMore) {
+          const newPosts = this.allPosts.slice(
+            this.groupPosts.length,
+            this.groupPosts.length + this.PostToShow
+          );
+          this.groupPosts.push(...newPosts);
+        }
+      } else {
+        this.loadMore = false;
+      }
     },
   },
 };

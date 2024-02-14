@@ -91,7 +91,7 @@
               <div class="mt-4 flex justify-between items-center">
                 <h5 class="dark:text-neutral-200 text-xs">
                   Không nhập mật khẩu hoặc thông tin nhạy cảm khác tại đây, ngay
-                  cả khi quản trị viên nhóm Tom yêu cầu.
+                  cả khi quản trị viên nhóm {{ group.name }} yêu cầu.
                 </h5>
                 <div class="flex items-center gap-2 w-full">
                   <button

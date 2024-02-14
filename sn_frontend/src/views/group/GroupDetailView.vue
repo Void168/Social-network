@@ -123,7 +123,7 @@ export default {
       await axios
         .get(`/api/group/check-user/${this.$route.params.id}/`)
         .then((res) => {
-          console.log(res.data);
+          // console.log(res.data);
           if (res.data.message === "User joined the group") {
             this.isUserInGroup = true;
           } else {
@@ -141,7 +141,7 @@ export default {
         .then((res) => {
           this.group = res.data;
           this.getCurrentMember();
-          console.log(res.data);
+          // console.log(res.data);
         })
         .catch((error) => {
           console.log(error);
@@ -152,7 +152,7 @@ export default {
         .get(`/api/group/get-current-member/${this.$route.params.id}/`)
         .then((res) => {
           this.currentMember = res.data;
-          console.log(res.data)
+          // console.log(res.data)
         })
         .catch((error) => {
           console.log(error);

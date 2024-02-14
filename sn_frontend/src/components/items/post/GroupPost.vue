@@ -132,7 +132,7 @@
           >
         </div>
       </div>
-      <div class="absolute right-4 shadow-lg rounded-lg ease-in duration-300">
+      <div class="absolute right-4 bottom-4 shadow-lg rounded-lg ease-in duration-300">
         <Menu as="div" class="relative inline-block text-left">
           <div>
             <MenuButton

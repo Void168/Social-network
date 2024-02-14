@@ -17,10 +17,12 @@
               class="w-4"
             />
             <LockClosedIcon v-else class="w-4" />
-            <h5 class="text-sm">
-              {{ group.is_private_group ? "Nhóm riêng tư" : "Nhóm công khai" }}
-              &middot; {{ group.members_count }} thành viên
-            </h5>
+            <RouterLink :to="{name: 'groupdetail', params: {id: group.id }}">
+              <h5 class="text-sm">
+                {{ group.is_private_group ? "Nhóm riêng tư" : "Nhóm công khai" }}
+                &middot; {{ group.members_count }} thành viên
+              </h5>
+            </RouterLink>
           </div>
         </div>
       </div>

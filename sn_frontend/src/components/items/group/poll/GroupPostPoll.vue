@@ -19,10 +19,6 @@
               }"
               >{{ poll.created_by?.information?.name }}</RouterLink
             >
-            <TooltipProfileVue
-              :user="poll?.created_by?.information"
-              class="hidden md:group-hover:block lg:left-[-150px] md:left-0"
-            />
           </strong>
 
           <strong class="group" v-else> Người tham gia ẩn danh </strong>
@@ -168,7 +164,6 @@ import { useUserStore } from "../../../../stores/user";
 import { useToastStore } from "../../../../stores/toast";
 import { usePageStore } from "../../../../stores/page";
 import DeletePostModal from "../../../modals/post/DeletePostModal.vue";
-import TooltipProfileVue from "../../profile/TooltipProfile.vue";
 import PollOption from "./PollOption.vue";
 
 export default (await import("vue")).defineComponent({
@@ -307,7 +302,6 @@ export default (await import("vue")).defineComponent({
     HeartLike,
     UserGroupIcon,
     GlobeAsiaAustraliaIcon,
-    TooltipProfileVue,
     PollOption,
   },
 });

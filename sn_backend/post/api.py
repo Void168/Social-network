@@ -807,6 +807,7 @@ def vote_poll(request, pk, id):
             current_member = member
         else:
             pass
+        
     if current_member not in option.vote_by.all():
         option.vote_by.add(current_member)
         option.votes_count = option.votes_count + 1
@@ -823,14 +824,10 @@ def vote_poll(request, pk, id):
 @api_view(['GET'])
 def check_vote(request, pk):
     option = PollOption.objects.get(pk=pk)
-    if option.vote_by.all():
-        for member in option.vote_by.all():
-            if member.information == request.user:
-                return JsonResponse({'message': 'voted'})
-            else:
-                return JsonResponse({'message': 'Not voted yet'})
-    else:
+    if not option.vote_by.filter(Q(information=request.user)):
         return JsonResponse({'message': 'Not voted yet'})
+    else:
+        return JsonResponse({'message': 'voted'})
     
 @api_view(['DELETE'])
 def delete_poll(request, pk):

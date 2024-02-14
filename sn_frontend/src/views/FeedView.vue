@@ -243,6 +243,9 @@ export default {
             const posts = res.data.posts;
             const pagePosts = res.data.page_posts;
             this.postsList = posts.concat(pagePosts);
+            this.postsList.sort(
+              (a, b) => new Date(b.created_at) - new Date(a.created_at)
+            );
             this.posts = this.postsList.slice(0, this.PostToShow);
             this.isLoading = false;
           })
@@ -262,7 +265,7 @@ export default {
         setTimeout(() => {
           this.loadMore = true;
         }, 1000);
-        if (this.loadMore === true) {
+        if (this.loadMore) {
           const newPosts = this.postsList.slice(
             this.posts.length,
             this.posts.length + this.PostToShow

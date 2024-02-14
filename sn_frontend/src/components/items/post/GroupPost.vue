@@ -44,7 +44,7 @@
         <UserGroupIcon class="w-6" v-if="group?.is_private_group" />
         <GlobeAsiaAustraliaIcon class="w-6" v-else />
         <div class="relative group">
-          <RouterLink :to="{ name: 'grouppost', params: { postid: post.id } }">
+          <RouterLink :to="{ name: 'grouppost', params: { postid: post?.id } }">
             <p
               class="text-gray-600 dark:text-neutral-200 md:block hidden group-hover:underline"
             >
@@ -238,7 +238,6 @@ export default (await import("vue")).defineComponent({
   props: {
     post: Object,
     group: Object,
-    currentMember: Object,
   },
 
   data() {
@@ -261,10 +260,6 @@ export default (await import("vue")).defineComponent({
     };
   },
 
-  // beforeMount() {
-  //   this.checkMemberLike();
-  // },
-
   mounted() {
     this.checkMemberLike();
   },
@@ -278,7 +273,7 @@ export default (await import("vue")).defineComponent({
     },
     likePost(id) {
       axios
-        .post(`/api/posts/${id}/group/${this.group.id}/like/`)
+        .post(`/api/posts/${id}/group/${this.group?.id}/like/`)
         .then((res) => {
           if (res.data.message === "Liked") {
             this.post.likes_count += 1;

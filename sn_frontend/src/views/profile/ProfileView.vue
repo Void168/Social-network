@@ -183,20 +183,42 @@
             Nhắn tin
           </button>
         </div>
-        <div class="bg-white dark:bg-slate-600 dark:text-neutral-200 my-4 p-4">
-          <div class="flex justify-between items-center mb-4">
-            <p class="font-bold text-2xl">Ảnh</p>
-            <RouterLink
-              :to="{ name: 'photos', params: { id: userStore.user.id } }"
-            >
-              <p class="text-lg hover:underline cursor-pointer">
-                Xem tất cả ảnh
-              </p>
-            </RouterLink>
+        <div class="lg:sticky !shadow-none" :style="{top: `${toastStore.navbarHeight}px`}">
+          <div class="bg-white dark:bg-slate-600 dark:text-neutral-200 my-4 p-4 shadow-md rounded-lg">
+            <div class="flex justify-between items-center mb-4">
+              <p class="font-bold text-2xl">Ảnh</p>
+              <RouterLink
+                :to="{ name: 'photos', params: { id: userStore.user.id } }"
+              >
+                <p class="text-lg hover:underline cursor-pointer">
+                  Xem tất cả ảnh
+                </p>
+              </RouterLink>
+            </div>
+            <div class="grid grid-cols-3 gap-1">
+              <div v-for="image in images" v-bind:key="image.id">
+                <ImageShowcase v-bind:post="image" />
+              </div>
+            </div>
           </div>
-          <div class="grid grid-cols-3 gap-1">
-            <div v-for="image in images" v-bind:key="image.id">
-              <ImageShowcase v-bind:post="image" />
+          <div class="shadow-md bg-white dark:bg-slate-600 dark:text-neutral-200 my-4 p-4 rounded-lg">
+            <div class="flex justify-between items-center mb-4">
+              <div>
+                <h1 class="font-bold text-2xl">Bạn bè</h1>
+                <h3>{{ friends.length }} người bạn</h3>
+              </div>
+              <RouterLink
+                :to="{ name: 'friends', params: { id: userStore.user.id } }"
+              >
+                <p class="text-lg hover:underline cursor-pointer">
+                  Xem tất cả bạn bè
+                </p>
+              </RouterLink>
+            </div>
+            <div class="grid grid-cols-3 gap-1">
+              <div v-for="friend in friendShowcase" :key="friend.id">
+                <Friend :friend="friend" />
+              </div>
             </div>
           </div>
         </div>
@@ -321,6 +343,7 @@ import AvatarModal from "../../components/modals/profile/AvatarModal.vue";
 import FriendOptionsDropdown from "../../components/dropdown/FriendOptionsDropdown.vue";
 import DeleteFriendModal from "../../components/modals/profile/DeleteFriendModal.vue";
 import UnfollowedModal from "../../components/modals/profile/UnfollowedModal.vue";
+import Friend from '../../components/items/profile/Friend.vue';
 
 import {
   ClockIcon,
@@ -364,6 +387,7 @@ export default {
     ImageShowcase,
     FriendOptionsDropdown,
     DeleteFriendModal,
+    Friend,
     UnfollowedModal,
     ClockIcon,
     HeartIcon,
@@ -402,6 +426,7 @@ export default {
       avatarIsOpen: false,
       isDeleteFriendOpen: false,
       isUnfollowedOpen: false,
+      friendShowcase: []
     };
   },
 
@@ -426,6 +451,7 @@ export default {
     this.getImages();
     window.addEventListener("scroll", this.infinateScroll);
     this.getRelationship();
+    this.getFriendsShowCase()
   },
 
   beforeDestroy() {
@@ -438,6 +464,7 @@ export default {
         this.getFeed();
         this.getUserInfo();
         this.getImages();
+        this.getFriendsShowCase()
       },
       deep: true,
       immediate: true,
@@ -445,6 +472,13 @@ export default {
   },
 
   methods: {
+    getFriendsShowCase(){
+      axios.get(`/api/friends-showcase/${this.$route.params.id}/`).then((res) =>{
+        this.friendShowcase = res.data.friends
+      }).catch((error) => {
+        console.log(error)
+      } )
+    },
     getUserInfo() {
       axios
         .get(`/api/user-info/${this.$route.params.id}`)

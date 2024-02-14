@@ -12,7 +12,7 @@
                       ? 'https://cdn-icons-png.flaticon.com/512/350/350351.png'
                       : currentMember?.information?.get_avatar
                   "
-                  alt="admin-avatar"
+                  alt="member-avatar"
                   class="w-10 h-10 rounded-full"
                 />
               </div>
@@ -148,7 +148,6 @@
                 <GroupPost
                   :post="groupPost"
                   :group="group"
-                  :currentMember="currentMember"
                 />
               </div>
               <SkeletonLoadingPost
@@ -322,7 +321,7 @@
         <div class="dark:bg-slate-700 rounded-lg p-4 space-y-2">
           <h3 class="font-semibold text-lg">File phương tiện mới đây</h3>
           <div
-            v-for="image in groupImages.slice(0, 4)"
+            v-for="image in groupImages?.slice(0, 4)"
             :key="image.id"
             class="grid grid-cols-2"
           >
@@ -502,10 +501,10 @@ export default {
           this.groupPosts = this.allPosts?.sort(
             (a, b) => new Date(b.created_at) - new Date(a.created_at)
           );
-          this.groupPosts = this.allPosts.slice(0, this.PostToShow);
+          this.groupPosts = this.allPosts?.slice(0, this.PostToShow);
 
           this.isLoading = false;
-          // console.log(res.data);
+          console.log(res.data);
         })
         .catch((error) => {
           console.log(error);
@@ -516,7 +515,7 @@ export default {
         .get(`/api/posts/group/${this.$route.params.id}/poll/`)
         .then((res) => {
           this.polls = res.data;
-          console.log(res.data);
+          // console.log(res.data);
         })
         .catch((error) => {
           console.log(error);
@@ -551,7 +550,7 @@ export default {
           this.$refs.file.value = null;
           this.urlPost = null;
           if (!this.group.pending_post) {
-            this.groupPosts.unshift(res.data);
+            this.groupPosts?.unshift(res.data);
           }
         })
         .catch((error) => {
@@ -568,7 +567,7 @@ export default {
           this.loadMore = true;
         }, 1000);
         if (this.loadMore) {
-          const newPosts = this.allPosts.slice(
+          const newPosts = this.allPosts?.slice(
             this.groupPosts.length,
             this.groupPosts.length + this.PostToShow
           );

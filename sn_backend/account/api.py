@@ -84,7 +84,20 @@ def friends(request, pk):
         'followers':UserSerializer(user_followers, many=True).data,
         'following':UserSerializer(user_following, many=True).data,
     }, safe=False)
+
+@api_view(['GET'])
+def friends_showcase(request, pk):
+    user = User.objects.get(pk=pk)
+    print(user)
     
+    friends = user.friends.all()
+    if friends.count() > 9:
+        friends = user.friends.all()[friends.count() - 9 :friends.count() - 1]
+     
+    return JsonResponse({
+        'friends': UserSerializer(friends, many=True).data,
+    }, safe=False)
+
 @api_view(['GET'])
 def my_friendship_suggestions(request):
     serializer = UserSerializer(request.user.people_you_may_know.all(), many=True)

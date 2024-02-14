@@ -16,7 +16,14 @@
             class="w-6 absolute top-[-1px] left-[-1px] bg-emerald-500 rounded-md"
           />
         </div>
-        <h3 class="text-lg font-semibold">{{ option.body }}</h3>
+        <div>
+          <h4 class="text-sm" v-if="!poll.is_anonymous">Do 
+            <RouterLink :to="{name: 'profile', params: {id: option.created_by.information.id}}" class="font-semibold hover:underline text-emerald-400">
+              {{ option.created_by.information.name }}
+            </RouterLink>
+             thêm</h4>
+          <h3 class="text-lg font-semibold">{{ option.body }}</h3>
+        </div>
         <div class="flex items-center">
           <div v-for="user in option?.vote_by?.slice(0, 3)" :key="user?.id">
             <img
@@ -39,7 +46,7 @@
       @click="openListVoteModal"
     >
       <h3 class="text-emerald-500 font-semibold">
-        {{ totalVote > 0 ? Math.round((voteCount / totalVote) * 100, 0) : 0 }}%
+        {{ totalVote > 0 ? Math.round((voteCount / totalVote) * 100, 2) : 0 }}%
       </h3>
       <ChevronRightIcon class="w-4" />
       <ListMemberVoteModal
@@ -75,6 +82,7 @@ export default (await import("vue")).defineComponent({
     option: Object,
     totalVote: Number,
     voteCount: Number,
+    poll: Object
   },
 
   data() {
@@ -106,7 +114,6 @@ export default (await import("vue")).defineComponent({
       await axios
         .get(`/api/posts/group/poll/option/${this.option.id}/check-vote/`)
         .then((res) => {
-          console.log(res.data);
           if (res.data.message === "voted") {
             this.isVote = true;
           } else {

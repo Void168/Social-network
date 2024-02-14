@@ -87,7 +87,8 @@ def get_current_member(request, pk):
     if members.count() > 0:
         for member in members:
             if member not in group_members:
-                continue
+                # return JsonResponse({'message': 'User not in the group'})
+                pass
             else:
                 serializer = MemberSerializer(member)
                 return JsonResponse(serializer.data, safe=False)
@@ -101,9 +102,9 @@ def check_user_in_group(request, pk):
     if members.count() > 0:
         for member in members:
             if member not in group.members.all():
-                continue
-            else:
                 # return JsonResponse({'message': 'User not in the group'})
+                pass
+            else:
                 return JsonResponse({'message': 'User joined the group'})
                 break
     else:
@@ -148,9 +149,9 @@ def get_discover_groups(request):
             friend_members = Member.objects.filter(Q(information=friend))
             if friend_members:
                 for friend_member in friend_members:
-                    for member in members:
-                        discover_group = Group.objects.exclude(members__in=list([member])).filter(members__in=list([friend_member]))
-                        discover_groups = discover_groups | discover_group
+                    discover_group = Group.objects.exclude(members__in=list(members)).filter(members__in=list([friend_member]))
+                        
+                    discover_groups = discover_groups | discover_group
             else:
                 continue
         
@@ -186,7 +187,7 @@ def join_public_group(request, pk):
     group.members_count = group.members_count + 1
     group.save()
     
-    return JsonRespone({'message': 'Joined group successfully'})
+    return JsonResponse({'message': 'Joined group successfully'})
 
 @api_view((['GET']))
 def get_join_group_requests(request, pk):

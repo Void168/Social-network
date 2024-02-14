@@ -1,71 +1,41 @@
 <template>
-  <div class="relative">
+  <div class="relative bg-slate-800 p-4 my-4 rounded-lg shadow-md">
     <div class="mb-2 flex items-center justify-between">
       <div class="flex items-center space-x-6 p-4">
         <div class="relative">
           <img
-            src="https://s3.amazonaws.com/intanibase/iad_screenshots/1951/3523/6thumb.jpg"
+            :src="post.group.get_cover_image"
             alt="group-avatar"
             class="w-10 h-10 rounded-lg"
           />
           <img
-            :src="userStore.user.avatar"
+            :src="post.created_by.information.get_avatar"
             class="w-6 h-6 rounded-full absolute bottom-[-4px] right-[-4px] ring-1 ring-emerald-400"
           />
         </div>
 
         <div class="flex flex-col flex-wrap">
-          <p class="font-bold">Tom Group</p>
-          <!-- <strong class="group">
-            <RouterLink
-              :to="{ name: post.created_by.is_page ? 'page' : 'profile', params: { id: post.created_by.id } }"
-              >{{ userStore.user.name }}</RouterLink
-            >
-            <TooltipProfileVue :user="post.created_by" class="hidden md:group-hover:block lg:left-[-150px] md:left-0"/>
-          </strong>
-          <div v-if="post.post_to" class="flex gap-1">
-            <p>cùng với</p>
-            <strong class="group">
-              <RouterLink
-                :to="{ name: 'profile', params: { id: post.post_to.id } }"
-                >{{ post.post_to.name }}</RouterLink
-              >
-              <TooltipProfileVue :user="post.post_to" class="hidden md:group-hover:block lg:left-[-150px] md:left-0"/>
-            </strong>
-          </div> -->
-
-          <!-- <span v-if="post.is_avatar_post === true" class="sm:text-base xs:text-sm"
-            >đã thay đổi ảnh đại diện</span
-          > -->
+          <p class="font-bold">{{ post.group.name }}</p>
           <div class="items-center gap-2 flex">
-            <!-- <div class="relative group md:hidden">
-              <p class="text-gray-600 dark:text-neutral-200 sm:text-base xs:text-sm group-hover:underline">
-                {{ post.created_at_formatted }} trước
-              </p>
-              <CreatedAtTooltip :post="post"/>
-            </div> -->
             <div class="relative group flex gap-2 items-center">
-              <p class="text-sm">{{ userStore.user.name }}</p>
+              <p class="text-sm">{{ post.created_by.information.name }}</p>
               &middot;
               <p
                 class="text-gray-600 text-sm dark:text-neutral-200 md:block hidden group-hover:underline"
               >
-                16 phút trước
+                {{ post.created_at_formatted }} trước
               </p>
               &middot;
               <div class="relative group">
-              <!-- <PrivacyTooltip :post="post"/> -->
-              <UserGroupIcon class="w-5 h-5 p-1 dark:bg-slate-500/50 rounded-full" />
-              <!-- v-if="post.is_private === false && post.only_me === false || post.created_by.is_page" -->
-              <!-- <UserGroupIcon
-                class="w-5 h-5"
-                v-else-if="post.is_private === true && post.only_me === false"
-              />
-              <LockClosedIcon
-                class="w-5 h-5"
-                v-else-if="post.is_private === true && post.only_me === true"
-              /> -->
-            </div>
+                <UserGroupIcon
+                  class="w-5 h-5 p-1 dark:bg-slate-500/50 rounded-full"
+                  v-if="post.group.is_private_group"
+                />
+                <GlobeAsiaAustraliaIcon
+                  class="w-5 h-5 p-1 dark:bg-slate-500/50 rounded-full"
+                  v-else
+                />
+              </div>
             </div>
           </div>
         </div>
@@ -74,44 +44,13 @@
     </div>
 
     <p class="px-4 text-lg">
-      Lorem ipsum dolor sit amet consectetur adipisicing elit. Iusto placeat
-      explicabo aspernatur quisquam sunt harum libero molestias nulla, facere
-      incidunt quia voluptatibus architecto? Qui, ut explicabo culpa aut dolore
-      nulla.
+      {{ post.body }}
     </p>
-
-    <!-- <div
-      v-if="post.attachments?.length && post.is_avatar_post"
-      class="mt-4 flex justify-center relative sm:h-[400px] xm:h-[350px] xs:h-[300px]"
-    >
-      <div class="w-full">
-        <img
-          :src="post.created_by.get_cover_image"
-          alt="cover_image"
-          class="max-h-[300px] w-full rounded-none"
-        />
-      </div>
-
-      <img
-        v-for="image in post.attachments"
-        v-bind:key="image.id"
-        :src="image.get_image"
-        class="absolute top-5 mb-4 rounded-full md:w-96 md:h-96 xm:w-80 xm:h-80 xs:w-64 xs:h-64 shadow-md ring-8 ring-white dark:ring-slate-700"
-        alt="avatar"
-      />
-    </div>
-
-    <div v-else class="mt-4 px-4">
-      <img
-        v-for="image in post.attachments"
-        v-bind:key="image.id"
-        :src="image.get_image"
-        class="w-full mb-4 rounded-xl"
-      />
-    </div> -->
     <div class="mt-4 px-4">
       <img
-        src="https://s3.amazonaws.com/intanibase/iad_screenshots/1951/3523/6thumb.jpg"
+        v-for="image in post.attachments"
+        v-bind:key="image.id"
+        :src="image.get_image"
         class="w-full mb-4 rounded-xl"
       />
     </div>
@@ -119,25 +58,18 @@
     <div class="p-4 my-6 flex justify-between">
       <div class="flex space-x-6">
         <div class="flex items-center space-x-2">
-          <!-- <HeartLike
-            class="w-6 h-6 text-rose-500 cursor-pointer"
-            v-if="!pageStore.pageId && checkUserLike"
-          />
-          <HeartLike
-          class="w-6 h-6 text-rose-500 cursor-pointer"
-          v-else-if="pageStore.pageId && checkPageLike"
-          />
           <HeartLike
             class="w-6 h-6 text-rose-500 cursor-pointer"
-            v-else-if="isLike"
-          /> -->
-          <!-- v-else -->
-          <!-- @click="likePost(post.id)" -->
+            v-if="checkLike || isLike"
+            @click="likePost(post.id)"
+          />
           <HeartLike
+            v-else-if="!checkLike || isLike"
+            @click="likePost(post.id)"
             class="w-6 h-6 cursor-pointer text-gray-400 hover:text-rose-500 transition-colors duration-75"
           />
           <span class="text-gray-500 text-xs dark:text-neutral-200"
-            >0 lượt thích</span
+            >{{ post.likes_count }} lượt thích</span
           >
         </div>
 
@@ -157,15 +89,14 @@
             />
           </svg>
 
-          <!-- <RouterLink
+          <RouterLink
             :to="{
-              name: post.created_by.is_page ? 'pagepostview' : 'postview',
-              params: { id: post.id },
+              name: 'grouppost',
+              params: { postid: post?.id, id: post?.group?.id }
             }"
             class="text-gray-500 text-xs dark:text-neutral-200"
             >{{ post?.comments_count }} bình luận</RouterLink
-          > -->
-          <p class="text-gray-500 text-xs dark:text-neutral-200">0 bình luận</p>
+          >
         </div>
       </div>
       <div class="absolute right-4 shadow-lg rounded-lg ease-in duration-300">
@@ -250,29 +181,22 @@ import axios from "axios";
 
 import { RouterLink } from "vue-router";
 import { Menu, MenuButton, MenuItem, MenuItems } from "@headlessui/vue";
-import {
-  ShieldCheckIcon,
-  TrashIcon,
-  EllipsisHorizontalIcon,
-} from "@heroicons/vue/24/solid";
+import { ShieldCheckIcon, TrashIcon } from "@heroicons/vue/24/solid";
 import {
   GlobeAsiaAustraliaIcon,
   UserGroupIcon,
-  LockClosedIcon,
+  EllipsisHorizontalIcon,
 } from "@heroicons/vue/24/outline";
 import { HeartIcon as HeartLike } from "@heroicons/vue/24/solid";
 import { useUserStore } from "../../../../stores/user";
 import { useToastStore } from "../../../../stores/toast";
 import { usePageStore } from "../../../../stores/page";
-// import DeletePostModal from "../../modals/post/DeletePostModal.vue";
-// import CreatedAtTooltip from "./Tooltip/CreatedAtTooltip.vue";
-// import PrivacyTooltip from "./Tooltip/PrivacyTooltip.vue";
-// import TooltipProfileVue from "../profile/TooltipProfile.vue";
+import DeletePostModal from "../../../modals/post/DeletePostModal.vue";
 
 export default (await import("vue")).defineComponent({
   components: {
     RouterLink,
-    // DeletePostModal,
+    DeletePostModal,
     Menu,
     MenuButton,
     MenuItem,
@@ -280,13 +204,9 @@ export default (await import("vue")).defineComponent({
     ShieldCheckIcon,
     TrashIcon,
     HeartLike,
-    GlobeAsiaAustraliaIcon,
     UserGroupIcon,
-    LockClosedIcon,
+    GlobeAsiaAustraliaIcon,
     EllipsisHorizontalIcon,
-    // CreatedAtTooltip,
-    // PrivacyTooltip,
-    // TooltipProfileVue,
   },
 
   setup() {
@@ -299,6 +219,96 @@ export default (await import("vue")).defineComponent({
       toastStore,
       pageStore,
     };
+  },
+  props: {
+    post: Object,
+  },
+
+  data() {
+    return {
+      isOpen: false,
+      isLike: false,
+      checkLike: false,
+    };
+  },
+
+  mounted() {
+    this.checkMemberLike();
+  },
+
+  methods: {
+    checkMemberLike() {
+      this.checkLike = this.post.likes
+        .map((like) => like.created_by)
+        .map((created_by) => created_by?.information?.id)
+        .includes(this.userStore.user.id);
+    },
+    likePost(id) {
+      axios
+        .post(`/api/posts/${id}/group/${this.group?.id}/like/`)
+        .then((res) => {
+          if (res.data.message === "Liked") {
+            this.post.likes_count += 1;
+            this.isLike = true;
+          } else {
+            this.post.likes_count -= 1;
+            this.isLike = false;
+          }
+          this.checkMemberLike();
+        })
+        .catch((error) => {
+          console.log(error);
+        });
+    },
+    deletePost() {
+      this.$emit("deletePost", this.post.id);
+      axios
+        .delete(`/api/posts/group/${this.post.id}/delete/`)
+        .then((res) => {
+          setTimeout(() => {
+            this.closeModal();
+          }, 1000);
+          this.toastStore.showToast(
+            5000,
+            "Bài viết đã được xóa",
+            "bg-emerald-500 text-white"
+          );
+        })
+        .catch((error) => {
+          console.log(error);
+          this.toastStore.showToast(
+            5000,
+            "Xóa bài viết thất bại",
+            "bg-rose-500 text-white"
+          );
+        });
+    },
+    reportPost() {
+      axios
+        .post(`/api/posts/group/${this.post.id}/report/`)
+        .then((res) => {
+          // console.log(res.data);
+          this.toastStore.showToast(
+            5000,
+            "Đã báo cáo bài viết",
+            "bg-emerald-500 text-white"
+          );
+        })
+        .catch((error) => {
+          console.log(error);
+          this.toastStore.showToast(
+            5000,
+            "Báo cáo bài viết thất bại",
+            "bg-rose-500 text-white"
+          );
+        });
+    },
+    closeModal() {
+      this.isOpen = false;
+    },
+    openModal() {
+      this.isOpen = true;
+    },
   },
 });
 </script>

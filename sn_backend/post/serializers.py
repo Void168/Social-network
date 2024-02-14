@@ -2,7 +2,7 @@ from rest_framework import serializers
 
 from account.serializers import UserSerializer, UserLessSerializer
 from page.serializers import PageSerializer
-from group.serializers import MemberSerializer
+from group.serializers import MemberSerializer, GroupSerializer
 from .models import Post, PostAttachment, Comment, Trend, Like, PageLike, PageComment, MemberComment, MemberLike, GroupPost, PagePost, PollOption, GroupPostPoll
 
 class PostAttachmentSerializer(serializers.ModelSerializer):
@@ -81,9 +81,10 @@ class GroupPostSerializer(serializers.ModelSerializer):
     attachments = PostAttachmentSerializer(read_only=True, many=True)
     likes = MemberLikeSerializer(read_only=True, many=True)
     comments = MemberCommentSerializer(read_only=True, many=True)
+    group = GroupSerializer(read_only=True)
     class Meta:
         model = GroupPost
-        fields = ('id', 'body', 'likes_count', 'comments_count', 'comments', 'created_by', 'created_at_formatted', 'created_at', 'attachments', 'likes','is_anonymous', 'pending',)  
+        fields = ('id', 'body', 'group', 'likes_count', 'comments_count', 'comments', 'created_by', 'created_at_formatted', 'created_at', 'attachments', 'likes','is_anonymous', 'pending',)  
         
 class AnonymousGroupPostSerializer(serializers.ModelSerializer):
     attachments = PostAttachmentSerializer(read_only=True, many=True)

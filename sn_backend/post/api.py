@@ -16,7 +16,7 @@ from notification.utils import create_notification
 
 from .forms import PostForm, AttachmentForm, PageAttachmentForm, PagePostForm, MemberAttachmentForm, GroupPostForm
 from .models import Post, Comment, Like, Trend, PagePost, PageComment, PageLike, GroupPost, MemberLike, MemberComment, GroupPostPoll, PollOption
-from .serializers import PostSerializer, PostDetailSerializer, CommentSerializer, TrendSerializer, LikeSerializer, PagePostSerializer, PageLikeSerializer, PageCommentSerializer, PagePostDetailSerializer, GroupPostSerializer, MemberLikeSerializer, MemberCommentSerializer, AnonymousGroupPostSerializer, GroupPostPollSerializer, AnonymousGroupPostPollSerializer
+from .serializers import PostSerializer, PostDetailSerializer, CommentSerializer, TrendSerializer, LikeSerializer, PagePostSerializer, PageLikeSerializer, PageCommentSerializer, PagePostDetailSerializer, GroupPostSerializer, MemberLikeSerializer, MemberCommentSerializer, AnonymousGroupPostSerializer, GroupPostPollSerializer, AnonymousGroupPostPollSerializer, PollOptionSerializer
 from notification.serializers import NotificationSerializer, NotificationForPageSerializer
 
 # Create your views here.
@@ -606,7 +606,7 @@ def group_post_create(request, pk):
         group_post = form.save(commit=False)
         group_post.created_by = current_member
         group_post.group = group
-        if group.anyone_can_post:
+        if group.pending_post:
             group_post.pending = True
         else:
             group_post.pending = False
@@ -626,7 +626,25 @@ def group_post_create(request, pk):
             return JsonResponse(serializer.data, safe=False)
     else:
         return JsonResponse({'error': 'add something here later!...'})
+
+@api_view(['GET'])
+def get_your_groups_post_list(request):
+    try:
+        members = Member.objects.filter(Q(information=request.user))
+        groups = Group.objects.none()
+        
+        for member in members:
+            group = Group.objects.filter(members__in=list([member]))
+            groups = groups | group
+        
+        your_group_posts = GroupPost.objects.filter(group__in=list(groups))
+        
+        serializer = GroupPostSerializer(your_group_posts, many=True)
+        return JsonResponse({'data': serializer.data})
     
+    except Member.DoesNotExist:
+        return JsonResponse({'message': 'No group found'})
+
 @api_view(['GET'])
 def get_group_post_list(request, pk):
     
@@ -782,6 +800,33 @@ def group_post_poll_create(request, pk):
         serializer = GroupPostPollSerializer(group_post_poll)
 
         return JsonResponse(serializer.data, safe=False)
+
+@api_view(['POST'])
+def add_poll_option(request, pk, id):
+    group_post_polls = GroupPostPoll.objects.get(pk=pk)
+    group = Group.objects.get(id=id)
+    additional_option_body = request.data.get('additional_option')
+    
+    members = Member.objects.filter(Q(information=request.user))
+    current_member = Member.objects.none()
+    group_members = group.members.all()
+    for member in members:
+        if member in group_members:
+            current_member = member
+        else:
+            pass
+    
+    option = PollOption.objects.create(
+            body=additional_option_body,
+            created_by=current_member
+        )
+    
+    group_post_polls.options.add(option)
+    group_post_polls.save()
+    
+    serializer = PollOptionSerializer(option)
+    
+    return JsonResponse({'option': serializer.data}, safe=False)
 
 @api_view(['GET'])
 def get_group_post_poll(request, pk):

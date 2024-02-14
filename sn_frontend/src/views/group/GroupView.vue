@@ -140,8 +140,8 @@
         <div v-if="activeTab === 1" class="w-[50%]">
           <div>
             <h3 class="font-semibold dark:text-neutral-400">Hoạt động gần đây</h3>
-            <div v-for="n in 3" :key="n">
-              <GroupPost />
+            <div v-for="groupPost in groupPosts" :key="groupPost.id">
+              <GroupPost :post="groupPost" :group="groupPost.group"/>
             </div>
           </div>
         </div>
@@ -241,7 +241,12 @@ export default {
       isOpen: false,
       yourGroups: [],
       discoverGroups: [],
+      groupPosts: []
     };
+  },
+
+  mounted(){
+    this.getYourGroupPosts()
   },
 
   methods: {
@@ -254,7 +259,7 @@ export default {
             if(!res.data.message){
               this.discoverGroups = res.data
             }
-            console.log(res.data)
+            // console.log(res.data)
           })
           .catch((error) => {
             console.log(error);
@@ -279,6 +284,14 @@ export default {
     closeCreateGroupModal() {
       this.isOpen = false;
     },
+    async getYourGroupPosts(){
+      axios.get('/api/posts/group/your-group/').then((res) => {
+        this.groupPosts = res.data.data
+        console.log(res.data.data)
+      }).catch((error) => {
+        console.log(error)
+      })
+    }
   },
 };
 </script>

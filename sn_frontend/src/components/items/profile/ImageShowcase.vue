@@ -40,7 +40,6 @@ export default (await import("vue")).defineComponent({
   data() {
     return {
       isOpen: false,
-      image: {},
     };
   },
 

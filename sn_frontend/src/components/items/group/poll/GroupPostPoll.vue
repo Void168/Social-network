@@ -51,17 +51,36 @@
     </div>
 
     <p class="pb-4 text-lg">{{ poll.body }}</p>
-    <div class="space-y-2">
-      <div v-for="option in sortOptions" :key="option.id">
+    <div class="space-y-2 max-h-72 scrollbar-corner-slate-200 scrollbar-none hover:scrollbar-thin scrollbar-thumb-slate-400 scrollbar-track-slate-800 overflow-auto">
+      <div v-for="option in sortOptions.slice(0, optionToShow)" :key="option.id">
         <PollOption
           :key="componentKey"
           :option="option"
           @voteOption="voteOption"
           :totalVote="totalVote"
           :voteCount="option.vote_by.length"
+          :poll="poll"
         />
       </div>
     </div>
+    <div v-if="sortOptions.length - optionToShow > 0" class="flex justify-center items-center">
+      <div class="py-2 bg-emerald-500/30 px-4 my-4 rounded-lg hover:bg-emerald-500/80 duration-75 cursor-pointer shadow-md" @click="loadMoreOption">
+        <h4 class="font-semibold">Hiện thêm {{ sortOptions.length - optionToShow }} lựa chọn nữa</h4>
+      </div>
+    </div>
+    <div v-else-if="sortOptions.length - optionToShow <= 0 && sortOptions.length > 3" class="flex justify-center items-center">
+      <div class="py-2 bg-emerald-500/30 px-4 my-4 rounded-lg hover:bg-emerald-500/80 duration-75 cursor-pointer shadow-md" @click="hideMoreOption">
+        <h4 class="font-semibold">Ẩn các lựa chọn khác</h4>
+      </div>
+    </div>
+    <form v-on:submit.prevent="submitForm" method="post">
+      <MUILikedInput
+        :placeholder="'Thêm lựa chọn thăm dò ý kiến'"
+        v-model="additionalOption"
+        class="my-2"
+        v-if="poll.multiple_options"
+      />
+    </form>
     <div class="p-4 my-6 flex justify-between">
       <div
         class="absolute bottom-0 right-4 shadow-lg rounded-lg ease-in duration-300"
@@ -155,6 +174,7 @@ import axios from "axios";
 import { RouterLink } from "vue-router";
 import { Menu, MenuButton, MenuItem, MenuItems } from "@headlessui/vue";
 import { ShieldCheckIcon, TrashIcon } from "@heroicons/vue/24/solid";
+import MUILikedInput from "../../../input/MUILikedInput.vue";
 import {
   UserGroupIcon,
   GlobeAsiaAustraliaIcon,
@@ -180,6 +200,9 @@ export default (await import("vue")).defineComponent({
       checkLike: false,
       totalVote: null,
       componentKey: 0,
+      additionalOption: "",
+      newOption: null,
+      optionToShow: 3
     };
   },
 
@@ -196,8 +219,13 @@ export default (await import("vue")).defineComponent({
   },
 
   computed: {
-    sortOptions() {
-      return this.poll.options.sort((a, b) => a.body - b.body);
+    sortOptions: {
+      get(){
+        return this.poll.options.sort((a, b) => a.body - b.body);
+      },
+      set(newVal){
+        [this.poll.options] = newVal.push(...this.newOption)
+      }
     },
   },
 
@@ -215,7 +243,7 @@ export default (await import("vue")).defineComponent({
       axios
         .delete(`/api/posts/group/${this.poll.id}/delete/`)
         .then((res) => {
-          console.log(res.data)
+          console.log(res.data);
           setTimeout(() => {
             this.closeModal();
           }, 1000);
@@ -264,13 +292,13 @@ export default (await import("vue")).defineComponent({
       this.totalVote = this.poll.options
         .map((option) => option.vote_by.length)
         .reduce((a, c) => a + c, 0);
-        // console.log(this.totalVote)
+      // console.log(this.totalVote)
     },
     forceRerender() {
       this.componentKey += 1;
     },
     voteOption(option) {
-      this.forceRerender()
+      this.forceRerender();
       axios
         .post(
           `/api/posts/group/${this.$route.params.id}/poll/option/${option.id}/vote/`
@@ -278,16 +306,36 @@ export default (await import("vue")).defineComponent({
         .then((res) => {
           if (res.data.message === "Remove vote") {
             this.totalVote -= 1;
-            option.vote_by.length -= 1
+            option.vote_by.length -= 1;
           } else {
             this.totalVote += 1;
-            option.vote_by.length += 1
+            option.vote_by.length += 1;
           }
           // console.log(this.totalVote)
         })
         .catch((error) => {
           console.log(error);
         });
+    },
+    loadMoreOption(){
+      this.optionToShow += this.sortOptions.length - this.optionToShow
+    },
+    hideMoreOption(){
+      this.optionToShow = 3
+    },
+    submitForm() {
+      if(this.currentMember){
+        axios
+          .post(`/api/posts/group/${this.$route.params.id}/poll/${this.poll.id}/add-option/`, {
+            additional_option: this.additionalOption,
+          })
+          .then((res) => {
+            this.newOption = res.data.option
+          })
+          .catch((error) => {
+            console.log(error);
+          });
+      }
     },
   },
   components: {
@@ -303,6 +351,7 @@ export default (await import("vue")).defineComponent({
     UserGroupIcon,
     GlobeAsiaAustraliaIcon,
     PollOption,
+    MUILikedInput,
   },
 });
 </script>

@@ -22,9 +22,9 @@
 
 <script>
 import axios from "axios";
-import CreateRuleModal from "../../components/modals/group/CreateRuleModal.vue";
+import CreateRuleModal from "../../../components/modals/group/CreateRuleModal.vue";
 import { EllipsisHorizontalIcon } from "@heroicons/vue/24/solid";
-import GroupRule from "../../components/items/group/GroupRule.vue";
+import GroupRule from "../../../components/items/group/GroupRule.vue";
 export default {
   name: "grouprules",
   components: {

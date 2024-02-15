@@ -32,14 +32,14 @@
       v-if="isUserInGroup && group?.admin?.id === userStore.user.id"
     >
       <RouterLink
-        :to="{ name: 'groupdetail', params: { id: group?.id } }"
+        :to="{ name: 'groupdiscuss', params: { id: group?.id } }"
         class="flex gap-2 items-center px-4 py-2 dark:hover:bg-slate-700 rounded-lg cursor-pointer duration-75 font-semibold w-full"
       >
         <HomeIcon class="w-6" />
         <h4>Trang chủ của cộng đồng</h4>
       </RouterLink>
       <RouterLink
-        to="/"
+      :to="{ name: 'groupoverview', params: { id: group?.id } }"
         class="flex gap-2 items-center px-4 py-2 dark:hover:bg-slate-700 rounded-lg cursor-pointer duration-75 font-semibold w-full"
       >
         <TableCellsIcon class="w-6" />
@@ -223,7 +223,7 @@ export default (await import("vue")).defineComponent({
             {
               name: "Mức độ tăng trưởng",
               content: "",
-              url: "",
+              url: "groupgrowth",
             },
             {
               name: "Tương tác",

@@ -240,15 +240,15 @@
 import axios from "axios";
 import { PencilIcon } from "@heroicons/vue/20/solid";
 import { useRoute } from "vue-router";
-import { useUserStore } from "../../stores/user";
-import { useToastStore } from "../../stores/toast";
-import MUILikedInput from "../../components/input/MUILikedInput.vue";
-import CustomListRadio from "../../components/input/CustomListRadioButton.vue";
-import EditGroupRadioItem from "../../components/items/group/EditGroupRadioItem.vue";
+import { useUserStore } from "../../../stores/user";
+import { useToastStore } from "../../../stores/toast";
+import MUILikedInput from "../../../components/input/MUILikedInput.vue";
+import CustomListRadio from "../../../components/input/CustomListRadioButton.vue";
+import EditGroupRadioItem from "../../../components/items/group/EditGroupRadioItem.vue";
 
-import ModeratorDropDown from "../../components/dropdown/ModeratorDropDown.vue";
-import AddModeratorsModal from "../../components/modals/group/editGroup/AddModeratorsModal.vue";
-import selection from "../../data/selection";
+import ModeratorDropDown from "../../../components/dropdown/ModeratorDropDown.vue";
+import AddModeratorsModal from "../../../components/modals/group/editGroup/AddModeratorsModal.vue";
+import selection from "../../../data/selection";
 import { EyeIcon, EyeSlashIcon, EllipsisHorizontalIcon } from "@heroicons/vue/24/solid";
 
 export default {

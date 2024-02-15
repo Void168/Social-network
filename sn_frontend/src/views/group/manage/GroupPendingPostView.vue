@@ -157,8 +157,8 @@
 
 <script>
 import axios from "axios";
-import { useUserStore } from "../../stores/user";
-import { useToastStore } from "../../stores/toast";
+import { useUserStore } from "../../../stores/user";
+import { useToastStore } from "../../../stores/toast";
 import { RouterLink } from "vue-router";
 import {
   ClockIcon,
@@ -168,7 +168,7 @@ import {
   EllipsisHorizontalIcon,
   UserGroupIcon,
 } from "@heroicons/vue/24/solid";
-import GroupDetailNavigation from "../../components/items/group/GroupDetailNavigation.vue";
+import GroupDetailNavigation from "../../../components/items/group/GroupDetailNavigation.vue";
 
 export default {
   name: "groupjoinrequest",

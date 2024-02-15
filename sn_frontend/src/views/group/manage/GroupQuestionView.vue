@@ -30,8 +30,8 @@
 </template>
 
 <script>
-import CreateQuestionModal from "../../components/modals/group/CreateQuestionModal.vue";
-import GroupQuestion from "../../components/items/group/GroupQuestion.vue";
+import CreateQuestionModal from "../../../components/modals/group/CreateQuestionModal.vue";
+import GroupQuestion from "../../../components/items/group/GroupQuestion.vue";
 import axios from "axios";
 
 export default {

@@ -12,13 +12,15 @@ import GroupDiscussView from "../views/group/GroupDiscussView.vue"
 import GroupAboutView from "../views/group/GroupAboutView.vue";
 import GroupMediaView from "../views/group/GroupMediaView.vue"
 import GroupFileView from "../views/group/GroupFileView.vue"
-import GroupQuestionView from "../views/group/GroupQuestionView.vue"
+import GroupQuestionView from "../views/group/manage/GroupQuestionView.vue"
 import GroupPostView from "../views/group/GroupPostView.vue";
 import GroupMembersView from "../views/group/GroupMembersView.vue";
-import GroupJoinRequestView from "../views/group/GroupJoinRequestView.vue";
-import GroupPendingPostView from "../views/group/GroupPendingPostView.vue"
-import GroupRulesView from "../views/group/GroupRulesView.vue"
-import GroupEditView from "../views/group/GroupEditView.vue"
+import GroupJoinRequestView from "../views/group/manage/GroupJoinRequestView.vue";
+import GroupPendingPostView from "../views/group/manage/GroupPendingPostView.vue"
+import GroupRulesView from "../views/group/manage/GroupRulesView.vue"
+import GroupEditView from "../views/group/manage/GroupEditView.vue"
+import GroupOverviewView from "../views/group/manage/GroupOverviewView.vue"
+import GroupGrowthView from "../views/group/manage/GroupGrowthView.vue"
 import FriendsView from "../views/profile/FriendsView.vue";
 import PostView from "../views/post/PostView.vue";
 import PagePostView from "../views/page/PagePostView.vue";
@@ -159,6 +161,16 @@ const router = createRouter({
           path: "post/:postid",
           component: GroupPostView,
           name: "grouppost",
+        },
+        {
+          path: "overview",
+          component: GroupOverviewView,
+          name: "groupoverview",
+        },
+        {
+          path: "growth",
+          component: GroupGrowthView,
+          name: "groupgrowth",
         },
       ],
     },

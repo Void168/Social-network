@@ -8,6 +8,7 @@ from datetime import datetime, timezone, timedelta
 
 from account.models import User
 from page.models import Page
+from post.models import GroupPost
 from account.serializers import UserSerializer
 from page.serializers import PageSerializer
 # from notification.models import NotificationForPage
@@ -580,3 +581,59 @@ def delete_rule(request, pk):
     rule.delete()
     
     return JsonResponse({'message': 'Rule deleted'})
+
+@api_view(['GET'])
+def get_group_overview(request, pk):
+    group = Group.objects.get(pk=pk)
+    join_requests = JoinGroupRequest.objects.filter(created_for=group)
+    group_posts = GroupPost.objects.filter(Q(group=group, pending=False))
+    pending_posts = GroupPost.objects.filter(Q(group=group, pending=True))
+        
+    week_ago = datetime.now() - timedelta(days=7)
+    month_ago = datetime.now() - timedelta(days=28)
+    # sixty_ago = datetime.now() - timedelta(days=60)
+    
+    new_members_in_seven_days = []
+    new_members_in_twenty_eight_days = []
+    # new_members_in_sixty_days = []
+    
+    new_posts_in_seven_days = []
+    new_posts_in_twenty_eight_days = []
+    
+    new_likes_in_seven_days = 0
+    new_likes_in_twenty_eight_days = 0
+    
+    new_comments_in_seven_days = 0
+    new_comments_in_twenty_eight_days = 0
+    
+    for member in group.members.all():
+        if member.date_join_group.timestamp() > week_ago.timestamp() and member.date_join_group.timestamp() < datetime.now().timestamp():
+            new_members_in_seven_days.append(member)
+        if member.date_join_group.timestamp() > month_ago.timestamp() and member.date_join_group.timestamp() < datetime.now().timestamp():
+            new_members_in_twenty_eight_days.append(member)
+        # if member.date_join_group.timestamp() > sixty_ago.timestamp() and member.date_join_group.timestamp() < datetime.now().timestamp():
+        #     new_members_in_sixty_days.append(member)
+    
+    for group_post in group_posts:
+        if group_post.created_at.timestamp() > week_ago.timestamp() and group_post.created_at.timestamp() < datetime.now().timestamp():
+            new_posts_in_seven_days.append(group_post)
+            new_likes_in_seven_days = new_likes_in_seven_days + group_post.likes.count()
+            new_comments_in_seven_days = new_comments_in_seven_days + group_post.likes.count()
+        if group_post.created_at.timestamp() > month_ago.timestamp() and group_post.created_at.timestamp() < datetime.now().timestamp():
+            new_posts_in_twenty_eight_days.append(group_post)
+            new_likes_in_twenty_eight_days = new_likes_in_twenty_eight_days + group_post.likes.count()
+            new_comments_in_twenty_eight_days = new_comments_in_twenty_eight_days + group_post.likes.count()
+    
+    return JsonResponse({
+        'memberSevenDays': len(new_members_in_seven_days),
+        'memberTwentyEightDays': len(new_members_in_twenty_eight_days),
+        # 'memberSixtyDays': len(new_members_in_sixty_days),
+        'postSevenDays': len(new_posts_in_seven_days),
+        'postTwentyEightDays': len(new_posts_in_twenty_eight_days),
+        'likeSevenDays': new_likes_in_seven_days,
+        'likeTwentyEightDays': new_likes_in_twenty_eight_days,
+        'commentSevenDays': new_comments_in_seven_days,
+        'commentTwentyEightDays': new_comments_in_twenty_eight_days,
+        'joinRequests': len(join_requests),
+        'pendingPosts': len(pending_posts)
+        })

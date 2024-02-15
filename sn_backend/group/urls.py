@@ -35,4 +35,5 @@ urlpatterns = [
     path('<uuid:pk>/set-anyone-post/', api.set_anyone_can_post, name='set_anyone_can_post'),
     path('<uuid:pk>/set-pending-post/', api.set_pending_post, name='set_pending_post'),
     path('<uuid:pk>/set-anyone-poll/', api.set_anyone_can_poll, name='set_anyone_can_poll'),
+    path('<uuid:pk>/overview/', api.get_group_overview, name='get_group_overview'),
 ]

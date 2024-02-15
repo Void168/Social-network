@@ -884,5 +884,3 @@ def delete_poll(request, pk):
         return JsonResponse({'message': 'Poll deleted'})
     else:
         return JsonResponse({'message': 'Delete poll failed'})
-
-

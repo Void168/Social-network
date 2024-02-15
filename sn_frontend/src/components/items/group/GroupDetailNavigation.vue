@@ -136,7 +136,7 @@ export default (await import("vue")).defineComponent({
             {
               name: "Hỗ trợ quản trị",
               content: "",
-              url: "",
+              url: "groupdiscuss",
             },
             {
               name: "Yêu cầu làm thành viên",
@@ -146,7 +146,7 @@ export default (await import("vue")).defineComponent({
             {
               name: "Yêu cầu huy hiệu",
               content: "",
-              url: "",
+              url: "groupdiscuss",
             },
             {
               name: "Câu hỏi chọn thành viên",
@@ -161,17 +161,17 @@ export default (await import("vue")).defineComponent({
             {
               name: "Có thể là spam",
               content: "",
-              url: "",
+              url: "groupdiscuss",
             },
             {
               name: "Bài viết đã lên lịch",
               content: "",
-              url: "",
+              url: "groupdiscuss",
             },
             {
               name: "Nhật ký hoạt động",
               content: "",
-              url: "",
+              url: "groupdiscuss",
             },
             {
               name: "Quy tắc nhóm",
@@ -181,22 +181,22 @@ export default (await import("vue")).defineComponent({
             {
               name: "Nội dung bị thành viên báo cáo",
               content: "",
-              url: "",
+              url: "groupdiscuss",
             },
             {
               name: "Thông báo kiểm duyệt",
               content: "",
-              url: "",
+              url: "groupdiscuss",
             },
             {
               name: "Trạng thái nhóm",
               content: "",
-              url: "",
+              url: "groupdiscuss",
             },
             {
               name: "Vai trò trong cộng đồng",
               content: "",
-              url: "",
+              url: "groupdiscuss",
             },
           ],
         },
@@ -212,7 +212,7 @@ export default (await import("vue")).defineComponent({
             {
               name: "Thêm tính năng",
               content: "",
-              url: "",
+              url: "groupdiscuss",
             },
           ],
         },
@@ -228,17 +228,17 @@ export default (await import("vue")).defineComponent({
             {
               name: "Tương tác",
               content: "",
-              url: "",
+              url: "groupdiscuss",
             },
             {
               name: "Quản trị viên & người kiểm duyệt",
               content: "",
-              url: "",
+              url: "groupdiscuss",
             },
             {
               name: "Thành viên",
               content: "",
-              url: "",
+              url: "groupdiscuss",
             },
           ],
         },
@@ -249,7 +249,7 @@ export default (await import("vue")).defineComponent({
             {
               name: "Trung tâm trợ giúp",
               content: "",
-              url: "",
+              url: "groupdiscuss",
             },
           ],
         },

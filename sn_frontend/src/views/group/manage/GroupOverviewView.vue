@@ -47,7 +47,7 @@
         <h3 class="text-xl font-semibold">Tóm tắt thông tin chi tiết</h3>
         <h4 class="text-neutral-400">Trong 7 ngày qua</h4>
       </div>
-      <div class="grid grid-rows-1 gap-4">
+      <div class="grid lg:grid-cols-2 grid-cols-1 gap-4">
         <div
           class="px-4 py-8 flex justify-between items-center bg-slate-700 rounded-lg duration-75"
           v-for="summary in summaries"
@@ -65,6 +65,10 @@
             <HandThumbUpIcon
               class="w-8"
               v-if="summaries.indexOf(summary) == 2"
+            />
+            <UserPlusIcon
+              class="w-8"
+              v-if="summaries.indexOf(summary) == 3"
             />
             <h4 class="font-semibold">{{ summary.name }}</h4>
           </div>
@@ -163,6 +167,10 @@ export default {
       },
       {
         name: "Cảm xúc",
+        rate: "1",
+      },
+      {
+        name: "Thành viên mới",
         rate: "1",
       },
     ];

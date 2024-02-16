@@ -8,13 +8,14 @@ from datetime import datetime, timezone, timedelta
 
 from account.models import User
 from page.models import Page
-from post.models import GroupPost
+from post.models import GroupPost, MemberLike, MemberComment
 from account.serializers import UserSerializer
 from page.serializers import PageSerializer
 # from notification.models import NotificationForPage
 # from notification.utils import create_notification
 
 from .serializers import QuestionSerializer, RuleSerializer, MemberSerializer, PageMemberSerializer, GroupSerializer, GroupDetailSerializer, JoinGroupRequestSerializer, QuestionSerializer
+from post.serializers import GroupPostSerializer, MemberLikeSerializer, MemberCommentSerializer
 from .models import Group, Rule, Question, Member, PageMember, JoinGroupRequest, Answer
 from .forms import GroupCreateForm, GroupInfoForm, GroupWebsiteForm, GroupQuestionForm, GroupCoverImageForm, GroupRuleForm
 
@@ -242,7 +243,7 @@ def handle_join_request(request, pk, status, id):
         #     created_for=sent_user
         # )
         
-        JoinGroupRequest.objects.filter(status='accepted').delete()
+        # JoinGroupRequest.objects.filter(status='accepted').delete()
         
         # serializer_notification = NotificationSerializer(notification)
         
@@ -586,8 +587,11 @@ def delete_rule(request, pk):
 def get_group_overview(request, pk):
     group = Group.objects.get(pk=pk)
     join_requests = JoinGroupRequest.objects.filter(created_for=group)
+    admin_member = Member.objects.get(information=group.admin)
+    moderators = group.moderators.all()
+    
     group_posts = GroupPost.objects.filter(Q(group=group, pending=False))
-    pending_posts = GroupPost.objects.filter(Q(group=group, pending=True))
+    pending_posts = GroupPost.objects.filter(Q(group=group, pending=True)).exclude(Q(created_by=admin_member) | Q(created_by__in=moderators))
         
     week_ago = datetime.now() - timedelta(days=7)
     month_ago = datetime.now() - timedelta(days=28)
@@ -617,12 +621,12 @@ def get_group_overview(request, pk):
     for group_post in group_posts:
         if group_post.created_at.timestamp() > week_ago.timestamp() and group_post.created_at.timestamp() < datetime.now().timestamp():
             new_posts_in_seven_days.append(group_post)
-            new_likes_in_seven_days = new_likes_in_seven_days + group_post.likes.count()
-            new_comments_in_seven_days = new_comments_in_seven_days + group_post.likes.count()
+            new_likes_in_seven_days = new_likes_in_seven_days + group_post.likes_count
+            new_comments_in_seven_days = new_comments_in_seven_days + group_post.comments_count
         if group_post.created_at.timestamp() > month_ago.timestamp() and group_post.created_at.timestamp() < datetime.now().timestamp():
             new_posts_in_twenty_eight_days.append(group_post)
-            new_likes_in_twenty_eight_days = new_likes_in_twenty_eight_days + group_post.likes.count()
-            new_comments_in_twenty_eight_days = new_comments_in_twenty_eight_days + group_post.likes.count()
+            new_likes_in_twenty_eight_days = new_likes_in_twenty_eight_days + group_post.likes_count
+            new_comments_in_twenty_eight_days = new_comments_in_twenty_eight_days + group_post.comments_count
     
     return JsonResponse({
         'memberSevenDays': len(new_members_in_seven_days),
@@ -637,3 +641,61 @@ def get_group_overview(request, pk):
         'joinRequests': len(join_requests),
         'pendingPosts': len(pending_posts)
         })
+    
+@api_view(['GET'])
+def get_group_join_requests_growth(request, pk):
+    group = Group.objects.get(pk=pk)
+    sixty_ago = (datetime.now() - timedelta(days=60))
+    today = datetime.now()
+    
+    join_requests = JoinGroupRequest.objects.filter(Q(created_for=group, created_at__range=(sixty_ago, today)))
+    
+    join_requests_serializer = JoinGroupRequestSerializer(join_requests, many=True)
+            
+    return JsonResponse({'joinRequests': join_requests_serializer.data})
+
+@api_view(['GET'])
+def get_group_posts_growth(request, pk):
+    group = Group.objects.get(pk=pk)
+    sixty_ago = (datetime.now() - timedelta(days=60))
+    today = datetime.now()
+    
+    posts = GroupPost.objects.filter(Q(group=group, created_at__range=(sixty_ago, today)))
+    
+    posts_serializer = GroupPostSerializer(posts, many=True)
+            
+    return JsonResponse({'groupPosts': posts_serializer.data})
+
+@api_view(['GET'])
+def get_group_likes_growth(request, pk):
+    group = Group.objects.get(pk=pk)
+    sixty_ago = (datetime.now() - timedelta(days=60))
+    today = datetime.now()
+    
+    likes = MemberLike.objects.none()
+    
+    posts = GroupPost.objects.filter(Q(group=group, created_at__range=(sixty_ago, today)))
+
+    for post in posts:
+        likes = likes | post.likes.all()
+    
+    likes_serializer = MemberLikeSerializer(likes, many=True)
+            
+    return JsonResponse({'likes': likes_serializer.data})
+
+@api_view(['GET'])
+def get_group_comments_growth(request, pk):
+    group = Group.objects.get(pk=pk)
+    sixty_ago = (datetime.now() - timedelta(days=60))
+    today = datetime.now()
+    
+    comments = MemberComment.objects.none()
+    
+    posts = GroupPost.objects.filter(Q(group=group, created_at__range=(sixty_ago, today)))
+
+    for post in posts:
+        comments = comments | post.comments.all()
+    
+    comment_serializer = MemberCommentSerializer(comments, many=True)
+            
+    return JsonResponse({'comments': comment_serializer.data})

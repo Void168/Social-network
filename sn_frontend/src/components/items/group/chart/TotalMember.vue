@@ -29,51 +29,6 @@ export default (await import("vue")).defineComponent({
       monthAgo,
     };
   },
-  data() {
-    return {
-      chartData: {
-        labels: this.sevenDaysAgo,
-        datasets: [
-          {
-            label: "Tổng số thành viên",
-            backgroundColor: "#f87979",
-            borderColor: "#f87979",
-            color: "#fff",
-            data: [
-              {
-                x: this.sevenDaysAgo[0],
-                y: 50,
-              },
-              {
-                x: this.sevenDaysAgo[1],
-                y: 60,
-              },
-              {
-                x: this.sevenDaysAgo[2],
-                y: 20,
-              },
-              {
-                x: this.sevenDaysAgo[3],
-                y: 50,
-              },
-              {
-                x: this.sevenDaysAgo[4],
-                y: 60,
-              },
-              {
-                x: this.sevenDaysAgo[5],
-                y: 20,
-              },
-              {
-                x: this.sevenDaysAgo[6],
-                y: 20,
-              },
-            ],
-          },
-        ],
-      },
-    };
-  },
 
   mounted() {
     this.createChart();
@@ -83,7 +38,47 @@ export default (await import("vue")).defineComponent({
     createChart() {
       const config = {
         type: "line",
-        data: this.chartData,
+        data: {
+          labels: this.sevenDaysAgo,
+          datasets: [
+            {
+              label: "Tổng số thành viên",
+              backgroundColor: "#f87979",
+              borderColor: "#f87979",
+              color: "#fff",
+              data: [
+                {
+                  x: this.sevenDaysAgo[0],
+                  y: 50,
+                },
+                {
+                  x: this.sevenDaysAgo[1],
+                  y: 60,
+                },
+                {
+                  x: this.sevenDaysAgo[2],
+                  y: 20,
+                },
+                {
+                  x: this.sevenDaysAgo[3],
+                  y: 50,
+                },
+                {
+                  x: this.sevenDaysAgo[4],
+                  y: 60,
+                },
+                {
+                  x: this.sevenDaysAgo[5],
+                  y: 20,
+                },
+                {
+                  x: this.sevenDaysAgo[6],
+                  y: 20,
+                },
+              ],
+            },
+          ],
+        },
         options: {
           scales: {
             x: {
@@ -102,13 +97,13 @@ export default (await import("vue")).defineComponent({
           },
         },
         responsive: true,
-        scaleFontColor: "#FFF"
+        scaleFontColor: "#FFF",
       };
 
       new Chart(document.getElementById("TotalUserChart"), config);
       setTimeout(() => {
-          Chart.defaults.color = "#ffffff";
-      }, 100)
+        Chart.defaults.color = "#ffffff";
+      }, 100);
     },
   },
 });

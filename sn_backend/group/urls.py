@@ -36,4 +36,8 @@ urlpatterns = [
     path('<uuid:pk>/set-pending-post/', api.set_pending_post, name='set_pending_post'),
     path('<uuid:pk>/set-anyone-poll/', api.set_anyone_can_poll, name='set_anyone_can_poll'),
     path('<uuid:pk>/overview/', api.get_group_overview, name='get_group_overview'),
+    path('<uuid:pk>/growth-join-requests/', api.get_group_join_requests_growth, name='get_group_join_requests_growth'),
+    path('<uuid:pk>/growth-posts/', api.get_group_posts_growth, name='get_group_posts_growth'),
+    path('<uuid:pk>/growth-likes/', api.get_group_likes_growth, name='get_group_likes_growth'),
+    path('<uuid:pk>/growth-comments/', api.get_group_comments_growth, name='get_group_comments_growth'),
 ]

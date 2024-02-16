@@ -80,19 +80,28 @@
     <div class="dark:bg-slate-800 w-full rounded-lg p-4 space-y-4">
       <div>
         <h3 class="text-lg font-semibold">
-          Yêu cầu làm thành viên: {{ group.members_count }}
+          Yêu cầu làm thành viên: {{ joinRequestsLength }}
         </h3>
-        <h5 class="text-sm text-neutral-400" v-if="selectedDistance.name === '7 ngày trước'">
+        <h5
+          class="text-sm text-neutral-400"
+          v-if="selectedDistance.name === '7 ngày trước'"
+        >
           {{ daySevenAgo }} - {{ today }}
         </h5>
-        <h5 class="text-sm text-neutral-400"  v-if="selectedDistance.name === '28 ngày trước'">
+        <h5
+          class="text-sm text-neutral-400"
+          v-if="selectedDistance.name === '28 ngày trước'"
+        >
           {{ dayTwentyEightAgo }} - {{ today }}
         </h5>
-        <h5 class="text-sm text-neutral-400"  v-if="selectedDistance.name === '60 ngày trước'">
+        <h5
+          class="text-sm text-neutral-400"
+          v-if="selectedDistance.name === '60 ngày trước'"
+        >
           {{ daySixtyAgo }} - {{ today }}
         </h5>
       </div>
-      <JoinRequest />
+      <JoinRequest :setJoinRequestLength="setJoinRequestLength" :selectedDays="selectedDistance.name"/>
       <div class="flex justify-center items-center">
         <RouterLink
           :to="{ name: 'groupjoinrequest', params: { id: group.id } }"
@@ -103,40 +112,58 @@
       </div>
     </div>
     <div class="flex gap-4 w-full">
-        <div class="dark:bg-slate-800 w-[50%] rounded-lg p-4 space-y-4">
-          <div>
-            <h3 class="text-lg font-semibold">
-                Bài viết: {{ group.members_count }}
-            </h3>
-            <h5 class="text-sm text-neutral-400" v-if="selectedDistance.name === '7 ngày trước'">
-              {{ daySevenAgo }} - {{ today }}
-            </h5>
-            <h5 class="text-sm text-neutral-400"  v-if="selectedDistance.name === '28 ngày trước'">
-              {{ dayTwentyEightAgo }} - {{ today }}
-            </h5>
-            <h5 class="text-sm text-neutral-400"  v-if="selectedDistance.name === '60 ngày trước'">
-              {{ daySixtyAgo }} - {{ today }}
-            </h5>
-          </div>
-          <Post />
+      <div class="dark:bg-slate-800 w-[50%] rounded-lg p-4 space-y-4">
+        <div>
+          <h3 class="text-lg font-semibold">
+            Bài viết: {{ group.members_count }}
+          </h3>
+          <h5
+            class="text-sm text-neutral-400"
+            v-if="selectedDistance.name === '7 ngày trước'"
+          >
+            {{ daySevenAgo }} - {{ today }}
+          </h5>
+          <h5
+            class="text-sm text-neutral-400"
+            v-if="selectedDistance.name === '28 ngày trước'"
+          >
+            {{ dayTwentyEightAgo }} - {{ today }}
+          </h5>
+          <h5
+            class="text-sm text-neutral-400"
+            v-if="selectedDistance.name === '60 ngày trước'"
+          >
+            {{ daySixtyAgo }} - {{ today }}
+          </h5>
         </div>
-        <div class="dark:bg-slate-800 w-[50%] rounded-lg p-4 space-y-4">
-          <div>
-            <h3 class="text-lg font-semibold">
-                Thành viên hoạt động: {{ group.members_count }}
-            </h3>
-            <h5 class="text-sm text-neutral-400" v-if="selectedDistance.name === '7 ngày trước'">
-              {{ daySevenAgo }} - {{ today }}
-            </h5>
-            <h5 class="text-sm text-neutral-400"  v-if="selectedDistance.name === '28 ngày trước'">
-              {{ dayTwentyEightAgo }} - {{ today }}
-            </h5>
-            <h5 class="text-sm text-neutral-400"  v-if="selectedDistance.name === '60 ngày trước'">
-              {{ daySixtyAgo }} - {{ today }}
-            </h5>
-          </div>
-          <ActiveMember />
+        <Post />
+      </div>
+      <div class="dark:bg-slate-800 w-[50%] rounded-lg p-4 space-y-4">
+        <div>
+          <h3 class="text-lg font-semibold">
+            Thành viên hoạt động: {{ group.members_count }}
+          </h3>
+          <h5
+            class="text-sm text-neutral-400"
+            v-if="selectedDistance.name === '7 ngày trước'"
+          >
+            {{ daySevenAgo }} - {{ today }}
+          </h5>
+          <h5
+            class="text-sm text-neutral-400"
+            v-if="selectedDistance.name === '28 ngày trước'"
+          >
+            {{ dayTwentyEightAgo }} - {{ today }}
+          </h5>
+          <h5
+            class="text-sm text-neutral-400"
+            v-if="selectedDistance.name === '60 ngày trước'"
+          >
+            {{ daySixtyAgo }} - {{ today }}
+          </h5>
         </div>
+        <ActiveMember />
+      </div>
     </div>
   </div>
 </template>
@@ -146,8 +173,8 @@ import { ref } from "vue";
 
 import TotalMember from "../../../components/items/group/chart/TotalMember.vue";
 import JoinRequest from "../../../components/items/group/chart/JoinRequest.vue";
-import Post from '../../../components/items/group/chart/Post.vue';
-import ActiveMember from '../../../components/items/group/chart/ActiveMember.vue';
+import Post from "../../../components/items/group/chart/Post.vue";
+import ActiveMember from "../../../components/items/group/chart/ActiveMember.vue";
 
 import {
   Listbox,
@@ -161,6 +188,7 @@ import {
   ChevronUpDownIcon,
   ArrowDownTrayIcon,
 } from "@heroicons/vue/20/solid";
+import axios from "axios";
 
 export default {
   name: "groupgrowth",
@@ -192,30 +220,29 @@ export default {
     const yyyy = today.getFullYear();
 
     let timeFrom = (X) => {
-      const day = new Date(
-        new Date().getTime() - (X) * 24 * 60 * 60 * 1000
-      );
-      return day
+      const day = new Date(new Date().getTime() - X * 24 * 60 * 60 * 1000);
+      return day;
     };
 
-    let daySevenAgo = timeFrom(7)
+    let daySevenAgo = timeFrom(7);
     const sevenDD = String(timeFrom(7).getDate()).padStart(2, "0");
     const sevenMM = String(timeFrom(7).getMonth()).padStart(2, "0");
-    const sevenYYYY = timeFrom(7).getFullYear()
+    const sevenYYYY = timeFrom(7).getFullYear();
 
-    let dayTwentyEightAgo = timeFrom(28)
+    let dayTwentyEightAgo = timeFrom(28);
     const twentyEightDD = String(timeFrom(28).getDate()).padStart(2, "0");
     const twentyEightMM = String(timeFrom(28).getMonth()).padStart(2, "0");
-    const twentyEightYYYY = timeFrom(28).getFullYear()
+    const twentyEightYYYY = timeFrom(28).getFullYear();
 
-    let daySixtyAgo = timeFrom(60)
+    let daySixtyAgo = timeFrom(60);
     const sixtyDD = String(timeFrom(60).getDate()).padStart(2, "0");
     const sixtyMM = String(timeFrom(60).getMonth()).padStart(2, "0");
-    const sixtyYYYY = timeFrom(60).getFullYear()
-    
+    const sixtyYYYY = timeFrom(60).getFullYear();
+
     today = dd + " Tháng " + mm + ", " + yyyy;
     daySevenAgo = sevenDD + " Tháng " + sevenMM + ", " + sevenYYYY;
-    dayTwentyEightAgo = twentyEightDD + " Tháng " + twentyEightMM + ", " + twentyEightYYYY;
+    dayTwentyEightAgo =
+      twentyEightDD + " Tháng " + twentyEightMM + ", " + twentyEightYYYY;
     daySixtyAgo = sixtyDD + " Tháng " + sixtyMM + ", " + sixtyYYYY;
 
     return {
@@ -229,6 +256,18 @@ export default {
   },
   props: {
     group: Object,
+  },
+
+  data(){
+    return {
+      joinRequestsLength: 0
+    }
+  },
+
+  methods: {
+    setJoinRequestLength(data){
+      this.joinRequestsLength = data
+    }
   },
 };
 </script>

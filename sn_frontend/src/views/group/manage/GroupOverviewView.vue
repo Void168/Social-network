@@ -204,16 +204,16 @@ export default {
           this.summaries[0].amount = res.data.postSevenDays;
           this.summaries[0].rate =
             (res.data.postSevenDays - res.data.postTwentyEightDays) * 100;
-          this.summaries[1].amount = res.data.likeSevenDays;
+          this.summaries[1].amount = res.data.commentSevenDays;
           this.summaries[1].rate =
-            (res.data.likeSevenDays - res.data.likeTwentyEightDays) * 100;
-          this.summaries[2].amount = res.data.commentSevenDays;
-          this.summaries[2].rate =
             (res.data.commentSevenDays - res.data.commentTwentyEightDays) * 100;
+          this.summaries[2].amount = res.data.likeSevenDays;
+          this.summaries[2].rate =
+            (res.data.likeSevenDays - res.data.likeTwentyEightDays) * 100;
           this.summaries[3].amount = res.data.memberSevenDays;
           this.summaries[3].rate =
-          (res.data.memberSevenDays - res.data.memberTwentyEightDays) * 100;
-          
+            (res.data.memberSevenDays - res.data.memberTwentyEightDays) * 100;
+
           this.navigators[1].amount = res.data.pendingPosts;
           this.navigators[3].amount = res.data.joinRequests;
         })

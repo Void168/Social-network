@@ -75,7 +75,7 @@
         </h3>
         <h5 class="text-sm text-neutral-400">{{ today }}</h5>
       </div>
-      <TotalMember />
+      <TotalMember :selectedDays="selectedDistance.name"/>
     </div>
     <div class="dark:bg-slate-800 w-full rounded-lg p-4 space-y-4">
       <div>

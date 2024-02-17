@@ -7,7 +7,6 @@
   import axios from "axios";
 
   export default (await import("vue")).defineComponent({
-    name: "groupgrowth",
     components: { Chart },
     setup() {
       let timeFromString = (X) => {
@@ -65,7 +64,7 @@
           .get(`/api/group/${this.$route.params.id}/growth-active-members/`)
           .then((res) => {
             this.activeMembers = res.data.activeMembers
-            console.log(this.activeMembers)
+            // console.log(this.activeMembers)
             this.setActiveMembersLength(this.activeMembers.length)
             this.createChart();
           })
@@ -174,9 +173,9 @@
             break;
         }
   
-        console.log(data);
-        console.log(scaleDaysMin);
-        console.log(scaleDaysMax);
+        // console.log(data);
+        // console.log(scaleDaysMin);
+        // console.log(scaleDaysMax);
   
         const config = {
           type: "line",

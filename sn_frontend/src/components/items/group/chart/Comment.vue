@@ -7,7 +7,6 @@
   import Chart from "chart.js/auto";
   
   export default (await import("vue")).defineComponent({
-    name: "groupgrowth",
     components: { Chart },
     setup() {
       let timeFromString = (X) => {

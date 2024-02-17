@@ -718,3 +718,21 @@ def get_group_active_member(request, pk):
     serializer = MemberSerializer(access_members, many=True)
     
     return JsonResponse({'activeMembers': serializer.data})
+
+@api_view(['GET'])
+def get_group_members(request, pk):
+    group = Group.objects.get(pk=pk)
+    sixty_ago = (datetime.now() - timedelta(days=60))
+    today = datetime.now()
+    
+    group_members = group.members.all()
+    
+    members = []
+    
+    for group_member in group_members:
+        if group_member.date_join_group.timestamp() > sixty_ago.timestamp() and group_member.date_join_group.timestamp() <today.timestamp():
+            members.append(group_member)
+    
+    serializer = MemberSerializer(members, many=True)
+    
+    return JsonResponse({'members': serializer.data})

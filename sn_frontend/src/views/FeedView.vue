@@ -120,7 +120,7 @@
             v-for="post in posts"
             v-bind:key="post.id"
           >
-            <FeedItem v-bind:post="post" v-on:deletePost="deletePost" />
+            <FeedItem :post="post" v-on:deletePost="deletePost" />
           </div>
 
           <SkeletonLoadingPostVue
@@ -210,8 +210,11 @@ export default {
     };
   },
 
-  mounted() {
+  created(){
     this.getFeed();
+  },
+
+  mounted() {
     window.addEventListener("scroll", this.infinateScroll);
   },
 

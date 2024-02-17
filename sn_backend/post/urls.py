@@ -32,6 +32,7 @@ urlpatterns = [
     path('group/<uuid:pk>/attachments/', api.group_post_attachment_list_profile, name='group_post_attachment_list_profile'),
     path('page/<uuid:id>/attachments/', api.page_post_attachment_list_profile, name='page_post_attachment_list_profile'),
     path('create/', api.post_create, name='post_create'),
+    path('<uuid:pk>/update/', api.post_update, name='post_update'),
     path('create/group/<uuid:pk>/', api.group_post_create, name='group_post_create'),
     path('create-poll/group/<uuid:pk>/', api.group_post_poll_create, name='group_post_poll_create'),
     path('group/<uuid:pk>/poll/', api.get_group_post_poll, name='get_group_post_poll'),

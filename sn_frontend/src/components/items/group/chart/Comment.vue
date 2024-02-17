@@ -183,8 +183,8 @@
             datasets: [
               {
                 label: "Bình luận",
-                backgroundColor: "#f87979",
-                borderColor: "#f87979",
+                backgroundColor: "#28d399",
+                borderColor: "#28d399",
                 data: data
               },
             ],

@@ -182,8 +182,8 @@ export default (await import("vue")).defineComponent({
           datasets: [
             {
               label: "Tổng số thành viên",
-              backgroundColor: "#f87979",
-              borderColor: "#f87979",
+              backgroundColor: "#28d399",
+              borderColor: "#28d399",
               data: data
             },
           ],

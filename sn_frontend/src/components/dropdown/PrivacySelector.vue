@@ -4,7 +4,7 @@
       <ListboxButton
         class="relative flex justify-center w-full cursor-default rounded-lg font-semibold bg-gray-200 dark:bg-slate-800 dark:border-slate-700 dark:text-neutral-200 py-2 pl-3 pr-10 text-left focus:outline-none focus-visible:border-indigo-500 focus-visible:ring-2 focus-visible:ring-white/75 focus-visible:ring-offset-2 focus-visible:ring-offset-orange-300 sm:text-sm"
       >
-        <span class="block truncate">{{ selectedPrivacy?.name || privacies[0].name }}</span>
+        <span class="block truncate">{{ privacy ? privacy : selectedPrivacy?.name || privacies[0].name }}</span>
         <span
           class="pointer-events-none absolute inset-y-0 right-0 flex items-center pr-2"
         >

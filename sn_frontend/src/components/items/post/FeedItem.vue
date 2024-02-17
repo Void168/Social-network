@@ -7,10 +7,16 @@
         <div class="flex gap-1 items-center flex-wrap">
           <strong class="group">
             <RouterLink
-              :to="{ name: post.created_by.is_page ? 'page' : 'profile', params: { id: post.created_by.id } }"
+              :to="{
+                name: post.created_by.is_page ? 'page' : 'profile',
+                params: { id: post.created_by.id },
+              }"
               >{{ post.created_by.name }}</RouterLink
             >
-            <TooltipProfileVue :user="post.created_by" class="hidden md:group-hover:block lg:left-[-150px] md:left-0"/>
+            <TooltipProfileVue
+              :user="post.created_by"
+              class="hidden md:group-hover:block lg:left-[-150px] md:left-0"
+            />
           </strong>
           <div v-if="post.post_to" class="flex gap-1">
             <p>cùng với</p>
@@ -19,19 +25,27 @@
                 :to="{ name: 'profile', params: { id: post.post_to.id } }"
                 >{{ post.post_to.name }}</RouterLink
               >
-              <TooltipProfileVue :user="post.post_to" class="hidden md:group-hover:block lg:left-[-150px] md:left-0"/>
+              <TooltipProfileVue
+                :user="post.post_to"
+                class="hidden md:group-hover:block lg:left-[-150px] md:left-0"
+              />
             </strong>
           </div>
 
-          <span v-if="post.is_avatar_post === true" class="sm:text-base xs:text-sm"
+          <span
+            v-if="post.is_avatar_post === true"
+            class="sm:text-base xs:text-sm"
             >đã thay đổi ảnh đại diện</span
           >
           <div class="md:hidden items-center gap-2 flex">
-            <div class="relative group">
-              <PrivacyTooltip :post="post"/>
+            <div class="relative group" v-if="!isAdjust">
+              <PrivacyTooltip :post="post" />
               <GlobeAsiaAustraliaIcon
                 class="w-5 h-5"
-                v-if="post.is_private === false && post.only_me === false || post.created_by.is_page"
+                v-if="
+                  (post.is_private === false && post.only_me === false) ||
+                  post.created_by.is_page
+                "
               />
               <UserGroupIcon
                 class="w-5 h-5"
@@ -42,21 +56,34 @@
                 v-else-if="post.is_private === true && post.only_me === true"
               />
             </div>
+            <PrivacySelector
+              v-else
+              @getOption="getOption"
+              :privacies="privacies"
+              v-model="privacy"
+              class="w-full"
+              :style="''"
+            />
             <div class="relative group md:hidden">
-              <p class="text-gray-600 dark:text-neutral-200 sm:text-base xs:text-sm group-hover:underline">
+              <p
+                class="text-gray-600 dark:text-neutral-200 sm:text-base xs:text-sm group-hover:underline"
+              >
                 {{ post.created_at_formatted }} trước
               </p>
-              <CreatedAtTooltip :post="post"/>
+              <CreatedAtTooltip :post="post" />
             </div>
           </div>
         </div>
       </div>
       <div class="p-4 md:flex items-center gap-2 hidden">
-        <div class="relative group">
-          <PrivacyTooltip :post="post"/>
+        <div class="relative group" v-if="!isAdjust">
+          <PrivacyTooltip :post="post" />
           <GlobeAsiaAustraliaIcon
             class="w-5 h-5"
-            v-if="post.is_private === false && post.only_me === false || post.created_by.is_page"
+            v-if="
+              (post.is_private === false && post.only_me === false) ||
+              post.created_by.is_page
+            "
           />
           <UserGroupIcon
             class="w-5 h-5"
@@ -67,18 +94,34 @@
             v-else-if="post.is_private === true && post.only_me === true"
           />
         </div>
-        <div class="relative group">
+        <PrivacySelector
+          v-else
+          @getOption="getOption"
+          :privacies="privacies"
+          v-model="privacy"
+          class="w-full"
+          :style="''"
+        />
+        <div class="relative group w-full">
           <RouterLink :to="{ name: 'postview', params: { id: post.id } }">
-            <p class="text-gray-600 dark:text-neutral-200 md:block hidden group-hover:underline">
+            <p
+              class="text-gray-600 dark:text-neutral-200 md:block hidden group-hover:underline"
+            >
               {{ post.created_at_formatted }} trước
             </p>
           </RouterLink>
-          <CreatedAtTooltip :post="post"/>
+          <CreatedAtTooltip :post="post" />
         </div>
       </div>
     </div>
-
-    <p class="px-4 text-lg">{{ post.body }}</p>
+    <textarea
+      v-if="isAdjust"
+      type="text"
+      class="form-control resize-none w-full px-4 text-lg"
+      rows="5"
+      v-model="post.body"
+    ></textarea>
+    <p class="px-4 text-lg" v-else>{{ post.body }}</p>
 
     <div
       v-if="post.attachments?.length && post.is_avatar_post"
@@ -110,7 +153,7 @@
       />
     </div>
 
-    <div class="p-4 my-6 flex justify-between">
+    <div class="p-4 my-6 flex justify-between" v-if="!isAdjust">
       <div class="flex space-x-6">
         <div class="flex items-center space-x-2">
           <HeartLike
@@ -118,8 +161,8 @@
             v-if="!pageStore.pageId && checkUserLike"
           />
           <HeartLike
-          class="w-6 h-6 text-rose-500 cursor-pointer"
-          v-else-if="pageStore.pageId && checkPageLike"
+            class="w-6 h-6 text-rose-500 cursor-pointer"
+            v-else-if="pageStore.pageId && checkPageLike"
           />
           <HeartLike
             class="w-6 h-6 text-rose-500 cursor-pointer"
@@ -152,15 +195,16 @@
           </svg>
 
           <RouterLink
-            :to="{ name: post.created_by.is_page ? 'pagepostview' : 'postview', params: { id: post.id } }"
+            :to="{
+              name: post.created_by.is_page ? 'pagepostview' : 'postview',
+              params: { id: post.id },
+            }"
             class="text-gray-500 text-xs dark:text-neutral-200"
             >{{ post?.comments_count }} bình luận</RouterLink
           >
         </div>
       </div>
-      <div
-        class="absolute  right-4 shadow-lg rounded-lg ease-in duration-300"
-      >
+      <div class="absolute right-4 shadow-lg rounded-lg ease-in duration-300">
         <Menu as="div" class="relative inline-block text-left">
           <div>
             <MenuButton
@@ -194,7 +238,13 @@
             <MenuItems
               class="absolute right-0 z-10 mt-2 w-56 origin-top-right divide-y divide-gray-100 rounded-md bg-white shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none"
             >
-              <div class="py-1" v-if="userStore.user.id === post.created_by.id || pageStore.pageId === post.created_by.id">
+              <div
+                class="py-1"
+                v-if="
+                  userStore.user.id === post.created_by.id ||
+                  pageStore.pageId === post.created_by.id
+                "
+              >
                 <MenuItem v-slot="{ active }" @click="openModal">
                   <div
                     :class="[
@@ -204,6 +254,19 @@
                   >
                     <span class="flex items-center gap-3"
                       ><TrashIcon class="w-5 h-5" />Xóa bài viết</span
+                    >
+                  </div>
+                </MenuItem>
+                <MenuItem v-slot="{ active }" @click="openPostAdjustment">
+                  <div
+                    :class="[
+                      active ? 'bg-gray-100 text-gray-700' : 'text-gray-700',
+                      'block px-4 py-2 text-sm cursor-pointer',
+                    ]"
+                  >
+                    <span class="flex items-center gap-3"
+                      ><AdjustmentsHorizontalIcon class="w-5 h-5" />Chỉnh sửa
+                      bài viết</span
                     >
                   </div>
                 </MenuItem>
@@ -233,6 +296,22 @@
         />
       </div>
     </div>
+    <div class="mt-4 flex justify-end gap-3 p-4" v-else>
+      <button
+        type="button"
+        class="btn inline-flex justify-center rounded-md border border-transparent bg-rose-400 text-white px-4 py-2 text-sm font-medium hover:bg-rose-600 focus:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 focus-visible:ring-offset-2"
+        @click="closePostAdjustment"
+      >
+        Hủy
+      </button>
+      <button
+        type="button"
+        class="btn inline-flex justify-center rounded-md border border-transparent bg-emerald-400 text-white px-4 py-2 text-sm font-medium hover:bg-emerald-600 focus:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 focus-visible:ring-offset-2"
+        @click="submitForm"
+      >
+        Đồng ý
+      </button>
+    </div>
   </div>
 </template>
 
@@ -241,7 +320,11 @@ import axios from "axios";
 
 import { RouterLink } from "vue-router";
 import { Menu, MenuButton, MenuItem, MenuItems } from "@headlessui/vue";
-import { ShieldCheckIcon, TrashIcon } from "@heroicons/vue/24/solid";
+import {
+  ShieldCheckIcon,
+  TrashIcon,
+  AdjustmentsHorizontalIcon,
+} from "@heroicons/vue/24/solid";
 import {
   GlobeAsiaAustraliaIcon,
   UserGroupIcon,
@@ -255,6 +338,7 @@ import DeletePostModal from "../../modals/post/DeletePostModal.vue";
 import CreatedAtTooltip from "./Tooltip/CreatedAtTooltip.vue";
 import PrivacyTooltip from "./Tooltip/PrivacyTooltip.vue";
 import TooltipProfileVue from "../profile/TooltipProfile.vue";
+import PrivacySelector from "../../dropdown/PrivacySelector.vue";
 
 export default (await import("vue")).defineComponent({
   props: {
@@ -265,35 +349,61 @@ export default (await import("vue")).defineComponent({
     return {
       isOpen: false,
       isLike: false,
+      isAdjust: false,
+      privacies: [
+        { name: "Công khai" },
+        { name: "Bạn bè" },
+        { name: "Chỉ mình tôi" },
+      ],
+      privacy: {
+        name: "",
+      },
+      is_private: this.post.is_private,
+      only_me: this.post.only_me,
     };
   },
 
   setup() {
     const userStore = useUserStore();
     const toastStore = useToastStore();
-    const pageStore = usePageStore()
+    const pageStore = usePageStore();
 
     return {
       userStore,
       toastStore,
-      pageStore
+      pageStore,
     };
   },
 
   computed: {
-    checkUserLike(){
-      return this.post?.likes?.map((like) => like?.created_by?.id).includes(this.userStore.user.id)
+    checkUserLike() {
+      return this.post?.likes
+        ?.map((like) => like?.created_by?.id)
+        .includes(this.userStore.user.id);
     },
-    checkPageLike(){
-      return this.post?.page_likes?.map((like) => like?.created_by?.id).includes(this.pageStore.pageId)
-    }
+    checkPageLike() {
+      return this.post?.page_likes
+        ?.map((like) => like?.created_by?.id)
+        .includes(this.pageStore.pageId);
+    },
   },
 
-  mounted() {
+  beforeMount() {
     this.like();
+    this.getPostsPrivacy();
   },
 
   methods: {
+    getPostsPrivacy() {
+      if (!this.is_private && !this.only_me) {
+        this.privacy.name === "Công khai";
+      }
+      if (this.is_private && !this.only_me) {
+        this.privacy.name === "Bạn bè";
+      } else {
+        this.privacy.name === "Chỉ mình tôi";
+      }
+    },
     like() {
       const is_like = this.post.likes
         .map((like) => like.created_by)
@@ -303,7 +413,7 @@ export default (await import("vue")).defineComponent({
       }
     },
     likePost(id) {
-      if(!this.post.created_by.is_page){
+      if (!this.post.created_by.is_page) {
         axios
           .post(`/api/posts/${id}/like/`)
           .then((res) => {
@@ -316,7 +426,7 @@ export default (await import("vue")).defineComponent({
             console.log(error);
           });
       }
-      if(this.post.created_by.is_page && this.pageStore.pageId){
+      if (this.post.created_by.is_page && this.pageStore.pageId) {
         axios
           .post(`/api/posts/page/${this.pageStore.pageId}/${id}/like-by-page/`)
           .then((res) => {
@@ -328,8 +438,7 @@ export default (await import("vue")).defineComponent({
           .catch((error) => {
             console.log(error);
           });
-      }
-      else {
+      } else {
         axios
           .post(`/api/posts/${id}/like-by-user/`)
           .then((res) => {
@@ -346,7 +455,7 @@ export default (await import("vue")).defineComponent({
     deletePost() {
       this.$emit("deletePost", this.post.id);
 
-      if(!this.post.created_by.is_page){
+      if (!this.post.created_by.is_page) {
         axios
           .delete(`/api/posts/${this.post.id}/delete/`)
           .then((res) => {
@@ -369,7 +478,9 @@ export default (await import("vue")).defineComponent({
           });
       } else {
         axios
-          .delete(`/api/posts/page/${this.pageStore.pageId}/${this.post.id}/delete/`)
+          .delete(
+            `/api/posts/page/${this.pageStore.pageId}/${this.post.id}/delete/`
+          )
           .then((res) => {
             setTimeout(() => {
               this.closeModal();
@@ -416,6 +527,61 @@ export default (await import("vue")).defineComponent({
     openModal() {
       this.isOpen = true;
     },
+    openPostAdjustment() {
+      this.isAdjust = true;
+    },
+    closePostAdjustment() {
+      this.isAdjust = false;
+    },
+    getOption() {
+      if (this.privacy.name === "Công khai") {
+        this.is_private = false;
+        this.only_me = false;
+      }
+      if (this.privacy.name === "Bạn bè") {
+        this.is_private = true;
+        this.only_me = false;
+      }
+      if (this.privacy.name === "Chỉ mình tôi") {
+        this.is_private = true;
+        this.only_me = true;
+      }
+    },
+    submitForm() {
+      if (!this.privacy.name) {
+        axios
+          .post(`/api/posts/${this.post.id}/update/`, {
+            body: this.post.body,
+          })
+          .then((res) => {
+            if (res.data) {
+              this.body = res.data.body;
+              this.closePostAdjustment();
+            }
+          })
+          .catch((error) => {
+            console.log(error);
+          });
+      } else {
+        axios
+          .post(`/api/posts/${this.post.id}/update/`, {
+            body: this.post.body,
+            is_private: this.is_private,
+            only_me: this.only_me,
+          })
+          .then((res) => {
+            if (res.data) {
+              this.body = res.data.body;
+              this.is_private = res.data.is_private;
+              this.only_me = res.data.only_me;
+              this.closePostAdjustment();
+            }
+          })
+          .catch((error) => {
+            console.log(error);
+          });
+      }
+    },
   },
   components: {
     RouterLink,
@@ -424,7 +590,9 @@ export default (await import("vue")).defineComponent({
     MenuButton,
     MenuItem,
     MenuItems,
+    PrivacySelector,
     ShieldCheckIcon,
+    AdjustmentsHorizontalIcon,
     TrashIcon,
     HeartLike,
     GlobeAsiaAustraliaIcon,
@@ -432,7 +600,7 @@ export default (await import("vue")).defineComponent({
     LockClosedIcon,
     CreatedAtTooltip,
     PrivacyTooltip,
-    TooltipProfileVue
+    TooltipProfileVue,
   },
 });
 </script>

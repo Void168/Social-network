@@ -261,6 +261,25 @@ def post_create(request):
         return JsonResponse({'error': 'add something here later!...'})
 
 @api_view(['POST'])
+def post_update(request, pk):
+    post = Post.objects.get(pk=pk)
+    
+    body = request.data.get('body')
+    is_private = request.data.get('is_private')
+    only_me = request.data.get('only_me')
+    
+    post.body = body
+    post.is_private = is_private
+    post.only_me = only_me
+    
+    post.save()
+    
+    serializer = PostSerializer(post)
+
+    return JsonResponse(serializer.data, safe=False)
+
+
+@api_view(['POST'])
 def page_post_create(request, pk):
     page = Page.objects.get(pk=pk)
     form = PagePostForm(request.POST)

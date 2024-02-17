@@ -214,7 +214,7 @@ def send_join_request_private_group(request, pk):
     check2 = JoinGroupRequest.objects.filter(created_for=group).filter(created_by=current_user).filter(status=JoinGroupRequest.REJECTED)
 
     if not check1:
-        join_request = JoinGroupRequest.objects.create(created_for=group, created_by=current_user)
+        join_request = JoinGroupRequest.objects.create(created_for=group, created_by=current_user, status='pending')
                 
         return JsonResponse({'message': 'Join group request created'})
     if check2:
@@ -456,37 +456,37 @@ def create_answer(request, pk):
     answer1 = request.data.get('answer1')
     answer2 = request.data.get('answer2')
     answer3 = request.data.get('answer3')
-    
-    if questions.count() > 0:
-        question1 = questions[0]
-        if questions.count() > 1:
-            question2 = questions[1]
-            if questions.count() > 2:
-                question3 = questions[2]
-                
-    if answer1 and question1:
-        answer_1 = Answer.objects.create(
-            body=answer1,
-            created_by=request.user,
-            question=question1
-        )
-        join_request.answers.add(answer_1)
-        
-    if answer2 and question2:
-        answer_2 = Answer.objects.create(
-            body=answer2,
-            created_by=request.user,
-            question=question2
-        )
-        join_request.answers.add(answer_2)
-        
-    if answer3 and question3:
-        answer_3 = Answer.objects.create(
-            body=answer3,
-            created_by=request.user,
-            question=question3
-        )
-        join_request.answers.add(answer_3)
+    if join_request.answers.count() == 0:
+        if questions.count() > 0:
+            question1 = questions[0]
+            if questions.count() > 1:
+                question2 = questions[1]
+                if questions.count() > 2:
+                    question3 = questions[2]
+                    
+        if answer1 and question1:
+            answer_1 = Answer.objects.create(
+                body=answer1,
+                created_by=request.user,
+                question=question1
+            )
+            join_request.answers.add(answer_1)
+            
+        if answer2 and question2:
+            answer_2 = Answer.objects.create(
+                body=answer2,
+                created_by=request.user,
+                question=question2
+            )
+            join_request.answers.add(answer_2)
+            
+        if answer3 and question3:
+            answer_3 = Answer.objects.create(
+                body=answer3,
+                created_by=request.user,
+                question=question3
+            )
+            join_request.answers.add(answer_3)
         
     join_request.save()
     
@@ -700,3 +700,21 @@ def get_group_comments_growth(request, pk):
     comment_serializer = MemberCommentSerializer(comments, many=True)
             
     return JsonResponse({'comments': comment_serializer.data})
+
+@api_view(['GET'])
+def get_group_active_member(request, pk):
+    group = Group.objects.get(pk=pk)
+    sixty_ago = (datetime.now() - timedelta(days=60))
+    today = datetime.now()
+    
+    group_members = group.members.all()
+    
+    access_members = []
+    
+    for group_member in group_members:
+        if group_member.last_access.timestamp() > sixty_ago.timestamp() and group_member.last_access.timestamp() <today.timestamp():
+            access_members.append(group_member)
+    
+    serializer = MemberSerializer(access_members, many=True)
+    
+    return JsonResponse({'activeMembers': serializer.data})

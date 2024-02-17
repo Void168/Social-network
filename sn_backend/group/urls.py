@@ -40,4 +40,5 @@ urlpatterns = [
     path('<uuid:pk>/growth-posts/', api.get_group_posts_growth, name='get_group_posts_growth'),
     path('<uuid:pk>/growth-likes/', api.get_group_likes_growth, name='get_group_likes_growth'),
     path('<uuid:pk>/growth-comments/', api.get_group_comments_growth, name='get_group_comments_growth'),
+    path('<uuid:pk>/growth-active-members/', api.get_group_active_member, name='get_group_active_member'),
 ]

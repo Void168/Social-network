@@ -224,7 +224,7 @@ export default (await import("vue")).defineComponent({
         axios
           .post(`/api/group/${this.group?.id}/join/request/`)
           .then((res) => {
-            // console.log(res.data);
+            console.log(res.data);
             if (this.questions?.length) {
               this.isQuestionOpen = true;
             }
@@ -233,7 +233,7 @@ export default (await import("vue")).defineComponent({
             console.log(error);
           });
       } 
-      if(!this.isUserInGroup){
+      else{
         axios
           .post(`/api/group/public/${this.group?.id}/join/`)
           .then((res) => {
@@ -242,7 +242,7 @@ export default (await import("vue")).defineComponent({
           .catch((error) => {
             console.log(error);
           });
-      }
+        }
     },
     leaveGroup() {
       axios

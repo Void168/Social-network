@@ -182,7 +182,7 @@
       <div class="dark:bg-slate-800 rounded-lg p-4 space-y-4">
         <div>
           <h3 class="text-lg font-semibold">
-            Thành viên hoạt động: {{ group.members_count }}
+            Thành viên hoạt động: {{ activeMembersLength }}
           </h3>
           <h5
             class="text-sm text-neutral-400"
@@ -203,7 +203,10 @@
             {{ daySixtyAgo }} - {{ today }}
           </h5>
         </div>
-        <ActiveMember />
+        <ActiveMember
+          :selectedDays="selectedDistance.name"
+          :setActiveMembersLength="setActiveMembersLength"
+        />
       </div>
     </div>
   </div>
@@ -216,7 +219,7 @@ import TotalMember from "../../../components/items/group/chart/TotalMember.vue";
 import JoinRequest from "../../../components/items/group/chart/JoinRequest.vue";
 import Post from "../../../components/items/group/chart/Post.vue";
 import Comment from "../../../components/items/group/chart/Comment.vue";
-import Like from '../../../components/items/group/chart/Like.vue';
+import Like from "../../../components/items/group/chart/Like.vue";
 import ActiveMember from "../../../components/items/group/chart/ActiveMember.vue";
 
 import {
@@ -313,6 +316,7 @@ export default {
       postsLength: 0,
       commentsLength: 0,
       likesLength: 0,
+      activeMembersLength: 0,
     };
   },
 
@@ -328,6 +332,9 @@ export default {
     },
     setLikesLength(data) {
       this.likesLength = data;
+    },
+    setActiveMembersLength(data) {
+      this.activeMembersLength = data;
     },
     getCategory(data) {
       this.selected = data;

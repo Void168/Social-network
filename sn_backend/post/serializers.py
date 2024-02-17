@@ -32,7 +32,7 @@ class MemberLikeSerializer(serializers.ModelSerializer):
     created_by = MemberSerializer(read_only=True)
     class Meta:
         model = MemberLike
-        fields = ('id', 'created_by',)
+        fields = ('id', 'created_by', 'created_at',)
         
 class PageCommentSerializer(serializers.ModelSerializer):
     created_by = PageSerializer(read_only=True)

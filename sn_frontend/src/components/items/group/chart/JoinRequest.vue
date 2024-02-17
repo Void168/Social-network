@@ -43,7 +43,7 @@ export default (await import("vue")).defineComponent({
   data() {
     return {
       joinRequests: [],
-      myChart: null,
+      joinRequestsChart: null,
     };
   },
 
@@ -54,9 +54,7 @@ export default (await import("vue")).defineComponent({
   watch: {
     selectedDays(val) {
       if (val) {
-        this.myChart.destroy();
-        // this.myChart.clear();
-        console.log(this.myChart)
+        this.joinRequestsChart.destroy();
         this.createChart();
       }
     },
@@ -144,9 +142,6 @@ export default (await import("vue")).defineComponent({
         }
       }
 
-      // console.log(timeFrom(60).reverse()[7])
-      // console.log()
-
       let data;
       let scaleDaysMin;
       let scaleDaysMax;
@@ -178,9 +173,9 @@ export default (await import("vue")).defineComponent({
           break;
       }
 
-      console.log(data);
-      console.log(scaleDaysMin);
-      console.log(scaleDaysMax);
+      // console.log(data);
+      // console.log(scaleDaysMin);
+      // console.log(scaleDaysMax);
 
       const config = {
         type: "line",
@@ -220,7 +215,7 @@ export default (await import("vue")).defineComponent({
         scaleFontColor: "#FFF",
       };
       
-      this.myChart = new Chart(
+      this.joinRequestsChart = new Chart(
         document.getElementById("joinRequestChart"),
         config
       );

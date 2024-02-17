@@ -101,7 +101,10 @@
           {{ daySixtyAgo }} - {{ today }}
         </h5>
       </div>
-      <JoinRequest :setJoinRequestLength="setJoinRequestLength" :selectedDays="selectedDistance.name"/>
+      <JoinRequest
+        :setJoinRequestLength="setJoinRequestLength"
+        :selectedDays="selectedDistance.name"
+      />
       <div class="flex justify-center items-center">
         <RouterLink
           :to="{ name: 'groupjoinrequest', params: { id: group.id } }"
@@ -111,34 +114,72 @@
         </RouterLink>
       </div>
     </div>
-    <div class="flex gap-4 w-full">
-      <div class="dark:bg-slate-800 w-[50%] rounded-lg p-4 space-y-4">
-        <div>
-          <h3 class="text-lg font-semibold">
-            Bài viết: {{ group.members_count }}
-          </h3>
-          <h5
-            class="text-sm text-neutral-400"
-            v-if="selectedDistance.name === '7 ngày trước'"
-          >
-            {{ daySevenAgo }} - {{ today }}
-          </h5>
-          <h5
-            class="text-sm text-neutral-400"
-            v-if="selectedDistance.name === '28 ngày trước'"
-          >
-            {{ dayTwentyEightAgo }} - {{ today }}
-          </h5>
-          <h5
-            class="text-sm text-neutral-400"
-            v-if="selectedDistance.name === '60 ngày trước'"
-          >
-            {{ daySixtyAgo }} - {{ today }}
-          </h5>
+    <div class="flex flex-col gap-4 w-full">
+      <div class="dark:bg-slate-800 rounded-lg p-4 space-y-4">
+        <div class="flex justify-between items-center">
+          <div>
+            <h3 class="text-lg font-semibold" v-if="selected === categories[0]">
+              Bài viết: {{ postsLength }}
+            </h3>
+            <h3 class="text-lg font-semibold" v-if="selected === categories[1]">
+              Bình luận: {{ commentsLength }}
+            </h3>
+            <h3 class="text-lg font-semibold" v-if="selected === categories[2]">
+              Cảm xúc: {{ likesLength }}
+            </h3>
+            <h5
+              class="text-sm text-neutral-400"
+              v-if="selectedDistance.name === '7 ngày trước'"
+            >
+              {{ daySevenAgo }} - {{ today }}
+            </h5>
+            <h5
+              class="text-sm text-neutral-400"
+              v-if="selectedDistance.name === '28 ngày trước'"
+            >
+              {{ dayTwentyEightAgo }} - {{ today }}
+            </h5>
+            <h5
+              class="text-sm text-neutral-400"
+              v-if="selectedDistance.name === '60 ngày trước'"
+            >
+              {{ daySixtyAgo }} - {{ today }}
+            </h5>
+          </div>
+          <div class="flex space-x-1 rounded-xl bg-slate-700 p-1">
+            <div v-for="category in categories" :key="category">
+              <button
+                @click="getCategory(category)"
+                :class="[
+                  'min-w-max rounded-lg px-4 py-2 text-sm font-medium leading-5 ',
+                  'ring-slate-600/60 focus:outline-none focus:ring-2 ',
+                  selected === category
+                    ? 'bg-white dark:bg-slate-500 dark:text-neutral-200 shadow'
+                    : 'dark:text-neutral-200 hover:bg-white/[0.12] hover:text-white',
+                ]"
+              >
+                {{ category }}
+              </button>
+            </div>
+          </div>
         </div>
-        <Post />
+        <Post
+          v-if="selected === categories[0]"
+          :selectedDays="selectedDistance.name"
+          :setPostsLength="setPostsLength"
+        />
+        <Comment
+          v-if="selected === categories[1]"
+          :selectedDays="selectedDistance.name"
+          :setCommentsLength="setCommentsLength"
+        />
+        <Like
+          v-if="selected === categories[2]"
+          :selectedDays="selectedDistance.name"
+          :setLikesLength="setLikesLength"
+        />
       </div>
-      <div class="dark:bg-slate-800 w-[50%] rounded-lg p-4 space-y-4">
+      <div class="dark:bg-slate-800 rounded-lg p-4 space-y-4">
         <div>
           <h3 class="text-lg font-semibold">
             Thành viên hoạt động: {{ group.members_count }}
@@ -174,6 +215,8 @@ import { ref } from "vue";
 import TotalMember from "../../../components/items/group/chart/TotalMember.vue";
 import JoinRequest from "../../../components/items/group/chart/JoinRequest.vue";
 import Post from "../../../components/items/group/chart/Post.vue";
+import Comment from "../../../components/items/group/chart/Comment.vue";
+import Like from '../../../components/items/group/chart/Like.vue';
 import ActiveMember from "../../../components/items/group/chart/ActiveMember.vue";
 
 import {
@@ -188,7 +231,6 @@ import {
   ChevronUpDownIcon,
   ArrowDownTrayIcon,
 } from "@heroicons/vue/20/solid";
-import axios from "axios";
 
 export default {
   name: "groupgrowth",
@@ -196,6 +238,8 @@ export default {
     TotalMember,
     JoinRequest,
     Post,
+    Comment,
+    Like,
     ActiveMember,
     Listbox,
     ListboxLabel,
@@ -207,6 +251,9 @@ export default {
     ArrowDownTrayIcon,
   },
   setup() {
+    const categories = ["Bài viết", "Bình luận", "Cảm xúc"];
+    const selected = ref(categories[0]);
+
     const distances = [
       { name: "7 ngày trước" },
       { name: "28 ngày trước" },
@@ -224,20 +271,20 @@ export default {
       return day;
     };
 
-    let daySevenAgo = timeFrom(7);
-    const sevenDD = String(timeFrom(7).getDate()).padStart(2, "0");
-    const sevenMM = String(timeFrom(7).getMonth()).padStart(2, "0");
-    const sevenYYYY = timeFrom(7).getFullYear();
+    let daySevenAgo = timeFrom(6);
+    const sevenDD = String(timeFrom(6).getDate()).padStart(2, "0");
+    const sevenMM = String(timeFrom(6).getMonth() + 1).padStart(2, "0");
+    const sevenYYYY = timeFrom(6).getFullYear();
 
-    let dayTwentyEightAgo = timeFrom(28);
-    const twentyEightDD = String(timeFrom(28).getDate()).padStart(2, "0");
-    const twentyEightMM = String(timeFrom(28).getMonth()).padStart(2, "0");
-    const twentyEightYYYY = timeFrom(28).getFullYear();
+    let dayTwentyEightAgo = timeFrom(27);
+    const twentyEightDD = String(timeFrom(27).getDate()).padStart(2, "0");
+    const twentyEightMM = String(timeFrom(27).getMonth() + 1).padStart(2, "0");
+    const twentyEightYYYY = timeFrom(27).getFullYear();
 
-    let daySixtyAgo = timeFrom(60);
-    const sixtyDD = String(timeFrom(60).getDate()).padStart(2, "0");
-    const sixtyMM = String(timeFrom(60).getMonth()).padStart(2, "0");
-    const sixtyYYYY = timeFrom(60).getFullYear();
+    let daySixtyAgo = timeFrom(59);
+    const sixtyDD = String(timeFrom(59).getDate()).padStart(2, "0");
+    const sixtyMM = String(timeFrom(59).getMonth() + 1).padStart(2, "0");
+    const sixtyYYYY = timeFrom(59).getFullYear();
 
     today = dd + " Tháng " + mm + ", " + yyyy;
     daySevenAgo = sevenDD + " Tháng " + sevenMM + ", " + sevenYYYY;
@@ -252,22 +299,39 @@ export default {
       daySevenAgo,
       dayTwentyEightAgo,
       daySixtyAgo,
+      categories,
+      selected,
     };
   },
   props: {
     group: Object,
   },
 
-  data(){
+  data() {
     return {
-      joinRequestsLength: 0
-    }
+      joinRequestsLength: 0,
+      postsLength: 0,
+      commentsLength: 0,
+      likesLength: 0,
+    };
   },
 
   methods: {
-    setJoinRequestLength(data){
-      this.joinRequestsLength = data
-    }
+    setJoinRequestLength(data) {
+      this.joinRequestsLength = data;
+    },
+    setPostsLength(data) {
+      this.postsLength = data;
+    },
+    setCommentsLength(data) {
+      this.commentsLength = data;
+    },
+    setLikesLength(data) {
+      this.likesLength = data;
+    },
+    getCategory(data) {
+      this.selected = data;
+    },
   },
 };
 </script>

@@ -287,7 +287,7 @@ export default {
     async getYourGroupPosts(){
       axios.get('/api/posts/group/your-group/').then((res) => {
         this.groupPosts = res.data.data
-        console.log(res.data.data)
+        // console.log(res.data.data)
       }).catch((error) => {
         console.log(error)
       })

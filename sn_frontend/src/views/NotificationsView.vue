@@ -4,9 +4,25 @@
       <div
         class="p-4 bg-white border border-gray-200 md:rounded-lg dark:bg-slate-600 dark:border-slate-700 dark:text-neutral-200"
       >
-        <div v-if="notifications?.length">
+        <div class="flex gap-2 items-center">
           <div
-            v-for="notification in notifications.slice(0, lastNoti)"
+            @click="getAllNotifications"
+            :class="unRead ? 'dark:bg-slate-700' : 'dark:bg-emerald-500'"
+            class="px-4 py-2 font-semibold rounded-lg duration-75 dark:hover:bg-emerald-500 cursor-pointer shadow-md"
+          >
+            Tất cả
+          </div>
+          <div
+            @click="getUnreadNotifications"
+            :class="unRead ? 'dark:bg-emerald-500' : 'dark:bg-slate-700'"
+            class="px-4 py-2 font-semibold rounded-lg duration-75 dark:hover:bg-emerald-500 cursor-pointer shadow-md"
+          >
+            Chưa đọc
+          </div>
+        </div>
+        <div v-if="allNotifications?.length">
+          <div
+            v-for="notification in allNotifications.slice(0, lastNoti)"
             v-bind:key="notification.id"
             @click="readNotification(notification)"
           >
@@ -34,7 +50,7 @@
             <button
               class="btn"
               @click="loadMore"
-              v-if="lastNoti < notifications.length"
+              v-if="lastNoti < allNotifications.length"
             >
               Tải thêm thông báo
             </button>
@@ -61,18 +77,26 @@ export default (await import("vue")).defineComponent({
   name: "notifications",
   setup() {
     const userStore = useUserStore();
-    const pageStore = usePageStore()
+    const pageStore = usePageStore();
 
     return {
       userStore,
-      pageStore
+      pageStore,
     };
   },
   data() {
     return {
       notifications: [],
       lastNoti: 5,
+      unRead: false,
     };
+  },
+
+  computed:{
+    allNotifications(){
+      return !this.unRead ? this.notifications : 
+      this.notifications.filter((noti) => !noti.is_read)
+    }
   },
 
   mounted() {
@@ -95,7 +119,7 @@ export default (await import("vue")).defineComponent({
       );
       channel.bind("like-notification:new", (data) => {
         this.notifications.push(JSON.parse(data.notification));
-        console.log(JSON.parse(data.notification))
+        console.log(JSON.parse(data.notification));
       });
       channel.bind("comment-notification:new", (data) => {
         this.notifications.push(JSON.parse(data.notification));
@@ -122,7 +146,7 @@ export default (await import("vue")).defineComponent({
       return formatDistanceToNow(result, { locale: vi });
     },
     async getNotifications() {
-      if(!this.pageStore.pageId){
+      if (!this.pageStore.pageId) {
         await axios
           .get("/api/notifications/")
           .then((res) => {
@@ -191,6 +215,13 @@ export default (await import("vue")).defineComponent({
         .catch((error) => {
           console.log(error);
         });
+    },
+
+    getAllNotifications() {
+      this.unRead = false;
+    },
+    getUnreadNotifications() {
+      this.unRead = true;
     },
   },
 });

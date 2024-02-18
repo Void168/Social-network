@@ -12,7 +12,13 @@
         }"
       >
         <ul class="w-full">
-          <li
+          <RouterLink
+            :to="{
+              name: pageStore.pageId ? 'page' : 'profile',
+              params: {
+                id: pageStore.pageId ? pageStore.pageId : userStore.user.id,
+              },
+            }"
             class="flex gap-3 w-full items-center dark:hover:bg-slate-600 cursor-pointer px-4 py-2 rounded-xl"
           >
             <img
@@ -31,7 +37,7 @@
                   : userStore.user.name
               }}
             </h3>
-          </li>
+          </RouterLink>
           <li
             v-for="nav in navigation.slice(0, navigationsShow)"
             :key="nav.icon"
@@ -70,6 +76,26 @@
           <h2 class="mx-4 dark:text-slate-400 font-semibold text-lg">
             Lối tắt của bạn
           </h2>
+          <RouterLink
+            v-for="group in yourGroups"
+            :key="group.id"
+            :to="{
+              name: 'groupdiscuss',
+              params: {
+                id: group.id,
+              },
+            }"
+            class="flex gap-3 w-full items-center dark:hover:bg-slate-600 cursor-pointer px-4 py-2 rounded-xl"
+          >
+            <img
+              :src="group.get_cover_image"
+              alt=""
+              class="w-12 h-12 rounded-full"
+            />
+            <h3 class="dark:text-white font-semibold">
+              {{ group.name }}
+            </h3>
+          </RouterLink>
           <li
             v-for="group in listGroups.slice(0, groupsShow)"
             :key="group.icon"
@@ -197,6 +223,7 @@ export default {
     return {
       posts: [],
       postsList: [],
+      yourGroups: [],
       body: "",
       PostToShow: 5,
       loadMore: false,
@@ -210,8 +237,9 @@ export default {
     };
   },
 
-  created(){
+  created() {
     this.getFeed();
+    this.getYourGroups();
   },
 
   mounted() {
@@ -251,6 +279,20 @@ export default {
             );
             this.posts = this.postsList.slice(0, this.PostToShow);
             this.isLoading = false;
+          })
+          .catch((error) => {
+            console.log(error);
+          });
+      }
+    },
+    async getYourGroups() {
+      if (!this.pageStore?.pageId) {
+        await axios
+          .get("/api/group/your-groups/")
+          .then((res) => {
+            if (!res.data.message) {
+              this.yourGroups = res.data;
+            }
           })
           .catch((error) => {
             console.log(error);

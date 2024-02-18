@@ -33,9 +33,9 @@
           </div>
 
           <span
-            v-if="post.is_avatar_post === true"
+            v-if="post.is_avatar_post"
             class="sm:text-base xs:text-sm"
-            >đã thay đổi ảnh đại diện</span
+            >{{post.created_by.is_page ? 'đã thay đổi ảnh đại diện của họ' : 'đã thay đổi ảnh đại diện'}}</span
           >
           <div class="md:hidden items-center gap-2 flex">
             <div class="relative group" v-if="!isAdjust">
@@ -49,7 +49,7 @@
               />
               <UserGroupIcon
                 class="w-5 h-5"
-                v-else-if="post.is_private === true && post.only_me === false"
+                v-else-if="post.is_private && post.only_me"
               />
               <LockClosedIcon
                 class="w-5 h-5"

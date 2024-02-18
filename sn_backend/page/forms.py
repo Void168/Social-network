@@ -26,3 +26,8 @@ class PageLocationForm(ModelForm):
     class Meta:
         model = Page
         fields = ('location',)
+
+class PageAvatarForm(ModelForm):
+    class Meta:
+        model = Page
+        fields = ('avatar',)

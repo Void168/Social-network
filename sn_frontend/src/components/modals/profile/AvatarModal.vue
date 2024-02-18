@@ -346,7 +346,71 @@ export default (await import("vue")).defineComponent({
               console.log("error", error);
             });
         } else {
-          console.log('hello')
+          axios
+            .post(`/api/page/${this.pageStore.pageId}/edit-avatar/`, formData, {
+              headers: {
+                "Content-Type": "multipart/form-data",
+              },
+            })
+            .then((res) => {
+              
+              if (res.data.message === "avatar updated") {
+                this.toastStore.showToast(
+                  5000,
+                  "Thay đổi ảnh đại diện thành công.",
+                  "bg-emerald-500 text-white"
+                );
+                
+              } else {
+                this.toastStore.showToast(
+                  5000,
+                  "Thay đổi ảnh đại diện thất bại.",
+                  "bg-rose-400 text-white"
+                );
+              }
+  
+              if (this.share === true) {
+                let form = new FormData();
+  
+                form.append("image", this.$refs.avatar.files[0]);
+                form.append("body", this.body);
+                form.append("is_private", this.is_private);
+                form.append("only_me", this.only_me);
+                form.append("is_avatar_post", this.share)
+  
+                axios
+                  .post(`/api/posts/page/${this.pageStore.pageId}/create/`, form, {
+                    headers: {
+                      "Content-Type": "multipart/form-data",
+                    },
+                  })
+                  .then((res) => {
+                    // console.log("data", res.data);
+  
+                    this.body = "";
+                    this.$refs.file.value = null;
+                    this.is_private = false;
+                    this.only_me = false;
+                    this.share = false;
+                    this.url = null;
+  
+                    if (this.user) {
+                      this.user.posts_count += 1;
+                    }
+                  })
+                  .catch((error) => {
+                    console.log("error", error);
+                  });
+              }
+  
+              setTimeout(() => {
+                  this.$router.go(0);
+                }, 1500);
+  
+            })
+            .catch((error) => {
+              console.log("error", error);
+            });
         }
       }
     },

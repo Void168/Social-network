@@ -10,7 +10,7 @@ from rest_framework.decorators import api_view
 from .serializers import PageSerializer, PageDetailSerializer
 from notification.models import NotificationForPage
 from notification.serializers import NotificationSerializer
-from .forms import PageForm, PageBiographyForm, PageTypeForm, PageLocationForm, PageProfileForm
+from .forms import PageForm, PageBiographyForm, PageTypeForm, PageLocationForm, PageProfileForm, PageAvatarForm
 
 from notification.serializers import NotificationForPageSerializer
 
@@ -57,6 +57,16 @@ def get_page(request, id):
         'other_page_likes':other_page_likes_serializer.data,
         'other_page_following':other_page_following_serializer.data
     }, safe=False)
+
+@api_view(['POST'])
+def edit_page_avatar(request, pk):
+    page = Page.objects.get(pk=pk)
+
+    form = PageAvatarForm(request.POST, request.FILES, instance=page)
+    if form.is_valid:
+        form.save()
+    
+    return JsonResponse({'message': 'avatar updated'})
 
 @api_view(['GET'])
 def get_page_detail(request, id):

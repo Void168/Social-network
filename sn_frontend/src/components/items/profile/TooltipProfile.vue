@@ -1,6 +1,6 @@
 <template>
   <div
-    class="w-[400px] min-h-max bg-slate-800 absolute top-[50px] left-[-150px] shadow-md rounded-xl p-4 space-y-4"
+    class="w-[400px] min-h-max bg-slate-800 absolute z-50 top-[50px] left-[-150px] shadow-md rounded-xl p-4 space-y-4"
   >
     <div class="grid grid-cols-4 space-x-4">
       <div class="col-span-1">
@@ -94,19 +94,21 @@
         <h4>Theo dõi</h4>
       </button>
       <button
-        class="btn text-sm min-w-max gap-2 flex items-center justify-center"
+        class="btn text-sm min-w-max"
         v-if="user?.id === userStore.user.id && !checkIsFriend"
       >
+      <RouterLink :to="{name: 'profileedit'}" class=" gap-2 flex items-center justify-center">
         <PencilIcon class="w-4" />
         <h4>Chỉnh sửa trang cá nhân</h4>
+      </RouterLink>
       </button>
-      <button
+      <!-- <button
         class="btn text-sm min-w-max gap-2 flex items-center justify-center"
         v-if="user?.id === userStore.user.id && !checkIsFriend && !user?.is_page"
       >
         <PencilIcon class="w-4" />
         <h4>Chỉnh sửa trang cá nhân</h4>
-      </button>
+      </button> -->
       <button
         class="btn text-sm min-w-max gap-2 flex items-center justify-center"
         v-else-if="!checkIsFriend && user?.is_page"
@@ -142,10 +144,12 @@ import {
   EnvelopeIcon
 } from "@heroicons/vue/24/solid";
 import { useUserStore } from "../../../stores/user";
+import { RouterLink } from "vue-router";
 
 import CreateStoryModal from "../../modals/story/CreateStoryModal.vue";
 export default (await import("vue")).defineComponent({
   components: {
+    RouterLink,
     HomeIcon,
     ChatBubbleOvalLeftIcon,
     UserPlusIcon,

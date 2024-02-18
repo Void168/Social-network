@@ -40,6 +40,14 @@ def get_user_page(request, id):
     return JsonResponse(serializer.data, safe=False)
 
 @api_view(['GET'])
+def get_user_following_pages(request):
+    pages = Page.objects.filter(followers__in=list([request.user]))
+    
+    serializer = PageSerializer(pages, many=True)
+    
+    return JsonResponse(serializer.data, safe=False)
+
+@api_view(['GET'])
 def get_page(request, id):
     page = Page.objects.get(pk=id)
     other_page_followers = page.other_page_followers.all()

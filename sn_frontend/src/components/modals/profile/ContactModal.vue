@@ -112,7 +112,7 @@ export default (await import("vue")).defineComponent({
 
   methods: {
     getUserInfo() {
-      if(this.pageStore.pageActive.is_page === false){
+      if(!this.pageStore.pageActive.is_page){
         axios
           .get(`/api/user-info/${this.$route.params.id}`)
           .then((res) => {
@@ -125,9 +125,9 @@ export default (await import("vue")).defineComponent({
         console.log('hello')
       }
     },
-    getWebsitesList() {
-      if(this.pageStore.pageActive.is_page === false){
-        axios
+    async getWebsitesList() {
+      if(!this.pageStore.pageActive.is_page){
+        await axios
           .get(`/api/informations/${this.user.id}/websites/`)
           .then((res) => {
             this.websites = res.data.websites;
@@ -137,9 +137,9 @@ export default (await import("vue")).defineComponent({
         console.log('hello')
       }
     },
-    getPhoneNumbersList() {
-      if(this.pageStore.pageActive.is_page === false){
-        axios
+    async getPhoneNumbersList() {
+      if(!this.pageStore.pageActive.is_page){
+        await axios
           .get(`/api/informations/${this.user.id}/phone-numbers/`)
           .then((res) => {
             this.phoneNumbers = res.data.phone_numbers;

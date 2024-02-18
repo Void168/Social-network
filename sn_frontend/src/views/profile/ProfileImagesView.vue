@@ -1,7 +1,7 @@
 <template>
   <div class="max-w-7xl mx-auto gap-4">
     <div
-      class="bg-neutral-200 dark:bg-slate-600 p-4 rounded-md dark:text-neutral-200 w-full"
+      class="bg-neutral-200 dark:bg-slate-600 p-4 dark:text-neutral-200 w-full rounded-lg my-4"
     >
       <p class="text-xl font-bold">Ảnh</p>
       <div class="grid grid-cols-6 gap-3 my-4">
@@ -18,6 +18,7 @@ import axios from "axios";
 import ImageShowcase from "../../components/items/profile/ImageShowcase.vue";
 
 export default {
+  name: 'photos',
   components: {
     ImageShowcase,
   },

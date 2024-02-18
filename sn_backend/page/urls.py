@@ -18,6 +18,7 @@ urlpatterns = [
     path('<uuid:id>/dislike/',api.dislike_page, name='dislike_page'),
     path('<uuid:pk>/dislike/page/<uuid:id>/',api.page_dislike_page, name='page_dislike_page'),
     path('<uuid:id>/follow/',api.follow_page, name='follow_page'),
+    path('following/',api.get_user_following_pages, name='get_user_following_pages'),
     path('<uuid:pk>/follow/page/<uuid:id>/',api.page_follow_page, name='page_follow_page'),
     path('<uuid:id>/unfollow/',api.unfollow_page, name='unfollow_page'),
     path('<uuid:pk>/unfollow/page/<uuid:id>/',api.page_unfollow_page, name='page_unfollow_page'),

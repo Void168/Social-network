@@ -230,7 +230,7 @@ export default {
       toastStore,
     };
   },
-  name: "FriendsView",
+  name: "friends",
   components: {
     TabGroup,
     TabList,

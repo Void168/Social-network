@@ -85,7 +85,6 @@ def phone_number_list_profile(request, id):
         phone_numbers = PhoneNumber.objects.filter(created_by_id=id)
         
     phone_numbers_serializer = PhoneNumberSerializer(phone_numbers, many=True)
-
     return JsonResponse({
         'phone_numbers': phone_numbers_serializer.data,
     }, safe=False)

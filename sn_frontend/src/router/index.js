@@ -5,8 +5,6 @@ import FeedView from "../views/FeedView.vue";
 import GroupView from "../views/group/GroupView.vue";
 import SearchView from "../views/SearchView.vue";
 import GroupSearchView from "../views/group/GroupSearchView.vue"
-import ProfileView from "../views/profile/ProfileView.vue";
-import ProfileImagesView from "../views/profile/ProfileImagesView.vue";
 import GroupDetailView from "../views/group/GroupDetailView.vue";
 import GroupDiscussView from "../views/group/GroupDiscussView.vue"
 import GroupAboutView from "../views/group/GroupAboutView.vue";
@@ -21,7 +19,11 @@ import GroupRulesView from "../views/group/manage/GroupRulesView.vue"
 import GroupEditView from "../views/group/manage/GroupEditView.vue"
 import GroupOverviewView from "../views/group/manage/GroupOverviewView.vue"
 import GroupGrowthView from "../views/group/manage/GroupGrowthView.vue"
+import ProfileView from "../views/profile/ProfileView.vue";
+import ProfileDetailView from "../views/profile/ProfileDetailView.vue"
+import ProfileImagesView from "../views/profile/ProfileImagesView.vue";
 import FriendsView from "../views/profile/FriendsView.vue";
+import ProfileAboutView from "../views/profile/ProfileAboutView.vue"
 import PostView from "../views/post/PostView.vue";
 import PagePostView from "../views/page/PagePostView.vue";
 import ChatView from "../views/chat/ChatView.vue";
@@ -89,6 +91,30 @@ const router = createRouter({
       path: "/profile/:id",
       name: "profile",
       component: ProfileView,
+      props: true,
+      redirect: {name: "profiledetail"},
+      children: [
+        {
+          path: "/profile/:id/",
+          name: "profiledetail",
+          component: ProfileDetailView,
+        },
+        {
+          path: "/profile/:id/friends",
+          name: "friends",
+          component: FriendsView,
+        },
+        {
+          path: "/profile/:id/photos",
+          name: "photos",
+          component: ProfileImagesView,
+        },
+        {
+          path: "/profile/:id/about",
+          name: "about",
+          component: ProfileAboutView,
+        },
+      ]
     },
     {
       path: "/page/:id",
@@ -209,16 +235,7 @@ const router = createRouter({
       name: "editpassword",
       component: EditPasswordView,
     },
-    {
-      path: "/profile/:id/friends",
-      name: "friends",
-      component: FriendsView,
-    },
-    {
-      path: "/profile/:id/photos",
-      name: "photos",
-      component: ProfileImagesView,
-    },
+
     {
       path: "/post/:id",
       name: "postview",

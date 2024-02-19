@@ -139,9 +139,14 @@ export default (await import("vue")).defineComponent({
   methods: {
     submitForm() {
       if (this.query !== "") {
-        this.$router.push(
-          `/groups/${this.group.id}/search?query=${this.query}`
-        );
+        axios.post(`/api/search/group/${this.group.id}/create-key-word/`, {
+          query: this.query
+        }).then((res) => {
+          // console.log(res.data)
+          this.$router.push(`/groups/${this.group.id}/search?query=${this.query}`);
+        }).catch((error) => {
+          console.log(error)
+        })
       }
     },
   },

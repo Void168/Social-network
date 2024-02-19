@@ -40,7 +40,9 @@
         :show="isOpen"
         @closeModal="closeModal"
         :group="group"
+        :keywords="keywords"
         @getQuery="getQuery"
+        @deleteKeyWord="deleteKeyWord"
       />
       <router-view
         :isUserInGroup="isUserInGroup"
@@ -96,6 +98,7 @@ export default {
       currentMember: {},
       query: "",
       isOpen: false,
+      keywords: []
     };
   },
 
@@ -118,6 +121,7 @@ export default {
     },
     openModal() {
       this.isOpen = true;
+      this.getKeyWords()
     },
     async checkUserInGroup() {
       await axios
@@ -148,7 +152,7 @@ export default {
         });
     },
     async getCurrentMember() {
-      axios
+      await axios
         .get(`/api/group/get-current-member/${this.$route.params.id}/`)
         .then((res) => {
           this.currentMember = res.data;
@@ -158,9 +162,22 @@ export default {
           console.log(error);
         });
     },
+    async getKeyWords() {
+      await axios
+        .get(`/api/search/group/${this.group.id}/get-key-words/`)
+        .then((res) => {
+          this.keywords = res.data
+        })
+        .catch((error) => {
+          console.log(error);
+        });
+    },
     getQuery(query) {
       this.query = query;
     },
+    deleteKeyWord(keyword){
+      this.keywords = this.keywords.filter((kw) => kw.id !== keyword.id)
+    }
   },
 };
 </script>

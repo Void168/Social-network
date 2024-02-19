@@ -504,7 +504,7 @@ export default {
           this.groupPosts = this.allPosts?.slice(0, this.PostToShow);
 
           this.isLoading = false;
-          console.log(res.data);
+          // console.log(res.data);
         })
         .catch((error) => {
           console.log(error);

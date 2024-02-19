@@ -11,7 +11,10 @@
         >
           Chọn ảnh
         </button>
-        <GroupCoverImageModal :show="isCoverImageOpen" @closeCoverImageModal="closeCoverImageModal"/>
+        <GroupCoverImageModal
+          :show="isCoverImageOpen"
+          @closeCoverImageModal="closeCoverImageModal"
+        />
       </div>
       <div class="flex justify-between my-8 mx-4">
         <div class="flex flex-col gap-2">
@@ -203,11 +206,11 @@ export default (await import("vue")).defineComponent({
     closeQuestionModal() {
       this.isQuestionOpen = false;
     },
-    openCoverImageModal(){
-      this.isCoverImageOpen = true
+    openCoverImageModal() {
+      this.isCoverImageOpen = true;
     },
-    closeCoverImageModal(){
-      this.isCoverImageOpen = false
+    closeCoverImageModal() {
+      this.isCoverImageOpen = false;
     },
     async getGroupQuestions() {
       await axios
@@ -232,8 +235,7 @@ export default (await import("vue")).defineComponent({
           .catch((error) => {
             console.log(error);
           });
-      } 
-      else{
+      } else {
         axios
           .post(`/api/group/public/${this.group?.id}/join/`)
           .then((res) => {
@@ -242,7 +244,7 @@ export default (await import("vue")).defineComponent({
           .catch((error) => {
             console.log(error);
           });
-        }
+      }
     },
     leaveGroup() {
       axios

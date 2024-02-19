@@ -1,7 +1,8 @@
 <template>
   <div
-    class="dark:bg-slate-900 bg-slate-200 flex flex-col gap-4 relative items-center pt-6 py-12 px-6 w-[50%]"
+    class="dark:bg-slate-900 bg-slate-200 pt-6 py-12 px-6 w-[50%]"
   >
+  <div class="flex flex-col gap-4 relative items-center" v-if="members.length || groupPosts.length">
     <div
       v-for="member in members"
       :key="member.id"
@@ -20,6 +21,10 @@
         :currentMember="currentMember"
       />
     </div>
+  </div>
+  <div class="flex justify-center items-center" v-else>
+    Không tìm thấy kết quả phù hợp
+  </div>
   </div>
 </template>
 
@@ -82,21 +87,23 @@ export default {
 
   methods: {
     async getQuerySearch() {
-      await axios
-        .post(`/api/search/group/${this.$route.params.id}/`, {
-          query: this.route.query.query,
-        })
-        .then((res) => {
-          this.members = res.data.members;
-          this.groupPosts = res.data.groupPosts.concat(res.data.anonymousPosts);
-          this.groupPosts.sort(
-            (a, b) => new Date(b.created_at) - new Date(a.created_at)
-          );
-          // console.log(this.route.query.query);
-        })
-        .catch((error) => {
-          console.log("error:", error);
-        });
+      if(this.route.query.query){
+        await axios
+          .post(`/api/search/group/${this.$route.params.id}/`, {
+            query: this.route.query.query,
+          })
+          .then((res) => {
+            this.members = res.data.members;
+            this.groupPosts = res.data?.groupPosts?.concat(res.data?.anonymousPosts);
+            this.groupPosts.sort(
+              (a, b) => new Date(b.created_at) - new Date(a.created_at)
+            );
+            // console.log(this.route.query.query);
+          })
+          .catch((error) => {
+            console.log("error:", error);
+          });
+      }
     },
   },
 };

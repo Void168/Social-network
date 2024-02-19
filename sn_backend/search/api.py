@@ -8,9 +8,11 @@ from account.serializers import UserSerializer
 from group.models import Group, Member
 from page.models import Page
 from post.models import Post, PagePost, GroupPost
+from .models import GroupSearchKeyWord, SearchKeyWord
 from post.serializers import PostSerializer, PagePostSerializer, GroupPostSerializer, AnonymousGroupPostSerializer
 from page.serializers import PageSerializer
 from group.serializers import MemberSerializer
+from .serializers import GroupSearchKeyWordSerializer
 
 @api_view(['POST'])
 def search(request):
@@ -52,8 +54,7 @@ def search(request):
 @api_view(['POST'])    
 def search_group(request, pk):
     group = Group.objects.get(pk=pk)
-    data = request.data
-    query = data['query']
+    query = request.data.get('query')
     current_user = request.user
     
     member_ids = []
@@ -68,11 +69,75 @@ def search_group(request, pk):
     
     group_posts_serializer = GroupPostSerializer(group_posts, many=True)
     
-    group_posts = GroupPost.objects.filter(Q(body__icontains=query, is_anonymous=True))
-    anonymous_group_posts_serializer = AnonymousGroupPostSerializer(group_posts, many=True)
+    anonymous_group_posts = GroupPost.objects.filter(Q(body__icontains=query, is_anonymous=True))
+    anonymous_group_posts_serializer = AnonymousGroupPostSerializer(anonymous_group_posts, many=True)
     
-    return JsonResponse({
-        'members': members_serializer.data,
-        'groupPosts': group_posts_serializer.data,
-        'anonymousPosts':anonymous_group_posts_serializer.data
-    }, safe=False)
+    if members or group_posts or anonymous_group_posts:
+        return JsonResponse({
+            'members': members_serializer.data,
+            'groupPosts': group_posts_serializer.data,
+            'anonymousPosts':anonymous_group_posts_serializer.data
+        }, safe=False)
+    else:
+        return JsonResponse({'message': 'Not found'})
+    
+@api_view(['POST'])  
+def create_search_group_keyword(request, pk):
+    group = Group.objects.get(pk=pk)
+    query = request.data.get('query')
+    members = Member.objects.filter(information=request.user)
+    
+    group_members = group.members.all()
+    
+    current_member = Member.objects.none()
+    
+    if members.count() > 0:
+        for member in members:
+            if member in group_members:
+                current_member = member
+            else:
+                continue
+    
+    group_keyword = GroupSearchKeyWord.objects.create(
+        body=query,
+        group=group,
+        created_by=current_member
+    )
+    
+    serializer = GroupSearchKeyWordSerializer(group_keyword)
+    
+    return JsonResponse(serializer.data, safe=False)
+
+@api_view(['GET'])
+def get_search_group_keywords(request, pk):
+    group = Group.objects.get(pk=pk)
+    
+    members = Member.objects.filter(information=request.user)
+    
+    group_members = group.members.all()
+    
+    current_member = Member.objects.none()
+    
+    if members.count() > 0:
+        for member in members:
+            if member in group_members:
+                current_member = member
+            else:
+                continue
+    
+    group_keywords = GroupSearchKeyWord.objects.filter(Q(created_by=current_member, group=group))
+
+    if group_keywords:
+        serializer = GroupSearchKeyWordSerializer(group_keywords, many=True)
+
+        return JsonResponse(serializer.data, safe=False)
+    else:
+        return JsonResponse({'message': 'No keywords found'})
+    
+@api_view(['DELETE'])
+def delete_search_group_keywords(request, pk):
+    group_keyword = GroupSearchKeyWord.objects.get(pk=pk)
+    
+    group_keyword.delete()
+
+    return JsonResponse({'message': 'Keyword deleted'})

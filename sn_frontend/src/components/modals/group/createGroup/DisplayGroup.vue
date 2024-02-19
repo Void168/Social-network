@@ -1,7 +1,7 @@
 <template>
   <div
-    class="dark:text-slate-200 dark:bg-slate-700 rounded-lg gap-6 p-4 mx-auto"
-    :class="isDeviceActive ? 'w-[40%]' : 'w-[70%]'"
+    class="dark:text-slate-200 dark:bg-slate-700 rounded-lg gap-6 p-4 mx-auto max-h-max lg:my-12 my-20"
+    :class="isDeviceActive ? '2xl:w-[40%] sm:w-[60%] w-full' : 'lg:w-[70%]'"
   >
     <div class="flex justify-between items-center w-full mb-4">
       <h2 class="text-lg font-semibold">Xem trước trên máy tính</h2>
@@ -71,7 +71,7 @@
         </div>
       </div>
       <div
-        class="p-2 bg-slate-800 rounded-b-lg flex gap-4 max-h-72"
+        class="p-2 bg-slate-800 rounded-b-lg flex gap-4"
         :class="isDeviceActive ? 'flex-col' : ''"
       >
         <div
@@ -88,7 +88,7 @@
               >
             </div>
           </div>
-          <div class="flex justify-evenly items-center">
+          <div class="flex 2xl:flex-row flex-col justify-evenly items-center gap-2">
             <div class="flex items-center gap-2">
               <PhotoIcon class="w-6 dark:text-neutral-400" />
               <h3 class="dark:text-neutral-400 font-semibold">Ảnh/video</h3>

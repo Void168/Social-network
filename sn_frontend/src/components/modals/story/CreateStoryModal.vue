@@ -1,6 +1,6 @@
 <template>
   <TransitionRoot appear as="template">
-    <Dialog as="div" class="relative z-[100]">
+    <Dialog as="div" class="relative z-50">
       <TransitionChild
         as="template"
         enter="duration-300 ease-out"
@@ -27,6 +27,15 @@
             <DialogPanel
               class="w-full h-screen transform grid grid-cols-5 overflow-hidden bg-white dark:bg-slate-900 text-left align-middle shadow-xl transition-all"
             >
+              <button
+                @click="removeAll"
+                class="m-4 p-2 bg-slate-900 rounded-full hover:bg-slate-700 lg:hidden absolute"
+              >
+                <XMarkIcon
+                  @click="$emit('closeModal')"
+                  class="text-neutral-200 h-8 w-8 cursor-pointer transition"
+                />
+              </button>
               <div
                 class="lg:col-span-1 hidden bg-slate-800 dark:text-neutral-200 border-r-[1px] border-slate-700 lg:flex flex-col justify-between"
               >
@@ -214,7 +223,6 @@
                         :class="[selectedTheme.textColor]"
                       >
                         {{ body || "Bắt đầu nhập" }}
-
                       </p>
                     </div>
                     <div

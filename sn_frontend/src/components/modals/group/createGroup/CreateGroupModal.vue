@@ -27,8 +27,30 @@
             <DialogPanel
               class="w-full h-screen transform grid grid-cols-5 overflow-hidden bg-white dark:bg-slate-900 text-left align-middle shadow-xl transition-all"
             >
+            <div v-if="isExpand" class="w-full h-full absolute bg-slate-700/50 z-10 duration-100" @click="expandNavigation"></div>
               <div
-                class="lg:col-span-1 hidden bg-slate-800 dark:text-neutral-200 border-r-[1px] border-slate-700 lg:flex flex-col justify-between"
+                @click="expandNavigation"
+                class="fixed flex lg:hidden left-0 z-20 inset-y-2/4 w-5 h-20 bg-slate-800 rounded-r-2xl"
+                :class="isExpand ? 'translate-x-[320px]' : 'translate-x-0'"
+              >
+                <ChevronRightIcon
+                  class="dark:text-slate-200"
+                  v-if="!isExpand"
+                />
+                <ChevronLeftIcon class="dark:text-slate-200" v-else />
+              </div>
+              <button
+                @click="removeAll"
+                class="m-4 p-2 bg-slate-900 rounded-full hover:bg-slate-700 absolute"
+              >
+                <XMarkIcon
+                  @click="$emit('closeCreateGroupModal')"
+                  class="text-neutral-200 h-8 w-8 cursor-pointer transition"
+                />
+              </button>
+              <div
+                class="lg:col-span-1 bg-slate-800 dark:text-neutral-200 border-r-[1px] border-slate-700 flex-col justify-between h-screen lg:static fixed z-50"
+                :class="isExpand ? 'block w-[320px]': 'hidden lg:flex'"
               >
                 <div>
                   <button
@@ -60,7 +82,11 @@
                     </div>
                   </div>
                   <div class="px-4 space-y-4">
-                    <MUILikedInput :placeholder="'Tên nhóm'" v-model="name" :type="'text'"/>
+                    <MUILikedInput
+                      :placeholder="'Tên nhóm'"
+                      v-model="name"
+                      :type="'text'"
+                    />
                     <div class="flex flex-col gap-2">
                       <div class="flex items-center gap-2">
                         <h4>Chọn quyền riêng tư</h4>
@@ -112,7 +138,7 @@
                       :on-create="getValue(value)"
                       placeholder="Mời bạn bè (không bắt buộc)"
                       @click="getFriends"
-                      class="dark:text-gray-800 dark:bg-slate-800 border dark:border-slate-700"
+                      class="dark:text-gray-800 dark:bg-slate-800 border dark:border-slate-700 xl:text-base text-xs"
                       :classes="{
                         tagsSearch:
                           'absolute inset-0 border-0 dark:bg-slate-800 dark:text-neutral-200 outline-none focus:ring-0 appearance-none p-0 text-base font-sans box-border w-full',
@@ -148,7 +174,7 @@
                 </div>
               </div>
               <div
-                class="lg:col-span-4 col-span-5 flex lg:flex-row flex-col items-center gap-6 w-full"
+                class="lg:col-span-4 col-span-5 flex lg:flex-row flex-col items-center gap-6 w-full h-screen"
               >
                 <DisplayGroup
                   :isDeviceActive="isDeviceActive"
@@ -182,6 +208,8 @@ import {
   XMarkIcon,
   GlobeAsiaAustraliaIcon,
   LockClosedIcon,
+  ChevronRightIcon,
+  ChevronLeftIcon,
 } from "@heroicons/vue/24/solid";
 import MUILikedInput from "../../../input/MUILikedInput.vue";
 import PrivacySelector from "../../../dropdown/PrivacySelector.vue";
@@ -198,6 +226,8 @@ export default (await import("vue")).defineComponent({
     Multiselect,
     DisplayGroup,
     XMarkIcon,
+    ChevronRightIcon,
+    ChevronLeftIcon,
     MUILikedInput,
     PrivacySelector,
     GlobeAsiaAustraliaIcon,
@@ -230,6 +260,7 @@ export default (await import("vue")).defineComponent({
       showOptions: [{ name: "Hiển thị" }, { name: "Ẩn" }],
       value: [],
       friendOptions: [],
+      isExpand: false
     };
   },
 
@@ -240,6 +271,9 @@ export default (await import("vue")).defineComponent({
   },
 
   methods: {
+    expandNavigation(){
+      this.isExpand = !this.isExpand
+    },
     removeAll() {
       this.name = "";
       this.isDeviceActive = false;
@@ -311,13 +345,14 @@ export default (await import("vue")).defineComponent({
               "bg-emerald-500 text-white"
             );
           }
-        }).catch((error) => {
+        })
+        .catch((error) => {
           this.toastStore.showToast(
             3500,
             "Tạo nhóm thất bại.",
             "bg-rose-500 text-white"
           );
-          console.log(error)
+          console.log(error);
         });
     },
   },

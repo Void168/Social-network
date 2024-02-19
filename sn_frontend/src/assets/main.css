@@ -61,3 +61,7 @@
     @apply h-[6px] rounded-2xl bg-emerald-400
   } */
 }
+
+body:has(.requires-no-scroll) {
+  overflow: hidden;
+}

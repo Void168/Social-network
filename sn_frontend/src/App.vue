@@ -11,7 +11,7 @@
             <a href="/" class="text-xl">SN</a>
           </div>
           <div
-            class="menu-center flex sm:space-x-12 xs:space-x-5"
+            class="menu-center flex sm:space-x-12 xm:space-x-5 xs:space-x-1"
             v-if="userStore.user.isAuthenticated"
           >
             <RouterLink to="/" class="group">

@@ -8,3 +8,8 @@ class GroupSearchKeyWordSerializer(serializers.ModelSerializer):
     class Meta:
         model = GroupSearchKeyWord
         fields = ('id', 'body',)
+        
+class SearchKeyWordSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = SearchKeyWord
+        fields = ('id', 'body',)

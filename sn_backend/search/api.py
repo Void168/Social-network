@@ -12,12 +12,11 @@ from .models import GroupSearchKeyWord, SearchKeyWord
 from post.serializers import PostSerializer, PagePostSerializer, GroupPostSerializer, AnonymousGroupPostSerializer
 from page.serializers import PageSerializer
 from group.serializers import MemberSerializer
-from .serializers import GroupSearchKeyWordSerializer
+from .serializers import GroupSearchKeyWordSerializer, SearchKeyWordSerializer
 
 @api_view(['POST'])
 def search(request):
-    data = request.data
-    query = data['query']
+    query = request.data.get('query')
     current_user = request.user
     
     user_ids = [request.user.id]
@@ -40,7 +39,7 @@ def search(request):
     
     posts_serializer = PostSerializer(posts, many=True)
     
-    page_posts = PagePost.objects.filter(Q(body__icontains=query) | Q(created_by__in=list(page_ids)))
+    page_posts = PagePost.objects.filter(Q(body__icontains=query, created_by__in=list(page_ids)))
     page_posts_serializer = PagePostSerializer(page_posts, many=True)
     
     return JsonResponse({
@@ -80,7 +79,52 @@ def search_group(request, pk):
         }, safe=False)
     else:
         return JsonResponse({'message': 'Not found'})
+
+@api_view(['POST'])  
+def create_search_keyword(request):
+    query = request.data.get('query')
     
+    try:
+        existed_keyword = SearchKeyWord.objects.get(Q(created_by=request.user, body=query))
+        keyword = SearchKeyWord.objects.create(
+            body=query,
+            created_by=request.user
+        )
+            
+        existed_keyword.delete()
+        
+        serializer = SearchKeyWordSerializer(keyword)
+        
+        return JsonResponse(serializer.data, safe=False)
+    except SearchKeyWord.DoesNotExist:
+        keyword = SearchKeyWord.objects.create(
+            body=query,
+            created_by=request.user
+        )
+        
+        serializer = SearchKeyWordSerializer(keyword)
+    
+        return JsonResponse(serializer.data, safe=False)
+
+@api_view(['GET'])
+def get_search_keywords(request):
+    keywords = SearchKeyWord.objects.filter(Q(created_by=request.user))
+
+    if keywords:
+        serializer = SearchKeyWordSerializer(keywords, many=True)
+
+        return JsonResponse(serializer.data, safe=False)
+    else:
+        return JsonResponse({'message': 'No keywords found'})
+
+@api_view(['DELETE'])
+def delete_search_keywords(request, pk):
+    keyword = SearchKeyWord.objects.get(pk=pk)
+    
+    keyword.delete()
+
+    return JsonResponse({'message': 'Keyword deleted'})
+
 @api_view(['POST'])  
 def create_search_group_keyword(request, pk):
     group = Group.objects.get(pk=pk)
@@ -146,6 +190,7 @@ def get_search_group_keywords(request, pk):
         return JsonResponse(serializer.data, safe=False)
     else:
         return JsonResponse({'message': 'No keywords found'})
+
     
 @api_view(['DELETE'])
 def delete_search_group_keywords(request, pk):

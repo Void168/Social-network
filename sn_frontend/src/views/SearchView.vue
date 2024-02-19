@@ -39,10 +39,42 @@
         </form>
       </div>
 
-      <div v-if="users.length" class="p-4 bg-white border space-y-3 border-gray-200 dark:bg-slate-600 dark:border-slate-700 dark:text-neutral-200 rounded-lg">
+      <div
+        v-if="!query"
+        class="bg-white border p-4 border-gray-200 rounded-lg mb-4 dark:bg-slate-600 dark:border-slate-700 dark:text-neutral-200"
+      >
+        <h3 class="text-lg font-semibold">Lịch sử tìm kiếm</h3>
+        <div
+          class="px-4 flex flex-col dark:text-neutral-200 py-2 rounded-lg dark:hover:bg-slate-700 duration-75 cursor-pointer my-4"
+          v-for="keyword in keywords.slice(0, 6)"
+          :key="keyword.id"
+        >
+          <div class="flex justify-between items-center">
+            <div class="w-full">
+              <div
+                class="flex items-center gap-3 w-full"
+                @click="searchByKeyWord(keyword)"
+              >
+                <ClockIcon class="w-8 p-1 dark:bg-slate-700 rounded-full" />
+                <h3>{{ keyword.body }}</h3>
+              </div>
+            </div>
+            <div @click="$emit('deleteKeyWord', keyword)">
+              <XMarkIcon
+                @click="deleteKeyWord(keyword)"
+                class="w-8 p-1 dark:hover:bg-slate-600 rounded-full"
+              />
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div
+        v-if="users.length"
+        class="p-4 bg-white border space-y-3 border-gray-200 dark:bg-slate-600 dark:border-slate-700 dark:text-neutral-200 rounded-lg"
+      >
         <h1 class="text-xl font-bold">Mọi người</h1>
         <div
-          
           class="grid xl:grid-cols-4 lg:grid-cols-3 sm:grid-cols-2 xs:grid-cols-1 gap-4"
         >
           <div
@@ -62,7 +94,9 @@
               <p>
                 <strong> {{ user.name }}</strong>
               </p>
-              <div class="mt-6 flex 2xl:gap-2 justify-between gap-4 2xl:flex-col 2xl:justify-center">
+              <div
+                class="mt-6 flex 2xl:gap-2 justify-between gap-4 2xl:flex-col 2xl:justify-center"
+              >
                 <p class="text-xs text-gray-500 dark:text-neutral-200">
                   {{ user.friends_count }} người bạn
                 </p>
@@ -75,7 +109,10 @@
         </div>
       </div>
 
-      <div v-if="pages.length" class="p-4 bg-white border space-y-3 border-gray-200 dark:bg-slate-600 dark:border-slate-700 dark:text-neutral-200 rounded-lg">
+      <div
+        v-if="pages.length"
+        class="p-4 bg-white border space-y-3 border-gray-200 dark:bg-slate-600 dark:border-slate-700 dark:text-neutral-200 rounded-lg"
+      >
         <h1 class="text-xl font-bold">Trang</h1>
         <div
           class="grid xl:grid-cols-4 lg:grid-cols-3 sm:grid-cols-2 xs:grid-cols-1 gap-4"
@@ -97,7 +134,9 @@
               <p>
                 <strong> {{ page.name }}</strong>
               </p>
-              <div class="mt-6 flex 2xl:gap-2 justify-between gap-4 2xl:flex-col 2xl:justify-center">
+              <div
+                class="mt-6 flex 2xl:gap-2 justify-between gap-4 2xl:flex-col 2xl:justify-center"
+              >
                 <p class="text-xs text-gray-500 dark:text-neutral-200">
                   {{ page.followers_count }} người theo dõi
                 </p>
@@ -117,6 +156,13 @@
       >
         <FeedItem v-bind:post="post" />
       </div>
+
+      <div
+        v-if="!users.length && !pages.length && !posts.length && isSearch"
+        class="flex justify-center items-center p-4 bg-white border border-gray-200 dark:bg-slate-600 dark:border-slate-700 dark:text-neutral-200 rounded-lg mt-4"
+      >
+        Không tìm thấy kết quả phù hợp
+      </div>
     </div>
     <div class="main-right col-span-2 space-y-4 hidden sm:block">
       <PeopleYouMayKnow />
@@ -131,12 +177,16 @@ import PeopleYouMayKnow from "../components/PeopleYouMayKnow.vue";
 import Trends from "../components/Trends.vue";
 import FeedItem from "../components/items/post/FeedItem.vue";
 
+import { ClockIcon, XMarkIcon } from "@heroicons/vue/20/solid";
+
 export default {
   name: "SearchView",
   components: {
     PeopleYouMayKnow,
     Trends,
     FeedItem,
+    ClockIcon,
+    XMarkIcon,
   },
 
   data() {
@@ -145,28 +195,104 @@ export default {
       users: [],
       posts: [],
       pages: [],
+      keywords: [],
+      isSearch: false
     };
   },
 
-  methods: {
-    submitForm() {
-      // console.log("submitForm", this.query);
+  watch: {
+    "$route.params.id": {
+      handler: function () {},
+      deep: true,
+      immediate: true,
+    },
+  },
 
+  mounted() {
+    this.getSearchKeywords();
+  },
+
+  methods: {
+    async getSearchKeywords() {
+      await axios
+        .get("/api/search/get-key-words/")
+        .then((res) => {
+          this.keywords = res.data;
+        })
+        .catch((error) => {
+          console.log(error);
+        });
+    },
+    createSearchKeyWord() {
       axios
-        .post("/api/search/", {
+        .post("/api/search/create-key-word/", {
           query: this.query,
         })
         .then((res) => {
-          this.$router.push(`/search/?query=${this.query}`);
+          this.keywords = this.keywords.unshift(res.data);
+        })
+        .catch((error) => {
+          console.log(error);
+        });
+    },
+    searchByKeyWord(keyword) {
+      axios
+        .post("/api/search/", {
+          query: keyword.body,
+        })
+        .then((res) => {
+          axios
+            .post("/api/search/create-key-word/", {
+              query: keyword,
+            })
+            .then((res) => {})
+            .catch((error) => {
+              console.log(error);
+            });
+
+          this.$router.push(`/search/?query=${keyword.body}`);
           this.users = res.data.users;
-          const page_posts = res.data.page_posts
+          const page_posts = res.data.page_posts;
           this.posts = res.data.posts.concat(page_posts);
-          this.pages = res.data.pages
+          this.pages = res.data.pages;
           // console.log(page_posts)
         })
         .catch((error) => {
           console.log("error:", error);
         });
+    },
+    deleteKeyWord(keyword) {
+      axios
+        .delete(`/api/search/${keyword.id}/delete/`)
+        .then((res) => {
+          this.keywords = this.keywords.filter((kw) => kw.id !== keyword.id);
+          console.log(res.data);
+        })
+        .catch((error) => {
+          console.log(error);
+        });
+    },
+    submitForm() {
+      // console.log("submitForm", this.query);
+      if (this.query) {
+        axios
+          .post("/api/search/", {
+            query: this.query,
+          })
+          .then((res) => {
+            this.createSearchKeyWord();
+            this.isSearch = true
+            this.$router.push(`/search/?query=${this.query}`);
+            this.users = res.data.users;
+            const page_posts = res.data.page_posts;
+            this.posts = res.data.posts.concat(page_posts);
+            this.pages = res.data.pages;
+            // console.log(page_posts)
+          })
+          .catch((error) => {
+            console.log("error:", error);
+          });
+      }
     },
   },
 };

@@ -2,7 +2,7 @@
   <div
     class="dark:bg-slate-900 bg-slate-200 pt-6 py-12 px-6 w-[50%]"
   >
-  <div class="flex flex-col gap-4 relative items-center" v-if="members.length || groupPosts.length">
+  <div class="flex flex-col gap-4 relative items-center" v-if="members?.length || groupPosts?.length">
     <div
       v-for="member in members"
       :key="member.id"
@@ -67,11 +67,6 @@ export default {
   },
 
   watch: {
-    query(newVal) {
-      if(newVal){
-        this.getQuerySearch();
-      }
-    },
     "$route.params.id": {
       handler: function () {
         this.getQuerySearch();
@@ -95,7 +90,7 @@ export default {
           .then((res) => {
             this.members = res.data.members;
             this.groupPosts = res.data?.groupPosts?.concat(res.data?.anonymousPosts);
-            this.groupPosts.sort(
+            this.groupPosts?.sort(
               (a, b) => new Date(b.created_at) - new Date(a.created_at)
             );
             // console.log(this.route.query.query);

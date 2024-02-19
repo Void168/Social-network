@@ -97,16 +97,29 @@ def create_search_group_keyword(request, pk):
                 current_member = member
             else:
                 continue
+    try:
+        existed_keyword = GroupSearchKeyWord.objects.get(Q(created_by=current_member, group=group, body=query))
+        group_keyword = GroupSearchKeyWord.objects.create(
+            body=query,
+            group=group,
+            created_by=current_member
+        )
+            
+        existed_keyword.delete()
+        
+        serializer = GroupSearchKeyWordSerializer(group_keyword)
+        
+        return JsonResponse(serializer.data, safe=False)
+    except GroupSearchKeyWord.DoesNotExist:
+        group_keyword = GroupSearchKeyWord.objects.create(
+            body=query,
+            group=group,
+            created_by=current_member
+        )
+        
+        serializer = GroupSearchKeyWordSerializer(group_keyword)
     
-    group_keyword = GroupSearchKeyWord.objects.create(
-        body=query,
-        group=group,
-        created_by=current_member
-    )
-    
-    serializer = GroupSearchKeyWordSerializer(group_keyword)
-    
-    return JsonResponse(serializer.data, safe=False)
+        return JsonResponse(serializer.data, safe=False)
 
 @api_view(['GET'])
 def get_search_group_keywords(request, pk):

@@ -70,28 +70,30 @@
                   Chỉnh sửa
                 </h4>
               </div>
-              <div
-                class="px-4 flex flex-col dark:text-neutral-200 py-2 rounded-lg dark:hover:bg-slate-700 duration-75 cursor-pointer"
-                v-for="keyword in keywords.slice(0, 6)"
-                :key="keyword.id"
-              >
-                <div class="flex justify-between items-center">
-                  <div @click="$emit('closeModal')" class="w-full">
-                    <div
-                      class="flex items-center gap-3 w-full"
-                      @click="searchByKeyWord(keyword)"
-                    >
-                      <ClockIcon
-                        class="w-8 p-1 dark:bg-slate-900 rounded-full"
-                      />
-                      <h3>{{ keyword.body }}</h3>
+              <div v-if="!query">
+                <div
+                  class="px-4 flex flex-col dark:text-neutral-200 py-2 rounded-lg dark:hover:bg-slate-700 duration-75 cursor-pointer"
+                  v-for="keyword in keywords.slice(0, 6)"
+                  :key="keyword.id"
+                >
+                  <div class="flex justify-between items-center">
+                    <div @click="$emit('closeModal')" class="w-full">
+                      <div
+                        class="flex items-center gap-3 w-full"
+                        @click="searchByKeyWord(keyword)"
+                      >
+                        <ClockIcon
+                          class="w-8 p-1 dark:bg-slate-900 rounded-full"
+                        />
+                        <h3>{{ keyword.body }}</h3>
+                      </div>
                     </div>
-                  </div>
-                  <div @click="$emit('deleteKeyWord', keyword)">
-                    <XMarkIcon
-                      @click="deleteKeyWord(keyword)"
-                      class="w-8 p-1 dark:hover:bg-slate-600 rounded-full"
-                    />
+                    <div @click="$emit('deleteKeyWord', keyword)">
+                      <XMarkIcon
+                        @click="deleteKeyWord(keyword)"
+                        class="w-8 p-1 dark:hover:bg-slate-600 rounded-full"
+                      />
+                    </div>
                   </div>
                 </div>
               </div>

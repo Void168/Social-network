@@ -1,5 +1,5 @@
 <template>
-  <div class="flex flex-col">
+  <div class="flex flex-col ">
     <div class="py-2 px-4">
       <div class="flex items-center gap-2">
         <div class="flex flex-col space-y-2">

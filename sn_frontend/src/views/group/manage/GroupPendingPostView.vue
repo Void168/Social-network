@@ -8,8 +8,8 @@
     <div
       class="w-full flex flex-col justify-center items-center mx-auto dark:bg-slate-800"
     >
-      <div class="w-[60%] py-6">
-        <div class="flex justify-between items-center">
+      <div class="xl:w-[60%] w-full py-6 px-4">
+        <div class="flex justify-between items-center sm:flex-nowrap flex-wrap">
           <h1 class="font-bold text-2xl">
             Bài viết đang chờ &middot; {{ pendingPosts.length }}
           </h1>
@@ -18,14 +18,14 @@
           >
           <button
                 :disabled="!isCheckAll"
-              class="px-4 py-2 shadow-md  rounded-lg font-semibold max-w-max  duration-75"
+              class="px-4 py-2 shadow-md  rounded-lg font-semibold max-w-max  duration-75 sm:text-base text-xs"
               :class="isCheckAll ? 'bg-emerald-500 hover:bg-emerald-400' : 'bg-slate-500 text-neutral-400'"
             >
               Phê duyệt
             </button>
             <button
             :disabled="!isCheckAll"
-              class="px-4 py-2 shadow-md rounded-lg font-semibold max-w-max duration-75"
+              class="px-4 py-2 shadow-md rounded-lg font-semibold max-w-max duration-75 sm:text-base text-xs"
               :class="isCheckAll ? 'bg-rose-500 hover:bg-rose-400' : 'bg-slate-500 text-neutral-400'"
             >
               Từ chối
@@ -87,7 +87,7 @@
         </div>
       </div>
     </div>
-    <div class="w-[50%] my-12 space-y-4 dark:text-neutral-200">
+    <div class="xl:w-[50%] w-full my-12 space-y-4 dark:text-neutral-200 px-4">
       <div
         v-for="post in pendingPosts"
         :key="post.id"
@@ -129,7 +129,7 @@
                   post?.id
                 )
               "
-              class="px-4 py-2 shadow-md bg-emerald-500 rounded-lg font-semibold w-full hover:bg-emerald-400 duration-75"
+              class="px-4 py-2 shadow-md bg-emerald-500 rounded-lg font-semibold w-full hover:bg-emerald-400 duration-75 sm:text-base text-sm"
             >
               Phê duyệt
             </button>
@@ -141,7 +141,7 @@
                   post?.id
                 )
               "
-              class="px-4 py-2 shadow-md bg-rose-500 rounded-lg font-semibold w-full hover:bg-rose-400 duration-75"
+              class="px-4 py-2 shadow-md bg-rose-500 rounded-lg font-semibold w-full hover:bg-rose-400 duration-75 sm:text-base text-sm"
             >
               Từ chối
             </button>

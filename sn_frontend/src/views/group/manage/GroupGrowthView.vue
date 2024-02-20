@@ -1,6 +1,6 @@
 <template>
   <div
-    class="w-[60%] flex flex-col justify-center items-center mx-auto my-4 space-y-4"
+    class="xl:w-[60%] w-full flex flex-col justify-center items-center mx-auto my-4 space-y-4 px-4"
   >
     <div class="flex justify-between items-center w-full">
       <Listbox v-model="selectedDistance">
@@ -116,7 +116,7 @@
     </div>
     <div class="flex flex-col gap-4 w-full">
       <div class="dark:bg-slate-800 rounded-lg p-4 space-y-4">
-        <div class="flex justify-between items-center">
+        <div class="flex justify-between sm:flex-row flex-col gap-3 items-center">
           <div>
             <h3 class="text-lg font-semibold" v-if="selected === categories[0]">
               Bài viết: {{ postsLength }}

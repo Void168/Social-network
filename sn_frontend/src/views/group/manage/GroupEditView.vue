@@ -1,5 +1,5 @@
 <template>
-  <div class="flex flex-col items-center justify-center py-6 gap-4 w-[50%]">
+  <div class="flex flex-col items-center justify-center py-6 gap-4 xl:w-[50%] lg:w-[70%] w-full px-4">
     <div class="w-full dark:bg-slate-800 rounded-lg p-4">
       <h1 class="font-bold text-2xl">Thiết lập nhóm</h1>
       <div class="my-4">
@@ -108,7 +108,7 @@
                 v-model="url"
                 :type="'url'"
               />
-              <div class="flex justify-end items-center gap-2">
+              <div class="flex justify-end items-center gap-2 mt-4">
                 <button
                   @click="toggleWebShow"
                   class="px-4 py-2 font-medium text-emerald-500 dark:bg-slate-700 dark:hover:bg-slate-600 duration-75 rounded-lg"

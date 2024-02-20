@@ -6,7 +6,7 @@
     }"
   >
     <div class="w-full flex flex-col justify-center items-center mx-auto dark:bg-slate-800">
-      <div class="w-[60%] py-6">
+      <div class="xl:w-[60%] w-full py-6 px-4">
         <div class="flex justify-between items-center">
           <h1 class="font-bold text-2xl">
             Yêu cầu làm thành viên &middot; {{ requests.length }}
@@ -75,7 +75,7 @@
         </div>
       </div>
     </div>
-    <div class="w-[60%] my-12 space-y-4 dark:text-neutral-200">
+    <div class="xl:w-[60%] w-full my-12 space-y-4 dark:text-neutral-200 px-4">
       <div
         v-for="request in requests"
         :key="request.id"
@@ -88,7 +88,7 @@
             class="w-16 h-[60px] rounded-full"
           />
         </div>
-        <div class="flex justify-between items-start w-full">
+        <div class="flex justify-between 2xl:flex-row flex-col gap-2 items-start w-full">
           <div class="flex flex-col space-y-2 w-full">
             <div>
               <h3 class="font-semibold text-lg">

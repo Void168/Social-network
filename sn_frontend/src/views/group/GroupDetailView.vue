@@ -13,7 +13,7 @@
       <ChevronLeftIcon class="dark:text-slate-200" v-else />
     </div>
     <div
-      class="xl:col-span-1 md:col-span-1 lg:col-span-2 md:block dark:bg-slate-800 bg-slate-200 md:sticky fixed overflow-y-auto scrollbar-corner-slate-200 scrollbar-none hover:scrollbar-thin scrollbar-thumb-slate-400 scrollbar-track-slate-800 z-50"
+      class="xl:col-span-1 md:col-span-1 lg:col-span-2 md:block border-r dark:border-slate-600 dark:bg-slate-800 bg-slate-200 md:sticky fixed overflow-y-auto scrollbar-corner-slate-200 scrollbar-none hover:scrollbar-thin scrollbar-thumb-slate-400 scrollbar-track-slate-800 z-50"
       :style="{
         height: `${toastStore.height}px`,
         top: `${toastStore.navbarHeight}px`,

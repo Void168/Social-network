@@ -1,17 +1,17 @@
 <template>
   <div
-    class="w-[60%] flex flex-col justify-center items-center mx-auto my-4 space-y-4"
+    class="lg:w-[60%] w-full px-4 flex flex-col justify-center items-center mx-auto my-4 space-y-4"
   >
     <div class="dark:bg-slate-800 w-full rounded-lg p-4 space-y-4">
       <div>
         <h3 class="text-xl font-semibold">Cần xem xét</h3>
         <h4 class="text-neutral-400">1 thông tin mới cần xem xét</h4>
       </div>
-      <div class="grid lg:grid-cols-2 grid-cols-1 gap-4">
+      <div class="grid xl:grid-cols-2 grid-cols-1 gap-4">
         <div v-for="navigator in navigators" :key="navigator.name">
           <RouterLink
             :to="{ name: navigator.url, params: { id: group.id } }"
-            class="p-2 flex justify-between items-start dark:hover:bg-slate-700 cursor-pointer rounded-lg duration-75"
+            class="p-2 flex justify-between gap-2 items-start dark:hover:bg-slate-700 cursor-pointer rounded-lg duration-75"
           >
             <div class="flex gap-2 items-start">
               <ExclamationTriangleIcon
@@ -50,7 +50,7 @@
         <h3 class="text-xl font-semibold">Tóm tắt thông tin chi tiết</h3>
         <h4 class="text-neutral-400">Trong 7 ngày qua</h4>
       </div>
-      <div class="grid lg:grid-cols-2 grid-cols-1 gap-4">
+      <div class="grid xl:grid-cols-2 grid-cols-1 gap-4">
         <div
           class="px-4 py-8 flex justify-between items-center bg-slate-700 rounded-lg duration-75"
           v-for="summary in summaries"
@@ -96,7 +96,7 @@
       <div class="flex justify-center items-center">
         <RouterLink
           :to="{ name: 'groupgrowth', params: { id: group.id } }"
-          class="px-4 py-2 dark:bg-slate-600 rounded-lg max-w-max font-semibold cursor-pointer dark:hover:bg-slate-500 duration-75"
+          class="px-4 text-center py-2 dark:bg-slate-600 rounded-lg max-w-max font-semibold cursor-pointer dark:hover:bg-slate-500 duration-75"
         >
           Xem thông tin chi tiết về lượt tương tác
         </RouterLink>

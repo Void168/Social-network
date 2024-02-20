@@ -1,12 +1,12 @@
 <template>
-  <div class="w-full space-y-2">
+  <div class="space-y-2 break-words">
     <div
       v-for="option in options"
       :key="option.id"
       class="p-2 flex justify-between items-center dark:hover:bg-slate-700 rounded-lg duration-75 cursor-pointer"
       @click="$emit('getOption', option)"
     >
-      <div class="flex gap-2 items-center">
+      <div class="flex gap-2 items-center w-[80%]">
         <EyeIcon
           class="w-10 p-2 rounded-full bg-slate-600"
           v-if="option.id === 1"
@@ -17,13 +17,13 @@
           <h5 class="text-sm">{{ option.content }}</h5>
         </div>
       </div>
-      <div class="relative w-10 h-10 rounded-full dark:bg-slate-600">
+      <div class="relative sm:w-10 sm:h-10 h-6 w-6 rounded-full dark:bg-slate-600">
         <span
-          class="absolute w-5 h-5 bg-emerald-500 rounded-full top-[10px] left-[10px]"
+          class="absolute sm:w-5 sm:h-5 h-3 w-3 bg-emerald-500 rounded-full sm:top-[10px] sm:left-[10px] top-[6px] left-[6px]"
           v-if="selectedOption && option.id === 1"
         ></span>
         <span
-          class="absolute w-5 h-5 bg-emerald-500 rounded-full top-[10px] left-[10px]"
+          class="absolute sm:w-5 sm:h-5 h-3 w-3 bg-emerald-500 rounded-full sm:top-[10px] sm:left-[10px] top-[6px] left-[6px]"
           v-if="!selectedOption && option.id === 2"
         ></span>
       </div>

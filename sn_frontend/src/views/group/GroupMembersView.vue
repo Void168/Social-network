@@ -1,6 +1,6 @@
 <template>
-  <div class="w-[50%] my-12 space-y-4 dark:text-neutral-200">
-    <div class="dark:bg-slate-700 rounded-lg p-4">
+  <div class="xl:w-[50%] sm:w-[80%] sm:my-12 my-4 space-y-4 dark:text-neutral-200">
+    <div class="dark:bg-slate-700 sm:rounded-lg p-4">
       <div>
         <h3 class="text-lg font-semibold">
           Thành viên &middot; {{ group.members_count }}
@@ -29,7 +29,7 @@
           <img
             :src="group?.admin?.get_avatar"
             alt="admin-avatar"
-            class="w-16 h-16 rounded-full"
+            class="xm:w-16 xm:h-16 w-10 h-10 rounded-full"
           />
           <div>
             <h3 class="font-semibold">{{ userStore.user.name }}</h3>
@@ -52,7 +52,7 @@
               <img
                 :src="group?.admin?.get_avatar"
                 alt="admin-avatar"
-                class="w-16 h-16 rounded-full"
+                class="xm:w-16 xm:h-16 w-10 h-10 rounded-full"
               />
               <div>
                 <h3 class="font-semibold">{{ group?.admin?.name }}</h3>
@@ -69,7 +69,7 @@
               <img
                 :src="moderator?.information?.get_avatar"
                 alt="admin-avatar"
-                class="w-16 h-16 rounded-full shadow-lg"
+                class="xm:w-16 xm:h-16 w-10 h-10 rounded-full shadow-lg"
               />
               <div>
                 <h3 class="font-semibold">
@@ -79,7 +79,7 @@
               </div>
             </div>
             <button
-              class="flex gap-2 items-center px-4 py-2 rounded-lg dark:bg-slate-800 dark:hover:bg-slate-600 duration-75 font-medium"
+              class="flex gap-2 xm:text-base text-xs items-center xm:px-4 xm:py-2 px-2 py-1 rounded-lg dark:bg-slate-800 dark:hover:bg-slate-600 duration-75 font-medium"
             >
               <UserPlusIcon class="w-6" />
               Thêm bạn bè
@@ -109,7 +109,7 @@
               <img
                 :src="friend?.information?.get_avatar"
                 alt="admin-avatar"
-                class="w-16 h-16 rounded-full"
+                class="xm:w-16 xm:h-16 w-10 h-10 rounded-full"
               />
               <div>
                 <h3 class="font-semibold">
@@ -119,7 +119,7 @@
               </div>
             </RouterLink>
             <button
-              class="flex gap-2 items-center px-4 py-2 rounded-lg dark:bg-slate-800 dark:hover:bg-slate-600 duration-75 font-medium"
+              class="flex gap-2 items-center xm:text-base text-xs xm:px-4 xm:py-2 px-2 py-1 rounded-lg dark:bg-slate-800 dark:hover:bg-slate-600 duration-75 font-medium"
             >
               <ChatBubbleLeftEllipsisIcon class="w-6" />
               Nhắn tin
@@ -152,7 +152,7 @@
               <img
                 :src="friends[0]?.information?.get_avatar"
                 alt="admin-avatar"
-                class="w-16 h-16 rounded-full"
+                class="xm:w-16 xm:h-16 w-10 h-10 rounded-full"
               />
               <div>
                 <h3 class="font-semibold">
@@ -162,7 +162,7 @@
               </div>
             </RouterLink>
             <button
-              class="flex gap-2 items-center px-4 py-2 rounded-lg dark:bg-slate-800 dark:hover:bg-slate-600 duration-75 font-medium"
+              class="flex gap-2 items-center xm:text-base text-xs xm:px-4 xm:py-2 px-2 py-1 rounded-lg dark:bg-slate-800 dark:hover:bg-slate-600 duration-75 font-medium"
             >
               <UserPlusIcon class="w-6" />
               Thêm bạn bè
@@ -200,7 +200,7 @@
               <img
                 :src="member?.information?.get_avatar"
                 alt="admin-avatar"
-                class="w-16 h-16 rounded-full"
+                class="xm:w-16 xm:h-16 w-10 h-10 rounded-full"
               />
               <div>
                 <h3 class="font-semibold">

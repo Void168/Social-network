@@ -1,7 +1,7 @@
 <template>
   <div class="w-full flex flex-col justify-center items-center">
-    <div class="w-[50%] my-12 space-y-4 dark:text-neutral-200">
-      <div class="dark:bg-slate-700 rounded-lg p-4">
+    <div class="xl:w-[50%] sm:w-[80%] sm:my-12 my-4 space-y-4 dark:text-neutral-200">
+      <div class="dark:bg-slate-700 sm:rounded-lg p-4">
         <h3 class="font-semibold text-lg">Giới thiệu về nhóm này</h3>
         <hr class="border my-6 border-slate-600" />
         <h4>{{ group?.biography }}</h4>
@@ -62,7 +62,7 @@
           </div>
         </div>
       </div>
-      <div class="dark:bg-slate-700 rounded-lg p-4">
+      <div class="dark:bg-slate-700 sm:rounded-lg p-4">
         <h3 class="font-semibold text-lg">
           Thành viên &middot; {{ group.members_count }}
         </h3>
@@ -89,7 +89,7 @@
           </h4>
         </div>
       </div>
-      <div class="dark:bg-slate-700 rounded-lg p-4 space-y-4">
+      <div class="dark:bg-slate-700 sm:rounded-lg p-4 space-y-4">
         <h3 class="font-semibold text-lg">Hoạt động</h3>
         <hr class="border my-6 border-slate-600" />
         <div class="flex gap-2">
@@ -116,7 +116,7 @@
         </div>
       </div>
       <div
-        class="dark:bg-slate-700 rounded-lg p-4 space-y-4"
+        class="dark:bg-slate-700 sm:rounded-lg p-4 space-y-4"
         v-if="rules.length"
       >
         <h3 class="text-lg font-semibold">Quy tắc nhóm của quản trị viên</h3>

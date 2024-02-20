@@ -17,7 +17,7 @@
         />
       </div>
       <div
-        class="flex sm:justify-between sm:flex-row flex-col sm:my-8 my-4 mx-4"
+        class="flex sm:justify-between sm:flex-row flex-col sm:my-8 my-4 md:mx-1 lm:mx-4 mx-4"
       >
         <div class="flex flex-col gap-2">
           <h1 class="sm:text-2xl text-3xl font-bold">{{ group.name }}</h1>
@@ -54,19 +54,19 @@
             v-if="isUserInGroup"
           >
             <button
-              class="flex items-center justify-center gap-1 sm:px-4 sm:py-2 font-semibold bg-emerald-500 hover:bg-emerald-400 rounded-lg duration-75 sm:max-w-max w-full sm:text-base xm:text-sm text-xs"
+              class="flex items-center justify-center gap-1 sm:px-4 sm:py-2 font-semibold bg-emerald-500 hover:bg-emerald-400 rounded-lg duration-75 sm:max-w-max w-full sm:text-base md:text-sm text-xs"
             >
               <PlusIcon class="w-4" />
               Mời</button
             ><button
-              class="flex items-center justify-center gap-1 sm:px-4 sm:py-2 font-semibold dark:bg-slate-800 bg-slate-300 dark:hover:bg-slate-900 rounded-lg duration-75 sm:max-w-max w-full sm:text-base xm:text-sm text-xs"
+              class="flex items-center justify-center gap-1 sm:px-4 sm:py-2 font-semibold dark:bg-slate-800 bg-slate-300 dark:hover:bg-slate-900 rounded-lg duration-75 sm:max-w-max w-full sm:text-base md:text-sm text-xs"
             >
               <ShareIcon class="w-4" />
               Chia sẻ
             </button>
             <button
               @click="leaveGroup"
-              class="flex items-center justify-center gap-1 sm:px-4 sm:py-2 font-semibold dark:bg-slate-800 bg-slate-300 dark:hover:bg-slate-900 rounded-lg duration-75 sm:max-w-max w-full sm:text-base xm:text-sm text-xs"
+              class="flex items-center justify-center gap-1 sm:px-4 sm:py-2 font-semibold dark:bg-slate-800 bg-slate-300 dark:hover:bg-slate-900 rounded-lg duration-75 sm:max-w-max w-full sm:text-base md:text-sm text-xs"
             >
               <UserMinusIcon class="w-4" />
               Rời nhóm

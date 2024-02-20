@@ -1,6 +1,6 @@
 <template>
   <div
-    class="dark:bg-slate-800 dark:text-neutral-200 grid md:grid-cols-3 xl:grid-cols-5 lg:grid-cols-7 grid-cols-4 relative"
+    class="dark:bg-slate-800 dark:text-neutral-200 grid md:grid-cols-3 xl:grid-cols-5 lg:grid-cols-7 grid-cols-4 relative min-h-screen"
     :class="isExpand ? 'requires-no-scroll' : ''"
   >
   <div v-if="isExpand" class="w-full h-full absolute bg-slate-700/50 z-10 duration-100" @click="expandGroupNavigation"></div>

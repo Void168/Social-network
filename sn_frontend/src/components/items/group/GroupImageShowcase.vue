@@ -21,7 +21,7 @@
       ></button>
       <img
         :src="groupPost?.attachments[0]?.get_image"
-        class="xl:h-36 lg:h-24 sm:h-48 xm:h-32 xs:h-24 cursor-pointer"
+        class="xl:h-36 xm:h-32 cursor-pointer w-full"
         :class="[
           index == 0 ? 'rounded-tl-md' : '',
           index == 1 ? 'rounded-tr-md' : '',
@@ -30,12 +30,6 @@
         ]"
       />
     </div>
-    <!-- <ImagePostModal
-        :show="isOpen"
-        @closeModal="closeModal"
-        :imageId="post.id"
-        :post="post"
-      /> -->
   </div>
 </template>
 

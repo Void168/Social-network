@@ -1,12 +1,12 @@
 <template>
   <div
-    class="w-full min-h-[700px]"
+    class="w-full min-h-[700px] px-4"
   >
-  <div class="w-[80%] mx-auto gap-4 my-6 bg-neutral-200 dark:bg-slate-700 p-4 rounded-md dark:text-neutral-200">
-      <div class="flex justify-between items-center">
+  <div class="lg:w-[80%] mx-auto gap-4 my-6 bg-neutral-200 dark:bg-slate-700 p-4 rounded-md dark:text-neutral-200">
+      <div class="flex justify-between items-center xm:flex-nowrap flex-wrap">
         <h2 class="text-xl font-semibold">File</h2>
-        <div class="flex items-center gap-4">
-          <div class="relative">
+        <div class="flex items-center xm:gap-4 gap-2 xm:flex-nowrap flex-wrap">
+          <div class="relative w-full">
             <MagnifyingGlassIcon
               class="absolute top-[18px] left-2 sm:w-6 sm:h-6 xs:w-3 xs:h-3 dark:text-neutral-400"
             />
@@ -18,21 +18,21 @@
             />
           </div>
           <div
-            class="px-4 py-2 font-semibold text-emerald-400 dark:bg-slate-600 dark:hover:bg-slate-500 duration-75 cursor-pointer rounded-lg"
+            class="px-4 py-2 font-semibold text-emerald-400 dark:bg-slate-600 dark:hover:bg-slate-500 duration-75 cursor-pointer rounded-lg sm:text-base text-sm w-full text-center"
           >
             Tải file lên
           </div>
         </div>
       </div>
       <hr class="border border-slate-600 my-2"/>
-      <div class="flex gap-2 items-center px-4 my-4">
-          <div class="flex justify-center items-center w-full dark:bg-slate-600 py-2 font-semibold px-4 rounded-lg">
+      <div class="flex sm:flex-nowrap	flex-wrap gap-2 items-center px-4 my-4">
+          <div class="flex justify-center items-center w-full dark:bg-slate-600 py-2 font-semibold  sm:text-base text-sm px-4 rounded-lg">
               TÊN FILE
           </div>
-          <div class="flex justify-center items-center max-w-max dark:bg-slate-600 py-2 font-semibold px-4 w-full rounded-lg">
+          <div class="flex justify-center items-center sm:max-w-max dark:bg-slate-600 py-2 font-semibold  sm:text-base text-sm px-4 w-full rounded-lg">
               LOẠI
           </div>
-          <div class="flex justify-center items-center max-w-max dark:bg-slate-600 py-2 font-semibold px-4 w-full rounded-lg">
+          <div class="flex justify-center items-center sm:max-w-max dark:bg-slate-600 py-2 font-semibold  sm:text-base text-sm px-4 w-full rounded-lg">
               LẦN SỬA ĐỔI GẦN ĐÂY
           </div>
       </div>

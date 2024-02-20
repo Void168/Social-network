@@ -22,9 +22,9 @@ module.exports = {
     },
     screens: {
       'xs': '320px',
-      'xm': '440px',
+      'xm': '444px',
       'sm': '640px',
-      'md': '768px',
+      'md': '774px',
       'lm': '875px',
       'lg': '1024px',
       'xl': '1280px',

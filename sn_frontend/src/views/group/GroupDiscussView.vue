@@ -1,7 +1,7 @@
 <template>
   <div class="w-full flex flex-col justify-center items-center">
-    <div class="flex w-[80%] my-4 gap-4 px-4">
-      <div class="w-[60%]" id="feed-frame">
+    <div class="flex xl:w-[80%] w-full my-4 gap-4 px-4">
+      <div class="lg:w-[60%] w-full" id="feed-frame">
         <div v-if="isUserInGroup" class="flex flex-col space-y-4">
           <div class="dark:bg-slate-700 rounded-lg px-4">
             <div class="py-4 flex items-start gap-2 p-2 rounded-lg">
@@ -42,19 +42,21 @@
               </XCircleIcon>
             </div>
             <hr class="mx-4 border dark:border-slate-600" />
-            <div class="flex justify-center items-center gap-2 px-4 py-2">
+            <div class="flex flex-wrap justify-center w-full items-center gap-2 px-4 py-2">
               <div
                 @click="activateAnonymous"
-                class="flex items-center font-medium justify-center gap-2 py-2 w-full rounded-lg dark:hover:bg-slate-800 cursor-pointer duration-75"
+                class="flex items-center font-medium justify-center gap-2 py-2 px-4  rounded-lg dark:hover:bg-slate-800 cursor-pointer duration-75"
                 :class="isAnonymous ? 'dark:bg-slate-800 bg-slate-400' : ''"
                 v-if="group.anonymous_post"
               >
+              <span class="xm:text-base text-xs flex gap-2 cursor-pointer">
                 <EyeSlashIcon class="w-6 text-sky-500" />
                 Bài viết ẩn danh
+              </span>
               </div>
               <div
                 v-if="!isPollOpen"
-                class="flex items-center font-medium justify-center gap-2 py-2 w-full rounded-lg dark:hover:bg-slate-800 cursor-pointer duration-75"
+                class="flex items-center font-medium justify-center gap-2 py-2 px-4 rounded-lg dark:hover:bg-slate-800 cursor-pointer duration-75"
               >
                 <label for="doc">
                   <span class="xm:text-base text-xs flex gap-2 cursor-pointer"
@@ -71,13 +73,15 @@
                 </label>
               </div>
               <div
-                class="flex items-center font-medium justify-center gap-2 py-2 w-full rounded-lg dark:hover:bg-slate-800 cursor-pointer duration-75"
+                class="flex items-center font-medium justify-center gap-2 py-2 px-4 rounded-lg dark:hover:bg-slate-800 cursor-pointer duration-75"
                 :class="isPollOpen ? 'bg-slate-800' : ''"
                 @click="createPollOpen"
                 v-if="group.anyone_can_poll"
               >
+              <span class="xm:text-base text-xs flex gap-2 cursor-pointer">
                 <HandRaisedIcon class="w-6 text-amber-600" />
                 Thăm dò ý kiến
+              </span>
               </div>
             </div>
             <button
@@ -94,8 +98,8 @@
               Đăng bài viết
             </button>
           </div>
-          <div class="flex items-center justify-between">
-            <div class="flex items-center gap-2 text-emerald-500 font-bold">
+          <div class="flex items-center flex-wrap gap-2 justify-between">
+            <div class="flex items-center gap-2 text-emerald-500 font-bold xm:text-base text-sm">
               Bài viết mới nhất
               <ChevronDownIcon class="w-5" />
             </div>
@@ -105,7 +109,7 @@
                 :class="
                   defaultTab ? 'dark:bg-emerald-600' : 'dark:bg-slate-700'
                 "
-                class="px-4 py-2 font-semibold rounded-lg dark:hover:bg-emerald-600 duration-75 cursor-pointer"
+                class="px-4 py-2 font-semibold rounded-lg dark:hover:bg-emerald-600 duration-75 cursor-pointer xm:text-base text-xs"
               >
                 Bài viết
               </div>
@@ -114,7 +118,7 @@
                 :class="
                   !defaultTab ? 'dark:bg-emerald-600' : 'dark:bg-slate-700'
                 "
-                class="px-4 py-2 font-semibold rounded-lg dark:hover:bg-emerald-600 duration-75 cursor-pointer"
+                class="px-4 py-2 font-semibold rounded-lg dark:hover:bg-emerald-600 duration-75 cursor-pointer xm:text-base text-xs"
               >
                 Cuộc thảo luận
               </div>
@@ -212,7 +216,7 @@
         </div>
       </div>
       <div
-        class="w-[40%] sticky space-y-4"
+        class="w-[40%] sticky space-y-4 lg:block hidden overflow-y-scroll"
         :style="{
           height: `${toastStore.height}px`,
           top: `${toastStore.navbarHeight}px`,
@@ -562,7 +566,7 @@ export default {
       let height = frame.scrollHeight;
       let scrollY = window.scrollY;
 
-      if (height < scrollY + 100) {
+      if (height < scrollY + 1000) {
         setTimeout(() => {
           this.loadMore = true;
         }, 1000);

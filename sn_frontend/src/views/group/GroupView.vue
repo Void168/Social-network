@@ -176,7 +176,6 @@ export default {
     },
     expandGroupNavigation() {
       this.isExpand = !this.isExpand;
-      console.log('hello')
     },
   },
 };

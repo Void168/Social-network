@@ -1,13 +1,24 @@
 <template>
   <div
-    class="dark:bg-slate-800 dark:text-neutral-200 grid lg:grid-cols-5 grid-cols-4 relative"
+    class="dark:bg-slate-800 dark:text-neutral-200 grid md:grid-cols-3 xl:grid-cols-5 lg:grid-cols-7 grid-cols-4 relative"
+    :class="isExpand ? 'requires-no-scroll' : ''"
   >
+  <div v-if="isExpand" class="w-full h-full absolute bg-slate-700/50 z-10 duration-100" @click="expandGroupNavigation"></div>
     <div
-      class="col-span-1 lg:block hidden dark:bg-slate-800 bg-slate-200 sticky overflow-y-auto scrollbar-corner-slate-200 scrollbar-none hover:scrollbar-thin scrollbar-thumb-slate-400 scrollbar-track-slate-800"
+      @click="expandGroupNavigation"
+      class="fixed flex md:hidden left-0 z-20 inset-y-2/4 w-5 h-20 bg-slate-600 rounded-r-2xl"
+      :class="isExpand ? 'translate-x-[274px]' : 'translate-x-0'"
+    >
+      <ChevronRightIcon class="dark:text-slate-200" v-if="!isExpand" />
+      <ChevronLeftIcon class="dark:text-slate-200" v-else />
+    </div>
+    <div
+      class="xl:col-span-1 md:col-span-1 lg:col-span-2 md:block dark:bg-slate-800 bg-slate-200 md:sticky fixed overflow-y-auto scrollbar-corner-slate-200 scrollbar-none hover:scrollbar-thin scrollbar-thumb-slate-400 scrollbar-track-slate-800 z-50"
       :style="{
         height: `${toastStore.height}px`,
         top: `${toastStore.navbarHeight}px`,
       }"
+      :class="isExpand ? 'block' : 'hidden'"
     >
       <GroupSearchNavigation
         v-if="route.name === 'groupsearch'"
@@ -22,7 +33,7 @@
       />
     </div>
     <div
-      class="lg:col-span-4 md:col-span-3 col-span-4 dark:bg-slate-900 bg-slate-200 flex flex-col relative items-center"
+      class="xl:col-span-4 lg:col-span-5 md:col-span-2 col-span-4 dark:bg-slate-900 bg-slate-200 flex flex-col relative items-center"
     >
       <GroupHeader
         :group="group"
@@ -63,6 +74,8 @@ import {
   GlobeAsiaAustraliaIcon,
   LockClosedIcon,
   HomeIcon,
+  ChevronRightIcon,
+  ChevronLeftIcon,
 } from "@heroicons/vue/24/solid";
 import GroupDetailNavigation from "../../components/items/group/GroupDetailNavigation.vue";
 import GroupSearchNavigation from "../../components/items/group/GroupSearchNavigation.vue";
@@ -74,6 +87,8 @@ export default {
     GlobeAsiaAustraliaIcon,
     LockClosedIcon,
     HomeIcon,
+    ChevronRightIcon,
+    ChevronLeftIcon,
     RouterLink,
     GroupDetailNavigation,
     GroupSearchNavigation,
@@ -98,7 +113,8 @@ export default {
       currentMember: {},
       query: "",
       isOpen: false,
-      keywords: []
+      keywords: [],
+      isExpand: false,
     };
   },
 
@@ -121,7 +137,10 @@ export default {
     },
     openModal() {
       this.isOpen = true;
-      this.getKeyWords()
+      this.getKeyWords();
+    },
+    expandGroupNavigation() {
+      this.isExpand = !this.isExpand;
     },
     async checkUserInGroup() {
       await axios
@@ -166,7 +185,7 @@ export default {
       await axios
         .get(`/api/search/group/${this.group.id}/get-key-words/`)
         .then((res) => {
-          this.keywords = res.data
+          this.keywords = res.data;
         })
         .catch((error) => {
           console.log(error);
@@ -175,9 +194,9 @@ export default {
     getQuery(query) {
       this.query = query;
     },
-    deleteKeyWord(keyword){
-      this.keywords = this.keywords.filter((kw) => kw.id !== keyword.id)
-    }
+    deleteKeyWord(keyword) {
+      this.keywords = this.keywords.filter((kw) => kw.id !== keyword.id);
+    },
   },
 };
 </script>

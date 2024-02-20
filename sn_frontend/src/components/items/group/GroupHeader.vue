@@ -1,8 +1,8 @@
 <template>
   <div class="flex justify-center items-center w-full mx-auto bg-slate-700">
-    <div class="flex flex-col w-[80%]">
+    <div class="flex flex-col 2xl:w-[80%] w-full">
       <div
-        class="relative justify-end h-[500px] bg-cover bg-center bg-no-repeat rounded-b-lg bg-fit w-full"
+        class="relative justify-end lg:h-[500px] sm:h-[300px] h-[200px] bg-cover bg-center bg-no-repeat rounded-b-lg bg-fit w-full"
         :style="bgImage"
       >
         <button
@@ -16,21 +16,23 @@
           @closeCoverImageModal="closeCoverImageModal"
         />
       </div>
-      <div class="flex justify-between my-8 mx-4">
+      <div
+        class="flex sm:justify-between sm:flex-row flex-col sm:my-8 my-4 mx-4"
+      >
         <div class="flex flex-col gap-2">
-          <h1 class="text-2xl font-bold">{{ group.name }}</h1>
+          <h1 class="sm:text-2xl text-3xl font-bold">{{ group.name }}</h1>
           <div class="flex items-center gap-2">
             <GlobeAsiaAustraliaIcon
               v-if="!group.is_private_group"
               class="w-4"
             />
             <LockClosedIcon v-else class="w-4" />
-            <h4 class="text-sm">
+            <h4 class="sm:text-sm">
               {{ group.is_private_group ? "Nhóm riêng tư" : "Nhóm công khai" }}
               &middot; {{ group.members_count }} thành viên
             </h4>
           </div>
-          <div class="flex gap-1 items-center">
+          <div class="flex gap-1 items-center sm:mb-0 mb-4">
             <img
               :src="group?.admin?.get_avatar"
               alt=""
@@ -47,29 +49,42 @@
           </div>
         </div>
         <div class="flex flex-col justify-end">
-          <div class="flex gap-4" v-if="isUserInGroup">
+          <div
+            class="flex lg:gap-4 gap-2 lg:text-lg md:text-xs"
+            v-if="isUserInGroup"
+          >
             <button
-              class="flex items-center gap-1 px-4 py-2 font-semibold bg-emerald-500 hover:bg-emerald-400 rounded-lg duration-75"
+              class="flex items-center justify-center gap-1 sm:px-4 sm:py-2 font-semibold bg-emerald-500 hover:bg-emerald-400 rounded-lg duration-75 sm:max-w-max w-full sm:text-base xm:text-sm text-xs"
             >
               <PlusIcon class="w-4" />
               Mời</button
             ><button
-              class="flex items-center gap-1 px-4 py-2 font-semibold dark:bg-slate-800 bg-slate-300 dark:hover:bg-slate-900 rounded-lg duration-75"
+              class="flex items-center justify-center gap-1 sm:px-4 sm:py-2 font-semibold dark:bg-slate-800 bg-slate-300 dark:hover:bg-slate-900 rounded-lg duration-75 sm:max-w-max w-full sm:text-base xm:text-sm text-xs"
             >
               <ShareIcon class="w-4" />
               Chia sẻ
             </button>
             <button
               @click="leaveGroup"
-              class="flex items-center gap-1 px-4 py-2 font-semibold dark:bg-slate-800 bg-slate-300 dark:hover:bg-slate-900 rounded-lg duration-75"
+              class="flex items-center justify-center gap-1 sm:px-4 sm:py-2 font-semibold dark:bg-slate-800 bg-slate-300 dark:hover:bg-slate-900 rounded-lg duration-75 sm:max-w-max w-full sm:text-base xm:text-sm text-xs"
             >
               <UserMinusIcon class="w-4" />
               Rời nhóm
             </button>
+            <div class="flex items-center gap-2 sm:hidden">
+              <MagnifyingGlassIcon
+                @click="$emit('openModal')"
+                class="w-10 p-2 rounded-lg dark:bg-slate-800 dark:hover:bg-slate-800/70 duration-75 cursor-pointer"
+              />
+
+              <EllipsisHorizontalIcon
+                class="w-10 p-2 rounded-lg dark:bg-slate-800 dark:hover:bg-slate-800/70 duration-75 cursor-pointer"
+              />
+            </div>
           </div>
           <button
             @click="joinGroup"
-            class="flex items-center gap-1 px-4 py-2 font-semibold bg-emerald-500 hover:bg-emerald-400 rounded-lg duration-75"
+            class="flex items-center gap-1 px-4 py-2 font-semibold bg-emerald-500 hover:bg-emerald-400 rounded-lg duration-75 sm:max-w-max w-full"
             v-else
           >
             <UserPlusIcon class="w-4" />
@@ -84,50 +99,51 @@
         </div>
       </div>
       <hr class="border dark:border-slate-600 mx-4" />
-      <div class="flex justify-between items-center mx-4">
-        <div class="flex items-center">
+      <div class="flex sm:justify-between justify-end items-center xm:mx-4">
+        <div class="flex items-center lg:text-base md:text-sm sm:text-base xm:text-sm text-xs">
           <RouterLink
             :to="{ name: 'groupdiscuss', params: { id: group?.id } }"
-            class="font-medium p-4 flex justify-center dark:hover:bg-slate-600 duration-75"
+            class="font-medium xm:p-4 p-2 flex justify-center dark:hover:bg-slate-600 duration-75"
           >
             Thảo luận
           </RouterLink>
           <RouterLink
             :to="{ name: 'groupabout', params: { id: group?.id } }"
-            class="font-medium p-4 flex justify-center dark:hover:bg-slate-600 duration-75"
+            class="font-medium xm:p-4 p-2 flex justify-center dark:hover:bg-slate-600 duration-75"
           >
             Về nhóm
           </RouterLink>
           <RouterLink
             v-if="isUserInGroup"
             :to="{ name: 'groupmembers', params: { id: group?.id } }"
-            class="font-medium p-4 flex justify-center dark:hover:bg-slate-600 duration-75"
+            class="font-medium xm:p-4 p-2 flex justify-center dark:hover:bg-slate-600 duration-75"
           >
             Thành viên
           </RouterLink>
           <RouterLink
             v-if="isUserInGroup"
             :to="{ name: 'groupmedia', params: { id: group?.id } }"
-            class="font-medium p-4 flex justify-center dark:hover:bg-slate-600 duration-75"
+            class="font-medium xm:p-4 p-2 lm:flex sm:flex hidden justify-center dark:hover:bg-slate-600 duration-75 md:hidden"
           >
             File Phương Tiện
           </RouterLink>
           <RouterLink
             v-if="isUserInGroup"
             :to="{ name: 'groupfile', params: { id: group?.id } }"
-            class="font-medium p-4 flex justify-center dark:hover:bg-slate-600 duration-75"
+            class="font-medium xm:p-4 p-2 lm:flex sm:flex hidden justify-center dark:hover:bg-slate-600 duration-75 md:hidden"
           >
             File
           </RouterLink>
+          <GroupRouterDropdown :group="group" />
         </div>
-        <div class="flex items-center gap-2">
+        <div class="sm:flex items-center gap-2 hidden">
           <MagnifyingGlassIcon
             @click="$emit('openModal')"
-            class="w-10 p-2 rounded-lg dark:bg-slate-800 dark:hover:bg-slate-800/70 duration-75 cursor-pointer"
+            class="lg:w-9 p-2 md:w-8 w-9 rounded-lg dark:bg-slate-800 dark:hover:bg-slate-800/70 duration-75 cursor-pointer"
           />
 
           <EllipsisHorizontalIcon
-            class="w-10 p-2 rounded-lg dark:bg-slate-800 dark:hover:bg-slate-800/70 duration-75 cursor-pointer"
+            class="lg:w-9 p-2 md:w-8 w-9 rounded-lg dark:bg-slate-800 dark:hover:bg-slate-800/70 duration-75 cursor-pointer"
           />
         </div>
       </div>
@@ -142,6 +158,7 @@ import { useToastStore } from "../../../stores/toast";
 import { RouterLink } from "vue-router";
 import ListQuestionModal from "../../modals/group/ListQuestionModal.vue";
 import GroupCoverImageModal from "../../modals/group/GroupCoverImageModal.vue";
+import GroupRouterDropdown from "../../dropdown/GroupRouterDropdown.vue";
 
 import {
   GlobeAsiaAustraliaIcon,
@@ -166,6 +183,7 @@ export default (await import("vue")).defineComponent({
     MagnifyingGlassIcon,
     GroupCoverImageModal,
     ListQuestionModal,
+    GroupRouterDropdown,
   },
   setup() {
     const userStore = useUserStore();
@@ -272,6 +290,7 @@ export default (await import("vue")).defineComponent({
   content: "";
   position: absolute;
   bottom: 0;
+  left: 0;
   height: 4px;
   width: 100%;
   z-index: 10;

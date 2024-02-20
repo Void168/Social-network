@@ -55,7 +55,7 @@
           >
             <PopoverPanel
               v-slot="{ close }"
-              class="absolute z-50 left-[-70px] mt-3 w-screen max-w-xs -translate-x-1/2 transform px-4 sm:px-0"
+              class="absolute z-50 xs:left-[-90px] xm:left-[-70px] mt-3 w-screen max-w-xs -translate-x-1/2 transform px-4 sm:px-0"
             >
               <div
                 v-if="isBack"

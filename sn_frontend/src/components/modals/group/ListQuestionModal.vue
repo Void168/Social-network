@@ -184,6 +184,7 @@ export default (await import("vue")).defineComponent({
         answer2: this.answer2,
         answer3: this.answer3,
       }).then((res) => {
+        this.$router.go(0)
         console.log(res.data)
       }).catch((error) => {
         console.log(error)

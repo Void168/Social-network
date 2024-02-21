@@ -216,7 +216,8 @@
         </div>
       </div>
       <div
-        class="w-[40%] sticky space-y-4 lg:block hidden overflow-y-scroll"
+        class="w-[40%] sticky space-y-4 lg:block hidden"
+        :class="isUserInGroup ? 'overflow-y-scroll' : ''"
         :style="{
           height: `${toastStore.height}px`,
           top: `${toastStore.navbarHeight}px`,
@@ -322,7 +323,7 @@
             </div>
           </div>
         </div>
-        <div class="dark:bg-slate-700 rounded-lg p-4 space-y-2">
+        <div class="dark:bg-slate-700 rounded-lg p-4 space-y-2" v-if="isUserInGroup">
           <h3 class="font-semibold text-lg">File phương tiện mới đây</h3>
           <div
             v-for="image in groupImages?.slice(0, 4)"

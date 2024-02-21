@@ -85,11 +85,24 @@
           <button
             @click="joinGroup"
             class="flex items-center gap-1 px-4 py-2 font-semibold bg-emerald-500 hover:bg-emerald-400 rounded-lg duration-75 sm:max-w-max w-full"
-            v-else
+            v-else-if="!isJoinRequest"
           >
             <UserPlusIcon class="w-4" />
             Tham gia nhóm
           </button>
+          <button
+            @click="openCancelRequestModal"
+            class="flex items-center gap-1 px-4 py-2 font-semibold bg-emerald-500 hover:bg-emerald-400 rounded-lg duration-75 sm:max-w-max w-full"
+            v-else-if="isJoinRequest"
+          >
+            <UserPlusIcon class="w-4" />
+            Đã gửi yêu cầu
+          </button>
+          <CancelRequestModal
+            :show="isCancelOpen"
+            @closeModal="closeCancelRequestModal"
+            @cancelJoinRequest="cancelJoinRequest"
+          />
           <ListQuestionModal
             :show="isQuestionOpen"
             @closeQuestionModal="closeQuestionModal"
@@ -100,7 +113,9 @@
       </div>
       <hr class="border dark:border-slate-600 mx-4" />
       <div class="flex sm:justify-between justify-end items-center xm:mx-4">
-        <div class="flex items-center lg:text-base md:text-sm sm:text-base xm:text-sm text-xs">
+        <div
+          class="flex items-center lg:text-base md:text-sm sm:text-base xm:text-sm text-xs"
+        >
           <RouterLink
             :to="{ name: 'groupdiscuss', params: { id: group?.id } }"
             class="font-medium xm:p-4 p-2 flex justify-center dark:hover:bg-slate-600 duration-75"
@@ -159,6 +174,7 @@ import { RouterLink } from "vue-router";
 import ListQuestionModal from "../../modals/group/ListQuestionModal.vue";
 import GroupCoverImageModal from "../../modals/group/GroupCoverImageModal.vue";
 import GroupRouterDropdown from "../../dropdown/GroupRouterDropdown.vue";
+import CancelRequestModal from "../../modals/group/CancelRequestModal.vue";
 
 import {
   GlobeAsiaAustraliaIcon,
@@ -183,6 +199,7 @@ export default (await import("vue")).defineComponent({
     MagnifyingGlassIcon,
     GroupCoverImageModal,
     ListQuestionModal,
+    CancelRequestModal,
     GroupRouterDropdown,
   },
   setup() {
@@ -197,6 +214,7 @@ export default (await import("vue")).defineComponent({
   props: {
     group: Object,
     isUserInGroup: Boolean,
+    isJoinRequest: Boolean,
   },
 
   data() {
@@ -205,6 +223,7 @@ export default (await import("vue")).defineComponent({
       isQuestionOpen: false,
       isCoverImageOpen: false,
       questions: [],
+      isCancelOpen: false,
     };
   },
 
@@ -230,6 +249,12 @@ export default (await import("vue")).defineComponent({
     closeCoverImageModal() {
       this.isCoverImageOpen = false;
     },
+    openCancelRequestModal() {
+      this.isCancelOpen = true;
+    },
+    closeCancelRequestModal() {
+      this.isCancelOpen = false;
+    },
     async getGroupQuestions() {
       await axios
         .get(`/api/group/${this.$route.params.id}/get-questions/`)
@@ -245,7 +270,6 @@ export default (await import("vue")).defineComponent({
         axios
           .post(`/api/group/${this.group?.id}/join/request/`)
           .then((res) => {
-            console.log(res.data);
             if (this.questions?.length) {
               this.isQuestionOpen = true;
             }
@@ -272,6 +296,31 @@ export default (await import("vue")).defineComponent({
         })
         .catch((error) => {
           console.log(error);
+        });
+    },
+    cancelJoinRequest() {
+      axios
+        .delete(`/api/group/${this.group.id}/join/cancel/`)
+        .then((res) => {
+          this.isCancelOpen = false
+          if (res.data.message) {
+            this.toastStore.showToast(
+              3000,
+              "Hủy yêu cầu thành công.",
+              "bg-emerald-500 text-white"
+            );
+            setTimeout(() => {
+              this.$router.go(0)
+            }, 4000)
+          }
+        })
+        .catch((error) => {
+          console.log(error);
+          this.toastStore.showToast(
+            3000,
+            "Hủy yêu cầu thất bại.",
+            "bg-emerald-500 text-white"
+          );
         });
     },
   },

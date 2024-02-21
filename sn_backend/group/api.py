@@ -112,6 +112,16 @@ def check_user_in_group(request, pk):
                 break
     else:
         return JsonResponse({'message': 'User not in the group'})
+    
+@api_view(['GET'])
+def check_request_in_group(request, pk):
+    group = Group.objects.get(pk=pk)
+    try:
+        join_request = JoinGroupRequest.objects.get(Q(created_for=group, created_by=request.user))
+        return JsonResponse({'message': 'request created'})
+    except JoinGroupRequest.DoesNotExist:
+        return JsonResponse({'message': 'request not create yet'})
+        
 
 @api_view(['GET'])
 def get_friends_in_group(request, pk):
@@ -221,6 +231,16 @@ def send_join_request_private_group(request, pk):
         return JsonResponse({'message': 'Join group request created'})
     else:
         return JsonResponse({'message': 'Join group request already sent'})
+    
+@api_view(['DELETE'])
+def cancel_join_request_private_group(request, pk):
+    group = Group.objects.get(pk=pk)
+    
+    join_request = JoinGroupRequest.objects.get(Q(created_by=request.user, created_for=group))
+    
+    join_request.delete()
+    
+    return JsonResponse({'message': 'request deleted'})
 
 @api_view(['POST'])
 def handle_join_request(request, pk, status, id):

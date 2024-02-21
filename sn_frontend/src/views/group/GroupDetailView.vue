@@ -38,6 +38,7 @@
       <GroupHeader
         :group="group"
         :isUserInGroup="isUserInGroup"
+        :isJoinRequest="isJoinRequest"
         @openModal="openModal"
         v-if="
           route.name === 'groupdiscuss' ||
@@ -115,6 +116,7 @@ export default {
       isOpen: false,
       keywords: [],
       isExpand: false,
+      isJoinRequest: false
     };
   },
 
@@ -129,6 +131,7 @@ export default {
 
   created() {
     this.checkUserInGroup();
+    this.checkRequestInGroup()
   },
 
   methods: {
@@ -153,6 +156,21 @@ export default {
             this.isUserInGroup = false;
           }
           this.getGroupDetail();
+        })
+        .catch((error) => {
+          console.log(error);
+        });
+    },
+    async checkRequestInGroup() {
+      await axios
+        .get(`/api/group/check-request/${this.$route.params.id}/`)
+        .then((res) => {
+          console.log(res.data);
+          if (res.data.message === "request created") {
+            this.isJoinRequest = true;
+          } else {
+            this.isJoinRequest = false;
+          }
         })
         .catch((error) => {
           console.log(error);

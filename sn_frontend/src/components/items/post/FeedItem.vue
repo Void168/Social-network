@@ -32,11 +32,11 @@
             </strong>
           </div>
 
-          <span
-            v-if="post.is_avatar_post"
-            class="sm:text-base xs:text-sm"
-            >{{post.created_by.is_page ? 'đã thay đổi ảnh đại diện của họ' : 'đã thay đổi ảnh đại diện'}}</span
-          >
+          <span v-if="post.is_avatar_post" class="sm:text-base xs:text-sm">{{
+            post.created_by.is_page
+              ? "đã thay đổi ảnh đại diện của họ"
+              : "đã thay đổi ảnh đại diện"
+          }}</span>
           <div class="md:hidden items-center gap-2 flex">
             <div class="relative group" v-if="!isAdjust">
               <PrivacyTooltip :post="post" />
@@ -123,8 +123,15 @@
     ></textarea>
     <p class="px-4 text-lg" v-else>{{ post.body }}</p>
 
+    <ImagePostModal
+      :show="isImagePostOpen"
+      @closeModal="closeImagePostModal"
+      :imageId="post.id"
+      :post="post"
+    />
     <div
       v-if="post.attachments?.length && post.is_avatar_post"
+      @click="openImagePostModal"
       class="mt-4 flex justify-center relative sm:h-[400px] xm:h-[350px] xs:h-[300px]"
     >
       <div class="w-full">
@@ -144,7 +151,7 @@
       />
     </div>
 
-    <div v-else class="mt-4 px-4">
+    <div v-else class="mt-4 px-4" @click="openImagePostModal">
       <img
         v-for="image in post.attachments"
         v-bind:key="image.id"
@@ -339,6 +346,7 @@ import CreatedAtTooltip from "./Tooltip/CreatedAtTooltip.vue";
 import PrivacyTooltip from "./Tooltip/PrivacyTooltip.vue";
 import TooltipProfileVue from "../profile/TooltipProfile.vue";
 import PrivacySelector from "../../dropdown/PrivacySelector.vue";
+import ImagePostModal from "../../modals/post/ImagePostModal.vue";
 
 export default (await import("vue")).defineComponent({
   props: {
@@ -360,6 +368,7 @@ export default (await import("vue")).defineComponent({
       },
       is_private: this.post.is_private,
       only_me: this.post.only_me,
+      isImagePostOpen: false,
     };
   },
 
@@ -547,6 +556,12 @@ export default (await import("vue")).defineComponent({
         this.only_me = true;
       }
     },
+    openImagePostModal() {
+      this.isImagePostOpen = true;
+    },
+    closeImagePostModal() {
+      this.isImagePostOpen = false;
+    },
     submitForm() {
       if (!this.privacy.name) {
         axios
@@ -601,6 +616,7 @@ export default (await import("vue")).defineComponent({
     CreatedAtTooltip,
     PrivacyTooltip,
     TooltipProfileVue,
+    ImagePostModal,
   },
 });
 </script>

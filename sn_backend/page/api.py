@@ -8,6 +8,7 @@ from account.models import User
 from rest_framework.decorators import api_view
 
 from .serializers import PageSerializer, PageDetailSerializer
+from account.serializers import UserLessSerializer
 from notification.models import NotificationForPage
 from notification.serializers import NotificationSerializer
 from .forms import PageForm, PageBiographyForm, PageTypeForm, PageLocationForm, PageProfileForm, PageAvatarForm
@@ -53,17 +54,20 @@ def get_page(request, id):
     other_page_followers = page.other_page_followers.all()
     other_page_likes = page.other_page_likes.all()
     other_page_following = page.other_page_following.all()
+    followers = page.followers.all()
     
     serializer = PageSerializer(page)
     other_page_followers_serializer = PageSerializer(other_page_followers, many=True)
     other_page_likes_serializer = PageSerializer(other_page_likes, many=True)
     other_page_following_serializer = PageSerializer(other_page_following, many=True)
+    followers_serializer = UserLessSerializer(followers, many=True)
     
     return JsonResponse({
         'data':serializer.data,
         'other_page_followers':other_page_followers_serializer.data,
         'other_page_likes':other_page_likes_serializer.data,
-        'other_page_following':other_page_following_serializer.data
+        'other_page_following':other_page_following_serializer.data,
+        'followers': followers_serializer.data
     }, safe=False)
 
 @api_view(['POST'])

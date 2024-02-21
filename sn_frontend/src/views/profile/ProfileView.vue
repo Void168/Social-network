@@ -17,6 +17,7 @@
       :partnerId="partnerId"
       :partner="partner"
       :postsList="postsList"
+      :PostToShow="PostToShow"
     ></router-view>
     <div
       v-if="route.name === 'about' || route.name === 'friends'"

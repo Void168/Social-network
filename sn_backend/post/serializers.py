@@ -127,7 +127,7 @@ class PagePostDetailSerializer(serializers.ModelSerializer):
     page_comments = PageCommentSerializer(read_only=True, many=True)
     class Meta:
         model = PagePost
-        fields = ('id', 'body', 'likes_count', 'likes','comments_count', 'created_by','is_private','only_me', 'created_at_formatted','comments','attachments','page_likes','page_comments',)
+        fields = ('id', 'body', 'likes_count', 'likes','comments_count', 'created_by', 'created_at_formatted','comments','attachments','page_likes','page_comments','is_avatar_post',)
 
 class TrendSerializer(serializers.ModelSerializer):
     class Meta:

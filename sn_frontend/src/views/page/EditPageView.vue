@@ -335,7 +335,7 @@
     </div>
     <!-- <Map :query="page.location"/> -->
     <div
-      class="flex justify-end items-end col-span-2 mb-4 dark:text-neutral-200"
+      class="flex xl:justify-end items-end justify-center col-span-2 mb-4 dark:text-neutral-200"
     >
       <div
         class="flex flex-col items-end space-y-4 rounded-lg"

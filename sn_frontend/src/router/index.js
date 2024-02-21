@@ -29,6 +29,7 @@ import PagePostView from "../views/page/PagePostView.vue";
 import ChatView from "../views/chat/ChatView.vue";
 import GroupChatView from "../views/chat/GroupChatView.vue";
 import PageChatView from "../views/chat/PageChatView.vue";
+import PageDetailView from "../views/page/PageDetailView.vue"
 import TrendView from "../views/post/TrendView.vue";
 import EditProfileView from "../views/profile/EditProfileView.vue";
 import EditPasswordView from "../views/profile/EditPasswordView.vue";
@@ -38,6 +39,8 @@ import StoryView from "../views/StoryView.vue";
 import PageView from "../views/page/PageView.vue";
 import EditPageView from "../views/page/EditPageView.vue";
 import PageUsersView from "../views/page/PageUsersView.vue";
+import PageAboutView from "../views/page/PageAboutView.vue"
+import PageImageView from "../views/page/PageImageView.vue"
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
@@ -120,6 +123,30 @@ const router = createRouter({
       path: "/page/:id",
       name: "page",
       component: PageView,
+      props: true,
+      redirect: {name: "pagedetail"},
+      children: [
+        {
+          path: "/page/:id/",
+          name: "pagedetail",
+          component: PageDetailView,
+        },
+        {
+          path: "/page/:id/users",
+          name: "pageusers",
+          component: PageUsersView,
+        },
+        {
+          path: "/page/:id/about",
+          name: "pageabout",
+          component: PageAboutView,
+        },
+        {
+          path: "/page/:id/photos",
+          name: "pagephotos",
+          component: PageImageView,
+        },
+      ]
     },
     {
       path: "/groups/:id",
@@ -201,9 +228,9 @@ const router = createRouter({
       ],
     },
     {
-      path: "/page/:id/users",
-      name: "pageusers",
-      component: PageUsersView,
+      path: "/page/post/:id",
+      name: "pagepostview",
+      component: PagePostView,
     },
     {
       path: "/page/edit",
@@ -240,11 +267,6 @@ const router = createRouter({
       path: "/post/:id",
       name: "postview",
       component: PostView,
-    },
-    {
-      path: "/page/post/:id",
-      name: "pagepostview",
-      component: PagePostView,
     },
   ],
 });

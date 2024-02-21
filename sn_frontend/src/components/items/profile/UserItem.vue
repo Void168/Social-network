@@ -7,7 +7,7 @@
     <p>
       <strong> {{ user.name }}</strong>
     </p>
-    <div class="mt-6 flex space-x-8 justify-around">
+    <div class="mt-6 flex space-x-8 justify-around" v-if="route.name === 'pageusers'">
       <p class="text-xs text-gray-500 dark:text-neutral-200">
         {{ user.friends_count }} người bạn
       </p>
@@ -19,8 +19,15 @@
 </template>
 
 <script>
-import { RouterLink } from "vue-router";
+import { RouterLink, useRoute } from "vue-router";
 export default (await import("vue")).defineComponent({
+  setup(){
+    const route = useRoute()
+
+     return {
+      route
+     }
+  },
   components: {
     RouterLink,
   },

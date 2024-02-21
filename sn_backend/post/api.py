@@ -103,9 +103,11 @@ def post_detail(request, pk):
 def page_post_detail(request, pk):
     page_post = PagePost.objects.get(pk=pk)
     
+    serializer = PagePostDetailSerializer(page_post)
+    
     return JsonResponse({
-        'page_post': PagePostDetailSerializer(page_post).data
-    })
+        'page_post': serializer.data
+    }, safe=False)
 
 @api_view(['GET'])
 def group_post_detail(request, pk):
@@ -302,7 +304,7 @@ def page_post_create(request, pk):
         page.posts_count = page.posts_count + 1
         page.save()
 
-        serializer = PostSerializer(page_post)
+        serializer = PagePostDetailSerializer(page_post)
 
         return JsonResponse(serializer.data, safe=False)
     else:

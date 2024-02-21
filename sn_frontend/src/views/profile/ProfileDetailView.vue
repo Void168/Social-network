@@ -317,6 +317,7 @@ export default {
     partnerId: String,
     partner: Object,
     postsList: Array,
+    PostToShow: Number
   },
 
   data() {

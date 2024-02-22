@@ -132,7 +132,7 @@
     <div
       v-if="post.attachments?.length && post.is_avatar_post"
       @click="openImagePostModal"
-      class="mt-4 flex justify-center relative sm:h-[400px] xm:h-[350px] xs:h-[300px]"
+      class="mt-4 flex justify-center relative sm:h-[400px] xm:h-[350px] xs:h-[250px] cursor-pointer"
     >
       <div class="w-full">
         <img
@@ -151,7 +151,7 @@
       />
     </div>
 
-    <div v-else class="mt-4 px-4" @click="openImagePostModal">
+    <div v-else class="mt-4 px-4 cursor-pointer" @click="openImagePostModal">
       <img
         v-for="image in post.attachments"
         v-bind:key="image.id"

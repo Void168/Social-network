@@ -37,7 +37,7 @@
             </p>
             <p class="mt-6 font-semibold text-lg">{{ page.biography }}</p>
           </div>
-          <div class="mt-6 flex space-x-8">
+          <RouterLink :to="{name: 'pageabout', params: {id: page.id}}" class="mt-6 flex space-x-8">
             <ul class="flex flex-col !justify-start space-y-4 text-sm">
               <li
                 class="text-gray-500 dark:text-neutral-300 flex items-center gap-2"
@@ -90,7 +90,7 @@
                 </p>
               </li>
             </ul>
-          </div>
+          </RouterLink>
           <RouterLink
             to="/page/edit"
             class="flex justify-center items-center w-full"
@@ -105,7 +105,7 @@
           <div class="flex justify-between items-center mb-4">
             <p class="font-bold text-2xl">Ảnh</p>
             <RouterLink
-              :to="{ name: 'photos', params: { id: userStore.user.id } }"
+              :to="{ name: 'pagephotos', params: { id: page.id } }"
             >
               <p class="text-lg hover:underline cursor-pointer">
                 Xem tất cả ảnh

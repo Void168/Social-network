@@ -16,17 +16,22 @@
       :allFollowers="allFollowers"
       :pageFollowing="pageFollowing"
       :PostToShow="PostToShow"
-
     ></router-view>
     <div
       v-if="route.name === 'pageabout' || route.name === 'pagephotos'"
       class="bg-neutral-200 dark:bg-slate-600 p-4 dark:text-neutral-200 w-full rounded-lg mt-4"
     >
       <p class="text-xl font-bold">Người theo dõi</p>
-      <div class="grid grid-cols-6 gap-3 my-4 max-h-96" v-if="allFollowers.length">
-        <div v-for="follower in allFollowers.slice(0, 12)" v-bind:key="follower.id">
-          <UserItem :user="follower" v-if="!follower.is_page"/>
-          <PageItem :page="follower" v-else/>
+      <div
+        class="grid lg:grid-cols-6 grid-cols-3 gap-3 my-4 max-h-96"
+        v-if="allFollowers.length"
+      >
+        <div
+          v-for="follower in allFollowers.slice(0, 12)"
+          v-bind:key="follower.id"
+        >
+          <UserItem :user="follower" v-if="!follower.is_page" />
+          <PageItem :page="follower" v-else />
         </div>
       </div>
       <div v-else class="flex items-center justify-center">
@@ -38,7 +43,9 @@
       class="bg-neutral-200 dark:bg-slate-600 p-4 dark:text-neutral-200 w-full rounded-lg mt-4"
     >
       <p class="text-xl font-bold">Ảnh</p>
-      <div class="grid grid-cols-6 gap-3 my-4 max-h-96">
+      <div
+        class="grid lg:grid-cols-6 md:grid-cols-4 grid-cols-2 gap-3 my-4 max-h-96"
+      >
         <div v-for="image in images.slice(0, 12)" v-bind:key="image.id">
           <ImageShowcase v-bind:post="image" />
         </div>
@@ -78,28 +85,27 @@
         class="max-h-96 min-h-[192px] flex justify-center items-center"
         v-if="!pageFollowing?.length"
       >
-        <h2 class="text-2xl font-semibold">
-          Không có gì trong mục đã thích
-        </h2>
+        <h2 class="text-2xl font-semibold">Không có gì trong mục đã thích</h2>
       </div>
-      <div class="grid grid-cols-6 gap-3 my-4 max-h-96" v-else>
+      <div
+        class="grid md:grid-cols-6 xm:grid-cols-4 grid-cols-2 gap-3 my-4 max-h-96"
+        v-else
+      >
         <div
           v-for="pageFollowing in pageFollowing.slice(0, 6)"
           v-bind:key="pageFollowing.id"
         >
-          <RouterLink :to="{name: 'page', params: {id: pageFollowing.id }}" class="relative group">
+          <RouterLink
+            :to="{ name: 'page', params: { id: pageFollowing.id } }"
+            class="relative group"
+          >
             <button
               class="absolute z-10 group-hover:bg-white/20 w-full h-full cursor-pointer rounded-md transition"
               v-on:click="openModal"
             ></button>
             <img
               :src="pageFollowing.get_avatar"
-              :class="
-                route.name !== 'profile'
-                  ? 'xl:h-48 lg:h-24 cursor-pointer'
-                  : ' md:w-full sm:h-48 xm:h-32 xs:h-24 cursor-pointer'
-              "
-              class="rounded-lg"
+              class="cursor-pointer"
             />
           </RouterLink>
           <h3 class="font-medium mt-2">{{ pageFollowing.name }}</h3>
@@ -125,8 +131,8 @@ import { useToastStore } from "../../stores/toast";
 import { usePageStore } from "../../stores/page";
 import { useRoute } from "vue-router";
 
-import UserItem from '../../components/items/profile/UserItem.vue';
-import PageItem from '../../components/items/page/PageItem.vue';
+import UserItem from "../../components/items/profile/UserItem.vue";
+import PageItem from "../../components/items/page/PageItem.vue";
 
 export default {
   setup() {
@@ -139,7 +145,7 @@ export default {
       userStore,
       toastStore,
       pageStore,
-      route
+      route,
     };
   },
   name: "FeedView",
@@ -201,9 +207,11 @@ export default {
         .get(`/api/page/get-page/${this.$route.params.id}`)
         .then((res) => {
           this.page = res.data.data;
-          this.pageLikes = res.data.other_page_likes
-          this.allFollowers = res.data?.followers?.concat(res.data?.other_page_followers)
-          this.pageFollowing = res.data.other_page_following
+          this.pageLikes = res.data.other_page_likes;
+          this.allFollowers = res.data?.followers?.concat(
+            res.data?.other_page_followers
+          );
+          this.pageFollowing = res.data.other_page_following;
         })
         .catch((error) => console.log(error));
     },

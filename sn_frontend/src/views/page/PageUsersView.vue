@@ -22,7 +22,7 @@
         class="dark:text-neutral-200 space-y-4 p-4 dark:bg-slate-800/50 rounded-lg"
       >
         <div class="flex justify-between items-center">
-          <h2 class="text-2xl font-bold">Người theo dõi</h2>
+          <h2 class="sm:text-2xl xm:text-lg text-sm font-bold">Người theo dõi</h2>
           <div class="relative">
             <MagnifyingGlassIcon
               class="absolute top-[18px] left-2 sm:w-6 sm:h-6 xs:w-3 xs:h-3 dark:text-neutral-400"
@@ -37,7 +37,7 @@
           </div>
         </div>
         <TabGroup>
-          <TabList class="flex space-x-1 rounded-xl bg-blue-900/20 p-1">
+          <TabList class="flex sm:flex-row flex-col space-x-1 rounded-xl bg-blue-900/20 p-1">
             <Tab
               v-for="category in categories"
               as="template"

@@ -3,7 +3,7 @@
       :to="{ name: 'page', params: { id: page.id } }"
       class="flex flex-col items-center"
     >
-      <img :src="page.get_avatar" alt="" class="w-32 h-32 mb-6 rounded-full" />
+      <img :src="page.get_avatar" alt="" class="sm:w-32 sm:h-32 h-16 w-16 mb-6 rounded-full" />
       <p>
         <strong> {{ page.name }}</strong>
       </p>

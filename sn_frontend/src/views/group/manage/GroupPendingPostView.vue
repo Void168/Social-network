@@ -6,7 +6,7 @@
     }"
   >
     <div
-      class="w-full flex flex-col justify-center items-center mx-auto dark:bg-slate-800"
+      class="w-full flex flex-col justify-center items-center mx-auto dark:bg-slate-800 bg-white"
     >
       <div class="xl:w-[60%] w-full py-6 px-4">
         <div class="flex justify-between items-center sm:flex-nowrap flex-wrap">
@@ -19,14 +19,14 @@
           <button
                 :disabled="!isCheckAll"
               class="px-4 py-2 shadow-md  rounded-lg font-semibold max-w-max  duration-75 sm:text-base text-xs"
-              :class="isCheckAll ? 'bg-emerald-500 hover:bg-emerald-400' : 'bg-slate-500 text-neutral-400'"
+              :class="isCheckAll ? 'bg-emerald-500 hover:bg-emerald-400' : 'dark:bg-slate-500 text-neutral-400 bg-slate-100'"
             >
               Phê duyệt
             </button>
             <button
             :disabled="!isCheckAll"
               class="px-4 py-2 shadow-md rounded-lg font-semibold max-w-max duration-75 sm:text-base text-xs"
-              :class="isCheckAll ? 'bg-rose-500 hover:bg-rose-400' : 'bg-slate-500 text-neutral-400'"
+              :class="isCheckAll ? 'bg-rose-500 hover:bg-rose-400' : 'dark:bg-slate-500 text-neutral-400 bg-slate-100'"
             >
               Từ chối
             </button>
@@ -91,7 +91,7 @@
       <div
         v-for="post in pendingPosts"
         :key="post.id"
-        class="dark:bg-slate-700 rounded-lg p-4 flex flex-col gap-2"
+        class="dark:bg-slate-700 bg-white rounded-lg p-4 flex flex-col gap-2"
       >
         <div class="flex justify-between items-center">
           <div class="flex items-center gap-2">

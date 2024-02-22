@@ -26,7 +26,7 @@
         </div>
       </div>
       <div class="lg:col-span-1 col-span-3">
-        <div class="flex items-center gap-3 justify-center">
+        <div class="flex items-center gap-3 lg:justify-end justify-center">
           <button
             @click="openContactModal"
             class="dark:text-neutral-200 bg-slate-200 dark:bg-slate-800 md:px-4 md:py-2 p-1 shadow-md rounded-md hover:bg-slate-300 dark:hover:bg-slate-900 transition"

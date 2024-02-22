@@ -1,7 +1,7 @@
 <template>
   <div class="py-4 max-w-7xl mx-auto gap-4">
     <div
-      class="main-center space-y-4 grid grid-cols-4 dark:bg-slate-600 rounded-lg"
+      class="main-center space-y-4 grid grid-cols-4 dark:bg-slate-600 bg-white rounded-lg"
     >
       <div class="lg:col-span-1 col-span-4 lg:border-r lg:border-b-0 border-b dark:border-slate-500 py-4">
         <h2 class="text-2xl font-bold dark:text-neutral-200 px-5">
@@ -14,7 +14,7 @@
             class="py-2 px-4 duration-75 dark:hover:bg-slate-700 rounded-lg cursor-pointer font-medium"
             :class="
               selectedNavigator?.name === navi?.name
-                ? 'text-emerald-400 bg-emerald-700/50'
+                ? 'text-emerald-400 dark:bg-emerald-700/50 bg-emerald-700/30'
                 : 'dark:text-neutral-300'
             "
             @click="getNavigator(navi)"

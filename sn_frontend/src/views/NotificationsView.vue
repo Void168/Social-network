@@ -1,20 +1,20 @@
 <template>
   <div class="max-w-7xl mx-auto gap-4">
-    <div class="main-center mx-auto md:py-12 md:w-[80%] space-y-4 min-h-screen">
+    <div class="main-center shadow-none mx-auto md:py-12 md:w-[80%] space-y-4 min-h-screen">
       <div
-        class="p-4 bg-white border border-gray-200 md:rounded-lg dark:bg-slate-600 dark:border-slate-700 dark:text-neutral-200"
+        class="p-4 bg-white border shadow-md border-gray-200 md:rounded-lg dark:bg-slate-600 dark:border-slate-700 dark:text-neutral-200"
       >
         <div class="flex gap-2 items-center">
           <div
             @click="getAllNotifications"
-            :class="unRead ? 'dark:bg-slate-700' : 'dark:bg-emerald-500'"
+            :class="unRead ? 'dark:bg-slate-700 bg-slate-200' : 'bg-emerald-400'"
             class="px-4 py-2 font-semibold rounded-lg duration-75 dark:hover:bg-emerald-500 cursor-pointer shadow-md"
           >
             Tất cả
           </div>
           <div
             @click="getUnreadNotifications"
-            :class="unRead ? 'dark:bg-emerald-500' : 'dark:bg-slate-700'"
+            :class="unRead ? 'bg-emerald-400' : 'dark:bg-slate-700 bg-slate-200'"
             class="px-4 py-2 font-semibold rounded-lg duration-75 dark:hover:bg-emerald-500 cursor-pointer shadow-md"
           >
             Chưa đọc

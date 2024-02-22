@@ -6,14 +6,14 @@
   <div v-if="isExpand" class="w-full h-full absolute bg-slate-700/50 z-10 duration-100" @click="expandGroupNavigation"></div>
     <div
       @click="expandGroupNavigation"
-      class="fixed flex md:hidden left-0 z-20 inset-y-2/4 w-5 h-20 bg-slate-600 rounded-r-2xl"
+      class="fixed flex md:hidden left-0 z-20 inset-y-2/4 w-5 h-20 dark:bg-slate-600 bg-white rounded-r-2xl"
       :class="isExpand ? 'translate-x-[274px]' : 'translate-x-0'"
     >
       <ChevronRightIcon class="dark:text-slate-200" v-if="!isExpand" />
       <ChevronLeftIcon class="dark:text-slate-200" v-else />
     </div>
     <div
-      class="xl:col-span-1 md:col-span-1 lg:col-span-2 md:block border-r dark:border-slate-600 dark:bg-slate-800 bg-slate-200 md:sticky fixed overflow-y-auto scrollbar-corner-slate-200 scrollbar-none hover:scrollbar-thin scrollbar-thumb-slate-400 scrollbar-track-slate-800 z-50"
+      class="xl:col-span-1 md:col-span-1 lg:col-span-2 md:block border-r dark:border-slate-600 dark:bg-slate-800 bg-white md:sticky fixed overflow-y-auto scrollbar-corner-slate-200 scrollbar-none hover:scrollbar-thin scrollbar-thumb-slate-400 scrollbar-track-slate-800 z-50"
       :style="{
         height: `${toastStore.height}px`,
         top: `${toastStore.navbarHeight}px`,

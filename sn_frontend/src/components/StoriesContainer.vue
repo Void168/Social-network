@@ -27,18 +27,18 @@
     >
       <SwiperSlide
         ><div
-          class="relative cursor-pointer bg-slate-700 rounded-lg h-[213px]"
+          class="relative cursor-pointer dark:bg-slate-700 bg-slate-300 rounded-lg h-[213px]"
           @click="openModal"
         >
           <img
             :src="pageStore.pageId ? pageStore.pageActive.get_avatar : userStore.user.avatar"
-            class="rounded-b-none h-[70%] w-full"
+            class="rounded-b-none h-[70%] w-full rounded-t-lg"
             alt="create-story"
           />
           <div class="flex justify-center items-center relative h-[30%]">
             <span class="absolute top-[-25%]">
               <PlusCircleIcon
-                class="w-10 h-10 text-blue-500 rounded-full bg-slate-700 p-1"
+                class="w-10 h-10 text-blue-500 rounded-full dark:bg-slate-700 bg-slate-300 p-1"
               />
             </span>
             <p class="font-semibold">Tạo tin</p>

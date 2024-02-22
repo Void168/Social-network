@@ -6,7 +6,7 @@
       </span>
       <div class="flex flex-col space-y-2">
         <h3 class="font-semibold">{{ rule.name }}</h3>
-        <h5 class="text-sm text-neutral-400">{{ rule.body }}</h5>
+        <h5 class="text-sm dark:text-neutral-400 ">{{ rule.body }}</h5>
       </div>
       <RuleDropdown
         :rule="rule"

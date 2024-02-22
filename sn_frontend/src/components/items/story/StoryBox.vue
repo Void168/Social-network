@@ -1,10 +1,10 @@
 <template>
   <div
     @click="$emit('otherStory')"
-    class="flex gap-3 items-center py-4 px-8 hover:bg-slate-700 rounded-lg cursor-pointer"
+    class="flex gap-3 items-center py-4 px-8 dark:hover:bg-slate-700 hover:bg-slate-200 rounded-lg cursor-pointer"
     :class="
       currentStoryStore.activeStory === story[0]?.created_by?.id
-        ? 'bg-slate-700'
+        ? 'dark:bg-slate-700 bg-slate-200'
         : ''
     "
   >

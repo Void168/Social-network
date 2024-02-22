@@ -1,12 +1,12 @@
 <template>
   <div class="w-full flex justify-center my-12">
-    <div class="2xl:w-[30%] xl:w-[50%] md:w-[70%] flex justify-center flex-col items-center space-y-4 px-4">
+    <div class="2xl:w-[30%] xl:w-[50%] md:w-[70%] flex justify-center flex-col items-center space-y-4 px-4 ">
       <img
         src="https://www.call2customer.com/wp-content/uploads/2020/01/brochure.png"
         alt=""
         class="w-32 h-32"
       />
-      <div class="text-neutral-400">
+      <div class="dark:text-neutral-400">
         <h2 class="text-2xl text-center font-semibold">
           Câu hỏi chọn thành viên
         </h2>

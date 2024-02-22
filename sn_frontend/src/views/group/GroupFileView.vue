@@ -2,7 +2,7 @@
   <div
     class="w-full min-h-[700px] px-4"
   >
-  <div class="lg:w-[80%] mx-auto gap-4 my-6 bg-neutral-200 dark:bg-slate-700 p-4 rounded-md dark:text-neutral-200">
+  <div class="lg:w-[80%] mx-auto gap-4 my-6 bg-white dark:bg-slate-700 p-4 rounded-md dark:text-neutral-200">
       <div class="flex justify-between items-center xm:flex-nowrap flex-wrap">
         <h2 class="text-xl font-semibold">File</h2>
         <div class="flex items-center xm:gap-4 gap-2 xm:flex-nowrap flex-wrap">

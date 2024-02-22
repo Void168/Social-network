@@ -7,7 +7,7 @@
     >
       <div
         @click="expandGroupNavigation"
-        class="fixed flex md:hidden left-0 z-20 inset-y-2/4 w-5 h-20 bg-slate-700 rounded-r-2xl"
+        class="fixed flex md:hidden left-0 z-20 inset-y-2/4 w-5 h-20 dark:bg-slate-700 bg-white rounded-r-2xl"
         :class="isExpand ? 'translate-x-[332px]' : 'translate-x-0'"
       >
         <ChevronRightIcon class="dark:text-slate-200" v-if="!isExpand" />

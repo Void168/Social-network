@@ -1,6 +1,6 @@
 <template>
   <div
-    class="flex items-start absolute bottom-0 max-h-min p-4 z-50 w-full h-[90%] flex-col dark:bg-slate-800 rounded-lg"
+    class="flex items-start absolute bottom-0 max-h-min p-4 z-50 w-full h-[90%] flex-col dark:bg-slate-800 bg-white rounded-lg"
   >
     <XMarkIcon
       class="absolute top-3 right-2 h-10 w-10 cursor-pointer p-2 hover:bg-neutral-600 rounded-full"
@@ -25,8 +25,8 @@
                 'w-full rounded-none py-2.5 font-medium leading-5 text-xl',
                 ' focus:border-emerald-400 focus:border-b-2',
                 selected
-                  ? ' text-white shadow'
-                  : 'text-blue-100 hover:bg-white/[0.12] hover:text-white',
+                  ? ' dark:text-white shadow'
+                  : 'dark:text-blue-100 hover:bg-white/[0.12] hover:text-white',
               ]"
             >
               <span ref="status">{{ emoji.unicode || emoji.name }}</span>

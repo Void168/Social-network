@@ -1,12 +1,12 @@
 <template>
-  <div class="bg-slate-800 text-neutral-200 h-screen grid lg:grid-cols-5 grid-cols-4 relative">
+  <div class="dark:bg-slate-800 dark:text-neutral-200 bg-white h-screen grid lg:grid-cols-5 grid-cols-4 relative">
     <div
-      class="md:col-span-1 md:block hidden bg-slate-800 overflow-y-auto scrollbar-corner-slate-200 scrollbar-none hover:scrollbar-thin scrollbar-thumb-slate-400 scrollbar-track-slate-800"
+      class="md:col-span-1 md:block hidden dark:bg-slate-800 overflow-y-auto scrollbar-corner-slate-200 scrollbar-none hover:scrollbar-thin scrollbar-thumb-slate-400 scrollbar-track-slate-800"
     >
-      <div class="p-4 border-b border-slate-700 bg-slate-800 sticky top-0">
+      <div class="p-4 border-b dark:border-slate-700 dark:bg-slate-800 sticky top-0">
         <RouterLink to="/" class="w-10 block">
           <XMarkIcon
-            class="text-neutral-200 h-10 w-10 cursor-pointer transition p-2 bg-slate-700 rounded-full hover:bg-slate-600"
+            class="dark:text-neutral-200 bg-slate-100 hover:bg-slate-300 text-black dark:hover:bg-slate-600 dark:bg-slate-700 h-10 w-10 cursor-pointer transition p-2  rounded-full "
           />
         </RouterLink>
       </div>
@@ -26,7 +26,7 @@
           <div class="flex gap-3 items-center">
             <PlusIcon
               @click="openModal"
-              class="text-emerald-300 2xl:h-16 2xl:w-16 xl:w-14 xl:h-[52px] xs:w-10 xs:h-[36px] cursor-pointer transition p-3 bg-slate-700 rounded-full hover:bg-slate-600"
+              class="text-emerald-300 2xl:h-16 2xl:w-16 xl:w-14 xl:h-[52px] xs:w-10 xs:h-[36px] cursor-pointer transition p-3 dark:bg-slate-700 bg-slate-200 hover:bg-slate-300 rounded-full dark:hover:bg-slate-600"
             />
             <div class="flex flex-col space-y-1">
               <h4 class="font-semibold text-lg">Tạo tin</h4>
@@ -46,10 +46,10 @@
           @click="otherStory(yourLastStory[0]?.created_by.id)"
         >
           <div
-            class="flex gap-3 items-center p-4 hover:bg-slate-700 rounded-lg cursor-pointer"
+            class="flex gap-3 items-center p-4 dark:hover:bg-slate-700 hover:bg-slate-200 rounded-lg cursor-pointer"
             :class="
               currentStoryStore.activeStory === yourLastStory[0]?.created_by.id
-                ? 'bg-slate-700'
+                ? 'dark:bg-slate-700'
                 : ''
             "
           >
@@ -61,7 +61,7 @@
             <div class="flex flex-col space-y-2">
               <h3 class="text-lg font-semibold">{{ userStore.user.name }}</h3>
               <p class="flex gap-2">
-                <span class="dark:text-neutral-400">{{
+                <span class="text-neutral-400">{{
                   yourLastStory[yourLastStory.length - 1]?.created_at_formatted
                 }}</span>
               </p>
@@ -128,7 +128,7 @@
               :isOtherStory="isOtherStory"
               :class="
                 story[0]?.created_by?.id === userStories[0]?.created_by?.id
-                  ? 'bg-slate-700'
+                  ? 'dark:bg-slate-700'
                   : ''
               "
             />
@@ -138,20 +138,20 @@
     </div>
     <div
       @click="expandListStories"
-      class="absolute flex md:hidden left-0 z-20 inset-y-2/4 w-5 h-20 bg-slate-800 rounded-r-2xl"
+      class="absolute flex md:hidden left-0 z-20 inset-y-2/4 w-5 h-20 dark:bg-slate-800 bg-white rounded-r-2xl"
       :class="isExpand ? 'translate-x-0' : 'translate-x-[300px]'"
     >
-      <ChevronLeftIcon class="dark:text-slate-200" v-if="!isExpand" />
-      <ChevronRightIcon class="dark:text-slate-200" v-else />
+      <ChevronLeftIcon class="dark:text-neutral-200 " v-if="!isExpand" />
+      <ChevronRightIcon class="dark:text-neutral-200" v-else />
     </div>
     <div
-      class="block md:hidden bg-slate-800 absolute w-[300px] z-50 h-full overflow-y-auto scrollbar-corner-slate-200 scrollbar-none hover:scrollbar-thin scrollbar-thumb-slate-400 scrollbar-track-slate-800"
+      class="block md:hidden dark:bg-slate-800 bg-white absolute w-[300px] z-50 h-full overflow-y-auto scrollbar-corner-slate-200 scrollbar-none hover:scrollbar-thin scrollbar-thumb-slate-400 scrollbar-track-slate-800"
       :class="isExpand ? '-translate-x-[300px]' : 'translate-x-0'"
     >
-      <div class="p-4 border-b border-slate-700 bg-slate-800 sticky top-0">
+      <div class="p-4 border-b dark:border-slate-700 dark:bg-slate-800 sticky top-0">
         <RouterLink to="/" class="w-10 block">
           <XMarkIcon
-            class="text-neutral-200 h-10 w-10 cursor-pointer transition p-2 bg-slate-700 rounded-full hover:bg-slate-600"
+            class="dark:text-neutral-200 h-10 w-10 cursor-pointer transition p-2 bg-slate-100 hover:bg-slate-300 text-black dark:hover:bg-slate-600 dark:bg-slate-700 rounded-full "
           />
         </RouterLink>
       </div>
@@ -171,7 +171,7 @@
           <div class="flex gap-3 items-center">
             <PlusIcon
               @click="openModal"
-              class="text-emerald-300 2xl:h-16 2xl:w-16 xl:w-14 xl:h-[52px] xs:w-10 xs:h-[36px] cursor-pointer transition p-3 bg-slate-700 rounded-full hover:bg-slate-600"
+              class="text-emerald-300 2xl:h-16 2xl:w-16 xl:w-14 xl:h-[52px] xs:w-10 xs:h-[36px] cursor-pointer transition p-3 dark:bg-slate-700 rounded-full dark:hover:bg-slate-600 bg-slate-200 hover:bg-slate-300"
             />
             <div class="flex flex-col space-y-1">
               <h4 class="font-semibold text-lg">Tạo tin</h4>
@@ -191,10 +191,10 @@
           @click="otherStory(yourLastStory[0]?.created_by.id)"
         >
           <div
-            class="flex gap-3 items-center p-4 hover:bg-slate-700 rounded-lg cursor-pointer"
+            class="flex gap-3 items-center p-4 dark:hover:bg-slate-700 hover:bg-slate-200 rounded-lg cursor-pointer"
             :class="
               currentStoryStore.activeStory === yourLastStory[0]?.created_by.id
-                ? 'bg-slate-700'
+                ? 'dark:bg-slate-700'
                 : ''
             "
           >
@@ -273,7 +273,7 @@
               :isOtherStory="isOtherStory"
               :class="
                 story[0]?.created_by?.id === userStories[0]?.created_by?.id
-                  ? 'bg-slate-700'
+                  ? 'dark:bg-slate-700'
                   : ''
               "
             />
@@ -287,7 +287,7 @@
       <div class="p-4 border-b border-slate-700 bg-slate-800 sticky top-0">
         <RouterLink to="/" class="w-10 block">
           <XMarkIcon
-            class="text-neutral-200 h-10 w-10 cursor-pointer transition p-2 bg-slate-700 rounded-full hover:bg-slate-600"
+            class="dark:text-neutral-200 bg-slate-100 hover:bg-slate-300 text-black dark:hover:bg-slate-600 dark:bg-slate-700 h-10 w-10 cursor-pointer transition p-2  rounded-full"
           />
         </RouterLink>
       </div>
@@ -417,7 +417,7 @@
         </div>
       </div>
     </div>
-    <div class="lg:col-span-4 md:col-span-3 col-span-4 bg-slate-900 flex flex-col relative h-screen">
+    <div class="lg:col-span-4 md:col-span-3 col-span-4 dark:bg-slate-900 bg-slate-200 flex flex-col relative h-screen">
       <div class="py-4 h-full">
         <Suspense>
           <StoryDetail

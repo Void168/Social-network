@@ -55,7 +55,7 @@
         <h3 class="text-center text-lg">{{ biography || "" }}</h3>
       </div>
       <hr class="border-slate-600 mx-4" />
-      <div class="flex justify-between items-center px-2 py-4">
+      <div class="flex justify-between 2xl:flex-row flex-col items-center px-2 py-4">
         <div class="flex gap-2 items-center max-h-max">
           <div class="px-4 py-2 dark:text-slate-300 font-semibold">
             Bài viết
@@ -73,13 +73,13 @@
             Người theo dõi
           </div>
           <div
-            class="px-4 py-2 dark:text-slate-300 font-semibold"
+            class="px-4 py-2 dark:text-slate-300 font-semibold 2xl:block hidden"
             :class="isDeviceActive ? 'hidden' : 'block'"
           >
             Ảnh
           </div>
           <div
-            class="px-4 py-2 dark:text-slate-300 font-semibold"
+            class="px-4 py-2 dark:text-slate-300 font-semibold 2xl:block hidden"
             :class="isDeviceActive ? 'hidden' : 'block'"
           >
             Video
@@ -108,11 +108,11 @@
         </div>
       </div>
       <div
-        class="p-2 bg-slate-800 rounded-b-lg flex gap-4 h-72"
+        class="p-2 dark:bg-slate-800 bg-white rounded-b-lg flex gap-4 h-72"
         :class="isDeviceActive ? 'flex-col' : ''"
       >
         <div
-          class="bg-slate-700 p-2 rounded-lg flex flex-col space-y-4 h-fit"
+          class="dark:bg-slate-700 bg-slate-200 p-2 rounded-lg flex flex-col space-y-4 h-fit"
           :class="isDeviceActive ? 'w-full' : 'w-[40%]'"
         >
           <h2 class="text-xl font-bold">Giới thiệu</h2>
@@ -128,7 +128,7 @@
           </div>
         </div>
         <div
-          class="bg-slate-700 p-2 rounded-lg flex justify-between items-center h-fit"
+          class="dark:bg-slate-700 bg-slate-200 p-2 rounded-lg flex justify-between items-center h-fit"
           :class="isDeviceActive ? 'w-full' : 'w-[60%]'"
         >
           <h2 class="text-xl font-bold">Bài viết</h2>

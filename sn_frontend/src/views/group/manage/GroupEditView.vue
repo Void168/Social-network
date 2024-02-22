@@ -1,6 +1,6 @@
 <template>
   <div class="flex flex-col items-center justify-center py-6 gap-4 xl:w-[50%] lg:w-[70%] w-full px-4">
-    <div class="w-full dark:bg-slate-800 rounded-lg p-4">
+    <div class="w-full dark:bg-slate-800 bg-white rounded-lg p-4">
       <h1 class="font-bold text-2xl">Thiết lập nhóm</h1>
       <div class="my-4">
         <div
@@ -33,7 +33,7 @@
             <div class="flex justify-end items-center gap-2">
               <button
                 @click="toggleEditName"
-                class="px-4 py-2 font-medium text-emerald-500 dark:bg-slate-700 dark:hover:bg-slate-600 duration-75 rounded-lg"
+                class="px-4 py-2 font-medium text-emerald-500 dark:bg-slate-700 dark:hover:bg-slate-600 bg-slate-100 hover:bg-slate-200 duration-75 rounded-lg"
               >
                 Hủy
               </button>
@@ -44,7 +44,7 @@
                 :class="
                   name === group.name && biography === ''
                     ? 'text-neutral-400 bg-slate-600 cursor-not-allowed'
-                    : 'text-emerald-500 dark:bg-slate-700 dark:hover:bg-slate-600 duration-75'
+                    : 'text-emerald-500 dark:bg-slate-700 dark:hover:bg-slate-600 duration-75 bg-slate-100 hover:bg-slate-200'
                 "
               >
                 Lưu
@@ -134,7 +134,7 @@
         </div>
       </div>
     </div>
-    <div class="w-full dark:bg-slate-800 rounded-lg p-4">
+    <div class="w-full dark:bg-slate-800 bg-white rounded-lg p-4">
       <h1 class="font-bold text-2xl">Quản lý thành viên</h1>
       <div class="my-4">
         <EditGroupRadioItem
@@ -185,7 +185,7 @@
         </div>
       </div>
     </div>
-    <div class="w-full dark:bg-slate-800 rounded-lg p-4">
+    <div class="w-full dark:bg-slate-800 bg-white rounded-lg p-4">
       <h1 class="font-bold text-2xl">Quản lý nội dung thảo luận</h1>
       <div class="my-4">
         <EditGroupRadioItem

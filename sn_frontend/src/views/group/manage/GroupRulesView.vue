@@ -1,7 +1,7 @@
 <template>
   <div class="flex flex-col items-center justify-center py-6 gap-4 xl:w-[40%] lg:w-[60%] md:w-[80%] px-4">
     <div
-      class="w-full dark:bg-slate-700 p-4 rounded-lg flex items-center justify-between"
+      class="w-full dark:bg-slate-700 bg-white p-4 rounded-lg flex items-center justify-between"
     >
       <h3 class="text-lg font-semibold">Quy tắc nhóm</h3>
       <div

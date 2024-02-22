@@ -1,6 +1,6 @@
 <template>
   <div
-    class="relative rounded-lg dark:bg-slate-700 dark:border-slate-600 border p-4"
+    class="relative rounded-lg dark:bg-slate-700 dark:border-slate-600 bg-white border p-4"
   >
     <div class="flex items-center gap-2">
       <RouterLink
@@ -32,7 +32,7 @@
           @click="accessGroup"
         >
           <button
-            class="py-2 w-full dark:bg-slate-800 rounded-lg dark:hover:bg-slate-900 font-semibold duration-75"
+            class="py-2 w-full dark:bg-slate-800 rounded-lg dark:hover:bg-slate-900 bg-slate-200 hover:bg-slate-300 font-semibold duration-75"
           >
             Xem nhóm
           </button>

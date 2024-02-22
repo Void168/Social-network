@@ -5,7 +5,7 @@
   >
     <div class="col-span-2 lg:block hidden">
       <div
-        class="overflow-y-scroll sticky scrollbar-corner-slate-200 scrollbar-none hover:scrollbar-thin scrollbar-thumb-slate-400 scrollbar-track-slate-800"
+        class="overflow-y-scroll sticky scrollbar-corner-slate-200 scrollbar-none hover:scrollbar-thin scrollbar-thumb-slate-400 dark:scrollbar-track-slate-800"
         :style="{
           height: `${toastStore.height}px`,
           top: `${toastStore.navbarHeight}px`,
@@ -14,7 +14,7 @@
         <ul class="w-full">
           <div
             @click="redirectToProfile"
-            class="flex gap-3 w-full items-center dark:hover:bg-slate-600 cursor-pointer px-4 py-2 rounded-xl"
+            class="flex gap-3 w-full items-center dark:hover:bg-slate-600 hover:bg-slate-300 cursor-pointer px-4 py-2 rounded-xl duration-75"
           >
             <img
               :src="
@@ -43,7 +43,7 @@
           >
             <RouterLink
               :to="nav.url"
-              class="flex gap-3 w-full items-center dark:hover:bg-slate-600 cursor-pointer px-4 py-2 rounded-xl"
+              class="flex gap-3 w-full items-center dark:hover:bg-slate-600 hover:bg-slate-300 cursor-pointer px-4 py-2 rounded-xl"
             >
               <img
                 :src="nav.icon"
@@ -56,17 +56,17 @@
           <li
             @click="clickLoadMoreNavigation"
             v-if="!loadMoreNavigation"
-            class="flex gap-3 w-full dark:text-slate-200 items-center dark:hover:bg-slate-600 cursor-pointer px-4 py-2 rounded-xl"
+            class="flex gap-3 w-full dark:text-slate-200 items-center dark:hover:bg-slate-600 hover:bg-slate-300 cursor-pointer px-4 py-2 rounded-xl"
           >
-            <ChevronDownIcon class="w-10 rounded-full p-1 bg-slate-500" />
+            <ChevronDownIcon class="w-10 rounded-full p-1 bg-slate-300 dark:bg-slate-500" />
             <span class="font-semibold">Xem thêm</span>
           </li>
           <li
             @click="clickLoadMoreNavigation"
             v-else
-            class="flex gap-3 w-full dark:text-slate-200 items-center dark:hover:bg-slate-600 cursor-pointer px-4 py-2 rounded-xl"
+            class="flex gap-3 w-full dark:text-slate-200 items-center dark:hover:bg-slate-600 hover:bg-slate-300 cursor-pointer px-4 py-2 rounded-xl"
           >
-            <ChevronUpIcon class="w-10 rounded-full p-1 bg-slate-500" />
+            <ChevronUpIcon class="w-10 rounded-full p-1 bg-slate-300 dark:bg-slate-500" />
             <span class="font-semibold">Ẩn bớt</span>
           </li>
         </ul>
@@ -84,7 +84,7 @@
                 id: group.id,
               },
             }"
-            class="flex gap-3 w-full items-center dark:hover:bg-slate-600 cursor-pointer px-4 py-2 rounded-xl"
+            class="flex gap-3 w-full items-center dark:hover:bg-slate-600 hover:bg-slate-300 cursor-pointer px-4 py-2 rounded-xl"
           >
             <img
               :src="group.get_cover_image"
@@ -98,7 +98,7 @@
           <li
             v-for="group in listGroups.slice(0, groupsShow)"
             :key="group.icon"
-            class="flex gap-3 w-full items-center dark:hover:bg-slate-600 cursor-pointer px-4 py-2 rounded-xl"
+            class="flex gap-3 w-full items-center dark:hover:bg-slate-600 hover:bg-slate-300 cursor-pointer px-4 py-2 rounded-xl"
           >
             <img
               :src="group.icon"
@@ -110,24 +110,24 @@
           <li
             @click="clickLoadMoreGroups"
             v-if="!loadMoreListGroups"
-            class="flex gap-3 w-full dark:text-slate-200 items-center dark:hover:bg-slate-600 cursor-pointer px-4 py-2 rounded-xl"
+            class="flex gap-3 w-full dark:text-slate-200 items-center dark:hover:bg-slate-600 hover:bg-slate-300 cursor-pointer px-4 py-2 rounded-xl"
           >
-            <ChevronDownIcon class="w-10 rounded-full p-1 bg-slate-500" />
+            <ChevronDownIcon class="w-10 rounded-full p-1 bg-slate-300 dark:bg-slate-500" />
             <span class="font-semibold">Xem thêm</span>
           </li>
           <li
             @click="clickLoadMoreGroups"
             v-else
-            class="flex gap-3 w-full dark:text-slate-200 items-center dark:hover:bg-slate-600 cursor-pointer px-4 py-2 rounded-xl"
+            class="flex gap-3 w-full dark:text-slate-200 items-center dark:hover:bg-slate-600 hover:bg-slate-300 cursor-pointer px-4 py-2 rounded-xl"
           >
-            <ChevronUpIcon class="w-10 rounded-full p-1 bg-slate-500" />
+            <ChevronUpIcon class="w-10 rounded-full p-1 bg-slate-300 dark:bg-slate-500" />
             <span class="font-semibold">Ẩn bớt</span>
           </li>
         </ul>
       </div>
     </div>
     <div
-      class="sm:ml-5 mx-5 main-center lg:col-span-4 sm:col-span-2 col-span-3 space-y-4 py-6"
+      class="sm:ml-5 mx-5 main-center !shadow-none lg:col-span-4 sm:col-span-2 col-span-3 space-y-4 py-6"
     >
       <div
         class="p-4 bg-white border border-gray-200 dark:bg-slate-600 dark:border-slate-700 dark:text-neutral-200 rounded-lg"

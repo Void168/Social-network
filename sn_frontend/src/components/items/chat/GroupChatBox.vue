@@ -166,7 +166,7 @@
                       <img
                         :src="seen_by.created_by.get_avatar"
                         alt="seen-avatar"
-                        class="w-4 h-4"
+                        class="w-4 h-4 rounded-full"
                       />
                     </span>
                   </div>
@@ -216,7 +216,7 @@
                     class="mb-4"
                   >
                     <p
-                      class="bg-gray-200 p-3 rounded-r-lg rounded-bl-lg dark:bg-slate-500 dark:border-slate-600 dark:text-neutral-200 max-w-[500px] text-sm font-semibold"
+                      class="bg-gray-100 p-3 rounded-r-lg rounded-bl-lg dark:bg-slate-500 dark:border-slate-600 dark:text-neutral-200 max-w-[500px] text-sm font-semibold"
                     >
                       <span class="break-all block whitespace-normal">
                         {{ message?.body }}

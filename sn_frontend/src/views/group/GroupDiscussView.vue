@@ -1,9 +1,9 @@
 <template>
   <div class="w-full flex flex-col justify-center items-center">
     <div class="flex xl:w-[80%] w-full my-4 gap-4 px-4">
-      <div class="lg:w-[60%] w-full" id="feed-frame">
+      <div class="lg:w-[60%] w-full " id="feed-frame">
         <div v-if="isUserInGroup" class="flex flex-col space-y-4">
-          <div class="dark:bg-slate-700 rounded-lg px-4">
+          <div class="dark:bg-slate-700 bg-white rounded-lg px-4">
             <div class="py-4 flex items-start gap-2 p-2 rounded-lg">
               <div>
                 <img
@@ -89,7 +89,7 @@
               class="w-full mb-4 font-semibold"
               :class="
                 !body
-                  ? 'dark:bg-slate-600 text-neutral-400 py-2 rounded-lg  duration-75'
+                  ? 'dark:bg-slate-600 bg-slate-200 text-neutral-400 py-2 rounded-lg  duration-75'
                   : 'btn'
               "
               :disabled="!body"
@@ -107,16 +107,16 @@
               <div
                 @click="togglePostTab"
                 :class="
-                  defaultTab ? 'dark:bg-emerald-600' : 'dark:bg-slate-700'
+                  defaultTab ? 'bg-emerald-400' : 'dark:bg-slate-700 bg-white'
                 "
-                class="px-4 py-2 font-semibold rounded-lg dark:hover:bg-emerald-600 duration-75 cursor-pointer xm:text-base text-xs"
+                class="px-4 py-2 font-semibold rounded-lg hover:bg-emerald-600 duration-75 cursor-pointer xm:text-base text-xs"
               >
                 Bài viết
               </div>
               <div
                 @click="togglePollTab"
                 :class="
-                  !defaultTab ? 'dark:bg-emerald-600' : 'dark:bg-slate-700'
+                  !defaultTab ? 'bg-emerald-400' : 'dark:bg-slate-700 bg-white'
                 "
                 class="px-4 py-2 font-semibold rounded-lg dark:hover:bg-emerald-600 duration-75 cursor-pointer xm:text-base text-xs"
               >
@@ -145,7 +145,7 @@
             <SkeletonLoadingPost v-if="isLoading" />
             <div v-else>
               <div
-                class="dark:bg-slate-700 rounded-lg px-4"
+                class="dark:bg-slate-700 bg-white rounded-lg px-4"
                 v-for="groupPost in groupPosts"
                 :key="groupPost.id"
               >
@@ -224,7 +224,7 @@
         }"
       >
         <div
-          class="dark:bg-slate-700 rounded-lg p-4 relative"
+          class="dark:bg-slate-700 bg-white rounded-lg p-4 relative"
           v-if="
             isUserInGroup &&
             group?.admin?.id === userStore.user.id &&
@@ -249,7 +249,7 @@
             <div
               class="flex items-center gap-2 p-2 dark:hover:bg-slate-800 duration-75 cursor-pointer font-semibold rounded-lg"
             >
-              <UserIcon class="w-8 rounded-full p-1 bg-slate-600" />
+              <UserIcon class="w-8 rounded-full p-1 dark:bg-slate-600 bg-slate-200" />
               <h3 class="text-lg">Mời mọi người tham gia</h3>
             </div>
             <div
@@ -261,26 +261,26 @@
                   : ''
               "
             >
-              <PhotoIcon class="w-8 rounded-full p-1 bg-slate-600" />
+              <PhotoIcon class="w-8 rounded-full p-1 dark:bg-slate-600 bg-slate-200" />
               <h3 class="text-lg">Thêm ảnh bìa</h3>
             </div>
             <div
               class="flex items-center gap-2 p-2 dark:hover:bg-slate-800 duration-75 cursor-pointer font-semibold rounded-lg"
               :class="group.biography !== '' ? 'text-emerald-400' : ''"
             >
-              <PencilIcon class="w-8 rounded-full p-1 bg-slate-600" />
+              <PencilIcon class="w-8 rounded-full p-1 dark:bg-slate-600 bg-slate-200" />
               <h3 class="text-lg">Thêm phần mô tả</h3>
             </div>
             <div
               class="flex items-center gap-2 p-2 dark:hover:bg-slate-800 duration-75 cursor-pointer font-semibold rounded-lg"
               :class="groupPosts ? 'text-emerald-400' : ''"
             >
-              <PencilSquareIcon class="w-8 rounded-full p-1 bg-slate-600" />
+              <PencilSquareIcon class="w-8 rounded-full p-1 dark:bg-slate-600 bg-slate-200" />
               <h3 class="text-lg">Tạo bài viết</h3>
             </div>
           </div>
         </div>
-        <div class="dark:bg-slate-700 rounded-lg p-4">
+        <div class="dark:bg-slate-700 bg-white rounded-lg p-4">
           <h2 class="text-xl font-bold">Giới thiệu</h2>
           <div class="flex gap-2" v-if="!group?.is_private_group">
             <div class="flex flex-col justify-start">
@@ -323,7 +323,7 @@
             </div>
           </div>
         </div>
-        <div class="dark:bg-slate-700 rounded-lg p-4 space-y-2" v-if="isUserInGroup">
+        <div class="dark:bg-slate-700 bg-white rounded-lg p-4 space-y-2" v-if="isUserInGroup">
           <h3 class="font-semibold text-lg">File phương tiện mới đây</h3>
           <div
             v-for="image in groupImages?.slice(0, 4)"
@@ -337,7 +337,7 @@
           </div>
           <div
             v-if="groupImages.length"
-            class="w-full flex justify-center items-center rounded-lg py-2 dark:bg-slate-600 cursor-pointer dark:hover:bg-slate-500 duration-75"
+            class="w-full flex justify-center items-center rounded-lg py-2 dark:bg-slate-600 cursor-pointer dark:hover:bg-slate-500 bg-slate-200 hover:bg-slate-300 duration-75"
           >
             <RouterLink
               :to="{ name: 'groupmedia', params: { id: group.id } }"

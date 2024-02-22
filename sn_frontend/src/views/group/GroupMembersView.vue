@@ -1,6 +1,6 @@
 <template>
   <div class="xl:w-[50%] sm:w-[80%] sm:my-12 my-4 space-y-4 dark:text-neutral-200">
-    <div class="dark:bg-slate-700 sm:rounded-lg p-4">
+    <div class="dark:bg-slate-700 bg-white sm:rounded-lg p-4">
       <div>
         <h3 class="text-lg font-semibold">
           Thành viên &middot; {{ group.members_count }}
@@ -79,7 +79,7 @@
               </div>
             </div>
             <button
-              class="flex gap-2 xm:text-base text-xs items-center xm:px-4 xm:py-2 px-2 py-1 rounded-lg dark:bg-slate-800 dark:hover:bg-slate-600 duration-75 font-medium"
+              class="flex gap-2 xm:text-base text-xs items-center xm:px-4 xm:py-2 px-2 py-1 rounded-lg dark:bg-slate-800 dark:hover:bg-slate-600 bg-slate-200 hover:bg-slate-300 duration-75 font-medium"
             >
               <UserPlusIcon class="w-6" />
               Thêm bạn bè
@@ -119,7 +119,7 @@
               </div>
             </RouterLink>
             <button
-              class="flex gap-2 items-center xm:text-base text-xs xm:px-4 xm:py-2 px-2 py-1 rounded-lg dark:bg-slate-800 dark:hover:bg-slate-600 duration-75 font-medium"
+              class="flex gap-2 items-center xm:text-base text-xs xm:px-4 xm:py-2 px-2 py-1 rounded-lg dark:bg-slate-800 dark:hover:bg-slate-600 bg-slate-200 hover:bg-slate-300 duration-75 font-medium"
             >
               <ChatBubbleLeftEllipsisIcon class="w-6" />
               Nhắn tin
@@ -162,7 +162,7 @@
               </div>
             </RouterLink>
             <button
-              class="flex gap-2 items-center xm:text-base text-xs xm:px-4 xm:py-2 px-2 py-1 rounded-lg dark:bg-slate-800 dark:hover:bg-slate-600 duration-75 font-medium"
+              class="flex gap-2 items-center xm:text-base text-xs xm:px-4 xm:py-2 px-2 py-1 rounded-lg dark:bg-slate-800 dark:hover:bg-slate-600 bg-slate-200 hover:bg-slate-300 duration-75 font-medium"
             >
               <UserPlusIcon class="w-6" />
               Thêm bạn bè
@@ -170,7 +170,7 @@
           </div>
         </div>
         <button
-          class="flex w-full items-center px-4 py-2 rounded-2xl dark:bg-slate-800 dark:hover:bg-slate-600 duration-75 font-medium justify-center mt-4"
+          class="flex w-full items-center px-4 py-2 rounded-2xl dark:bg-slate-800 dark:hover:bg-slate-600 bg-slate-100 hover:bg-slate-200 duration-75 font-medium justify-center mt-4"
         >
           Xem tất cả
         </button>

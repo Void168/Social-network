@@ -37,7 +37,7 @@
                   >
                     <img
                       :src="post?.attachments[0]?.get_image"
-                      class="rounded-none"
+                      class="rounded-none max-h-screen"
                     />
                   </div>
 

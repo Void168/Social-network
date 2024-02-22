@@ -1,5 +1,5 @@
 <template>
-  <div class="relative rounded-lg dark:bg-slate-700 dark:border-slate-600 border">
+  <div class="relative rounded-lg dark:bg-slate-700 dark:border-slate-600 bg-white shadow-md border">
     <RouterLink :to="{name: 'groupdetail', params: {id: group?.id}}">
       <img
         :src="group?.get_cover_image"

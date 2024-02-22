@@ -5,7 +5,7 @@
       top: `${toastStore.navbarHeight}px`,
     }"
   >
-    <div class="w-full flex flex-col justify-center items-center mx-auto dark:bg-slate-800">
+    <div class="w-full flex flex-col justify-center items-center mx-auto dark:bg-slate-800 bg-white">
       <div class="xl:w-[60%] w-full py-6 px-4">
         <div class="flex justify-between items-center">
           <h1 class="font-bold text-2xl">
@@ -79,7 +79,7 @@
       <div
         v-for="request in requests"
         :key="request.id"
-        class="dark:bg-slate-700 rounded-lg p-4 flex gap-2"
+        class="dark:bg-slate-700 bg-white rounded-lg p-4 flex gap-2"
       >
         <div class="flex flex-col justify-start">
           <img

@@ -36,6 +36,7 @@ export default (await import("vue")).defineComponent({
 
   props: {
     selectedDays: String,
+    isDark: Boolean
   },
 
   data() {
@@ -204,7 +205,7 @@ export default (await import("vue")).defineComponent({
           plugins: {
             legend: {
               labels: {
-                color: "#fff",
+                color: this.isDark ? "#fff" : '#000',
               },
             },
           },

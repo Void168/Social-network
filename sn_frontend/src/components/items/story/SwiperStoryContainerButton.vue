@@ -12,7 +12,7 @@
     >
       <div @click="$emit('prev')">
         <ChevronLeftIcon
-          class="w-12 bg-slate-700/50 p-2 rounded-full hover:bg-slate-600 transition duration-100"
+          class="w-12 dark:bg-slate-700/50 dark:hover:bg-slate-600 bg-slate-300 hover:bg-slate-400 p-2 rounded-full  transition duration-100"
         />
       </div>
     </button>
@@ -29,7 +29,7 @@
     >
       <div @click="$emit('next')">
         <ChevronRightIcon
-          class="w-12 bg-slate-700/50 p-2 rounded-full hover:bg-slate-600 transition duration-100"
+          class="w-12 dark:bg-slate-700/50 dark:hover:bg-slate-600 bg-slate-300 hover:bg-slate-400 dark:text-neutral-200 text-black p-2 rounded-full  transition duration-100"
         />
       </div>
     </button>

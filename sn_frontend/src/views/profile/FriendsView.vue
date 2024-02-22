@@ -1,6 +1,6 @@
 <template>
   <div class="max-w-7xl mx-auto gap-4 min-h-screen">
-    <div class="main-center space-y-4" id="feed-frame">
+    <div class="main-center shadow-none space-y-4" id="feed-frame">
       <div
         class="sticky py-2 top-0 h-16 dark:bg-slate-700"
         :style="{ top: `${toastStore.navbarHeight}px` }"
@@ -20,7 +20,7 @@
       </div>
       <div
         v-if="friendshipRequests.length"
-        class="p-4 bg-white border border-gray-200 dark:bg-slate-600 dark:border-slate-700 dark:text-neutral-200 rounded-lg"
+        class="p-4 bg-white  border-gray-200 dark:bg-slate-600 dark:border-slate-700 dark:text-neutral-200 rounded-lg"
       >
         <h2 class="mb-6 text-xl">Lời mời kết bạn</h2>
         <div
@@ -86,7 +86,7 @@
                 'ring-white/60 ring-offset-2 ring-offset-blue-200 focus:outline-none focus:ring-2',
                 selected
                   ? 'bg-white dark:bg-slate-800 dark:text-slate-200 text-blue-700 shadow'
-                  : 'text-blue-100 hover:bg-white/[0.12] hover:text-white',
+                  : ' hover:bg-white/[0.12] hover:text-white',
               ]"
             >
               <span>{{ category.name }}</span>
@@ -108,7 +108,7 @@
             v-for="n in categories.length"
             :key="n"
             :class="['xl:rounded-xl rounded-none p-3', 'focus:outline-none']"
-            class="p-4 bg-white border border-gray-200 rounded-lg dark:bg-slate-600 dark:border-slate-700 dark:text-neutral-200"
+            class="p-4 bg-white border-gray-200 rounded-lg dark:bg-slate-600 dark:border-slate-700 dark:text-neutral-200"
           >
             <div
               v-if="friends.length && n === 1"

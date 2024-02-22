@@ -1,7 +1,7 @@
 <template>
   <div class="max-w-7xl mx-auto gap-4">
     <div
-      class="bg-neutral-200 dark:bg-slate-600 p-4 dark:text-neutral-200 w-full rounded-lg my-4"
+      class="bg-white dark:bg-slate-600 p-4 dark:text-neutral-200 w-full rounded-lg my-4"
     >
       <p class="text-xl font-bold">Ảnh</p>
       <div class="grid lg:grid-cols-6 md:grid-cols-4 grid-cols-2 gap-3 my-4">

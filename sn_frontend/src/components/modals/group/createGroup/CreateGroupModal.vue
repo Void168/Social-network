@@ -27,7 +27,11 @@
             <DialogPanel
               class="w-full h-screen transform grid grid-cols-5 overflow-hidden bg-white dark:bg-slate-900 text-left align-middle shadow-xl transition-all"
             >
-            <div v-if="isExpand" class="w-full h-full absolute bg-slate-700/50 z-10 duration-100" @click="expandNavigation"></div>
+              <div
+                v-if="isExpand"
+                class="w-full h-full absolute bg-slate-700/50 z-10 duration-100"
+                @click="expandNavigation"
+              ></div>
               <div
                 @click="expandNavigation"
                 class="fixed flex lg:hidden left-0 z-20 inset-y-2/4 w-5 h-20 bg-slate-800 rounded-r-2xl"
@@ -49,17 +53,17 @@
                 />
               </button>
               <div
-                class="lg:col-span-1 bg-slate-800 dark:text-neutral-200 border-r-[1px] border-slate-700 flex-col justify-between h-screen lg:static fixed z-50"
-                :class="isExpand ? 'block w-[320px]': 'hidden lg:flex'"
+                class="lg:col-span-1 dark:bg-slate-800 dark:text-neutral-200 border-r-[1px] border-slate-700 flex-col justify-between h-screen lg:static fixed z-50"
+                :class="isExpand ? 'block w-[320px]' : 'hidden lg:flex'"
               >
                 <div>
                   <button
                     @click="removeAll"
-                    class="m-4 p-2 bg-slate-900 rounded-full hover:bg-slate-700"
+                    class="m-4 p-2 dark:bg-slate-900 bg-slate-200 hover:slate-300 rounded-full dark:hover:bg-slate-700"
                   >
                     <XMarkIcon
                       @click="$emit('closeCreateGroupModal')"
-                      class="text-neutral-200 h-8 w-8 cursor-pointer transition"
+                      class="dark:text-neutral-200 h-8 w-8 cursor-pointer transition"
                     />
                   </button>
                   <div class="flex justify-between items-center px-4">
@@ -165,7 +169,7 @@
                     class="w-full py-2 px-4 shadow-md rounded-lg font-semibold"
                     :class="
                       isDisabled
-                        ? 'dark:bg-slate-500'
+                        ? 'dark:bg-slate-500 bg-slate-200'
                         : 'dark:bg-emerald-500 dark:hover:bg-emerald-400 duration-75'
                     "
                   >
@@ -260,7 +264,7 @@ export default (await import("vue")).defineComponent({
       showOptions: [{ name: "Hiển thị" }, { name: "Ẩn" }],
       value: [],
       friendOptions: [],
-      isExpand: false
+      isExpand: false,
     };
   },
 
@@ -271,8 +275,8 @@ export default (await import("vue")).defineComponent({
   },
 
   methods: {
-    expandNavigation(){
-      this.isExpand = !this.isExpand
+    expandNavigation() {
+      this.isExpand = !this.isExpand;
     },
     removeAll() {
       this.name = "";

@@ -1,5 +1,5 @@
 <template>
-  <div class="text-slate-900 dark:text-neutral-200 bg-white dark:bg-slate-600">
+  <div class="text-slate-900 dark:text-neutral-200">
     <div class="relative group">
       <button
         class="absolute z-10 group-hover:bg-white/20 w-full h-full cursor-pointer rounded-md transition"

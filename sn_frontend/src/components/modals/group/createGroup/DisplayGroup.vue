@@ -71,11 +71,11 @@
         </div>
       </div>
       <div
-        class="p-2 bg-slate-800 rounded-b-lg flex gap-4"
+        class="p-2 dark:bg-slate-800 rounded-b-lg flex gap-4"
         :class="isDeviceActive ? 'flex-col' : ''"
       >
         <div
-          class="bg-slate-700 p-2 rounded-lg flex flex-col space-y-4 h-fit"
+          class="dark:bg-slate-700 bg-slate-200 p-2 rounded-lg flex flex-col space-y-4 h-fit"
           :class="isDeviceActive ? 'w-full' : 'w-[60%]'"
         >
           <div class="flex items-center w-full gap-2">
@@ -108,7 +108,7 @@
           </div>
         </div>
         <div
-          class="bg-slate-700 p-2 rounded-lg h-fit"
+          class="dark:bg-slate-700 bg-slate-200 p-2 rounded-lg h-fit"
           :class="isDeviceActive ? 'w-full' : 'w-[40%]'"
         >
           <h2 class="text-xl font-bold">Giới thiệu</h2>

@@ -3,7 +3,7 @@
     <div class="col-span-1 lg:block hidden"></div>
     <div class="col-span-3 grid grid-cols-3 gap-4 relative">
       <div class="relative main-left top-0 lg:col-span-1 col-span-4">
-        <div class="h-[88px] frame"></div>
+        <div class="h-[88px] frame !shadow-none"></div>
         <div
           class="px-4 pb-4 bg-white dark:bg-slate-600 dark:border-slate-700 dark:text-neutral-200 flex flex-col rounded-lg shadow-md overflow-hidden lg:w-full w-[90%] mx-auto"
         >

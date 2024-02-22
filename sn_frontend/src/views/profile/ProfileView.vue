@@ -21,7 +21,7 @@
     ></router-view>
     <div
       v-if="route.name === 'about' || route.name === 'friends'"
-      class="bg-neutral-200 dark:bg-slate-600 p-4 dark:text-neutral-200 w-full rounded-lg mt-4"
+      class="bg-white dark:bg-slate-600 p-4 dark:text-neutral-200 w-full rounded-lg mt-4"
     >
       <p class="text-xl font-bold">Ảnh</p>
       <div class="grid lg:grid-cols-6 md:grid-cols-4 grid-cols-2 gap-3 my-4 max-h-96">
@@ -31,7 +31,7 @@
       </div>
       <RouterLink
         :to="{ name: 'photos', params: { id: user.id } }"
-        class="w-full flex justify-center items-center py-2 dark:bg-slate-700 rounded-lg duration-75 dark:hover:bg-slate-800 cursor-pointer font-semibold text-lg"
+        class="w-full flex justify-center items-center py-2 dark:bg-slate-700 bg-slate-200 hover:bg-slate-300 rounded-lg duration-75 dark:hover:bg-slate-800 cursor-pointer font-semibold text-lg"
       >
         Xem tất cả
       </RouterLink>
@@ -42,7 +42,7 @@
         route.name === 'friends' ||
         route.name === 'photos'
       "
-      class="bg-neutral-200 dark:bg-slate-600 p-4 dark:text-neutral-200 w-full rounded-lg mt-4"
+      class="bg-white dark:bg-slate-600 p-4 dark:text-neutral-200 w-full rounded-lg mt-4"
     >
       <p class="text-xl font-bold">Video</p>
       <div class="max-h-96 min-h-[192px] flex justify-center items-center">
@@ -57,7 +57,7 @@
         route.name === 'friends' ||
         route.name === 'photos'
       "
-      class="bg-neutral-200 dark:bg-slate-600 p-4 dark:text-neutral-200 w-full rounded-lg mt-4"
+      class="bg-white dark:bg-slate-600 p-4 dark:text-neutral-200 w-full rounded-lg mt-4"
     >
       <p class="text-xl font-bold">Check in</p>
       <div class="max-h-96 min-h-[192px] flex justify-center items-center">
@@ -72,7 +72,7 @@
         route.name === 'friends' ||
         route.name === 'photos'
       "
-      class="bg-neutral-200 dark:bg-slate-600 p-4 dark:text-neutral-200 w-full rounded-lg mt-4"
+      class="bg-white dark:bg-slate-600 p-4 dark:text-neutral-200 w-full rounded-lg mt-4"
     >
       <p class="text-xl font-bold">Phim</p>
       <div class="max-h-96 min-h-[192px] flex justify-center items-center" v-if="!following.length">
@@ -105,7 +105,7 @@
         route.name === 'friends' ||
         route.name === 'photos'
       "
-      class="bg-neutral-200 dark:bg-slate-600 p-4 dark:text-neutral-200 w-full rounded-lg mt-4"
+      class="bg-white dark:bg-slate-600 p-4 dark:text-neutral-200 w-full rounded-lg mt-4"
     >
       <p class="text-xl font-bold">Chương trình TV</p>
       <div class="max-h-96 min-h-[192px] flex justify-center items-center">
@@ -120,7 +120,7 @@
         route.name === 'friends' ||
         route.name === 'photos'
       "
-      class="bg-neutral-200 dark:bg-slate-600 p-4 dark:text-neutral-200 w-full rounded-lg mt-4"
+      class="bg-white dark:bg-slate-600 p-4 dark:text-neutral-200 w-full rounded-lg mt-4"
     >
       <p class="text-xl font-bold">Thích</p>
       <div

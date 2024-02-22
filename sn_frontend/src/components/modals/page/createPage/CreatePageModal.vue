@@ -28,7 +28,29 @@
               class="w-full h-screen transform grid grid-cols-5 overflow-hidden bg-white dark:bg-slate-900 text-left align-middle shadow-xl transition-all"
             >
               <div
-                class="lg:col-span-1 h-screen hidden bg-slate-800 dark:text-neutral-200 border-r-[1px] border-slate-700 lg:flex flex-col justify-between"
+                v-if="isExpand"
+                class="w-full h-full absolute bg-slate-700/50 z-10 duration-100"
+                @click="expandNavigation"
+              ></div>
+              <div
+                @click="expandNavigation"
+                class="fixed flex lg:hidden left-0 z-20 inset-y-2/4 w-5 h-20 bg-slate-800 rounded-r-2xl"
+                :class="isExpand ? 'translate-x-[320px]' : 'translate-x-0'"
+              >
+                <ChevronRightIcon
+                  class="dark:text-slate-200"
+                  v-if="!isExpand"
+                />
+                <ChevronLeftIcon class="dark:text-slate-200" v-else />
+              </div>
+              <div
+                @click="expandNavigation"
+                class="lg:col-span-1 h-screen dark:bg-slate-800 dark:border-slate-700 bg-white dark:text-neutral-200 border-r-[1px] border-slate-200 lg:static fixed z-50 overflow-y-scroll"
+                :class="
+                  isExpand
+                    ? 'block w-[320px]'
+                    : 'hidden lg:flex flex-col justify-between'
+                "
               >
                 <div class="flex flex-col space-y-2">
                   <XMarkIcon
@@ -45,14 +67,16 @@
                   </div>
                   <div class="px-4">Bước {{ step }}/3</div>
                   <div class="w-full px-4">
-                    <div class="dark:bg-white rounded-lg h-2 relative">
+                    <div
+                      class="dark:bg-white bg-slate-200 rounded-lg h-2 relative"
+                    >
                       <span
                         :style="{ width: `${(step * 100) / 3}%` }"
                         class="bg-emerald-400 absolute z-20 h-2 rounded-lg"
                       />
                     </div>
                   </div>
-                  <h1 class="text-2xl font-bold px-4" v-if="step === 1">
+                  <h1 class="2xl:text-2xl text-xl font-bold px-4" v-if="step === 1">
                     Tạo trang
                   </h1>
                   <h1 class="text-2xl font-bold px-4" v-if="step === 2">
@@ -62,7 +86,7 @@
                     Tùy chỉnh Trang
                   </h1>
                   <div class="px-4 flex flex-col space-y-4" v-if="step === 1">
-                    <h3 class="px-4 text-lg">
+                    <h3 class="px-4 2xl:text-lg">
                       Trang sẽ hiển thị thông tin về bạn để mọi người tìm hiểu
                       thêm. Hãy chắc chắn là Trang của bạn có mọi thông tin cần
                       thiết nhé.
@@ -123,7 +147,11 @@
                     >
                       <div class="my-2 h-[550px] space-y-4 px-4">
                         <h2 class="mb-2 text-lg">Thông tin liên hệ</h2>
-                        <MUILikedInput :placeholder="'Email'" v-model="email" :type="'email'"/>
+                        <MUILikedInput
+                          :placeholder="'Email'"
+                          v-model="email"
+                          :type="'email'"
+                        />
                         <MUILikedInput
                           :placeholder="'Số điện thoại'"
                           v-model="phone"
@@ -140,7 +168,7 @@
                           v-model="location"
                           :type="'text'"
                         />
-                        <MUILikedInput :placeholder="'Mã zip'" :type="'text'"/>
+                        <MUILikedInput :placeholder="'Mã zip'" :type="'text'" />
                         <div>
                           <h2 class="font-semibold text-lg">Giờ mở cửa</h2>
                           <h3 class="text-sm">
@@ -240,7 +268,7 @@
                       v-if="step < 3"
                       :class="
                         isDisabled
-                          ? 'dark:bg-slate-600 py-2 rounded-lg font-semibold dark:text-slate-400'
+                          ? 'dark:bg-slate-600 py-2 rounded-lg font-semibold text-slate-400 bg-slate-200'
                           : 'btn'
                       "
                       :disabled="isDisabled"
@@ -303,7 +331,13 @@ import {
   DialogPanel,
   DialogTitle,
 } from "@headlessui/vue";
-import { XMarkIcon, PhotoIcon, TrashIcon } from "@heroicons/vue/24/solid";
+import {
+  XMarkIcon,
+  PhotoIcon,
+  TrashIcon,
+  ChevronRightIcon,
+  ChevronLeftIcon,
+} from "@heroicons/vue/24/solid";
 import ChooseTypePage from "../../../dropdown/ChooseTypePage.vue";
 import MUILikedInput from "../../../input/MUILikedInput.vue";
 import ListRadioButton from "../../../input/ListRadioButton.vue";
@@ -324,6 +358,8 @@ export default (await import("vue")).defineComponent({
     XMarkIcon,
     PhotoIcon,
     TrashIcon,
+    ChevronRightIcon,
+    ChevronLeftIcon,
   },
   setup() {
     const toastStore = useToastStore();
@@ -338,6 +374,7 @@ export default (await import("vue")).defineComponent({
 
   data() {
     return {
+      isExpand: false,
       isLoading: false,
       isBioFocus: false,
       isDeviceActive: false,
@@ -381,6 +418,9 @@ export default (await import("vue")).defineComponent({
   mounted() {},
 
   methods: {
+    expandNavigation() {
+      this.isExpand = !this.isExpand;
+    },
     bioFocus() {
       this.isBioFocus = true;
     },
@@ -463,8 +503,8 @@ export default (await import("vue")).defineComponent({
                 "bg-emerald-500 text-white"
               );
               setTimeout(() => {
-                this.$router.go(0)
-              }, 3500)
+                this.$router.go(0);
+              }, 3500);
             } else {
               this.toastStore.showToast(
                 3500,

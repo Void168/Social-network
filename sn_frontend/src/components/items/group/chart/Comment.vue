@@ -37,6 +37,7 @@
     props: {
       setCommentsLength: Function,
       selectedDays: String,
+      isDark: Boolean
     },
   
     data() {
@@ -205,7 +206,7 @@
             plugins: {
               legend: {
                 labels: {
-                  color: "#fff",
+                  color: this.isDark ? "#fff" : '#000',
                 },
               },
             },

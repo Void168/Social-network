@@ -8,16 +8,16 @@
     >
       <div class="flex gap-2 items-center w-[80%]">
         <EyeIcon
-          class="w-10 p-2 rounded-full bg-slate-600"
+          class="w-10 p-2 rounded-full dark:bg-slate-600 bg-slate-100"
           v-if="option.id === 1"
         />
-        <EyeSlashIcon class="w-10 p-2 rounded-full bg-slate-600" v-else />
+        <EyeSlashIcon class="w-10 p-2 rounded-full dark:bg-slate-600 bg-slate-100" v-else />
         <div class="flex flex-col gap-1">
           <h4 class="font-medium">{{ option.name }}</h4>
           <h5 class="text-sm">{{ option.content }}</h5>
         </div>
       </div>
-      <div class="relative sm:w-10 sm:h-10 h-6 w-6 rounded-full dark:bg-slate-600">
+      <div class="relative sm:w-10 sm:h-10 h-6 w-6 rounded-full dark:bg-slate-600 bg-slate-200">
         <span
           class="absolute sm:w-5 sm:h-5 h-3 w-3 bg-emerald-500 rounded-full sm:top-[10px] sm:left-[10px] top-[6px] left-[6px]"
           v-if="selectedOption && option.id === 1"

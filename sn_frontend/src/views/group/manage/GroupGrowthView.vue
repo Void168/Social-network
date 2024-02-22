@@ -68,16 +68,16 @@
         Tải xuống
       </div>
     </div>
-    <div class="dark:bg-slate-800 w-full rounded-lg p-4 space-y-4">
+    <div class="dark:bg-slate-800 bg-white w-full rounded-lg p-4 space-y-4">
       <div>
         <h3 class="text-lg font-semibold">
           Tổng số thành viên: {{ group.members_count }}
         </h3>
         <h5 class="text-sm text-neutral-400">{{ today }}</h5>
       </div>
-      <TotalMember :selectedDays="selectedDistance.name"/>
+      <TotalMember :selectedDays="selectedDistance.name" :isDark="isDark"/>
     </div>
-    <div class="dark:bg-slate-800 w-full rounded-lg p-4 space-y-4">
+    <div class="dark:bg-slate-800 bg-white w-full rounded-lg p-4 space-y-4">
       <div>
         <h3 class="text-lg font-semibold">
           Yêu cầu làm thành viên: {{ joinRequestsLength }}
@@ -104,6 +104,7 @@
       <JoinRequest
         :setJoinRequestLength="setJoinRequestLength"
         :selectedDays="selectedDistance.name"
+        :isDark="isDark"
       />
       <div class="flex justify-center items-center">
         <RouterLink
@@ -115,7 +116,7 @@
       </div>
     </div>
     <div class="flex flex-col gap-4 w-full">
-      <div class="dark:bg-slate-800 rounded-lg p-4 space-y-4">
+      <div class="dark:bg-slate-800 bg-white rounded-lg p-4 space-y-4">
         <div class="flex justify-between sm:flex-row flex-col gap-3 items-center">
           <div>
             <h3 class="text-lg font-semibold" v-if="selected === categories[0]">
@@ -146,7 +147,7 @@
               {{ daySixtyAgo }} - {{ today }}
             </h5>
           </div>
-          <div class="flex space-x-1 rounded-xl bg-slate-700 p-1">
+          <div class="flex space-x-1 rounded-xl dark:bg-slate-700 bg-slate-200 p-1">
             <div v-for="category in categories" :key="category">
               <button
                 @click="getCategory(category)"
@@ -167,19 +168,22 @@
           v-if="selected === categories[0]"
           :selectedDays="selectedDistance.name"
           :setPostsLength="setPostsLength"
+          :isDark="isDark"
         />
         <Comment
           v-if="selected === categories[1]"
           :selectedDays="selectedDistance.name"
           :setCommentsLength="setCommentsLength"
+          :isDark="isDark"
         />
         <Like
           v-if="selected === categories[2]"
           :selectedDays="selectedDistance.name"
           :setLikesLength="setLikesLength"
+          :isDark="isDark"
         />
       </div>
-      <div class="dark:bg-slate-800 rounded-lg p-4 space-y-4">
+      <div class="dark:bg-slate-800 bg-white rounded-lg p-4 space-y-4">
         <div>
           <h3 class="text-lg font-semibold">
             Thành viên hoạt động: {{ activeMembersLength }}
@@ -206,6 +210,7 @@
         <ActiveMember
           :selectedDays="selectedDistance.name"
           :setActiveMembersLength="setActiveMembersLength"
+          :isDark="isDark"
         />
       </div>
     </div>
@@ -221,6 +226,7 @@ import Post from "../../../components/items/group/chart/Post.vue";
 import Comment from "../../../components/items/group/chart/Comment.vue";
 import Like from "../../../components/items/group/chart/Like.vue";
 import ActiveMember from "../../../components/items/group/chart/ActiveMember.vue";
+import { useDark, useToggle } from "@vueuse/core";
 
 import {
   Listbox,
@@ -254,6 +260,8 @@ export default {
     ArrowDownTrayIcon,
   },
   setup() {
+    const isDark = useDark();
+    const toggleDark = useToggle(isDark);
     const categories = ["Bài viết", "Bình luận", "Cảm xúc"];
     const selected = ref(categories[0]);
 
@@ -304,6 +312,8 @@ export default {
       daySixtyAgo,
       categories,
       selected,
+      toggleDark,
+      isDark,
     };
   },
   props: {

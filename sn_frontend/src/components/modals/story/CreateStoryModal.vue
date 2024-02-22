@@ -25,28 +25,28 @@
             leave-to="opacity-0 scale-95"
           >
             <DialogPanel
-              class="w-full h-screen transform grid grid-cols-5 overflow-hidden bg-white dark:bg-slate-900 text-left align-middle shadow-xl transition-all"
+              class="w-full h-screen transform grid grid-cols-5 overflow-hidden bg-slate-200 dark:bg-slate-900 text-left align-middle shadow-xl transition-all"
             >
               <button
                 @click="removeAll"
-                class="m-4 p-2 bg-slate-900 rounded-full hover:bg-slate-700 lg:hidden absolute"
+                class="m-4 p-2 dark:bg-slate-900 rounded-full hover:bg-slate-700  duration-75 lg:hidden absolute"
               >
                 <XMarkIcon
                   @click="$emit('closeModal')"
-                  class="text-neutral-200 h-8 w-8 cursor-pointer transition"
+                  class="dark:text-neutral-200 h-8 w-8 cursor-pointer transition duration-75"
                 />
               </button>
               <div
-                class="lg:col-span-1 hidden bg-slate-800 dark:text-neutral-200 border-r-[1px] border-slate-700 lg:flex flex-col justify-between"
+                class="lg:col-span-1 hidden dark:bg-slate-800 dark:text-neutral-200 border-r-[1px] dark:border-slate-700 border-slate-300 lg:flex flex-col justify-between"
               >
                 <div>
                   <button
                     @click="removeAll"
-                    class="m-4 p-2 bg-slate-900 rounded-full hover:bg-slate-700"
+                    class="m-4 p-2 dark:bg-slate-900 rounded-full dark:hover:bg-slate-700 hover:bg-slate-300 duration-75"
                   >
                     <XMarkIcon
                       @click="$emit('closeModal')"
-                      class="text-neutral-200 h-8 w-8 cursor-pointer transition"
+                      class="dark:text-neutral-200 h-8 w-8 cursor-pointer transition"
                     />
                   </button>
                   <div class="flex justify-between items-center px-4">
@@ -59,7 +59,7 @@
                     />
                   </div>
                   <div
-                    class="flex gap-3 my-4 py-4 items-center border-b border-slate-700 px-4"
+                    class="flex gap-3 my-4 py-4 items-center border-b dark:border-slate-700 border-slate-300 px-4"
                   >
                     <img
                       :src="userStore.user.avatar"
@@ -89,7 +89,7 @@
                           @getFont="getFont"
                         />
                         <div
-                          class="p-2 border mt-8 border-slate-700 rounded-lg max-h-max"
+                          class="p-2 border mt-8 dark:border-slate-700 border-slate-300 rounded-lg max-h-max"
                         >
                           <h3 class="dark:text-neutral-200/70 text-lg">
                             Phông nền
@@ -111,10 +111,10 @@
                   </div>
                   <div v-if="url" class="flex flex-col space-y-4">
                     <div
-                      class="p-4 flex gap-3 items-center font-semibold hover:bg-slate-700 rounded-lg mx-4 cursor-pointer"
+                      class="p-4 flex gap-3 items-center font-semibold dark:hover:bg-slate-700 hover:bg-slate-300 rounded-lg mx-4 cursor-pointer"
                     >
                       <span
-                        class="rounded-full bg-slate-600 p-1 w-12 h-12 flex items-center justify-center text-xl"
+                        class="rounded-full dark:bg-slate-600 p-1 w-12 h-12 flex items-center justify-center text-xl"
                         >Aa</span
                       >
                       <p class="text-xl">Thêm văn bản</p>
@@ -138,13 +138,13 @@
                 <div class="my-4 px-6 flex gap-2" v-if="isTextStory || url">
                   <div
                     @click="$emit('closeTextStory')"
-                    class="flex justify-center 2xl:py-2 2xl:px-4 py-1 px-2 w-[40%] dark:bg-slate-700 shadow-md rounded-lg font-semibold hover:bg-slate-600 transition duration-100 cursor-pointer"
+                    class="flex justify-center 2xl:py-2 2xl:px-4 py-1 px-2 w-[40%] dark:bg-slate-700 bg-white shadow-md rounded-lg font-semibold dark:hover:bg-slate-600 hover:bg-slate-300 transition duration-100 cursor-pointer"
                   >
                     <button @click="removeAll" class="w-full">Bỏ</button>
                   </div>
                   <button
                     @click="submitForm"
-                    class="w-[60%] dark:bg-emerald-500 hover:bg-emerald-400 py-2 px-4 shadow-md rounded-lg font-semibold"
+                    class="w-[60%] bg-emerald-500 hover:bg-emerald-400 py-2 px-4 shadow-md rounded-lg font-semibold"
                   >
                     Chia sẻ lên tin
                   </button>
@@ -204,10 +204,10 @@
                 </h3>
                 <div
                   v-if="isTextStory || url"
-                  class="bg-slate-800 h-full lg:w-[65%] xm:w-[80%] w-full rounded-xl p-4"
+                  class="dark:bg-slate-800 bg-white h-full lg:w-[65%] xm:w-[80%] w-full rounded-xl p-4"
                 >
                   <div
-                    class="flex justify-center flex-col items-center bg-slate-900 h-full rounded-xl p-4 w-full"
+                    class="flex justify-center flex-col items-center dark:bg-slate-900 bg-slate-300 h-full rounded-xl p-4 w-full"
                   >
                     <div
                       v-if="!url"
@@ -260,7 +260,7 @@
                     </div>
                     <div
                       v-if="isImage"
-                      class="text-neutral-200 text-lg mt-4 flex items-center gap-3 w-full justify-center"
+                      class="dark:text-neutral-200 text-lg mt-4 flex items-center gap-3 w-full justify-center"
                     >
                       <h3 v-if="!isRotate && url" class="px-2 py-1">
                         Chọn ảnh để cắt và xoay
@@ -279,7 +279,7 @@
                       </div>
                       <button
                         v-if="isRotate"
-                        class="flex items-center gap-2 bg-slate-700 px-2 py-1 rounded-md"
+                        class="flex items-center gap-2 dark:bg-slate-700 bg-slate-100 px-2 py-1 rounded-md"
                         @click="rotate"
                       >
                         <ArrowPathIcon class="w-6 h-6" />
@@ -289,7 +289,7 @@
                   </div>
                 </div>
                 <div
-                  class="bg-slate-800 dark:text-neutral-200 border-r-[1px] w-[90%] border-slate-700 flex justify-between lg:hidden overflow-x-scroll"
+                  class="dark:bg-slate-800 bg-white dark:text-neutral-200 border-r-[1px] w-[90%] border-slate-700 flex justify-between lg:hidden overflow-x-scroll rounded-lg py-4 items-center"
                 >
                   <div class="flex">
                     <div v-if="isTextStory">
@@ -311,7 +311,7 @@
                             @getFont="getFont"
                           />
                           <div
-                            class="p-2 border border-slate-700 rounded-lg w-full"
+                            class="p-2 border dark:border-slate-700 border-slate-300 rounded-lg w-full"
                           >
                             <h3 class="dark:text-neutral-200/70 text-lg">
                               Phông nền
@@ -357,13 +357,13 @@
                   >
                     <div
                       @click="$emit('closeTextStory')"
-                      class="flex justify-center 2xl:py-2 2xl:px-4 py-1 px-2 w-full dark:bg-slate-700 shadow-md rounded-lg font-semibold hover:bg-slate-600 transition duration-100 cursor-pointer"
+                      class="flex justify-center 2xl:py-2 2xl:px-4 py-1 px-2 w-full dark:bg-slate-700 bg-white hover:bg-slate-300 shadow-md rounded-lg font-semibold dark:hover:bg-slate-600 transition duration-100 cursor-pointer"
                     >
                       <button @click="removeAll" class="w-full">Bỏ</button>
                     </div>
                     <button
                       @click="submitForm"
-                      class="w-full dark:bg-emerald-500 hover:bg-emerald-400 py-2 px-4 shadow-md rounded-lg font-semibold"
+                      class="w-full bg-emerald-500 hover:bg-emerald-400 py-2 px-4 shadow-md rounded-lg font-semibold"
                     >
                       <span class="md:block hidden">Chia sẻ lên tin</span>
                       <span class="md:hidden xs:block">Chia sẻ</span>

@@ -70,7 +70,7 @@
           </div>
           <button
             @click="openContactModal"
-            class="dark:text-neutral-200 bg-slate-200 dark:bg-slate-800 md:px-4 md:py-2 p-1 shadow-md rounded-md hover:bg-slate-300 dark:hover:bg-slate-900 transition"
+            class="dark:text-neutral-200 bg-slate-300 dark:bg-slate-800 md:px-4 md:py-2 p-1 shadow-md rounded-md hover:bg-slate-300 dark:hover:bg-slate-900 transition"
           >
             <span class="md:block hidden">Thông tin liên lạc</span>
             <PencilSquareIcon class="w-6 md:hidden" />
@@ -82,7 +82,7 @@
         </div>
       </div>
     </div>
-    <hr class="col-span-3" />
+    <hr class="col-span-3 dark:border-slate-600 border-slate-300" />
   </div>
 </template>
 

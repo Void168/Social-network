@@ -1,6 +1,6 @@
 <template>
     <div
-        class="xl:col-span-1 md:col-span-2 md:block dark:bg-slate-800 bg-slate-200 overflow-y-auto scrollbar-corner-slate-200 scrollbar-none hover:scrollbar-thin scrollbar-thumb-slate-400 scrollbar-track-slate-800 z-20 dark:text-neutral-200"
+        class="xl:col-span-1 md:col-span-2 md:block dark:bg-slate-800 bg-white overflow-y-auto scrollbar-corner-slate-200 scrollbar-none hover:scrollbar-thin scrollbar-thumb-slate-400 scrollbar-track-slate-800 z-20 dark:text-neutral-200"
         :style="{
           height: `${toastStore.height}px`,
           top: `${toastStore.navbarHeight}px`,
@@ -32,8 +32,8 @@
               @click="$emit('getActiveTab', category.tab)"
               v-for="category in categories"
               :key="category.tab"
-              class="flex gap-3 items-center hover:bg-slate-400 dark:hover:bg-slate-700 duration-75 px-4 py-2 rounded-lg cursor-pointer"
-              :class="activeTab === category.tab ? 'bg-slate-700' : ''"
+              class="flex gap-3 items-center hover:bg-slate-300 dark:hover:bg-slate-700 duration-75 px-4 py-2 rounded-lg cursor-pointer"
+              :class="activeTab === category.tab ? 'dark:bg-slate-700 bg-slate-300' : ''"
             >
               <NewspaperIcon
                 class="w-10 p-2 bg-slate-200 rounded-full cursor-pointer duration-75"
@@ -69,10 +69,10 @@
         <div class="p-4">
           <button
             @click="openCreateGroupModal"
-            class="px-4 py-2 w-full flex items-center justify-center gap-2 bg-slate-300 dark:bg-emerald-700/50 dark:hover:bg-emerald-400/50 rounded-lg duration-75"
+            class="px-4 py-2 w-full flex items-center justify-center gap-2 bg-emerald-500/30 hover:bg-emerald-400/50 dark:bg-emerald-700/50 dark:hover:bg-emerald-400/50 rounded-lg duration-75"
           >
-            <PlusIcon class="w-6 text-emerald-300" />
-            <h4 class="font-semibold text-emerald-300">Tạo nhóm mới</h4>
+            <PlusIcon class="w-6 text-emerald-400" />
+            <h4 class="font-semibold text-emerald-400">Tạo nhóm mới</h4>
           </button>
           <CreateGroupModal
             @closeCreateGroupModal="closeCreateGroupModal"

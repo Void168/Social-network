@@ -1,9 +1,9 @@
 <template>
-  <div class="p-4 dark:bg-slate-800 rounded-lg">
+  <div class="p-4 dark:bg-slate-800 bg-white rounded-lg">
     <h4 class="text-sm">Câu hỏi {{ index }}</h4>
     <h3 class="font-semibold" v-if="!isUpdate">{{ question.body }}</h3>
     <div
-      class="my-4 dark:bg-slate-700 rounded-lg relative h-20"
+      class="my-4 dark:bg-slate-700 bg-slate-200 rounded-lg relative h-20"
       v-if="!isUpdate"
     >
       <span class="absolute top-2 left-2 dark:text-neutral-400"
@@ -20,7 +20,7 @@
     <div class="py-4 flex justify-center items-center gap-2" v-if="!isUpdate">
       <button
         @click="openUpdateQuestion"
-        class="py-2 px-4 font-semibold text-emerald-300 rounded-lg bg-emerald-500/70 hover:bg-emerald-500/50 duration-75 w-full"
+        class="py-2 px-4 font-semibold text-emerald-200 rounded-lg bg-emerald-500/70 hover:bg-emerald-500/50 duration-75 w-full"
       >
         Chỉnh sửa
       </button>

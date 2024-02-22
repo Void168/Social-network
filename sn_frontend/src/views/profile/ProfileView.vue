@@ -24,7 +24,7 @@
       class="bg-neutral-200 dark:bg-slate-600 p-4 dark:text-neutral-200 w-full rounded-lg mt-4"
     >
       <p class="text-xl font-bold">Ảnh</p>
-      <div class="grid grid-cols-6 gap-3 my-4 max-h-96">
+      <div class="grid lg:grid-cols-6 md:grid-cols-4 grid-cols-2 gap-3 my-4 max-h-96">
         <div v-for="image in images.slice(0, 12)" v-bind:key="image.id">
           <ImageShowcase v-bind:post="image" />
         </div>
@@ -80,7 +80,7 @@
           {{ user.name }} chưa thích bộ phim nào
         </h2>
       </div>
-      <div class="grid grid-cols-6 gap-3 my-4 max-h-96" v-else>
+      <div class="grid lg:grid-cols-6 md:grid-cols-4 grid-cols-2 gap-3 my-4 max-h-96" v-else>
         <div
           v-for="movie in moviePage"
           v-bind:key="movie.id"
@@ -92,12 +92,7 @@
             ></button>
             <img
               :src="movie.get_avatar"
-              :class="
-                route.name !== 'profile'
-                  ? 'xl:h-48 lg:h-24 cursor-pointer'
-                  : ' md:w-full sm:h-48 xm:h-32 xs:h-24 cursor-pointer'
-              "
-              class="rounded-lg"
+              class="cursor-pointer rounded-lg"
             />
           </RouterLink>
           <h3 class="font-medium mt-2">{{ movie.name }}</h3>
@@ -136,7 +131,7 @@
           Không có gì trong mục đã thích
         </h2>
       </div>
-      <div class="grid grid-cols-6 gap-3 my-4 max-h-96" v-else>
+      <div class="grid lg:grid-cols-6 md:grid-cols-4 grid-cols-2 gap-3 my-4 max-h-96" v-else>
         <div
           v-for="followingPage in followingPages.slice(0, 6)"
           v-bind:key="followingPage.id"

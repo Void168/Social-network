@@ -9,7 +9,7 @@
             <RouterLink
               :to="{
                 name: post.created_by.is_page ? 'page' : 'profile',
-                params: { id: post.created_by.id },
+                params: { id: post?.created_by?.id },
               }"
               >{{ post.created_by.name }}</RouterLink
             >
@@ -22,7 +22,7 @@
             <p>cùng với</p>
             <strong class="group">
               <RouterLink
-                :to="{ name: 'profile', params: { id: post.post_to.id } }"
+                :to="{ name: 'profile', params: { id: post?.post_to?.id } }"
                 >{{ post.post_to.name }}</RouterLink
               >
               <TooltipProfileVue

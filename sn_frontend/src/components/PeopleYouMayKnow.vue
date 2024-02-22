@@ -76,7 +76,6 @@ export default (await import("vue")).defineComponent({
       this.toastStore.setPeopleHeight(
         this.$refs.peopleContainer.clientHeight
       );
-      console.log(this.$refs.peopleContainer.clientHeight)
     },
   },
 });

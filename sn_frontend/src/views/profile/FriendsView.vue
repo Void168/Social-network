@@ -73,7 +73,7 @@
         </div>
       </div>
       <TabGroup>
-        <TabList class="flex space-x-1 rounded-xl bg-blue-900/20 p-1">
+        <TabList class="flex sm:flex-row flex-col space-x-1 rounded-xl bg-blue-900/20 p-1">
           <Tab
             v-for="category in categories"
             as="template"

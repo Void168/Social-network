@@ -66,7 +66,6 @@ export default (await import("vue")).defineComponent({
     setHeight(){
       this.toastStore.resetTrendsHeight()
       this.toastStore.setTrendsHeight(this.$refs.trendsContainer.clientHeight)
-      console.log(this.$refs.trendsContainer.clientHeight)
     }
   },
   components: { RouterLink, SkeletionLoadingChatBox },

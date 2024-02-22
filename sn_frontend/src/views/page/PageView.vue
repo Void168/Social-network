@@ -105,7 +105,7 @@
             ></button>
             <img
               :src="pageFollowing.get_avatar"
-              class="cursor-pointer"
+              class="cursor-pointer rounded-lg"
             />
           </RouterLink>
           <h3 class="font-medium mt-2">{{ pageFollowing.name }}</h3>

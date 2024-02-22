@@ -4,7 +4,7 @@
       <img
         :src="group?.get_cover_image"
         alt=""
-        class="w-full rounded-t-lg max-h-56"
+        class="w-full rounded-t-lg md:h-48 sm:h-64 xs:h-56 cursor-pointer"
       />
       <div class="px-4 py-2 flex flex-col justify-between gap-4">
         <div>

@@ -3,7 +3,7 @@
     <div
       class="main-center space-y-4 grid grid-cols-4 dark:bg-slate-600 rounded-lg"
     >
-      <div class="col-span-1 border-r dark:border-slate-500 py-4">
+      <div class="lg:col-span-1 col-span-4 lg:border-r lg:border-b-0 border-b dark:border-slate-500 py-4">
         <h2 class="text-2xl font-bold dark:text-neutral-200 px-5">
           Giới thiệu
         </h2>
@@ -23,7 +23,7 @@
           </li>
         </ul>
       </div>
-      <div class="px-4 col-span-3">
+      <div class="px-4 lg:col-span-3 col-span-4">
         <div
           class="flex flex-col gap-4 my-8"
           v-if="selectedNavigator?.name === 'Tổng quan'"
@@ -82,7 +82,7 @@
           </div>
         </div>
         <div
-          class="flex flex-col gap-6"
+          class="flex flex-col gap-6 my-4"
           v-if="selectedNavigator?.name === 'Công việc và học vấn'"
         >
           <div class="dark:text-neutral-300 space-y-1">
@@ -108,7 +108,7 @@
           </div>
         </div>
         <div
-          class="flex flex-col gap-6"
+          class="flex flex-col gap-6 my-4"
           v-if="selectedNavigator?.name === 'Nơi từng sống'"
         >
           <div class="dark:text-neutral-300 space-y-1">
@@ -150,7 +150,7 @@
           </div>
         </div>
         <div
-          class="flex flex-col gap-4"
+          class="flex flex-col gap-4 my-4"
           v-if="selectedNavigator?.name === 'Thông tin liên hệ và cơ bản'"
         >
           <h3 class="text-lg font-semibold dark:text-neutral-300">
@@ -215,7 +215,7 @@
           </div>
         </div>
         <div
-          class="flex flex-col gap-6"
+          class="flex flex-col gap-6 my-4"
           v-if="selectedNavigator?.name === 'Gia đình và các mối quan hệ'"
         >
           <div class="dark:text-neutral-300 space-y-1">
@@ -252,7 +252,7 @@
           </div>
         </div>
         <div
-          class="flex flex-col gap-6"
+          class="flex flex-col gap-6 my-4"
           v-if="selectedNavigator?.name?.includes('Chi tiết về')"
         >
           <div class="dark:text-neutral-300 space-y-1">
@@ -283,7 +283,7 @@
           </div>
         </div>
         <div
-          class="flex flex-col gap-6"
+          class="flex flex-col gap-6 my-4"
           v-if="selectedNavigator?.name === 'Sự kiện trong đời'"
         >
           <div class="dark:text-neutral-300 space-y-1">

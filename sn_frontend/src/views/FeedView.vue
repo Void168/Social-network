@@ -12,13 +12,8 @@
         }"
       >
         <ul class="w-full">
-          <RouterLink
-            :to="{
-              name: pageStore.pageId ? 'page' : 'profile',
-              params: {
-                id: pageStore.pageId ? pageStore.pageId : userStore.user.id,
-              },
-            }"
+          <div
+            @click="redirectToProfile"
             class="flex gap-3 w-full items-center dark:hover:bg-slate-600 cursor-pointer px-4 py-2 rounded-xl"
           >
             <img
@@ -37,9 +32,13 @@
                   : userStore.user.name
               }}
             </h3>
-          </RouterLink>
+          </div>
           <li
-            v-for="nav in navigation.slice(0, navigationsShow)"
+            v-for="nav in !pageStore?.pageId
+              ? navigation.slice(0, navigationsShow)
+              : navigation
+                  .slice(0, navigationsShow)
+                  .filter((nav) => nav.for === 'both')"
             :key="nav.icon"
           >
             <RouterLink
@@ -212,6 +211,7 @@ export default {
     const userStore = useUserStore();
     const toastStore = useToastStore();
     const pageStore = usePageStore();
+
     return {
       userStore,
       toastStore,
@@ -251,6 +251,13 @@ export default {
   },
 
   methods: {
+    redirectToProfile() {
+      if (this.pageStore.pageId) {
+        this.$router.push(`/page/${this.pageStore.pageId}`);
+      } else {
+        this.$router.push(`/profile/${this.userStore.user.id}`);
+      }
+    },
     async getFeed() {
       this.isLoading = true;
       if (!this.pageStore?.pageId) {

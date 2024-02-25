@@ -141,7 +141,7 @@ import { useUnseenConversationsStore } from "./stores/conversations";
 import { useCurrentStoryStore } from "./stores/currentStory";
 import { useToastStore } from "./stores/toast";
 import { usePageStore } from "./stores/page";
-import { socket } from "./socket";
+// import { socket } from "./socket";
 import { useRoute } from "vue-router";
 import { computed } from "vue";
 
@@ -199,7 +199,7 @@ export default {
 
   beforeCreate() {
     this.userStore.initStore();
-    socket.off();
+    // socket.off();
     // this.connectionStore.bindEvents();
 
     const token = this.userStore.user.access;

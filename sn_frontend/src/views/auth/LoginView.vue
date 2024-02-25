@@ -22,7 +22,7 @@
     </div>
 
     <div class="main-right flex justify-center items-center">
-      <div class="p-12 bg-white dark:bg-slate-600 dark:text-slate-200 border boder-gray-200 dark:border-slate-500 md:rounded-lg w-full md:h-[50%] h-full">
+      <div class="p-12 bg-white dark:bg-slate-600 dark:text-slate-200 text-black border boder-gray-200 dark:border-slate-500 md:rounded-lg w-full md:h-[50%] h-full">
         <template v-if="errors.length > 0">
           <div
             class="bg-rose-400 text-white text-center rounded-lg px-6 py-3 mb-4"
@@ -37,7 +37,7 @@
               v-model="form.email"
               type="email"
               placeholder="E-mail của bạn"
-              class="w-full mt-2 py-2 px-6 border border-gray-200 rounded-lg"
+              class="w-full mt-2 py-2 px-6 border border-gray-200 dark:bg-slate-600 rounded-lg dark:text-slate-200 text-black"
             />
           </div>
           <div>
@@ -46,7 +46,7 @@
               v-model="form.password"
               type="password"
               placeholder="Mật khẩu của bạn"
-              class="w-full mt-2 py-2 px-6 border border-gray-200 rounded-lg"
+              class="w-full mt-2 py-2 px-6 border border-gray-200 dark:bg-slate-600 rounded-lg dark:text-slate-200 text-black"
             />
           </div>
 

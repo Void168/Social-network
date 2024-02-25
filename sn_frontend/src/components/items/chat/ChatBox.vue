@@ -352,7 +352,7 @@ export default (await import("vue")).defineComponent({
     const toastStore = useToastStore();
     return {
       userStore,
-      connectionStore,
+      // connectionStore,
       toastStore,
     };
   },

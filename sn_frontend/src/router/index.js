@@ -43,7 +43,7 @@ import PageAboutView from "../views/page/PageAboutView.vue"
 import PageImageView from "../views/page/PageImageView.vue"
 
 const router = createRouter({
-  history: createWebHistory(import.meta.env.VITE_CLIENT_URL),
+  history: createWebHistory(),
   routes: [
     {
       path: "/signup",

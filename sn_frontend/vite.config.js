@@ -30,7 +30,17 @@ export default defineConfig({
     },
   },
   build: {
-    target: 'esnext'
+    target: 'esnext',
+    outDir: '../sn_frontend',
+    rollupOptions: {
+      output:{
+          manualChunks(id) {
+              if (id.includes('node_modules')) {
+                  return id.toString().split('node_modules/')[1].split('/')[0].toString();
+              }
+          }
+      }
+  }
   },
   preview: {
     port: 5173,

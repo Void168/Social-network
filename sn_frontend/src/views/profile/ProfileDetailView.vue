@@ -238,7 +238,7 @@
             v-for="post in posts"
             v-bind:key="post.id"
           >
-            <FeedItem v-bind:post="post" v-on:deletePost="deletePost" />
+            <FeedItem v-bind:post="post" />
           </div>
           <SkeletonLoadingPost
             v-show="!loadMore"
@@ -341,9 +341,6 @@ export default {
     },
     closeAvatarModal() {
       this.avatarIsOpen = false;
-    },
-    deletePost(id) {
-      this.posts = this.posts.filter((post) => post.id !== id);
     },
     sendDirectMessage() {
       if (!this.pageStore.pageId) {

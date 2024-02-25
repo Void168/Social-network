@@ -137,7 +137,7 @@ import Toast from "@/components/Toast.vue";
 import { useUserStore } from "./stores/user";
 import { useNotificationStore } from "./stores/notification";
 import { useUnseenConversationsStore } from "./stores/conversations";
-// import { useConnectionStore } from "./stores/connection";
+import { useConnectionStore } from "./stores/connection";
 import { useCurrentStoryStore } from "./stores/currentStory";
 import { useToastStore } from "./stores/toast";
 import { usePageStore } from "./stores/page";
@@ -154,7 +154,7 @@ import ProfileDropdown from "./components/dropdown/ProfileDropdown.vue";
 
 export default {
   setup() {
-    // const connectionStore = useConnectionStore();
+    const connectionStore = useConnectionStore();
     const currentStoryStore = useCurrentStoryStore();
     const userStore = useUserStore();
     const toastStore = useToastStore();
@@ -169,7 +169,7 @@ export default {
     const path = computed(() => route.path);
 
     return {
-      // connectionStore,
+      connectionStore,
       currentStoryStore,
       userStore,
       toastStore,
@@ -200,7 +200,7 @@ export default {
   beforeCreate() {
     this.userStore.initStore();
     socket.off();
-    // this.connectionStore.bindEvents();
+    this.connectionStore.bindEvents();
 
     const token = this.userStore.user.access;
 

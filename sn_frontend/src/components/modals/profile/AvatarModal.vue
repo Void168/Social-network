@@ -279,7 +279,7 @@ export default (await import("vue")).defineComponent({
       if (this.errors.length === 0) {
         let formData = new FormData();
         formData.append("avatar", this.$refs.avatar.files[0]);
-        if(!this.pageStore.pageActive.is_page){
+        if(this.pageStore.pageActive.is_page === false){
           axios
             .post("/api/edit-avatar/", formData, {
               headers: {

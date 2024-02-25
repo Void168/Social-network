@@ -15,8 +15,8 @@
             <div class="flex gap-2 items-center">
               <div class="relative">
                 <img :src="friend.get_avatar" class="w-10 h-10 rounded-full" />
-                <!-- v-if="connectionStore.isConnected" -->
                 <span
+                  v-if="connectionStore.isConnected"
                   class="w-3 h-3 bg-emerald-400 shadow-md absolute top-0 right-0 ring-4 dark:ring-slate-600 rounded-full"
                 ></span>
               </div>
@@ -75,7 +75,7 @@
 <script>
 import axios from "axios";
 import { useUserStore } from "../stores/user";
-// import { useConnectionStore } from "../stores/connection";
+import { useConnectionStore } from "../stores/connection";
 
 import { RouterLink } from "vue-router";
 import GroupConversationBox from "./items/chat/GroupConversationBox.vue";
@@ -127,13 +127,13 @@ export default (await import("vue")).defineComponent({
   },
   setup() {
     const userStore = useUserStore();
-    // const connectionStore = useConnectionStore();
+    const connectionStore = useConnectionStore();
     const toastStore = useToastStore()
 
     return {
       userStore,
       toastStore,
-      // connectionStore,
+      connectionStore,
     };
   },
 

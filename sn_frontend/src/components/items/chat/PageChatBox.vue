@@ -344,7 +344,7 @@ import Pusher from "pusher-js";
 
 import ConversationBox from "./ConversationBox.vue";
 import { useUserStore } from "../../../stores/user";
-// import { useConnectionStore } from "../../../stores/connection";
+import { useConnectionStore } from "../../../stores/connection";
 import { useToastStore } from "../../../stores/toast";
 import { usePageStore } from "../../../stores/page";
 import { RouterLink } from "vue-router";
@@ -366,12 +366,12 @@ export default (await import("vue")).defineComponent({
   },
   setup() {
     const userStore = useUserStore();
-    // const connectionStore = useConnectionStore();
+    const connectionStore = useConnectionStore();
     const toastStore = useToastStore();
     const pageStore = usePageStore();
     return {
       userStore,
-      // connectionStore,
+      connectionStore,
       toastStore,
       pageStore,
     };

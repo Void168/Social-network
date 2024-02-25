@@ -26,7 +26,7 @@
 <script>
 import axios from "axios";
 import { RouterLink } from "vue-router";
-import SkeletionLoadingChatBox from './loadings/SkeletionLoadingChatbox.vue'
+import SkeletionLoadingChatBox from "./loadings/SkeletionLoadingChatBox.vue"
 import { useToastStore } from "../stores/toast";
 
 export default (await import("vue")).defineComponent({

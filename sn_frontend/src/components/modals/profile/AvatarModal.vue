@@ -279,7 +279,7 @@ export default (await import("vue")).defineComponent({
       if (this.errors.length === 0) {
         let formData = new FormData();
         formData.append("avatar", this.$refs.avatar.files[0]);
-        if(!this.pageStore.pageActive.is_page){
+        if(!this.pageStore.pageId){
           axios
             .post("/api/edit-avatar/", formData, {
               headers: {
@@ -347,7 +347,7 @@ export default (await import("vue")).defineComponent({
             });
         } else {
           axios
-            .post(`/api/page/${this.pageStore.pageId}/edit-avatar/`, formData, {
+            .post(`/api/page/${this.$route.params.id}/edit-avatar/`, formData, {
               headers: {
                 "Content-Type": "multipart/form-data",
               },
@@ -379,7 +379,7 @@ export default (await import("vue")).defineComponent({
                 form.append("is_avatar_post", this.share)
   
                 axios
-                  .post(`/api/posts/page/${this.pageStore.pageId}/create/`, form, {
+                  .post(`/api/posts/page/${this.$route.params.id}/create/`, form, {
                     headers: {
                       "Content-Type": "multipart/form-data",
                     },
@@ -393,10 +393,6 @@ export default (await import("vue")).defineComponent({
                     this.only_me = false;
                     this.share = false;
                     this.url = null;
-  
-                    if (this.user) {
-                      this.user.posts_count += 1;
-                    }
                   })
                   .catch((error) => {
                     console.log("error", error);
@@ -405,7 +401,7 @@ export default (await import("vue")).defineComponent({
   
               setTimeout(() => {
                   this.$router.go(0);
-                }, 1500);
+                }, 5000);
   
             })
             .catch((error) => {

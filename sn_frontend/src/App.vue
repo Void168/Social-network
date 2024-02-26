@@ -49,7 +49,7 @@
                 </svg>
                 <span
                   class="text-white text-center w-6 h-6 absolute top-0 right-0 rounded-full bg-rose-400"
-                  v-if="pageStore.pageId"
+                  v-if="!pageStore.pageId"
                 >
                   {{
                     userUnseenConversationsStore.getUnseenConversations()

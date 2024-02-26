@@ -1,6 +1,6 @@
 <template>
   <div
-    class="relative scrollbar-corner-slate-200 scrollbar-none hover:scrollbar-thin scrollbar-thumb-slate-400 scrollbar-track-slate-800 bg-white border border-gray-200 dark:bg-slate-600 dark:border-slate-700 dark:text-neutral-200 rounded-l-lg overflow-y-scroll"
+    class="scrollbar-corner-slate-200 scrollbar-none hover:scrollbar-thin scrollbar-thumb-slate-400 scrollbar-track-slate-800 bg-white border border-gray-200 dark:bg-slate-600 dark:border-slate-700 dark:text-neutral-200 rounded-l-lg overflow-y-scroll"
     :style="{height: `${toastStore.height - toastStore.peopleYouMayKnowHeight - toastStore.trendsHeight + 35}px`}"
   >
     <h3 class="xl:text-xl p-4 text-center">Người liên hệ</h3>
@@ -64,7 +64,7 @@
         />
       </div>
     </div>
-    <div class="absolute bottom-3 right-1">
+    <div class="absolute bottom-3 right-3">
       <div class="flex flex-col" v-for="friend in chats" :key="friend.id">
         <ChatBubble :friend="friend" @openChatWindow="openChatWindow(friend)" />
       </div>

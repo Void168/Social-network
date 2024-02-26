@@ -12,6 +12,7 @@ urlpatterns = [
     path('edit-profile-page/<uuid:id>/', api.edit_page_profile, name='edit_page_profile'),
     path('<uuid:id>/add-moderators/', api.page_add_moderators, name='page_add_moderators'),
     path('<uuid:pk>/edit-avatar/', api.edit_page_avatar, name='edit_page_avatar'),
+    path('<uuid:pk>/edit-cover-image/', api.edit_page_cover_image, name='edit_page_cover_image'),
     path('set-biography/<uuid:id>/', api.set_page_biography, name='set_page_biography'),
     path('set-type/<uuid:id>/', api.set_page_type, name='set_page_type'),
     path('set-location/<uuid:id>/', api.set_page_location, name='set_page_location'),

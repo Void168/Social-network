@@ -303,7 +303,7 @@ export default (await import("vue")).defineComponent({
                 );
               }
   
-              if (this.share === true) {
+              if (this.share) {
                 let form = new FormData();
   
                 form.append("image", this.$refs.avatar.files[0]);
@@ -357,19 +357,19 @@ export default (await import("vue")).defineComponent({
               if (res.data.message === "avatar updated") {
                 this.toastStore.showToast(
                   5000,
-                  "Thay đổi ảnh đại diện thành công.",
+                  "Thay đổi ảnh đại diện trang thành công.",
                   "bg-emerald-500 text-white"
                 );
                 
               } else {
                 this.toastStore.showToast(
                   5000,
-                  "Thay đổi ảnh đại diện thất bại.",
+                  "Thay đổi ảnh đại diện trang thất bại.",
                   "bg-rose-400 text-white"
                 );
               }
   
-              if (this.share === true) {
+              if (this.share) {
                 let form = new FormData();
   
                 form.append("image", this.$refs.avatar.files[0]);

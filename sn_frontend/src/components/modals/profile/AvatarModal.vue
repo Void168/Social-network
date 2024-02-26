@@ -289,7 +289,8 @@ export default (await import("vue")).defineComponent({
             })
             .then((res) => {
               if (res.data.message === "avatar updated") {
-
+                
+                localStorage.setItem("user.avatar", this.$refs.avatar.files[0]);
                 if (this.share) {
 
                   let form = new FormData();
@@ -329,7 +330,6 @@ export default (await import("vue")).defineComponent({
                   "Thay đổi ảnh đại diện thành công.",
                   "bg-emerald-500 text-white"
                 );
-                localStorage.setItem("user.avatar", this.$refs.avatar.files[0]);
                 
 
                 // setTimeout(() => {

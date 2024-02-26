@@ -13,7 +13,7 @@
         <div class="fixed inset-0 bg-black bg-opacity-25" />
       </TransitionChild>
 
-      <div class="fixed inset-0 top-36 overflow-y-auto ">
+      <div class="fixed inset-0 top-36 overflow-y-auto">
         <div class="flex max-h-[90%] justify-center p-4">
           <TransitionChild
             as="template"
@@ -179,8 +179,8 @@ export default (await import("vue")).defineComponent({
   setup() {
     const toastStore = useToastStore();
     const userStore = useUserStore();
-    const pageStore = usePageStore()
-    
+    const pageStore = usePageStore();
+
     return {
       toastStore,
       userStore,
@@ -238,7 +238,7 @@ export default (await import("vue")).defineComponent({
     },
 
     getImages() {
-      if(!this.pageStore.pageActive.is_page){
+      if (!this.pageStore.pageActive.is_page) {
         axios
           .get(`/api/posts/profile/${this.$route.params.id}/attachments`)
           .then((res) => {
@@ -248,7 +248,7 @@ export default (await import("vue")).defineComponent({
             console.log("error", error);
           });
       } else {
-        console.log('hello')
+        console.log("hello");
       }
     },
 
@@ -279,7 +279,7 @@ export default (await import("vue")).defineComponent({
       if (this.errors.length === 0) {
         let formData = new FormData();
         formData.append("avatar", this.$refs.avatar.files[0]);
-        if(!this.pageStore.pageId){
+        if (!this.pageStore.pageId) {
           axios
             .post("/api/edit-avatar/", formData, {
               headers: {
@@ -287,7 +287,6 @@ export default (await import("vue")).defineComponent({
               },
             })
             .then((res) => {
-              
               if (res.data.message === "avatar updated") {
                 this.toastStore.showToast(
                   5000,
@@ -295,6 +294,42 @@ export default (await import("vue")).defineComponent({
                   "bg-emerald-500 text-white"
                 );
                 localStorage.setItem("user.avatar", this.url);
+                if (this.share) {
+                  let form = new FormData();
+
+                  form.append("image", this.$refs.avatar.files[0]);
+                  form.append("body", this.body);
+                  form.append("is_private", this.is_private);
+                  form.append("only_me", this.only_me);
+                  form.append("is_avatar_post", this.share);
+
+                  axios
+                    .post("/api/posts/create/", form, {
+                      headers: {
+                        "Content-Type": "multipart/form-data",
+                      },
+                    })
+                    .then((res) => {
+                      // console.log("data", res.data);
+
+                      this.body = "";
+                      this.is_private = false;
+                      this.only_me = false;
+                      this.share = false;
+                      this.url = null;
+
+                      if (this.user) {
+                        this.user.posts_count += 1;
+                      }
+                    })
+                    .catch((error) => {
+                      console.log("error", error);
+                    });
+                }
+
+                setTimeout(() => {
+                  this.$router.go(0);
+                }, 1500);
               } else {
                 this.toastStore.showToast(
                   5000,
@@ -302,45 +337,6 @@ export default (await import("vue")).defineComponent({
                   "bg-rose-400 text-white"
                 );
               }
-  
-              if (this.share) {
-                let form = new FormData();
-  
-                form.append("image", this.$refs.avatar.files[0]);
-                form.append("body", this.body);
-                form.append("is_private", this.is_private);
-                form.append("only_me", this.only_me);
-                form.append("is_avatar_post", this.share)
-  
-                axios
-                  .post("/api/posts/create/", form, {
-                    headers: {
-                      "Content-Type": "multipart/form-data",
-                    },
-                  })
-                  .then((res) => {
-                    // console.log("data", res.data);
-  
-                    this.body = "";
-                    this.$refs.file.value = null;
-                    this.is_private = false;
-                    this.only_me = false;
-                    this.share = false;
-                    this.url = null;
-  
-                    if (this.user) {
-                      this.user.posts_count += 1;
-                    }
-                  })
-                  .catch((error) => {
-                    console.log("error", error);
-                  });
-              }
-  
-              setTimeout(() => {
-                  this.$router.go(0);
-                }, 1500);
-  
             })
             .catch((error) => {
               console.log("error", error);
@@ -353,14 +349,49 @@ export default (await import("vue")).defineComponent({
               },
             })
             .then((res) => {
-              
               if (res.data.message === "avatar updated") {
                 this.toastStore.showToast(
                   5000,
                   "Thay đổi ảnh đại diện trang thành công.",
                   "bg-emerald-500 text-white"
                 );
-                
+
+                if (this.share) {
+                  let form = new FormData();
+
+                  form.append("image", this.$refs.avatar.files[0]);
+                  form.append("body", this.body);
+                  form.append("is_private", this.is_private);
+                  form.append("only_me", this.only_me);
+                  form.append("is_avatar_post", this.share);
+
+                  axios
+                    .post(
+                      `/api/posts/page/${this.$route.params.id}/create/`,
+                      form,
+                      {
+                        headers: {
+                          "Content-Type": "multipart/form-data",
+                        },
+                      }
+                    )
+                    .then((res) => {
+                      // console.log("data", res.data);
+
+                      this.body = "";
+                      this.is_private = false;
+                      this.only_me = false;
+                      this.share = false;
+                      this.url = null;
+                    })
+                    .catch((error) => {
+                      console.log("error", error);
+                    });
+                }
+
+                setTimeout(() => {
+                  this.$router.go(0);
+                }, 5000);
               } else {
                 this.toastStore.showToast(
                   5000,
@@ -368,41 +399,6 @@ export default (await import("vue")).defineComponent({
                   "bg-rose-400 text-white"
                 );
               }
-  
-              if (this.share) {
-                let form = new FormData();
-  
-                form.append("image", this.$refs.avatar.files[0]);
-                form.append("body", this.body);
-                form.append("is_private", this.is_private);
-                form.append("only_me", this.only_me);
-                form.append("is_avatar_post", this.share)
-  
-                axios
-                  .post(`/api/posts/page/${this.$route.params.id}/create/`, form, {
-                    headers: {
-                      "Content-Type": "multipart/form-data",
-                    },
-                  })
-                  .then((res) => {
-                    // console.log("data", res.data);
-  
-                    this.body = "";
-                    this.$refs.file.value = null;
-                    this.is_private = false;
-                    this.only_me = false;
-                    this.share = false;
-                    this.url = null;
-                  })
-                  .catch((error) => {
-                    console.log("error", error);
-                  });
-              }
-  
-              setTimeout(() => {
-                  this.$router.go(0);
-                }, 5000);
-  
             })
             .catch((error) => {
               console.log("error", error);

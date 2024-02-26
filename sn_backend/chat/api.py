@@ -426,7 +426,7 @@ def set_group_avatar(request, pk):
     current_user = request.user
     group_conversation = GroupConversation.objects.filter(users__in=list([request.user])).get(pk=pk)
 
-    form = AvatarGroupForm(request.FILES, instance=group_conversation)
+    form = AvatarGroupForm(request.FILES, instance=current_user)
     if form.is_valid():
         form.save()
         group_conversation.avatar = request.FILES['avatar']

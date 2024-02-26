@@ -243,7 +243,7 @@ export default {
         .then((res) => {
           axios
             .post("/api/search/create-key-word/", {
-              query: keyword,
+              query: keyword.body,
             })
             .then((res) => {})
             .catch((error) => {

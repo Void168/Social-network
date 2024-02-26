@@ -238,7 +238,7 @@ export default (await import("vue")).defineComponent({
     },
 
     getImages() {
-      if(this.pageStore.pageActive.is_page === false){
+      if(!this.pageStore.pageActive.is_page){
         axios
           .get(`/api/posts/profile/${this.$route.params.id}/attachments`)
           .then((res) => {
@@ -279,7 +279,7 @@ export default (await import("vue")).defineComponent({
       if (this.errors.length === 0) {
         let formData = new FormData();
         formData.append("avatar", this.$refs.avatar.files[0]);
-        if(this.pageStore.pageActive.is_page === false){
+        if(!this.pageStore.pageActive.is_page){
           axios
             .post("/api/edit-avatar/", formData, {
               headers: {

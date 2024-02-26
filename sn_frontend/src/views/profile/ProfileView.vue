@@ -286,7 +286,7 @@ export default {
       axios
         .get(`/api/user-info/${this.$route.params.id}`)
         .then((res) => {
-          console.log(res.data);
+          // console.log(res.data);
           this.partnerId = res.data.user.partner;
           this.getPartnerInfo();
         })

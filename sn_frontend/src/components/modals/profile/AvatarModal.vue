@@ -25,7 +25,7 @@
             leave-to="opacity-0 scale-95"
           >
             <DialogPanel
-              class="lg:w-[50%] relative overflow-y-auto transform overflow-hidden scrollbar-corner-slate-200 hover:scrollbar-thin scrollbar-thumb-slate-400 scrollbar-track-slate-800 rounded-2xl bg-white dark:bg-slate-700 dark:text-neutral-200 p-6 text-left align-middle shadow-xl transition-all"
+              class="lg:w-[50%] relative overflow-y-auto transform overflow-hidden scrollbar-none scrollbar-corner-slate-200 hover:scrollbar-thin scrollbar-thumb-slate-400 scrollbar-track-slate-800 rounded-2xl bg-white dark:bg-slate-700 dark:text-neutral-200 p-6 text-left align-middle shadow-xl transition-all"
             >
               <DialogTitle
                 as="h3"
@@ -142,7 +142,7 @@
                 >
                   <span
                     v-if="share"
-                    class="h-[10px] w-[10px] bg-neutral-200 rounded-full absolute top-[3.2px] left-[3.9px]"
+                    class="h-[10px] w-[10px] bg-neutral-200 rounded-full absolute top-[3.2px] left-[3.3px]"
                   ></span>
                 </span>
                 <span class="text-lg">Chia sẻ lên trang cá nhân</span>
@@ -278,6 +278,7 @@ export default (await import("vue")).defineComponent({
 
       if (this.errors.length === 0) {
         let formData = new FormData();
+
         formData.append("avatar", this.$refs.avatar.files[0]);
         if (!this.pageStore.pageId) {
           axios
@@ -288,13 +289,9 @@ export default (await import("vue")).defineComponent({
             })
             .then((res) => {
               if (res.data.message === "avatar updated") {
-                this.toastStore.showToast(
-                  5000,
-                  "Thay đổi ảnh đại diện thành công.",
-                  "bg-emerald-500 text-white"
-                );
-                localStorage.setItem("user.avatar", this.url);
+
                 if (this.share) {
+
                   let form = new FormData();
 
                   form.append("image", this.$refs.avatar.files[0]);
@@ -310,7 +307,7 @@ export default (await import("vue")).defineComponent({
                       },
                     })
                     .then((res) => {
-                      // console.log("data", res.data);
+                      console.log("data", res.data);
 
                       this.body = "";
                       this.is_private = false;
@@ -327,9 +324,17 @@ export default (await import("vue")).defineComponent({
                     });
                 }
 
-                setTimeout(() => {
-                  this.$router.go(0);
-                }, 1500);
+                this.toastStore.showToast(
+                  5000,
+                  "Thay đổi ảnh đại diện thành công.",
+                  "bg-emerald-500 text-white"
+                );
+                localStorage.setItem("user.avatar", this.$refs.avatar.files[0]);
+                
+
+                // setTimeout(() => {
+                //   this.$router.go(0);
+                // }, 5000);
               } else {
                 this.toastStore.showToast(
                   5000,
@@ -350,12 +355,6 @@ export default (await import("vue")).defineComponent({
             })
             .then((res) => {
               if (res.data.message === "avatar updated") {
-                this.toastStore.showToast(
-                  5000,
-                  "Thay đổi ảnh đại diện trang thành công.",
-                  "bg-emerald-500 text-white"
-                );
-
                 if (this.share) {
                   let form = new FormData();
 
@@ -376,7 +375,7 @@ export default (await import("vue")).defineComponent({
                       }
                     )
                     .then((res) => {
-                      // console.log("data", res.data);
+                      console.log("data", res.data);
 
                       this.body = "";
                       this.is_private = false;
@@ -389,9 +388,15 @@ export default (await import("vue")).defineComponent({
                     });
                 }
 
-                setTimeout(() => {
-                  this.$router.go(0);
-                }, 5000);
+                this.toastStore.showToast(
+                  5000,
+                  "Thay đổi ảnh đại diện trang thành công.",
+                  "bg-emerald-500 text-white"
+                );
+
+                // setTimeout(() => {
+                //   this.$router.go(0);
+                // }, 5000);
               } else {
                 this.toastStore.showToast(
                   5000,

@@ -62,19 +62,19 @@
                 class="overflow-hidden rounded-lg shadow-lg ring-1 ring-black/5"
               >
                 <div class="bg-gray-50 dark:bg-slate-800 p-4">
-                  <div
-                    @click="accept(close)"
-                    class="flow-root rounded-md px-2 py-2 transition duration-150 ease-in-out hover:bg-gray-100 dark:hover:bg-slate-600 focus:outline-none focus-visible:ring focus-visible:ring-orange-500/50 cursor-pointer"
+                  <RouterLink
+                    :to="{
+                      name: pageStore.pageId ? 'page' : 'profile',
+                      params: {
+                        id: pageStore.pageId
+                          ? pageStore.pageId
+                          : userStore.user.id,
+                      },
+                    }"
                   >
-                    <RouterLink
-                      :to="{
-                        name: pageStore.pageId ? 'page' : 'profile',
-                        params: {
-                          id: pageStore.pageId
-                            ? pageStore.pageId
-                            : userStore.user.id,
-                        },
-                      }"
+                    <div
+                      @click="accept(close)"
+                      class="flow-root rounded-md px-2 py-2 transition duration-150 ease-in-out hover:bg-gray-100 dark:hover:bg-slate-600 focus:outline-none focus-visible:ring focus-visible:ring-orange-500/50 cursor-pointer"
                     >
                       <span class="flex items-center">
                         <span
@@ -83,8 +83,8 @@
                           Trang cá nhân
                         </span>
                       </span>
-                    </RouterLink>
-                  </div>
+                    </div>
+                  </RouterLink>
                   <hr class="my-1 border-slate-500" />
                   <div
                     class="flow-root mt-4 mb-2 rounded-md px-2 py-2 transition duration-150 ease-in-out hover:bg-gray-100 dark:bg-slate-600 dark:hover:bg-slate-500 focus:outline-none focus-visible:ring focus-visible:ring-orange-500/50 cursor-pointer"
@@ -182,7 +182,7 @@
                   "
                 >
                   <div
-                    class="flex justify-between items-center dark:hover:bg-slate-700  p-2 rounded-xl cursor-pointer transition duration-100"
+                    class="flex justify-between items-center dark:hover:bg-slate-700 p-2 rounded-xl cursor-pointer transition duration-100"
                   >
                     <div class="flex gap-3 items-center">
                       <img
@@ -197,7 +197,7 @@
                     >
                       <span
                         v-if="!pageStore.pageActive.id"
-                        class="w-3 h-3 bg-emerald-500  absolute rounded-full"
+                        class="w-3 h-3 bg-emerald-500 absolute rounded-full"
                       ></span>
                     </span>
                   </div>

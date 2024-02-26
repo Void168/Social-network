@@ -31,3 +31,10 @@ class PageAvatarForm(ModelForm):
     class Meta:
         model = Page
         fields = ('avatar',)
+        
+class PageCoverImageForm(ModelForm):
+    class Meta:
+        model = Page
+        fields = ('cover_image',)
+        
+        

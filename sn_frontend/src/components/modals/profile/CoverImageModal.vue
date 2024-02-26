@@ -120,15 +120,18 @@ import {
 import axios from "axios";
 import { useToastStore } from "@/stores/toast";
 import { useUserStore } from "@/stores/user";
+import { usePageStore } from "../../../stores/page";
 
 export default (await import("vue")).defineComponent({
   setup() {
     const toastStore = useToastStore();
     const userStore = useUserStore()
+    const pageStore = usePageStore()
 
     return {
       toastStore,
-      userStore
+      userStore,
+      pageStore
     };
   },
   components: {
@@ -163,33 +166,63 @@ export default (await import("vue")).defineComponent({
         let formData = new FormData();
         formData.append("cover_image", this.$refs.image.files[0]);
 
-        axios
-          .post("/api/edit-cover-image/", formData, {
-            headers: {
-              "Content-Type": "multipart/form-data",
-            },
-          })
-          .then((res) => {
-            if (res.data.message === "cover image updated") {
-              this.toastStore.showToast(
-                5000,
-                "Thay đổi ảnh bìa thành công.",
-                "bg-emerald-500 text-white"
-              );
-              setTimeout(() => {
-                this.$router.go(0);
-              }, 1500)
-            } else {
-              this.toastStore.showToast(
-                5000,
-                "Thay đổi ảnh bìa thất bại.",
-                "bg-rose-400 text-white"
-              );
-            }
-          })
-          .catch((error) => {
-            console.log("error", error);
-          });
+        if(!this.pageStore.pageId){
+          axios
+            .post("/api/edit-cover-image/", formData, {
+              headers: {
+                "Content-Type": "multipart/form-data",
+              },
+            })
+            .then((res) => {
+              if (res.data.message === "cover image updated") {
+                this.toastStore.showToast(
+                  5000,
+                  "Thay đổi ảnh bìa thành công.",
+                  "bg-emerald-500 text-white"
+                );
+                setTimeout(() => {
+                  this.$router.go(0);
+                }, 1500)
+              } else {
+                this.toastStore.showToast(
+                  5000,
+                  "Thay đổi ảnh bìa thất bại.",
+                  "bg-rose-400 text-white"
+                );
+              }
+            })
+            .catch((error) => {
+              console.log("error", error);
+            });
+        } else {
+          axios
+            .post(`/api/page/${this.$route.params.id}/edit-cover-image/`, formData, {
+              headers: {
+                "Content-Type": "multipart/form-data",
+              },
+            })
+            .then((res) => {
+              if (res.data.message === "cover image updated") {
+                this.toastStore.showToast(
+                  5000,
+                  "Thay đổi ảnh bìa thành công.",
+                  "bg-emerald-500 text-white"
+                );
+                setTimeout(() => {
+                  this.$router.go(0);
+                }, 1500)
+              } else {
+                this.toastStore.showToast(
+                  5000,
+                  "Thay đổi ảnh bìa thất bại.",
+                  "bg-rose-400 text-white"
+                );
+              }
+            })
+            .catch((error) => {
+              console.log("error", error);
+            });
+        }
       }
     },
   },

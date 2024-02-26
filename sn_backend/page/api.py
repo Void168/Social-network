@@ -11,7 +11,7 @@ from .serializers import PageSerializer, PageDetailSerializer
 from account.serializers import UserLessSerializer
 from notification.models import NotificationForPage
 from notification.serializers import NotificationSerializer
-from .forms import PageForm, PageBiographyForm, PageTypeForm, PageLocationForm, PageProfileForm, PageAvatarForm
+from .forms import PageForm, PageBiographyForm, PageTypeForm, PageLocationForm, PageProfileForm, PageAvatarForm, PageCoverImageForm
 
 from notification.serializers import NotificationForPageSerializer
 
@@ -153,6 +153,19 @@ def edit_page_profile(request, id):
     serializer = PageSerializer(current_page)
         
     return JsonResponse({'message': 'information updated', 'page': serializer.data})
+
+@api_view(['POST'])
+def edit_page_cover_image(request, pk):
+    page = Page.objects.get(pk=pk)
+    
+    form = PageCoverImageForm(request.POST, request.FILES, instance=page)
+    
+    if form.is_valid:
+        form.save()
+    
+    serializer = PageSerializer(page)
+    
+    return JsonResponse({'message': 'cover image updated'})
 
 @api_view(['POST'])
 def page_add_moderators(request, id):

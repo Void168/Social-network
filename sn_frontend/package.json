@@ -8,6 +8,10 @@
     "preview": "vite preview",
     "watch": "vite build --watch --mode development"
   },
+  "browserslist": [
+    "defaults and fully supports es6-module",
+    "maintained node versions"
+  ],
   "dependencies": {
     "@headlessui/vue": "^1.7.16",
     "@heroicons/vue": "^2.0.18",
@@ -16,6 +20,7 @@
     "@vuepic/vue-datepicker": "^7.3.0",
     "@vueuse/core": "^10.5.0",
     "axios": "^1.5.1",
+    "browserslist": "^4.23.0",
     "chart.js": "^4.4.1",
     "colorthief": "^2.4.0",
     "country-state-city": "^3.2.1",

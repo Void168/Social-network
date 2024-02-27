@@ -435,7 +435,11 @@
             :isListSeenOpen="isListSeenOpen"
             @closeListSeen="closeListSeen"
           />
-          <template #fallback> Loading... </template>
+          <template #fallback> 
+            <div class="flex justify-center items-center h-full">
+              <SkeletonLoadingStoryView /> 
+            </div>
+          </template>
         </Suspense>
       </div>
       <div v-if="!isListSeenOpen && currentStoryStore.activeStoryId" class="flex justify-center items-center">
@@ -506,6 +510,7 @@ import StoryBox from "../components/items/story/StoryBox.vue";
 import CreateStoryModal from "../components/modals/story/CreateStoryModal.vue";
 import emojiStory from "../data/emoji";
 import { defineAsyncComponent } from "vue";
+import SkeletonLoadingStoryView from "../components/loadings/SkeletonLoadingStoryView.vue";
 
 export default {
   name: "StoryView",
@@ -519,7 +524,8 @@ export default {
     XMarkIcon,
     PlusIcon,
     ChevronUpIcon,
-    ChevronLeftIcon, ChevronRightIcon
+    ChevronLeftIcon, ChevronRightIcon,
+    SkeletonLoadingStoryView
   },
   setup() {
     const currentStoryStore = useCurrentStoryStore();

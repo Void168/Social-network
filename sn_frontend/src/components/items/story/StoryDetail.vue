@@ -1,6 +1,8 @@
 <template>
   <div class="flex items-center justify-center h-full">
-    <div class="relative border-2 md:w-[500px] h-full xs:w-[300px] xm:w-[400px] rounded-lg flex items-center shadow-lg">
+    <div
+      class="relative border-2 md:w-[500px] h-full xs:w-[300px] xm:w-[400px] rounded-lg flex items-center shadow-lg"
+    >
       <Suspense>
         <SwiperStoryHeader
           v-if="isYourStory && !isFirstStory && !isOtherStory"
@@ -57,7 +59,6 @@
           @pause="pause"
           @mute="mute"
         />
-        <template #fallback> Loading... </template>
       </Suspense>
       <Suspense>
         <SwiperStory
@@ -132,11 +133,20 @@
         >
           <p class="text-center">Đã xem hết tin</p>
         </div>
-        <template #fallback> Loading... </template>
+        <template #fallback>
+          <SkeletonLoadingContainer
+            class="flex justify-center items-center w-full"
+          />
+        </template>
       </Suspense>
       <Suspense>
-        <MediaStoryTitle :stories="yourStory" v-if="isYourStory && !isFirstStory && !isOtherStory"/>
-        <MediaStoryTitle :stories="currentStoryStore?.currentStory" v-else-if="
+        <MediaStoryTitle
+          :stories="yourStory"
+          v-if="isYourStory && !isFirstStory && !isOtherStory"
+        />
+        <MediaStoryTitle
+          :stories="currentStoryStore?.currentStory"
+          v-else-if="
             isOtherStory &&
             isFirstStory &&
             !isYourStory &&
@@ -144,18 +154,27 @@
             !prevStories.length &&
             !isNext &&
             currentStoryStore.activeStory
-          "/>
-        <MediaStoryTitle :stories="nextStories" v-else-if="nextStories.length && !prevStories.length"/>
-        <MediaStoryTitle :stories="prevStories" v-else-if="prevStories.length && !nextStories.length"/>
-        <MediaStoryTitle :stories="userStories"  v-else-if="
+          "
+        />
+        <MediaStoryTitle
+          :stories="nextStories"
+          v-else-if="nextStories.length && !prevStories.length"
+        />
+        <MediaStoryTitle
+          :stories="prevStories"
+          v-else-if="prevStories.length && !nextStories.length"
+        />
+        <MediaStoryTitle
+          :stories="userStories"
+          v-else-if="
             userStories.length &&
             !prevStories.length &&
             !nextStories.length &&
             currentStoryStore.listId.indexOf(
               this.currentStoryStore?.activeStory
             ) > 0
-          "/>
-        <template #fallback> Loading... </template>
+          "
+        />
       </Suspense>
       <Suspense>
         <ListSeenUserStory
@@ -179,6 +198,7 @@ import { useUserStore } from "../../../stores/user";
 import { useCurrentStoryStore } from "../../../stores/currentStory";
 import { useToastStore } from "../../../stores/toast";
 import { defineAsyncComponent } from "vue";
+import SkeletonLoadingContainer from "../../loadings/SkeletonLoadingContainer.vue";
 
 export default (await import("vue")).defineComponent({
   components: {
@@ -189,7 +209,10 @@ export default (await import("vue")).defineComponent({
     ListSeenUserStory: defineAsyncComponent(() =>
       import("./ListSeenUserStory.vue")
     ),
-    MediaStoryTitle: defineAsyncComponent(() => import("./MediaStoryTitle.vue"))
+    MediaStoryTitle: defineAsyncComponent(() =>
+      import("./MediaStoryTitle.vue")
+    ),
+    SkeletonLoadingContainer,
   },
   props: {
     isOtherStory: Boolean,
@@ -294,9 +317,7 @@ export default (await import("vue")).defineComponent({
         this.currentStoryStore.getActiveStory(
           this.nextStories[0]?.created_by?.id
         );
-        this.currentStoryStore.getActiveStoryId(
-          this.nextStories[0]?.id
-        );
+        this.currentStoryStore.getActiveStoryId(this.nextStories[0]?.id);
       }
     },
     async prev() {

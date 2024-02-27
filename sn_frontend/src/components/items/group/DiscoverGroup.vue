@@ -26,6 +26,7 @@
 import { useToastStore } from "../../../stores/toast";
 import { useUserStore } from "../../../stores/user";
 import { RouterLink } from "vue-router";
+
 export default (await import("vue")).defineComponent({
   components: {
     RouterLink

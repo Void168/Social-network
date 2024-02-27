@@ -68,6 +68,7 @@
 
 <script>
 import axios from "axios";
+import { defineAsyncComponent } from "vue";
 import { useUserStore } from "../../stores/user";
 import { useToastStore } from "../../stores/toast";
 import { RouterLink, useRoute } from "vue-router";
@@ -78,10 +79,26 @@ import {
   ChevronRightIcon,
   ChevronLeftIcon,
 } from "@heroicons/vue/24/solid";
-import GroupDetailNavigation from "../../components/items/group/GroupDetailNavigation.vue";
-import GroupSearchNavigation from "../../components/items/group/GroupSearchNavigation.vue";
+// import GroupDetailNavigation from "../../components/items/group/GroupDetailNavigation.vue";
+// import GroupSearchNavigation from "../../components/items/group/GroupSearchNavigation.vue";
 import GroupHeader from "../../components/items/group/GroupHeader.vue";
 import SearchModal from "../../components/modals/group/SearchModal.vue";
+import SkeletonLoadingContainer from "../../components/loadings/SkeletonLoadingContainer.vue";
+
+const GroupSearchNavigation = defineAsyncComponent({
+  loader: () => import("../../components/items/group/GroupSearchNavigation.vue"),
+  loadingComponent: SkeletonLoadingContainer,
+  delay: 500,
+  timeout: 3000,
+});
+
+const GroupDetailNavigation = defineAsyncComponent({
+  loader: () => import("../../components/items/group/GroupDetailNavigation.vue"),
+  loadingComponent: SkeletonLoadingContainer,
+  delay: 500,
+  timeout: 3000,
+});
+
 export default {
   name: "groupdetail",
   components: {
@@ -95,6 +112,7 @@ export default {
     GroupSearchNavigation,
     GroupHeader,
     SearchModal,
+    SkeletonLoadingContainer,
   },
   setup() {
     const userStore = useUserStore();
@@ -165,7 +183,7 @@ export default {
       await axios
         .get(`/api/group/check-request/${this.$route.params.id}/`)
         .then((res) => {
-          console.log(res.data);
+          // console.log(res.data);
           if (res.data.message === "request created") {
             this.isJoinRequest = true;
           } else {

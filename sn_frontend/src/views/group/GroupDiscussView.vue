@@ -219,14 +219,14 @@
       </div>
       <div
         class="w-[40%] sticky space-y-4 lg:block hidden"
-        :class="isUserInGroup ? 'overflow-y-scroll' : ''"
+        :class="isUserInGroup ? 'overflow-y-scroll scrollbar-corner-slate-200 scrollbar-none scrollbar-thumb-slate-400 scrollbar-track-slate-800' : ''"
         :style="{
           height: `${toastStore.height}px`,
           top: `${toastStore.navbarHeight}px`,
         }"
       >
         <div
-          class="dark:bg-slate-700 bg-white rounded-lg p-4 relative"
+          class="dark:bg-slate-700 bg-white rounded-lg p-4 relative "
           v-if="
             isUserInGroup &&
             group?.admin?.id === userStore.user.id &&

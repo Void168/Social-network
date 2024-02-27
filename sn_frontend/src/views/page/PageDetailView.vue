@@ -165,6 +165,7 @@
 import { useUserStore } from "../../stores/user";
 import { useToastStore } from "../../stores/toast";
 import { usePageStore } from "../../stores/page";
+import { defineAsyncComponent } from 'vue';
 
 import {
   CameraIcon,

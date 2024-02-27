@@ -261,6 +261,7 @@ import { RouterLink } from "vue-router";
 import { useUserStore } from "../../stores/user";
 import { useToastStore } from "../../stores/toast";
 import { usePageStore } from "../../stores/page";
+import { defineAsyncComponent } from "vue";
 
 import {
   CameraIcon,
@@ -272,13 +273,26 @@ import {
   ClockIcon,
 } from "@heroicons/vue/24/solid";
 import AvatarModal from "../../components/modals/profile/AvatarModal.vue";
-import ImageShowcase from "../../components/items/profile/ImageShowcase.vue";
 import PostForm from "../../components/forms/PostForm.vue";
 import PostToForm from "../../components/forms/PostToForm.vue";
 import FeedItem from "../../components/items/post/FeedItem.vue";
-import Friend from "../../components/items/profile/Friend.vue";
 
 import SkeletonLoadingPost from "../../components/loadings/SkeletonLoadingPost.vue";
+import SkeletonShowcaseLoading from "../../components/loadings/SkeletonShowcaseLoading.vue";
+
+const ImageShowcase = defineAsyncComponent({
+  loader: () => import("../../components/items/profile/ImageShowcase.vue"),
+  loadingComponent: SkeletonShowcaseLoading,
+  delay: 500,
+  timeout: 3000,
+});
+
+const Friend = defineAsyncComponent({
+  loader: () => import("../../components/items/profile/Friend.vue"),
+  loadingComponent: SkeletonShowcaseLoading,
+  delay: 500,
+  timeout: 3000,
+});
 
 export default {
   name: "profiledetail",

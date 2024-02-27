@@ -6,7 +6,14 @@
       <p class="text-xl font-bold">Ảnh</p>
       <div class="grid lg:grid-cols-6 md:grid-cols-4 grid-cols-2 gap-3 my-4">
         <div v-for="image in images" v-bind:key="image.id">
-          <ImageShowcase v-bind:post="image" />
+          <Suspense>
+            <ImageShowcase v-bind:post="image" />
+            <template #fallback>
+              <SkeletonLoadingContainer
+                class="flex justify-center items-center w-full"
+              />
+            </template>
+          </Suspense>
         </div>
       </div>
     </div>
@@ -15,21 +22,31 @@
 
 <script>
 import axios from "axios";
-import ImageShowcase from "../../components/items/profile/ImageShowcase.vue";
+import SkeletonLoadingContainer from "../../components/loadings/SkeletonLoadingContainer.vue";
+import SkeletonShowcaseLoading from "../../components/loadings/SkeletonShowcaseLoading.vue";
+import { defineAsyncComponent } from "vue";
+
+const ImageShowcase = defineAsyncComponent({
+  loader: () => import("../../components/items/profile/ImageShowcase.vue"),
+  loadingComponent: SkeletonShowcaseLoading,
+  delay: 500,
+  timeout: 3000,
+});
 
 export default {
-  name: 'photos',
+  name: "photos",
   components: {
     ImageShowcase,
+    SkeletonLoadingContainer,
   },
   data() {
     return {
-        images: []
-    }
+      images: [],
+    };
   },
 
   mounted() {
-    this.getImages()
+    this.getImages();
   },
 
   methods: {
@@ -43,6 +60,6 @@ export default {
           console.log("error", error);
         });
     },
-  }
+  },
 };
 </script>

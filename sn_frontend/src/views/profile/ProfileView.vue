@@ -19,6 +19,9 @@
       :postsList="postsList"
       :PostToShow="PostToShow"
     ></router-view>
+    <Suspense>
+      
+    </Suspense>
     <div
       v-if="route.name === 'about' || route.name === 'friends'"
       class="bg-white dark:bg-slate-600 p-4 dark:text-neutral-200 w-full rounded-lg mt-4"

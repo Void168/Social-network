@@ -72,7 +72,7 @@ export default (await import("vue")).defineComponent({
       axios
         .post(`/api/group/${this.yourGroup.id}/last-access/`)
         .then((res) => {
-          console.log(res.data);
+          // console.log(res.data);
         })
         .catch((error) => {
           console.log(error);

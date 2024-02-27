@@ -20,6 +20,7 @@
         v-on:click="openModal"
       ></button>
       <img
+      loading="lazy"
         :src="groupPost?.attachments[0]?.get_image"
         class="xl:h-36 xm:h-32 cursor-pointer w-full"
         :class="[

@@ -4,6 +4,7 @@
       <div class="flex items-center gap-2">
         <RouterLink :to="{ name: 'groupdetail', params: { id: group?.id } }" class="rounded-lg">
           <img
+          loading="lazy"
             :src="group.get_cover_image"
             alt=""
             class="rounded-lg h-12 w-12"

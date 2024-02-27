@@ -8,6 +8,7 @@
           class="flex items-center gap-2"
         >
           <img
+          loading="lazy"
             :src="member?.information?.get_avatar"
             alt="admin-avatar"
             class="w-16 h-16 rounded-full"

@@ -91,6 +91,7 @@
               v-on:click="openModal"
             ></button>
             <img
+              loading="lazy"
               :src="movie.get_avatar"
               class="cursor-pointer rounded-lg"
             />
@@ -142,6 +143,7 @@
               v-on:click="openModal"
             ></button>
             <img
+            loading="lazy"
               :src="followingPage.get_avatar"
               :class="
                 route.name !== 'profile'

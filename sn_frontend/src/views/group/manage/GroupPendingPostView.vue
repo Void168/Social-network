@@ -96,6 +96,7 @@
         <div class="flex justify-between items-center">
           <div class="flex items-center gap-2">
             <img
+            loading="lazy"
               :src="post?.created_by?.information?.get_avatar"
               alt="member-avatar"
               class="w-10 h-10 rounded-full"

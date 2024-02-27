@@ -87,6 +87,7 @@
               class="flex flex-col space-y-2 justify-center items-center"
             >
               <img
+                loading="lazy"
                 :src="user.get_avatar"
                 alt=""
                 class="mb-6 rounded-full w-32 h-32"
@@ -127,6 +128,7 @@
               class="flex flex-col space-y-2 justify-center items-center"
             >
               <img
+                loading="lazy"
                 :src="page.get_avatar"
                 alt=""
                 class="mb-6 rounded-full w-32 h-32"

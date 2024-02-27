@@ -52,7 +52,7 @@
                     >
                       <template v-slot:option="{ option }">
                         <div class="flex items-center gap-2">
-                            <img class="w-10 h-10 rounded-full" :src="option.icon" />
+                            <img loading="lazy" class="w-10 h-10 rounded-full" :src="option.icon" />
                             <h4 class="font-medium">{{ option.label }}</h4>
                         </div>
                       </template>

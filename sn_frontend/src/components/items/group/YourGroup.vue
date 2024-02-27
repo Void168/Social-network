@@ -8,6 +8,7 @@
         @click="accessGroup"
       >
         <img
+        loading="lazy"
           :src="yourGroup.get_cover_image"
           alt=""
           class="rounded-lg h-20 w-20"

@@ -340,7 +340,7 @@ def edit_avatar(request):
     
     serializer = UserSerializer(user)
     
-    return JsonResponse({'message': 'avatar updated'})
+    return JsonResponse({'message': 'avatar updated', 'data': serializer.data}, safe=False)
 
 @api_view(['POST'])
 def edit_password(request):

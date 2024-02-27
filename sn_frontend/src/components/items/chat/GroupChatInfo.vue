@@ -3,17 +3,20 @@
     <div class="flex flex-col items-center justify-center">
       <div class="h-14 w-16 relative" v-if="!activeConversation.get_avatar">
         <img
+        loading="lazy"
           :src="avatar1"
           alt="avatar-1"
           class="w-9 h-9 rounded-full absolute top-0 z-10 right-0"
         />
         <img
+        loading="lazy"
           :src="avatar2"
           alt="avatar-0"
           class="w-9 h-9 rounded-full ring-4 ring-white dark:ring-slate-600 absolute bottom-0 z-20"
         />
       </div>
       <img
+      loading="lazy"
         v-else
         :src="activeConversation.get_avatar"
         alt="avatar-group"
@@ -158,6 +161,7 @@
                 <div class="flex items-center justify-between gap-3 space-y-4">
                   <div class="flex gap-3 items-center">
                     <img
+                    loading="lazy"
                       :src="user.get_avatar"
                       alt=""
                       class="w-10 h-10 rounded-full"

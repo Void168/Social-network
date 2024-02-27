@@ -152,6 +152,7 @@
                   class="flex items-center gap-3 py-2 px-4 bg-slate-700 rounded-lg"
                 >
                     <img
+                    loading="lazy"
                       :src="page?.admin?.get_avatar"
                       class="w-12 h-12 rounded-full"
                     />
@@ -172,6 +173,7 @@
                       class="flex items-center gap-3"
                     >
                       <img
+                      loading="lazy"
                         :src="moderator.get_avatar"
                         class="w-12 h-12 rounded-full"
                       />

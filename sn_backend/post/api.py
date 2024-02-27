@@ -897,11 +897,32 @@ def check_vote(request, pk):
     
 @api_view(['DELETE'])
 def delete_poll(request, pk):
-    group_post_polls = GroupPostPoll.objects.get(pk=pk)
+    group_post_poll = GroupPostPoll.objects.get(pk=pk)
     
-    if group_post_polls.created_by.information == request.user:
-        group_post_polls.delete()
+    if group_post_poll.created_by.information == request.user:
+        group_post_poll.delete()
 
         return JsonResponse({'message': 'Poll deleted'})
     else:
         return JsonResponse({'message': 'Delete poll failed'})
+    
+@api_view(['DELETE'])
+def delete_group_post(request, pk, id):
+    group_post = GroupPost.objects.get(pk=pk)
+    group = Group.objects.get(id=id)
+    moderators = group.moderators.all()
+    
+    current_member = Member.objects.none()
+    group_members = group.members.all()
+    for member in members:
+        if member in group_members:
+            current_member = member
+        else:
+            pass
+    
+    if group_post.created_by.information == request.user or request.user == group.admin.information or current_member.information == request.user:
+        group_post.delete()
+
+        return JsonResponse({'message': 'Group post deleted'})
+    else:
+        return JsonResponse({'message': 'Group post delete failed'})

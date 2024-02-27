@@ -2,6 +2,7 @@
   <div class="w-full flex justify-center my-12">
     <div class="2xl:w-[30%] xl:w-[50%] md:w-[70%] flex justify-center flex-col items-center space-y-4 px-4 ">
       <img
+      loading="lazy"
         src="https://www.call2customer.com/wp-content/uploads/2020/01/brochure.png"
         alt=""
         class="w-32 h-32"

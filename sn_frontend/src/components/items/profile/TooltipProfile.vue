@@ -10,7 +10,7 @@
             params: { id: user?.id },
           }"
         >
-          <img :src="user?.get_avatar" class="w-20 h-20 rounded-full" />
+          <img loading="lazy" :src="user?.get_avatar" class="w-20 h-20 rounded-full" />
         </router-link>
       </div>
       <div class="col-span-3 space-y-2">

@@ -9,6 +9,7 @@
     "
   >
     <img
+    loading="lazy"
       :src="story[0].created_by.get_avatar"
       alt="story-owner"
       class="2xl:w-16 2xl:h-16 xl:w-14 xl:h-14 xs:w-10 xs:h-10 rounded-full ring-4"

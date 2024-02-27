@@ -166,7 +166,7 @@
           </div>
           <div v-for="moderator in group?.moderators" :key="moderator?.id" class="flex justify-between items-center my-4">
             <div class="flex gap-2 items-center px-4">
-              <img :src="moderator?.information?.get_avatar" alt="moderator-avatar" class="w-10 h-10 rounded-full">
+              <img loading="lazy" :src="moderator?.information?.get_avatar" alt="moderator-avatar" class="w-10 h-10 rounded-full">
               <h4 class="font-semibold">{{ moderator?.information?.name }}</h4>
             </div>
             <ModeratorDropDown :moderator="moderator" @removeModerator="removeModerator(moderator)"/>

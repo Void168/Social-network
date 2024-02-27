@@ -37,6 +37,7 @@
         :style="{ backgroundColor: story?.theme }"
       >
         <img
+        loading="lazy"
           v-if="story.attachments[0].get_image"
           :src="story?.attachments[0]?.get_image"
           :style="{ scale: story?.attachments[0]?.zoom_image }"

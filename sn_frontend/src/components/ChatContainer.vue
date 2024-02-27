@@ -14,7 +14,7 @@
           <div @click="seenMessage">
             <div class="flex gap-2 items-center">
               <div class="relative">
-                <img :src="friend.get_avatar" class="w-10 h-10 rounded-full" />
+                <img loading="lazy" :src="friend.get_avatar" class="w-10 h-10 rounded-full" />
                 <!-- v-if="connectionStore.isConnected" -->
                 <span
                   class="w-3 h-3 bg-emerald-400 shadow-md absolute top-0 right-0 ring-4 dark:ring-slate-600 rounded-full"
@@ -40,6 +40,7 @@
         class="flex items-center gap-2 px-4 py-2 cursor-pointer"
       >
         <img
+        loading="lazy"
           v-if="groupConversation.get_avatar"
           :src="groupConversation.get_avatar"
           alt=""
@@ -47,6 +48,7 @@
         />
         <img
           v-else
+          loading="lazy"
           :src="groupConversation.admin.get_avatar"
           alt=""
           class="h-10 w-10 rounded-full"
@@ -99,7 +101,7 @@ import {
 import "emoji-picker-element";
 
 import { Popover, PopoverButton, PopoverPanel } from "@headlessui/vue";
-import SkeletionLoadingChatBoxVue from "./loadings/SkeletionLoadingChatBox.vue";
+import SkeletionLoadingChatBoxVue from "./loadings/SkeletonLoadingChatBox.vue";
 import { useToastStore } from "../stores/toast";
 import { th } from "date-fns/locale";
 

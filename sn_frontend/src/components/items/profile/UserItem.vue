@@ -3,7 +3,7 @@
     :to="{ name: 'profile', params: { id: user.id } }"
     class="flex flex-col items-center"
   >
-    <img :src="user.get_avatar" alt="" class="sm:w-32 sm:h-32 h-16 w-16 mb-6 rounded-full" />
+    <img loading="lazy" :src="user.get_avatar" alt="" class="sm:w-32 sm:h-32 h-16 w-16 mb-6 rounded-full" />
     <p>
       <strong> {{ user.name }}</strong>
     </p>

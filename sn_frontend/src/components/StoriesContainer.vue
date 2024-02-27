@@ -31,6 +31,7 @@
           @click="openModal"
         >
           <img
+          loading="lazy"
             :src="pageStore.pageId ? pageStore.pageActive.get_avatar : userStore.user.avatar"
             class="rounded-b-none h-[70%] w-full rounded-t-lg"
             alt="create-story"
@@ -53,6 +54,7 @@
           @click="getUserStories(yourLastStory?.created_by?.id)"
         >
           <img
+          loading="lazy"
             :src="userStore.user.avatar"
             alt=""
             class="absolute top-4 left-4 w-10 h-10 rounded-full ring-4 ring-emerald-300 z-20"
@@ -80,6 +82,7 @@
               "
             >
               <img
+              loading="lazy"
                 v-if="yourLastStory?.attachments[0]?.get_image"
                 :src="yourLastStory?.attachments[0]?.get_image"
                 :class="[yourLastStory?.attachments[0]?.rotate]"
@@ -163,7 +166,8 @@ import "swiper/css";
 
 import SwiperStoryContainerButton from "./items/story/SwiperStoryContainerButton.vue";
 import CreateStoryModal from "./modals/story/CreateStoryModal.vue";
-import SkeletonLoadingStoryVue from "../components/loadings/SkeletionLoadingStory.vue";
+import SkeletonLoadingStoryVue from "./loadings/SkeletonLoadingStory.vue";
+import SkeletonLoadingContainer from "./loadings/SkeletonLoadingContainer.vue";
 
 export default {
   components: {
@@ -174,6 +178,7 @@ export default {
     SwiperStoryContainerButton,
     CreateStoryModal,
     SkeletonLoadingStoryVue,
+    SkeletonLoadingContainer,
   },
   setup() {
     const userStore = useUserStore();

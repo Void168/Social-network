@@ -2,7 +2,7 @@
   <div class="relative">
     <div class="mb-2 flex items-center justify-between">
       <div class="flex items-center space-x-6 p-4">
-        <img :src="post.created_by.get_avatar" class="w-12 h-12 rounded-full" />
+        <img loading="lazy" :src="post.created_by.get_avatar" class="w-12 h-12 rounded-full" />
 
         <div class="flex gap-1 items-center flex-wrap">
           <strong class="group">
@@ -136,6 +136,7 @@
     >
       <div class="w-full">
         <img
+        loading="lazy"
           :src="post.created_by.get_cover_image"
           alt="cover_image"
           class="max-h-[300px] w-full rounded-none"
@@ -143,6 +144,7 @@
       </div>
 
       <img
+      loading="lazy"
         v-for="image in post.attachments"
         v-bind:key="image.id"
         :src="image.get_image"
@@ -153,6 +155,7 @@
 
     <div v-else class="mt-4 px-4 cursor-pointer" @click="openImagePostModal">
       <img
+      loading="lazy"
         v-for="image in post.attachments"
         v-bind:key="image.id"
         :src="image.get_image"

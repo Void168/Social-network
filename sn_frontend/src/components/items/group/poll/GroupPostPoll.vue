@@ -3,6 +3,7 @@
     <div class="mb-2 flex items-center justify-between">
       <div class="flex items-center space-x-6 p-4">
         <img
+        loading="lazy"
           :src="
             !poll?.is_anonymous
               ? poll?.created_by?.information?.get_avatar

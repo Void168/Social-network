@@ -3,6 +3,7 @@
     <div class="mb-2 flex items-center justify-between">
       <div class="flex items-center space-x-6 p-4">
         <img
+        loading="lazy"
           :src="
             !post?.is_anonymous
               ? post?.created_by?.information?.get_avatar
@@ -64,6 +65,7 @@
     >
       <div class="w-full">
         <img
+        loading="lazy"
           :src="post.created_by.get_cover_image"
           alt="cover_image"
           class="max-h-[300px] w-full rounded-none"
@@ -71,6 +73,7 @@
       </div>
 
       <img
+      loading="lazy"
         v-for="image in post.attachments"
         v-bind:key="image.id"
         :src="image.get_image"
@@ -81,6 +84,7 @@
 
     <div v-else class="mt-4 px-4">
       <img
+      loading="lazy"
         v-for="image in post.attachments"
         v-bind:key="image.id"
         :src="image.get_image"
@@ -291,7 +295,7 @@ export default (await import("vue")).defineComponent({
     deletePost() {
       this.$emit("deletePost", this.post.id);
       axios
-        .delete(`/api/posts/group/${this.post.id}/delete/`)
+        .delete(`/api/posts/group/${this.group.id}/post/${this.post.id}/delete/`)
         .then((res) => {
           setTimeout(() => {
             this.closeModal();

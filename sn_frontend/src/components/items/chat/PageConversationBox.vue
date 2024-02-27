@@ -81,6 +81,7 @@
         <div class="flex sm:justify-between justify-center items-center">
           <div class="flex justify-center items-center gap-3">
             <img
+            loading="lazy"
               :src="
                 pageStore.pageId
                   ? pageConversation?.user?.get_avatar
@@ -159,6 +160,7 @@
               "
             >
               <img
+              loading="lazy"
                 :src="pageConversation?.page?.get_avatar"
                 class="w-4 h-4 rounded-full"
                 alt="seen-avatar"
@@ -170,6 +172,7 @@
               "
             >
               <img
+              loading="lazy"
                 :src="pageConversation?.user?.get_avatar"
                 class="w-4 h-4 rounded-full"
                 alt="seen-avatar"

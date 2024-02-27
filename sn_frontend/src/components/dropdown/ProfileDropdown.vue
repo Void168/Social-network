@@ -3,6 +3,7 @@
     <template v-if="userStore.user.isAuthenticated && userStore.user.id">
       <div class="flex flex-row items-center gap-3">
         <img
+        loading="lazy"
           :src="
             pageStore.pageActive.id
               ? pageStore.pageActive.get_avatar
@@ -26,6 +27,7 @@
               }}</span
             >
             <img
+            loading="lazy"
               :src="userStore.user.avatar"
               class="rounded-full w-8 h-8 sm:hidden xs:block"
               alt="avatar"
@@ -186,6 +188,7 @@
                   >
                     <div class="flex gap-3 items-center">
                       <img
+                      loading="lazy"
                         :src="userStore.user.avatar"
                         alt="user-avatar"
                         class="w-10 h-10 rounded-full"
@@ -216,6 +219,7 @@
                   >
                     <div class="flex gap-3 items-center">
                       <img
+                      loading="lazy"
                         :src="page.get_avatar"
                         alt="page-avatar"
                         class="w-10 h-10 rounded-full"

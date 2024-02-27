@@ -27,6 +27,7 @@
         <div class="flex items-center">
           <div v-for="user in option?.vote_by?.slice(0, 3)" :key="user?.id">
             <img
+            loading="lazy"
               :src="user?.information?.get_avatar || userStore.user.avatar"
               alt="vote-avatar"
               class="w-6 h-6 rounded-full"

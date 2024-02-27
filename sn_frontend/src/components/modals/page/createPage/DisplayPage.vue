@@ -28,6 +28,7 @@
         "
       >
         <img
+        loading="lazy"
           :src="
             coverImageUrl ||
             'https://th.bing.com/th/id/OIP.o1n4kgruF-5cDCCx7jNYKQHaEo?pid=ImgDet&rs=1'
@@ -40,6 +41,7 @@
           class="absolute bottom-[-15px] z-10 w-40 h-40 rounded-full bg-slate-700/60"
         ></span>
         <img
+        loading="lazy"
           :src="
             avatarUrl ||
             'https://sbcf.fr/wp-content/uploads/2018/03/sbcf-default-avatar.png'

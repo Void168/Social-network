@@ -197,6 +197,7 @@
                             class="w-full h-36 dark:bg-slate-800 flex flex-col justify-center items-center rounded-lg border dark:border-slate-600 cursor-pointer"
                           >
                             <img
+                            loading="lazy"
                               v-if="avatarUrl"
                               :src="avatarUrl"
                               class="w-full p-1 absolute rounded-lg h-full"
@@ -227,6 +228,7 @@
                             class="w-full h-36 dark:bg-slate-800 flex flex-col justify-center items-center rounded-lg border dark:border-slate-600 cursor-pointer"
                           >
                             <img
+                            loading="lazy"
                               v-if="coverImageUrl"
                               :src="coverImageUrl"
                               class="w-full p-1 absolute rounded-lg h-full"

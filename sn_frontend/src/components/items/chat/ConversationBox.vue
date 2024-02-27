@@ -81,6 +81,7 @@
         <div class="flex sm:justify-between justify-center items-center">
           <div class="flex justify-center items-center gap-3">
             <img
+            loading="lazy"
               :src="friend?.get_avatar"
               alt="avatar"
               class="xm:w-14 xm:h-14 h-10 w-10 rounded-full shadow-lg"
@@ -162,6 +163,7 @@
             ></span>
             <span v-if="seen && lastMessage?.created_by?.id === userStore.user.id">
               <img
+              loading="lazy"
                 :src="friend.get_avatar"
                 class="w-4 h-4 rounded-full"
                 alt="seen-avatar"

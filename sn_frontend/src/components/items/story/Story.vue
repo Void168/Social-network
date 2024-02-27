@@ -5,6 +5,7 @@
   >
     <div v-if="story?.body">
       <img
+      loading="lazy"
         :src="story?.created_by?.get_avatar"
         alt=""
         class="absolute top-4 left-4 w-10 h-10 rounded-full ring-4 z-20"
@@ -26,6 +27,7 @@
     </div>
     <div v-if="story?.attachments">
       <img
+      loading="lazy"
         :src="story?.created_by?.get_avatar"
         alt=""
         class="absolute top-4 left-4 w-10 h-10 rounded-full ring-4 z-20"
@@ -41,6 +43,7 @@
           :class="story?.attachments[0]?.get_video ? 'bg-black' : ''"
         >
           <img
+          loading="lazy"
             v-if="story?.attachments[0]?.get_image"
             :src="story?.attachments[0]?.get_image"
             class="rounded-none"

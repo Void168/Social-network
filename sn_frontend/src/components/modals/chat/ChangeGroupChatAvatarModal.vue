@@ -41,6 +41,7 @@
                 >
                   <div v-if="url" class="relative">
                     <img
+                    loading="lazy"
                       :src="url"
                       class="w-[120px] h-[120px] rounded-full p-1 ml-[1.5px]"
                     />

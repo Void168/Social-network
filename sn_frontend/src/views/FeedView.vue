@@ -17,6 +17,7 @@
             class="flex gap-3 w-full items-center dark:hover:bg-slate-600 hover:bg-slate-300 cursor-pointer px-4 py-2 rounded-xl duration-75"
           >
             <img
+              loading="lazy"
               :src="
                 pageStore.pageId
                   ? pageStore.pageActive.get_avatar
@@ -46,6 +47,7 @@
               class="flex gap-3 w-full items-center dark:hover:bg-slate-600 hover:bg-slate-300 cursor-pointer px-4 py-2 rounded-xl"
             >
               <img
+                loading="lazy"
                 :src="nav.icon"
                 alt=""
                 class="2xl:w-10 2xl:h-10 w-8 h-8 rounded-full"
@@ -87,6 +89,7 @@
             class="flex gap-3 w-full items-center dark:hover:bg-slate-600 hover:bg-slate-300 cursor-pointer px-4 py-2 rounded-xl"
           >
             <img
+              loading="lazy"
               :src="group.get_cover_image"
               alt=""
               class="w-12 h-12 rounded-full"
@@ -101,6 +104,7 @@
             class="flex gap-3 w-full items-center dark:hover:bg-slate-600 hover:bg-slate-300 cursor-pointer px-4 py-2 rounded-xl"
           >
             <img
+              loading="lazy"
               :src="group.icon"
               alt=""
               class="2xl:w-10 2xl:h-10 w-8 h-8 rounded-full"
@@ -178,7 +182,7 @@ import { defineAsyncComponent } from "vue";
 import PeopleYouMayKnow from "../components/PeopleYouMayKnow.vue";
 import Trends from "../components/Trends.vue";
 import ChatContainer from "../components/ChatContainer.vue";
-import StoriesContainer from "../components/StoriesContainer.vue";
+// import StoriesContainer from "../components/StoriesContainer.vue";
 
 import { ChevronUpIcon, ChevronDownIcon } from "@heroicons/vue/24/solid";
 
@@ -191,6 +195,16 @@ import { usePageStore } from "../stores/page";
 import navigation from "../data/navigationBar";
 import listGroups from "../data/listGroups";
 import { RouterLink } from "vue-router";
+import SkeletonLoadingContainer from '../components/loadings/SkeletonLoadingContainer.vue';
+
+const StoriesContainer = defineAsyncComponent(
+  {
+    loader: () => import('../components/StoriesContainer.vue'),
+    loadingComponent: SkeletonLoadingContainer,
+    delay: 500,
+    timeout: 3000
+  }
+)
 
 export default {
   name: "FeedView",

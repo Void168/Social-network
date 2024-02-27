@@ -27,6 +27,7 @@
       <div class="flex justify-between items-center px-4 py-2">
         <div class="flex items-center gap-2">
           <img
+          loading="lazy"
             :src="group?.admin?.get_avatar"
             alt="admin-avatar"
             class="xm:w-16 xm:h-16 w-10 h-10 rounded-full"
@@ -50,6 +51,7 @@
           <div class="flex justify-between items-center px-4 py-2">
             <div class="flex items-center gap-2">
               <img
+              loading="lazy"
                 :src="group?.admin?.get_avatar"
                 alt="admin-avatar"
                 class="xm:w-16 xm:h-16 w-10 h-10 rounded-full"
@@ -67,6 +69,7 @@
               class="px-4 py-2 flex items-center gap-2"
             >
               <img
+              loading="lazy"
                 :src="moderator?.information?.get_avatar"
                 alt="admin-avatar"
                 class="xm:w-16 xm:h-16 w-10 h-10 rounded-full shadow-lg"
@@ -107,6 +110,7 @@
               class="flex items-center gap-2"
             >
               <img
+              loading="lazy"
                 :src="friend?.information?.get_avatar"
                 alt="admin-avatar"
                 class="xm:w-16 xm:h-16 w-10 h-10 rounded-full"
@@ -150,6 +154,7 @@
               class="flex items-center gap-2"
             >
               <img
+              loading="lazy"
                 :src="friends[0]?.information?.get_avatar"
                 alt="admin-avatar"
                 class="xm:w-16 xm:h-16 w-10 h-10 rounded-full"
@@ -198,6 +203,7 @@
               class="flex items-center gap-2"
             >
               <img
+              loading="lazy"
                 :src="member?.information?.get_avatar"
                 alt="admin-avatar"
                 class="xm:w-16 xm:h-16 w-10 h-10 rounded-full"

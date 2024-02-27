@@ -28,6 +28,7 @@
         "
       >
         <img
+        loading="lazy"
           src="@/assets/default-group-cover-image.jpg"
           alt="default-avatar"
           class="w-full h-full rounded-lg"

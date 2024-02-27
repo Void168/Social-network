@@ -13,11 +13,13 @@
               v-if="!activeConversation.get_avatar"
             >
               <img
+              loading="lazy"
                 :src="avatar2"
                 alt="avatar-1"
                 class="w-9 h-9 rounded-full absolute top-0 z-9 right-1"
               />
               <img
+              loading="lazy"
                 :src="avatar1"
                 alt="avatar-0"
                 class="w-9 h-9 rounded-full ring-4 absolute bottom-0 z-9"
@@ -26,6 +28,7 @@
             </div>
             <img
               v-else
+              loading="lazy"
               :src="activeConversation.get_avatar"
               alt="avatar-group"
               class="w-14 h-14 rounded-full"
@@ -97,6 +100,7 @@
                         </span>
                       </p>
                       <img
+                      loading="lazy"
                         v-if="message?.attachments.length > 0"
                         :src="message?.attachments[0]?.get_image"
                         :class="
@@ -109,6 +113,7 @@
                   </div>
                   <div class="flex-shrink-0 h-10 w-10 rounded-full bg-gray-300">
                     <img
+                    loading="lazy"
                       :src="message?.created_by?.get_avatar"
                       alt=""
                       class="w-10 h-10 rounded-full"
@@ -164,6 +169,7 @@
                         }}
                       </span>
                       <img
+                      loading="lazy"
                         :src="seen_by.created_by.get_avatar"
                         alt="seen-avatar"
                         class="w-4 h-4 rounded-full"
@@ -200,6 +206,7 @@
               >
                 <div class="flex-shrink-0 h-10 w-10 rounded-full bg-gray-300">
                   <img
+                  loading="lazy"
                     :src="message?.created_by?.get_avatar"
                     alt=""
                     class="w-10 h-10 rounded-full"
@@ -251,6 +258,7 @@
           class="flex absolute bottom-0 w-full items-center p-4 shadow-md rounded-b-md bg-slate-100 dark:bg-slate-700"
         >
           <img
+          loading="lazy"
             :src="url"
             class="w-20 h-20 rounded-lg border-[1px] border-slate-200 bg-slate-300 dark:border-slate-500 p-1"
           />

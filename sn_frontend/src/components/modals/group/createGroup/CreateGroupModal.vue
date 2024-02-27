@@ -74,6 +74,7 @@
                     class="flex gap-3 my-4 py-4 items-center border-b border-slate-700 px-4"
                   >
                     <img
+                    loading="lazy"
                       :src="userStore.user.avatar"
                       alt="group-owner"
                       class="w-10 h-10 rounded-full shadow-lg"

@@ -75,17 +75,20 @@
           <div class="flex justify-center items-center gap-4 w-full">
             <div class="h-14 w-16 relative" v-if="!groupConversation.get_avatar">
               <img
+              loading="lazy"
                 :src="getAvatars[1]"
                 alt="avatar-1"
                 class="w-9 h-9 rounded-full absolute top-0 z-10 right-0"
               />
               <img
+              loading="lazy"
                 :src="getAvatars[0]"
                 alt="avatar-0"
                 class="w-9 h-9 rounded-full ring-4 ring-white dark:ring-slate-600 absolute bottom-0 z-20"
               />
             </div>
             <img
+            loading="lazy"
               v-else
               :src="groupConversation.get_avatar"
               alt="avatar-group"

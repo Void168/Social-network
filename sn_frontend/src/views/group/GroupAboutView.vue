@@ -69,12 +69,14 @@
         <hr class="border my-6 border-slate-600" />
         <div class="flex gap-1 items-center">
           <img
+          loading="lazy"
             :src="group?.admin?.get_avatar"
             alt="admin-avatar"
             class="w-8 h-8 rounded-full shadow-lg"
           />
           <div v-for="moderator in group?.moderators" :key="moderator.id">
             <img
+            loading="lazy"
               :src="moderator?.information?.get_avatar"
               alt="admin-avatar"
               class="w-8 h-8 rounded-full shadow-lg"

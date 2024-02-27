@@ -83,6 +83,7 @@
       >
         <div class="flex flex-col justify-start">
           <img
+          loading="lazy"
             :src="request?.created_by?.get_avatar"
             alt="request-user-avatar"
             class="w-16 h-[60px] rounded-full"

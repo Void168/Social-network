@@ -4,11 +4,13 @@
       <div class="flex items-center space-x-6 p-4">
         <div class="relative">
           <img
+          loading="lazy"
             :src="post.group.get_cover_image"
             alt="group-avatar"
             class="w-10 h-10 rounded-lg"
           />
           <img
+          loading="lazy"
             :src="post.created_by.information.get_avatar"
             class="w-6 h-6 rounded-full absolute bottom-[-4px] right-[-4px] ring-1 ring-emerald-400"
           />
@@ -48,6 +50,7 @@
     </p>
     <div class="mt-4 px-4">
       <img
+      loading="lazy"
         v-for="image in post.attachments"
         v-bind:key="image.id"
         :src="image.get_image"

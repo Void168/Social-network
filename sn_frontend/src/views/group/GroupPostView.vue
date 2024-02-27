@@ -74,6 +74,7 @@
                   class="hover:bg-slate-300 dark:hover:bg-slate-700 p-4 flex items-center gap-2 cursor-pointer"
                 >
                   <img
+                  loading="lazy"
                     :src="friend.get_avatar"
                     class="w-10 h-10 rounded-full"
                   />

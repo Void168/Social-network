@@ -20,6 +20,7 @@
             >
             <div v-for="user in usersVote.slice(0, 3)" :key="user.id">
               <img
+              loading="lazy"
                 :src="user.get_avatar"
                 alt="avatar-vote"
                 class="w-4 h-4 rounded-full"

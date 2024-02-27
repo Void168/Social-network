@@ -46,6 +46,7 @@
                   class="rounded-lg"
                 >
                   <img
+                  loading="lazy"
                     :src="group.get_cover_image"
                     alt=""
                     class="rounded-lg h-16 w-16"

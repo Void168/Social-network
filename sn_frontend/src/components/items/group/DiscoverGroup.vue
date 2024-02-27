@@ -2,6 +2,7 @@
   <div class="relative rounded-lg dark:bg-slate-700 dark:border-slate-600 bg-white shadow-md border">
     <RouterLink :to="{name: 'groupdetail', params: {id: group?.id}}">
       <img
+      loading="lazy"
         :src="group?.get_cover_image"
         alt=""
         class="w-full rounded-t-lg md:h-48 sm:h-64 xs:h-56 cursor-pointer"

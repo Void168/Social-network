@@ -104,6 +104,7 @@
               v-on:click="openModal"
             ></button>
             <img
+            loading="lazy"
               :src="pageFollowing.get_avatar"
               class="cursor-pointer rounded-lg"
             />

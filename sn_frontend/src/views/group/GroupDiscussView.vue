@@ -7,6 +7,7 @@
             <div class="py-4 flex items-start gap-2 p-2 rounded-lg">
               <div>
                 <img
+                loading="lazy"
                   :src="
                     isAnonymous
                       ? 'https://cdn-icons-png.flaticon.com/512/350/350351.png'
@@ -34,7 +35,7 @@
               v-if="urlPost"
               class="flex relative justify-center items-center w-full p-4 border-[1px] border-slate-400 rounded-lg my-2"
             >
-              <img :src="urlPost" class="w-full rounded-lg" />
+              <img loading="lazy" :src="urlPost" class="w-full rounded-lg" />
               <XCircleIcon
                 class="absolute top-5 right-5 cursor-pointer w-10 h-10"
                 @click="removeImage"
@@ -196,6 +197,7 @@
           class="flex flex-col justify-center items-center dark:bg-slate-700 h-[500px] rounded-lg"
         >
           <img
+          loading="lazy"
             src="https://th.bing.com/th/id/R.0b658885df48a3649d297aa3cb9b701c?rik=O%2bnowdCCiEHMBw&riu=http%3a%2f%2fwww.freeiconspng.com%2fuploads%2fyellow-lock-icon-1.png&ehk=vmtKzvuDRyuDCuxWRt5bkcNNyst9WtJzTsByLmk4QOI%3d&risl=&pid=ImgRaw&r=0"
             alt="lock"
             class="w-40 h-40 shadow-none"

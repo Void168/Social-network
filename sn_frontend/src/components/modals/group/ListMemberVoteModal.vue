@@ -55,7 +55,7 @@
                 </h2>
                 <div class="my-4" v-for="user in option.vote_by" :key="user.id">
                   <div class="flex items-center gap-2">
-                    <img :src="user?.information?.get_avatar" class="w-10 h-10 rounded-full" alt="vote-avatar"/>
+                    <img loading="lazy" :src="user?.information?.get_avatar" class="w-10 h-10 rounded-full" alt="vote-avatar"/>
                     <h4 class="font-semibold">{{ user?.information?.name }}</h4>
                   </div>
                 </div>

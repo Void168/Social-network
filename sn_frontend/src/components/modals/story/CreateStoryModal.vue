@@ -62,6 +62,7 @@
                     class="flex gap-3 my-4 py-4 items-center border-b dark:border-slate-700 border-slate-300 px-4"
                   >
                     <img
+                    loading="lazy"
                       :src="userStore.user.avatar"
                       alt="story-owner"
                       class="w-16 h-16 rounded-full shadow-lg"
@@ -235,6 +236,7 @@
                       }"
                     >
                       <img
+                      loading="lazy"
                         :src="url"
                         alt="story-url"
                         class="rounded-none w-full cursor-pointer shadow-none"

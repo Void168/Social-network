@@ -12,7 +12,7 @@
           }"
           class="flex items-center gap-3 max-w-max"
         >
-          <img :src="page.get_avatar" class="w-10 h-10 rounded-full" />
+          <img loading="lazy" :src="page.get_avatar" class="w-10 h-10 rounded-full" />
           <h3 class="dark:text-slate-200 font-bold">
             {{ page.name }}
           </h3>

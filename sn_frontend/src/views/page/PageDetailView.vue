@@ -22,6 +22,7 @@
               </span>
             </div>
             <img
+            loading="lazy"
               :src="page.get_avatar"
               alt=""
               class="rounded-full w-44 h-44 shadow-xl absolute top-2"
@@ -37,7 +38,10 @@
             </p>
             <p class="mt-6 font-semibold text-lg">{{ page.biography }}</p>
           </div>
-          <RouterLink :to="{name: 'pageabout', params: {id: page.id}}" class="mt-6 flex space-x-8">
+          <RouterLink
+            :to="{ name: 'pageabout', params: { id: page.id } }"
+            class="mt-6 flex space-x-8"
+          >
             <ul class="flex flex-col !justify-start space-y-4 text-sm">
               <li
                 class="text-gray-500 dark:text-neutral-300 flex items-center gap-2"
@@ -101,20 +105,25 @@
             </button>
           </RouterLink>
         </div>
-        <div class="bg-white dark:bg-slate-600 dark:text-neutral-200 my-4 p-4">
-          <div class="flex justify-between items-center mb-4">
-            <p class="font-bold text-2xl">Ảnh</p>
-            <RouterLink
-              :to="{ name: 'pagephotos', params: { id: page.id } }"
-            >
-              <p class="text-lg hover:underline cursor-pointer">
-                Xem tất cả ảnh
-              </p>
-            </RouterLink>
-          </div>
-          <div class="grid grid-cols-3 gap-1">
-            <div v-for="image in images" v-bind:key="image.id">
-              <ImageShowcase v-bind:post="image" />
+        <div
+          class="lg:sticky !shadow-none"
+          :style="{ top: `${toastStore.navbarHeight}px` }"
+        >
+          <div
+            class="bg-white dark:bg-slate-600 dark:text-neutral-200 my-4 p-4"
+          >
+            <div class="flex justify-between items-center mb-4">
+              <p class="font-bold text-2xl">Ảnh</p>
+              <RouterLink :to="{ name: 'pagephotos', params: { id: page.id } }">
+                <p class="text-lg hover:underline cursor-pointer">
+                  Xem tất cả ảnh
+                </p>
+              </RouterLink>
+            </div>
+            <div class="grid grid-cols-3 gap-1">
+              <div v-for="image in images" v-bind:key="image.id">
+                <ImageShowcase v-bind:post="image" />
+              </div>
             </div>
           </div>
         </div>
@@ -169,9 +178,9 @@ import {
 } from "@heroicons/vue/24/solid";
 import AvatarModal from "../../components/modals/profile/AvatarModal.vue";
 import ImageShowcase from "../../components/items/profile/ImageShowcase.vue";
-import FeedItem from '../../components/items/post/FeedItem.vue';
+import FeedItem from "../../components/items/post/FeedItem.vue";
 import SkeletonLoadingPost from "../../components/loadings/SkeletonLoadingPost.vue";
-import PostForm from '../../components/forms/PostForm.vue';
+import PostForm from "../../components/forms/PostForm.vue";
 
 export default {
   name: "pagedetail",
@@ -188,7 +197,7 @@ export default {
     ImageShowcase,
     FeedItem,
     SkeletonLoadingPost,
-    PostForm
+    PostForm,
   },
   setup() {
     const userStore = useUserStore();
@@ -210,7 +219,7 @@ export default {
     postsList: Array,
     pageLikes: Array,
     pageFollowers: Array,
-    PostToShow: Number
+    PostToShow: Number,
   },
 
   data() {
@@ -226,6 +235,14 @@ export default {
         .map((page) => page.id)
         .includes(this.$route.params.id);
     },
+  },
+
+  mounted(){
+    window.addEventListener("scroll", this.infinateScroll);
+  },
+
+  beforeDestroy() {
+    window.removeEventListener("scroll", this.infinateScroll);
   },
 
   methods: {

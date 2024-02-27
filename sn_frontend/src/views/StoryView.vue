@@ -54,6 +54,7 @@
             "
           >
             <img
+            loading="lazy"
               :src="userStore.user.avatar"
               alt="story-owner"
               class="2xl:w-16 2xl:h-16 xl:w-14 xl:h-14 xs:w-10 xs:h-10 rounded-full"
@@ -90,6 +91,7 @@
               "
             >
               <img
+              loading="lazy"
                 :src="
                   currentStoryStore?.currentStory[0]?.created_by?.get_avatar
                 "
@@ -199,6 +201,7 @@
             "
           >
             <img
+            loading="lazy"
               :src="userStore.user.avatar"
               alt="story-owner"
               class="2xl:w-16 2xl:h-16 xl:w-14 xl:h-14 xs:w-10 xs:h-10 rounded-full"
@@ -235,6 +238,7 @@
               "
             >
               <img
+              loading="lazy"
                 :src="
                   currentStoryStore?.currentStory[0]?.created_by?.get_avatar
                 "
@@ -335,6 +339,7 @@
             "
           >
             <img
+            loading="lazy"
               :src="userStore.user.avatar"
               alt="story-owner"
               class="2xl:w-16 2xl:h-16 xl:w-14 xl:h-14 xs:w-10 xs:h-10 rounded-full"
@@ -371,6 +376,7 @@
               "
             >
               <img
+              loading="lazy"
                 :src="
                   currentStoryStore?.currentStory[0]?.created_by?.get_avatar
                 "
@@ -480,7 +486,7 @@
               ]?.seen_by.slice(0, 4)"
               :key="user.id"
             >
-              <img :src="user.get_avatar" class="w-8 h-8 rounded-full" />
+              <img loading="lazy" :src="user.get_avatar" class="w-8 h-8 rounded-full" />
             </div>
           </div>
         </div>

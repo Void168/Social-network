@@ -85,7 +85,7 @@
         v-if="urlPost"
         class="flex relative justify-center items-center w-full p-4 border-[1px] border-slate-400 rounded-lg my-2"
       >
-        <img :src="urlPost" class="w-full rounded-lg" />
+        <img loading="lazy" :src="urlPost" class="w-full rounded-lg" />
         <span class="absolute top-5 right-5 cursor-pointer" @click="removeImage"
           ><svg
             xmlns="http://www.w3.org/2000/svg"

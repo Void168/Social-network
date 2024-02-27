@@ -58,6 +58,7 @@
                 >
                   <div class="flex items-center gap-3">
                     <img
+                    loading="lazy"
                       :src="user.get_avatar"
                       alt="avatar"
                       class="w-12 h-12 rounded-full"
@@ -96,6 +97,7 @@
                   <div v-if="user.type_of_react === emojiStory[n - 1]?.unicode" class="flex items-center justify-between w-full">
                     <div class="flex items-center gap-3">
                       <img
+                      loading="lazy"
                         :src="user.created_by.get_avatar"
                         alt="avatar"
                         class="w-12 h-12 rounded-full"

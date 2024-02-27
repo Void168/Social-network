@@ -34,6 +34,7 @@
           </div>
           <div class="flex gap-1 items-center sm:mb-0 mb-4">
             <img
+            loading="lazy"
               :src="group?.admin?.get_avatar"
               alt=""
               class="w-8 h-8 rounded-full"
@@ -41,6 +42,7 @@
             <!-- v-if="isUserInGroup" -->
             <div v-for="moderator in group?.moderators" :key="moderator.id">
               <img
+              loading="lazy"
                 :src="moderator?.information?.get_avatar"
                 alt="admin-avatar"
                 class="w-8 h-8 rounded-full shadow-lg"

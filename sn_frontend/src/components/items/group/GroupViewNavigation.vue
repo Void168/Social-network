@@ -89,6 +89,7 @@
           >
             <div class="flex items-center gap-3">
               <img
+              loading="lazy"
                 src="https://s3.amazonaws.com/intanibase/iad_screenshots/1951/3523/6thumb.jpg"
                 alt=""
                 class="h-12 w-12 rounded-xl"
@@ -119,6 +120,7 @@
           >
             <div class="flex items-center gap-3">
               <img
+              loading="lazy"
                 src="https://s3.amazonaws.com/intanibase/iad_screenshots/1951/3523/6thumb.jpg"
                 alt=""
                 class="h-12 w-12 rounded-xl"

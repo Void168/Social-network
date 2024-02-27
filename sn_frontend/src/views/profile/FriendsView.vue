@@ -12,7 +12,7 @@
           }"
           class="flex items-center gap-3"
         >
-          <img :src="userStore.user.avatar" class="w-10 h-10 rounded-full" />
+          <img loading="lazy" :src="userStore.user.avatar" class="w-10 h-10 rounded-full" />
           <h3 class="dark:text-slate-200 font-bold">
             {{ userStore.user.name }}
           </h3>
@@ -35,6 +35,7 @@
             }"
           >
             <img
+            loading="lazy"
               :src="friendshipRequest.created_by.get_avatar"
               alt=""
               class="mb-6 rounded-full mx-auto w-32 h-32"
@@ -124,6 +125,7 @@
                   class="flex flex-col items-center"
                 >
                   <img
+                  loading="lazy"
                     :src="friend.get_avatar"
                     alt=""
                     class="w-32 h-32 mb-6 rounded-full"
@@ -156,6 +158,7 @@
                   class="flex flex-col items-center"
                 >
                   <img
+                  loading="lazy"
                     :src="follower.get_avatar"
                     alt=""
                     class="w-32 h-32 mb-6 rounded-full"
@@ -188,6 +191,7 @@
                   class="flex flex-col items-center"
                 >
                   <img
+                  loading="lazy"
                     :src="following.get_avatar"
                     alt=""
                     class="w-32 h-32 mb-6 rounded-full"

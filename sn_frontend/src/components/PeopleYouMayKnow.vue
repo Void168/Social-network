@@ -12,7 +12,7 @@
         class="flex items-center justify-between"
       >
         <div class="flex items-center space-x-2">
-          <img :src="user.get_avatar" class="w-10 h-10 rounded-full" />
+          <img loading="lazy" :src="user.get_avatar" class="w-10 h-10 rounded-full" />
 
           <p class="text-xs">
             <strong>{{ user.name }}</strong>
@@ -30,7 +30,7 @@
 <script>
 import axios from "axios";
 import { useToastStore } from "../stores/toast";
-import SkeletionLoadingChatBox from "./loadings/SkeletionLoadingChatBox.vue";
+import SkeletionLoadingChatBox from "./loadings/SkeletonLoadingChatBox.vue";
 export default (await import("vue")).defineComponent({
   components: {
     SkeletionLoadingChatBox,

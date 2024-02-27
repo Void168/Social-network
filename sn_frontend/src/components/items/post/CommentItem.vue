@@ -10,6 +10,7 @@
             }"
           >
             <img
+            loading="lazy"
               :src="comment?.created_by?.get_avatar"
               class="w-10 h-10 rounded-full"
             />

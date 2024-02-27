@@ -69,7 +69,7 @@
         class="flex p-4 gap-2 items-center hover:rounded-tl-lg cursor-pointer transition duration-[25ms]"
         :class="[selectedTheme?.hover]"
       >
-        <img :src="friend.get_avatar" class="rounded-full h-10 w-10" />
+        <img loading="lazy" :src="friend.get_avatar" class="rounded-full h-10 w-10" />
         <span class="font-bold">{{ friend.name }}</span>
         <ChevronDownIcon class="w-6 h-6 rounded-full p-1" />
       </div>
@@ -133,6 +133,7 @@
                   </span>
                 </p>
                 <img
+                loading="lazy"
                   v-if="message.attachments.length > 0"
                   :src="message?.attachments[0]?.get_image"
                   :class="
@@ -166,6 +167,7 @@
             <div class="flex w-full mt-2 space-x-3 max-w-md" v-else>
               <div class="flex-shrink-0 h-10 w-10 rounded-full bg-gray-300">
                 <img
+                loading="lazy"
                   :src="message.created_by.get_avatar"
                   alt=""
                   class="w-10 h-10 rounded-full"
@@ -206,6 +208,7 @@
           class="bg-slate-200 dark:bg-slate-600 dark:border-slate-700 dark:text-neutral-200 flex flex-col justify-center items-center"
         >
           <img
+          loading="lazy"
             :src="friend.get_avatar"
             alt="non_conversation_avatar"
             class="w-16 h-16 rounded-full"
@@ -221,6 +224,7 @@
       class="flex relative items-center p-4 shadow-md rounded-b-md bg-slate-100 dark:bg-slate-700"
     >
       <img
+      loading="lazy"
         :src="url"
         class="w-20 h-20 rounded-lg border-[1px] border-slate-200 bg-slate-300 dark:border-slate-500 p-1"
       />

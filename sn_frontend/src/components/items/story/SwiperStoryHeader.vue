@@ -5,6 +5,7 @@
   >
     <div class="flex gap-4 items-center">
       <img
+      loading="lazy"
         :src="stories[0]?.created_by?.get_avatar"
         alt=""
         class="rounded-full w-12 h-12"

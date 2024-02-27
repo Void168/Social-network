@@ -38,7 +38,7 @@
                 <div class="flex flex-col justify-center items-center my-4">
                   <div class="h-64 w-full border-4 border-dashed p-2">
                     <div v-if="url" class="relative mt-1">
-                      <img :src="url" class="w-full h-56 rounded-lg" />
+                      <img loading="lazy" :src="url" class="w-full h-56 rounded-lg" />
                       <span
                         class="absolute top-3 right-3 cursor-pointer"
                         @click="removeImage"

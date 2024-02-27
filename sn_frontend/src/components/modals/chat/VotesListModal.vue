@@ -46,6 +46,7 @@
               >
                 <div class="flex gap-4 items-center">
                   <img
+                  loading="lazy"
                     :src="user.get_avatar"
                     alt="avatar-vote"
                     class="w-12 h-12 rounded-full"

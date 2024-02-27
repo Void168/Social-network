@@ -61,6 +61,7 @@
                 >
                   <div v-if="url" class="relative mt-1">
                     <img
+                    loading="lazy"
                       :src="url"
                       class="w-[360px] h-[360px] rounded-full p-1"
                     />
@@ -289,8 +290,7 @@ export default (await import("vue")).defineComponent({
             })
             .then((res) => {
               if (res.data.message === "avatar updated") {
-                
-                localStorage.setItem("user.avatar", this.$refs.avatar.files[0]);
+                localStorage.setItem("user.avatar", res.data.data.get_avatar);
                 if (this.share) {
 
                   let form = new FormData();
@@ -332,9 +332,9 @@ export default (await import("vue")).defineComponent({
                 );
                 
 
-                // setTimeout(() => {
-                //   this.$router.go(0);
-                // }, 5000);
+                setTimeout(() => {
+                  this.$router.go(0);
+                }, 5000);
               } else {
                 this.toastStore.showToast(
                   5000,
@@ -394,9 +394,9 @@ export default (await import("vue")).defineComponent({
                   "bg-emerald-500 text-white"
                 );
 
-                // setTimeout(() => {
-                //   this.$router.go(0);
-                // }, 5000);
+                setTimeout(() => {
+                  this.$router.go(0);
+                }, 5000);
               } else {
                 this.toastStore.showToast(
                   5000,

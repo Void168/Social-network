@@ -36,6 +36,7 @@
                     class="w-full h-full flex justify-center items-center bg-black"
                   >
                     <img
+                    loading="lazy"
                       :src="post?.attachments[0]?.get_image"
                       class="rounded-none max-h-screen"
                     />
@@ -58,6 +59,7 @@
                   <div class="mb-6 flex items-center justify-between p-4">
                     <div class="flex items-center space-x-4">
                       <img
+                      loading="lazy"
                         :src="post?.created_by.get_avatar"
                         class="w-12 h-12 rounded-full shadow-md"
                       />
@@ -187,6 +189,7 @@
                     >
                       <div class="py-4 flex items-center gap-2 w-full">
                         <img
+                        loading="lazy"
                           :src="post?.created_by.get_avatar"
                           class="w-10 h-10 rounded-full shadow-md"
                         />

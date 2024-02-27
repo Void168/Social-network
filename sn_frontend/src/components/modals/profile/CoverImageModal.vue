@@ -38,7 +38,7 @@
               <div class="flex flex-col justify-center items-center my-4">
                 <div class="h-64 w-full border-4 border-dashed p-2">
                   <div v-if="url" class="relative mt-1">
-                    <img :src="url" class="w-full h-56 rounded-lg" />
+                    <img loading="lazy" :src="url" class="w-full h-56 rounded-lg" />
                     <span
                       class="absolute top-3 right-3 cursor-pointer"
                       @click="removeImage"
@@ -176,16 +176,16 @@ export default (await import("vue")).defineComponent({
             .then((res) => {
               if (res.data.message === "cover image updated") {
                 this.toastStore.showToast(
-                  5000,
+                  3500,
                   "Thay đổi ảnh bìa thành công.",
                   "bg-emerald-500 text-white"
                 );
                 setTimeout(() => {
                   this.$router.go(0);
-                }, 1500)
+                }, 4000)
               } else {
                 this.toastStore.showToast(
-                  5000,
+                  3500,
                   "Thay đổi ảnh bìa thất bại.",
                   "bg-rose-400 text-white"
                 );
@@ -204,16 +204,16 @@ export default (await import("vue")).defineComponent({
             .then((res) => {
               if (res.data.message === "cover image updated") {
                 this.toastStore.showToast(
-                  5000,
+                  3500,
                   "Thay đổi ảnh bìa thành công.",
                   "bg-emerald-500 text-white"
                 );
                 setTimeout(() => {
                   this.$router.go(0);
-                }, 1500)
+                }, 4000)
               } else {
                 this.toastStore.showToast(
-                  5000,
+                  3500,
                   "Thay đổi ảnh bìa thất bại.",
                   "bg-rose-400 text-white"
                 );

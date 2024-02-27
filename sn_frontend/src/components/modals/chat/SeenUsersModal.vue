@@ -42,6 +42,7 @@
               <div class="my-4 px-4" v-for="user in lastMessage" :key="user.id">
                 <div class="flex gap-2 items-center">
                   <img
+                  loading="lazy"
                     :src="user.created_by.get_avatar"
                     alt=""
                     class="w-12 h-12 rounded-full"

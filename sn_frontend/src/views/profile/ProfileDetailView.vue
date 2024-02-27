@@ -20,6 +20,7 @@
             </span>
           </div>
           <img
+          loading="lazy"
             :src="user.get_avatar"
             alt=""
             class="mb-6 rounded-full w-44 h-44 shadow-xl absolute top-0"
@@ -185,6 +186,7 @@
               }"
             >
               <img
+              loading="lazy"
                 :src="relationshipRequest[0].created_by.get_avatar"
                 alt=""
                 class="mb-6 rounded-full mx-auto w-20 h-20"
@@ -238,7 +240,8 @@
             v-for="post in posts"
             v-bind:key="post.id"
           >
-            <FeedItem v-bind:post="post" v-on:deletePost="deletePost" />
+          <!-- v-on:deletePost="deletePost" -->
+            <FeedItem v-bind:post="post"  />
           </div>
           <SkeletonLoadingPost
             v-show="!loadMore"
@@ -342,9 +345,9 @@ export default {
     closeAvatarModal() {
       this.avatarIsOpen = false;
     },
-    deletePost(id) {
-      this.posts = this.posts.filter((post) => post.id !== id);
-    },
+    // deletePost(id) {
+    //   this.posts = this.posts.filter((post) => post.id !== id);
+    // },
     sendDirectMessage() {
       if (!this.pageStore.pageId) {
         axios

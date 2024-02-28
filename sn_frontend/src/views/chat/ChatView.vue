@@ -237,7 +237,7 @@ export default (await import("vue")).defineComponent({
           .get("/api/chat/group/")
           .then((res) => {
             this.groupConversations = res.data;
-            console.log(this.groupConversations);
+            // console.log(this.groupConversations);
           })
           .catch((error) => {
             console.log(error);

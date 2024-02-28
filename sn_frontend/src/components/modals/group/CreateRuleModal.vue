@@ -88,19 +88,21 @@
                 >
                   Hủy
                 </button>
-                <button
-                  :disabled="!name"
-                  type="button"
-                  class="btn inline-flex justify-center rounded-md border border-transparent px-4 py-2 text-sm font-medium focus:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 focus-visible:ring-offset-2"
-                  @click="createRule"
-                  :class="
-                    !name
-                      ? 'dark:bg-slate-600 dark:text-neutral-400 dark:hover:bg-slate-600'
-                      : 'bg-emerald-400 text-white hover:bg-emerald-600'
-                  "
-                >
-                  Tạo
-                </button>
+                <div @click="$emit('closeModal')">
+                  <button
+                    :disabled="!name"
+                    type="button"
+                    class="btn inline-flex justify-center rounded-md border border-transparent px-4 py-2 text-sm font-medium focus:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 focus-visible:ring-offset-2"
+                    @click="createRule"
+                    :class="
+                      !name
+                        ? 'dark:bg-slate-600 dark:text-neutral-400 dark:hover:bg-slate-600'
+                        : 'bg-emerald-400 text-white hover:bg-emerald-600'
+                    "
+                  >
+                    Tạo
+                  </button>
+                </div>
               </div>
             </DialogPanel>
           </TransitionChild>

@@ -199,7 +199,7 @@ export default (await import("vue")).defineComponent({
       axios
         .post(`/api/unfollowed/${this.$route.params.id}/`)
         .then((res) => {
-          console.log(res.data);
+          // console.log(res.data);
         })
         .catch((error) => {
           console.log(error);

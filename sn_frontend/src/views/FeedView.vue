@@ -338,7 +338,7 @@ export default {
     },
     infinateScroll() {
       const frame = document.getElementById("feed-frame");
-      let height = frame.scrollHeight;
+      let height = frame?.scrollHeight;
       let scrollY = window.scrollY;
       if (height < scrollY + 1000) {
         setTimeout(() => {

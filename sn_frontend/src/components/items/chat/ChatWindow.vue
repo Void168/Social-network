@@ -101,9 +101,9 @@
       class="h-[346px] px-4 overflow-auto scrollbar-corner-slate-200 scrollbar-thin scrollbar-thumb-slate-400 scrollbar-track-slate-800 border-b border-gray-200 dark:bg-slate-600 dark:border-slate-700 dark:text-neutral-200"
     >
       <div class="flex flex-col flex-grow p-4">
-        <div v-if="conversation?.messages?.length > 0 && conversation">
+        <div v-if="listMessages?.length > 0 && conversation">
           <div
-            v-for="message in conversation?.messages"
+            v-for="message in listMessages"
             v-bind:key="message.id"
             :id="message.id"
           >
@@ -176,7 +176,7 @@
               <div class="flex flex-col w-full space-x-3 items-start max-w-md ml-auto justify-end gap-2">
                 <div
                   v-if="
-                    conversation?.messages?.filter(
+                    listMessages?.filter(
                       (user) => user.sent_to.id === userStore.user.id
                     )
                   "
@@ -420,6 +420,9 @@ export default (await import("vue")).defineComponent({
         ? Math.ceil(this.body.length / 30)
         : 5;
     },
+    listMessages() {
+      return this.conversation?.messages;
+    },
     lastMessage() {
       return this.conversation?.messages[
         this.conversation.messages?.length - 1
@@ -440,7 +443,7 @@ export default (await import("vue")).defineComponent({
   mounted() {
     document.addEventListener("click", this.clickOutside);
     this.getConversation();
-    this.getPusher();
+    // this.getPusher();
   },
   
   beforeUnmount() {
@@ -474,6 +477,7 @@ export default (await import("vue")).defineComponent({
         .then((res) => {
           this.conversation = res.data.conversation;
           // console.log(this.conversation);
+          this.getPusher()
         })
         .catch((error) => console.log(error));
     },
@@ -546,7 +550,7 @@ export default (await import("vue")).defineComponent({
               .then((res) => {
                 // console.log(res.data);
                 this.scrollToBottom();
-                res.data.messages?.push(res.data);
+                // res.data.messages?.push(res.data);
                 this.$refs.fileMessage.value = null;
                 this.url = null;
                 this.body = "";
@@ -575,7 +579,7 @@ export default (await import("vue")).defineComponent({
           .then((res) => {
             // console.log(res.data);
             this.scrollToBottom();
-            this.conversation?.messages?.push(res.data);
+            // this.conversation?.messages?.push(res.data);
             this.$refs.fileMessage.value = null;
             this.url = null;
             this.body = "";

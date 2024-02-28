@@ -89,6 +89,7 @@
             <p
               class="text-xs font-bold dark:text-neutral-300 sm:block hidden"
               v-if="
+              lastMessage &&
                 lastMessage?.seen_by
                   .map((obj) => obj.created_by.email)
                   .includes(userStore.user.email) === false
@@ -105,9 +106,9 @@
           </div>
 
           <span
-            v-if="conversation?.messages?.length"
+            v-if="conversation?.messages?.length && lastMessage"
             class="text-xs text-gray-600 dark:text-neutral-300 sm:block hidden"
-            >{{ lastMessage.created_at_formatted }} trước</span
+            >{{ lastMessage?.created_at_formatted }} trước</span
           >
         </div>
 
@@ -119,21 +120,21 @@
             <div class="flex gap-2 px-2 py-1 w-[50%]">
               <span
                 class="font-semibold"
-                v-if="lastMessage.created_by.id === userStore.user.id"
+                v-if="lastMessage?.created_by?.id === userStore.user.id && lastMessage"
                 >Bạn:
               </span>
               <span
                 v-else-if="
-                  lastMessage.created_by.id !== userStore.user.id &&
+                  lastMessage?.created_by?.id !== userStore.user.id &&
                   lastMessage?.seen_by
                     .map((obj) => obj.created_by.email)
-                    .includes(userStore.user.email) === false
+                    .includes(userStore.user.email) === false && lastMessage
                 "
                 class="font-bold text-emerald-500 dark:text-neutral-200"
-                >{{ lastMessage.created_by.name }}:
+                >{{ lastMessage?.created_by?.name }}:
               </span>
               <span class="dark:text-neutral-300" v-else
-                >{{ lastMessage.created_by.name }}:
+                >{{ lastMessage?.created_by?.name }}:
               </span>
               <div class="flex justify-between w-full">
                 <p
@@ -146,10 +147,10 @@
                       .includes(userStore.user.email) === false
                   "
                 >
-                  {{ lastMessage.body }}
+                  {{ lastMessage?.body }}
                 </p>
                 <p class="truncate dark:text-neutral-300" v-else>
-                  {{ lastMessage.body }}
+                  {{ lastMessage?.body }}
                 </p>
               </div>
             </div>
@@ -161,7 +162,7 @@
                   .includes(userStore.user.email) === false 
               "
             ></span>
-            <span v-if="seen && lastMessage?.created_by?.id === userStore.user.id">
+            <span v-if="seen && lastMessage?.created_by?.id === userStore.user.id && lastMessage">
               <img
               loading="lazy"
                 :src="friend.get_avatar"
@@ -226,9 +227,9 @@ export default (await import("vue")).defineComponent({
       )[0];
     },
     lastMessage() {
-      return this.conversation?.messages[
+      return this.conversation ? this.conversation?.messages[
         this.conversation?.messages?.length - 1
-      ];
+      ] : null;
     },
     friend() {
       return this.conversation?.users?.filter(
@@ -257,9 +258,9 @@ export default (await import("vue")).defineComponent({
       channel.bind("message:new", (data) => {
         this.conversation?.messages.push(JSON.parse(data.message));
       });
-      channel.bind("seen_message", (data) => {
-        this.lastMessage = JSON.parse(data.message);
-      });
+      // channel.bind("seen_message", (data) => {
+      //   this.lastMessage = JSON.parse(data.message);
+      // });
     },
     deleteConversation() {
       this.$emit("deleteConversation", this.conversation.id);

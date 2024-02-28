@@ -11,14 +11,13 @@
         class="bg-white overflow-y-scroll scrollbar-corner-slate-200 scrollbar-thin scrollbar-thumb-slate-400 scrollbar-track-slate-800 border border-gray-200 dark:bg-slate-600 dark:border-slate-700 dark:text-neutral-200 rounded-lg px-2"
       >
         <h3 class="sm:text-xl p-3 xm:block hidden sm:text-left text-center">
-          Đoạn hội thoại ({{ conversations.length }})
+          Đoạn hội thoại ({{ conversations?.length }})
         </h3>
         <div class="flex justify-center items-center xm:hidden p-3">
-          <UserIcon class="w-6" /> ({{ conversations.length }})
+          <UserIcon class="w-6" /> ({{ conversations?.length }})
         </div>
         <div v-for="conversation in conversations" :key="conversation.id">
           <ConversationBox
-            v-bind:conversations="conversations"
             v-bind:conversation="conversation"
             @seenMessage="seenMessage"
           />
@@ -159,7 +158,8 @@ export default (await import("vue")).defineComponent({
       axios
         .get("/api/chat/")
         .then((res) => {
-          this.conversations = res.data;
+          this.conversations = res.data.conversations;
+          // console.log(res.data)
         })
         .catch((error) => {
           console.log(error);

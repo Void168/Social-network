@@ -423,6 +423,7 @@ export default (await import("vue")).defineComponent({
       channel.bind("message:new", (data) => {
         this.listMessages.push(JSON.parse(data.message));
       });
+      
       // channel.bind("pusher:subscription_succeeded", function () {
       //   console.log("Auth went OK!");
       // });

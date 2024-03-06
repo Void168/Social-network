@@ -1,15 +1,4 @@
 { 
-    "routes": [{ "src": "/[^.]+", "dest": "/", "status": 200 }],
-    "images": {
-        "sizes": [256, 640, 1080, 2048, 3840],
-        "remotePatterns": [
-          {
-            "protocol": "https",
-            "hostname": "https://tommi.pythonanywhere.com/"
-          }
-        ],
-        "minimumCacheTTL": 60,
-        "formats": ["image/webp"],
-        "dangerouslyAllowSVG": false
-      }
+    "routes": [{ "src": "/[^.]+", "dest": "/", "status": 200 }]
+
  }

@@ -21,13 +21,9 @@ const userStore = useUserStore();
 const pageStore = usePageStore();
 
 router.beforeEach((to, from) => {
-  if (to.path !== "/login" && !userStore.user.isAuthenticated) {
-    return "/login" || "/signup";
+  if (to.path !== "/login" || to.path !== "/signup" && !userStore.user.isAuthenticated) {
+    return "/login";
   }
-
-  // if (to.path !== "/signup" && !userStore.user.isAuthenticated) {
-  //   return "/signup";
-  // }
 
   if (to.path === "/login" && userStore.user.isAuthenticated) {
     return "/";

@@ -18,10 +18,9 @@
       :partner="partner"
       :postsList="postsList"
       :PostToShow="PostToShow"
+      :getNewPost="getNewPost"
+      :deletePost="deletePost"
     ></router-view>
-    <Suspense>
-      
-    </Suspense>
     <div
       v-if="route.name === 'about' || route.name === 'friends'"
       class="bg-white dark:bg-slate-600 p-4 dark:text-neutral-200 w-full rounded-lg mt-4"
@@ -287,6 +286,15 @@ export default {
           console.log(error);
         });
     },
+    getNewPost(data){
+      if(data.id){
+        this.posts?.unshift(data)
+        // console.log(data)
+      }
+    },
+    deletePost(id) {
+      this.posts = this.posts.filter((post) => post.id !== id);
+    },
     getUserInfo() {
       axios
         .get(`/api/user-info/${this.$route.params.id}`)
@@ -311,9 +319,6 @@ export default {
     },
     toPartner() {
       this.$router.push(`/profile/${this.partnerId}`);
-    },
-    deletePost(id) {
-      this.posts = this.posts.filter((post) => post.id !== id);
     },
 
     getImages() {

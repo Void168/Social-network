@@ -122,8 +122,8 @@
 
                         <span
                           aria-hidden="true"
-                          :class="isDark ? 'translate-x-0' : 'translate-x-6'"
-                          class="absolute top-0 left-[2px] z-10 pointer-events-none inline-block h-[20px] w-[20px] transform rounded-full bg-white shadow-lg ring-0 transition duration-200 ease-in-out"
+                          :class="isDark ? 'translate-x-[-2px]' : 'translate-x-[23px]'"
+                          class="absolute top-[-1] left-[2px] z-10 pointer-events-none inline-block h-[20px] w-[20px] transform rounded-full bg-white shadow-lg ring-0 transition duration-200 ease-in-out"
                         />
                       </Switch>
                     </span>

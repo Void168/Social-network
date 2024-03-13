@@ -121,7 +121,7 @@
           @change="onFileChange"
         />
       </label>
-      <button class="btn xm:text-base text-xs">Đăng bài viết</button>
+      <button class="btn xm:text-base text-xs" @click="$emit('getNewPost', newPost)">Đăng bài viết</button>
     </div>
   </form>
 </template>
@@ -143,7 +143,7 @@ import {
 import { CheckIcon, ChevronUpDownIcon } from "@heroicons/vue/20/solid";
 import { ref } from "vue";
 
-export default {
+export default (await import("vue")).defineComponent({
   components: {
     Listbox,
     ListboxLabel,
@@ -171,9 +171,11 @@ export default {
     user: Object,
     posts: Array,
     page: Object,
+    getNewPost: Function,
   },
   data() {
     return {
+      newPost: {},
       body: "",
       urlPost: null,
       is_private: false,
@@ -220,7 +222,7 @@ export default {
       formData.append("image", this.$refs.file.files[0]);
       formData.append("body", this.body);
 
-      if(this.user?.id){
+      if(!this.pageStore.pageId){
         formData.append("is_private", this.is_private);
         formData.append("only_me", this.only_me);
         axios
@@ -230,7 +232,7 @@ export default {
             },
           })
           .then((res) => {
-            // console.log("data", res.data);
+            this.$emit('getNewPost', res.data)
             this.body = "";
             this.$refs.file.value = null;
             this.is_private = false;
@@ -265,5 +267,5 @@ export default {
       }
     },
   },
-};
+});
 </script>

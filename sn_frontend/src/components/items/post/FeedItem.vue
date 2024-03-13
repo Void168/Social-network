@@ -2,38 +2,42 @@
   <div class="relative">
     <div class="mb-2 flex items-center justify-between">
       <div class="flex items-center space-x-6 p-4">
-        <img loading="lazy" :src="post.created_by.get_avatar" class="w-12 h-12 rounded-full" />
+        <img
+          loading="lazy"
+          :src="post?.created_by?.get_avatar"
+          class="w-12 h-12 rounded-full"
+        />
 
         <div class="flex gap-1 items-center flex-wrap">
           <strong class="group">
             <RouterLink
               :to="{
-                name: post.created_by.is_page ? 'page' : 'profile',
+                name: post?.created_by?.is_page ? 'page' : 'profile',
                 params: { id: post?.created_by?.id },
               }"
-              >{{ post.created_by.name }}</RouterLink
+              >{{ post?.created_by?.name }}</RouterLink
             >
             <TooltipProfileVue
-              :user="post.created_by"
+              :user="post?.created_by"
               class="hidden md:group-hover:block lg:left-[-150px] md:left-0"
             />
           </strong>
-          <div v-if="post.post_to" class="flex gap-1">
+          <div v-if="post?.post_to" class="flex gap-1">
             <p>cùng với</p>
             <strong class="group">
               <RouterLink
                 :to="{ name: 'profile', params: { id: post?.post_to?.id } }"
-                >{{ post.post_to.name }}</RouterLink
+                >{{ post?.post_to?.name }}</RouterLink
               >
               <TooltipProfileVue
-                :user="post.post_to"
+                :user="post?.post_to"
                 class="hidden md:group-hover:block lg:left-[-150px] md:left-0"
               />
             </strong>
           </div>
 
-          <span v-if="post.is_avatar_post" class="sm:text-base xs:text-sm">{{
-            post.created_by.is_page
+          <span v-if="post?.is_avatar_post" class="sm:text-base xs:text-sm">{{
+            post?.created_by?.is_page
               ? "đã thay đổi ảnh đại diện của họ"
               : "đã thay đổi ảnh đại diện"
           }}</span>
@@ -43,17 +47,17 @@
               <GlobeAsiaAustraliaIcon
                 class="w-5 h-5"
                 v-if="
-                  (post.is_private === false && post.only_me === false) ||
-                  post.created_by.is_page
+                  (post?.is_private === false && post?.only_me === false) ||
+                  post?.created_by?.is_page
                 "
               />
               <UserGroupIcon
                 class="w-5 h-5"
-                v-else-if="post.is_private && post.only_me"
+                v-else-if="post?.is_private && post?.only_me"
               />
               <LockClosedIcon
                 class="w-5 h-5"
-                v-else-if="post.is_private === true && post.only_me === true"
+                v-else-if="post?.is_private === true && post?.only_me === true"
               />
             </div>
             <PrivacySelector
@@ -68,7 +72,7 @@
               <p
                 class="text-gray-600 dark:text-neutral-200 sm:text-base xs:text-sm group-hover:underline"
               >
-                {{ post.created_at_formatted }} trước
+                {{ post?.created_at_formatted }} trước
               </p>
               <CreatedAtTooltip :post="post" />
             </div>
@@ -81,17 +85,17 @@
           <GlobeAsiaAustraliaIcon
             class="w-5 h-5"
             v-if="
-              (post.is_private === false && post.only_me === false) ||
-              post.created_by.is_page
+              (post?.is_private === false && post?.only_me === false) ||
+              post?.created_by?.is_page
             "
           />
           <UserGroupIcon
             class="w-5 h-5"
-            v-else-if="post.is_private === true && post.only_me === false"
+            v-else-if="post?.is_private === true && post?.only_me === false"
           />
           <LockClosedIcon
             class="w-5 h-5"
-            v-else-if="post.is_private === true && post.only_me === true"
+            v-else-if="post?.is_private === true && post?.only_me === true"
           />
         </div>
         <PrivacySelector
@@ -107,7 +111,7 @@
             <p
               class="text-gray-600 dark:text-neutral-200 md:block hidden group-hover:underline"
             >
-              {{ post.created_at_formatted }} trước
+              {{ post?.created_at_formatted }} trước
             </p>
           </RouterLink>
           <CreatedAtTooltip :post="post" />
@@ -121,33 +125,33 @@
       rows="5"
       v-model="post.body"
     ></textarea>
-    <p class="px-4 text-lg" v-else>{{ post.body }}</p>
+    <p class="px-4 text-lg" v-else>{{ post?.body }}</p>
 
     <ImagePostModal
       :show="isImagePostOpen"
       @closeModal="closeImagePostModal"
-      :imageId="post.id"
+      :imageId="post?.id"
       :post="post"
     />
     <div
-      v-if="post.attachments?.length && post.is_avatar_post"
+      v-if="post?.attachments?.length && post?.is_avatar_post"
       @click="openImagePostModal"
       class="mt-4 flex justify-center relative sm:h-[400px] xm:h-[350px] xs:h-[250px] cursor-pointer"
     >
       <div class="w-full">
         <img
-        loading="lazy"
-          :src="post.created_by.get_cover_image"
+          loading="lazy"
+          :src="post?.created_by?.get_cover_image"
           alt="cover_image"
           class="max-h-[300px] w-full rounded-none"
         />
       </div>
 
       <img
-      loading="lazy"
-        v-for="image in post.attachments"
-        v-bind:key="image.id"
-        :src="image.get_image"
+        loading="lazy"
+        v-for="image in post?.attachments"
+        v-bind:key="image?.id"
+        :src="image?.get_image"
         class="absolute top-5 mb-4 rounded-full md:w-96 md:h-96 xm:w-80 xm:h-80 xs:w-64 xs:h-64 shadow-md ring-8 ring-white dark:ring-slate-700"
         alt="avatar"
       />
@@ -155,10 +159,10 @@
 
     <div v-else class="mt-4 px-4 cursor-pointer" @click="openImagePostModal">
       <img
-      loading="lazy"
-        v-for="image in post.attachments"
-        v-bind:key="image.id"
-        :src="image.get_image"
+        loading="lazy"
+        v-for="image in post?.attachments"
+        v-bind:key="image?.id"
+        :src="image?.get_image"
         class="w-full mb-4 rounded-xl"
       />
     </div>
@@ -180,11 +184,11 @@
           />
           <HeartLike
             v-else
-            @click="likePost(post.id)"
+            @click="likePost(post?.id)"
             class="w-6 h-6 cursor-pointer text-gray-400 hover:text-rose-500 transition-colors duration-75"
           />
           <span class="text-gray-500 text-xs dark:text-neutral-200"
-            >{{ post.likes_count }} lượt thích</span
+            >{{ post?.likes_count }} lượt thích</span
           >
         </div>
 
@@ -206,8 +210,8 @@
 
           <RouterLink
             :to="{
-              name: post.created_by.is_page ? 'pagepostview' : 'postview',
-              params: { id: post.id },
+              name: post?.created_by?.is_page ? 'pagepostview' : 'postview',
+              params: { id: post?.id },
             }"
             class="text-gray-500 text-xs dark:text-neutral-200"
             >{{ post?.comments_count }} bình luận</RouterLink
@@ -251,8 +255,8 @@
               <div
                 class="py-1"
                 v-if="
-                  userStore.user.id === post.created_by.id ||
-                  pageStore.pageId === post.created_by.id
+                  userStore?.user.id === post?.created_by?.id ||
+                  pageStore?.pageId === post?.created_by?.id
                 "
               >
                 <MenuItem v-slot="{ active }" @click="openModal">
@@ -417,10 +421,10 @@ export default (await import("vue")).defineComponent({
       }
     },
     like() {
-      const is_like = this.post.likes
-        .map((like) => like.created_by)
-        .map((created_by) => created_by.id);
-      if (is_like.includes(this.userStore.user.id)) {
+      const is_like = this.post?.likes
+        ?.map((like) => like?.created_by)
+        .map((created_by) => created_by?.id);
+      if (is_like?.includes(this.userStore.user.id)) {
         this.isLike = true;
       }
     },

@@ -155,7 +155,7 @@
       <div
         class="p-4 bg-white border border-gray-200 dark:bg-slate-600 dark:border-slate-700 dark:text-neutral-200 rounded-lg"
       >
-        <PostForm v-bind:user="null" v-bind:posts="posts" />
+        <PostForm v-bind:user="null" v-bind:posts="posts" @getNewPost="getNewPost"/>
         <SkeletonLoadingPostVue v-if="isLoading" />
         <div v-else>
           <div
@@ -248,6 +248,7 @@ export default {
 
   data() {
     return {
+      newPost: {},
       posts: [],
       postsList: [],
       yourGroups: [],
@@ -285,6 +286,12 @@ export default {
         this.$router.push(`/profile/${this.userStore.user.id}`);
       }
     },
+    getNewPost(data){
+      if(data.id){
+        this.posts?.unshift(data)
+      }
+    },
+
     async getFeed() {
       this.isLoading = true;
       if (!this.pageStore?.pageId) {

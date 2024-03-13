@@ -21,7 +21,7 @@
           </div>
           <img
           loading="lazy"
-            :src="user.get_avatar"
+            :src="user?.get_avatar"
             alt=""
             class="mb-6 rounded-full w-44 h-44 shadow-xl absolute top-0"
           />
@@ -31,9 +31,9 @@
           />
 
           <p>
-            <strong class="text-2xl">{{ user.name }}</strong>
+            <strong class="text-2xl">{{ user?.name }}</strong>
           </p>
-          <p v-if="user.nickname" class="text-xl">({{ user.nickname }})</p>
+          <p v-if="user.nickname" class="text-xl">({{ user?.nickname }})</p>
           <p class="mt-6 font-semibold text-lg">{{ user.biography }}</p>
           <div class="mt-6 flex space-x-8">
             <ul class="flex flex-col space-y-4 text-lg">
@@ -159,7 +159,7 @@
           v-if="userStore.user.id === user.id"
           class="p-4 bg-white rounded-lg dark:bg-slate-600 dark:border-slate-700 dark:text-neutral-200"
         >
-          <PostForm v-bind:user="user" v-bind:posts="posts" />
+          <PostForm v-bind:user="user" v-bind:posts="posts" @getNewPost="getNewPost"/>
         </div>
         <div
           v-else-if="friends.map((fr) => fr.id).includes(userStore.user.id)"
@@ -241,7 +241,7 @@
             v-bind:key="post.id"
           >
           <!-- v-on:deletePost="deletePost" -->
-            <FeedItem v-bind:post="post"  />
+            <FeedItem v-bind:post="post" v-on:deletePost="deletePost"/>
           </div>
           <SkeletonLoadingPost
             v-show="!loadMore"
@@ -324,6 +324,7 @@ export default {
       pageStore
     };
   },
+  emits: ['getNewPost'],
   props: {
     user: Object,
     images: Array,
@@ -334,7 +335,9 @@ export default {
     partnerId: String,
     partner: Object,
     postsList: Array,
-    PostToShow: Number
+    PostToShow: Number,
+    getNewPost: Function,
+    deletePost: Function
   },
 
   data() {

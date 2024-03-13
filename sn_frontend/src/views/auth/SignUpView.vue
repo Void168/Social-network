@@ -1,28 +1,7 @@
 <template>
-  <div class="max-w-7xl mx-auto grid md:grid-cols-2 xs:grid-cols-1 gap-4" :style="{height: `${toastStore.height}px`}">
-    <div class="main-left md:flex xs:hidden justify-center items-center">
-      <div class="p-12 bg-white dark:bg-slate-600 border border-gray-200 dark:border-slate-500 dark:text-slate-200 rounded-lg">
-        <h1 class="mb-6 text-2xl">Đăng nhập</h1>
-        <p class="mb-6 text-gray-500 dark:text-slate-200">
-          Lorem ipsum dolor sit amet, consectetur adipisicing elit. Eaque
-          delectus voluptatum sed ipsam, omnis voluptates et tempore temporibus
-          hic harum veritatis eveniet, alias pariatur, at ad architecto cumque
-          inventore illo. Lorem ipsum dolor sit amet, consectetur adipisicing
-          elit. Beatae, nostrum harum facere necessitatibus esse dolorum! Cum
-          provident, tenetur ipsa minus quam eos voluptas nostrum assumenda
-          suscipit, dolor veritatis perspiciatis soluta.
-        </p>
-        <p class="font-bold">
-          Đã có tài khoản?
-          <RouterLink :to="{ name: 'login' }" class="underline"
-            >Bấm để đăng nhập</RouterLink
-          >
-        </p>
-      </div>
-    </div>
-
-    <div class="main-right flex justify-center items-center">
-      <div class="p-12 bg-white dark:bg-slate-600 dark:text-slate-200 border boder-gray-200 dark:border-slate-500 md:rounded-lg w-full md:h-[540px] h-full">
+  <div class="max-w-7xl mx-auto flex justify-center items-center lg:py-4" :style="{height: `${toastStore.height}px`}">
+    <div class="main-right lg:w-[60%] w-full h-full flex justify-center items-center dark:bg-[url('https://wallpapercave.com/wp/wp1912996.jpg')] bg-[url('https://media.istockphoto.com/photos/social-media-title-word-picture-id871280234?k=20&m=871280234&s=170667a&w=0&h=tENwfLyOFLpRr0HURw5MmYaFyMy89t-LrvGWdrOTUgU=')] bg-cover bg-center bg-no-repeat lg:rounded-lg">
+      <div class="md:p-12 p-4 dark:text-slate-200 text-black dark:border-slate-500 md:rounded-lg w-full h-full backdrop-blur-sm dark:bg-slate-900/60 bg-slate-900/20">
         <template v-if="errors.length > 0">
           <div
             class="bg-rose-400 text-white text-center rounded-lg px-6 py-3 mb-4"
@@ -30,51 +9,61 @@
             <p v-for="error in errors" v-bind:key="error">{{ error }}</p>
           </div>
         </template>
-        <form action="" class="space-y-6" v-on:submit.prevent="submitForm">
-          <div>
-            <label for="">Tên người dùng</label>
-            <input
-              v-model="form.name"
-              type="text"
-              placeholder="Họ và tên"
-              class="w-full mt-2 py-2 px-6 border border-gray-200 rounded-lg"
-            />
-          </div>
-          <div>
-            <label for="">E-mail</label>
-            <input
-              type="email"
-              v-model="form.email"
-              placeholder="E-mail của bạn"
-              class="w-full mt-2 py-2 px-6 border border-gray-200 rounded-lg"
-            />
-          </div>
-          <div>
-            <label for="">Mật khẩu</label>
-            <input
-              type="password"
-              v-model="form.password1"
-              placeholder="Mật khẩu của bạn"
-              class="w-full mt-2 py-2 px-6 border border-gray-200 rounded-lg"
-            />
-          </div>
-          <div>
-            <label for="">Nhập lại mật khẩu</label>
-            <input
-              type="password"
-              v-model="form.password2"
-              placeholder="Nhập lại mật khẩu"
-              class="w-full mt-2 py-2 px-6 border border-gray-200 rounded-lg"
-            />
-          </div>
-          <div class="flex items-center justify-center">
-            <button class="w-full btn">Đăng ký</button>
-          </div>
-          <p class="font-bold md:hidden xs:block">
+        <div class="md:flex-none flex md:justify-normal justify-center items-center flex-col space-y-4">
+          <h1 class="md:hidden font-bold text-3xl"> Đăng nhập</h1>
+          <form action="" class="space-y-6 w-full" v-on:submit.prevent="submitForm">
+            <div>
+              <label for="">Tên người dùng</label>
+              <input
+                v-model="form.name"
+                type="text"
+                placeholder="Họ và tên"
+                class="w-full mt-2 py-2 px-6 border border-gray-200 dark:bg-slate-600 rounded-lg dark:text-slate-200 text-black"
+              />
+            </div>
+            <div>
+              <label for="">E-mail</label>
+              <input
+                id="email-signup"
+                type="email"
+                v-model="form.email"
+                placeholder="E-mail của bạn"
+                class="w-full mt-2 py-2 px-6 border border-gray-200 dark:bg-slate-600 rounded-lg dark:text-slate-200 text-black"
+              />
+            </div>
+            <div>
+              <label for="">Mật khẩu</label>
+              <input
+                type="password"
+                v-model="form.password1"
+                placeholder="Mật khẩu của bạn"
+                class="w-full mt-2 py-2 px-6 border border-gray-200 dark:bg-slate-600 rounded-lg dark:text-slate-200 text-black"
+              />
+            </div>
+            <div>
+              <label for="">Nhập lại mật khẩu</label>
+              <input
+                type="password"
+                v-model="form.password2"
+                placeholder="Nhập lại mật khẩu"
+                class="w-full mt-2 py-2 px-6 border border-gray-200 dark:bg-slate-600 rounded-lg dark:text-slate-200 text-black"
+              />
+            </div>
+            <div class="flex items-center justify-center">
+              <button class="w-full btn">Đăng ký</button>
+            </div>
+            <p class="font-bold md:hidden xs:block">
+              Đã có tài khoản?
+              <a href="#" class="underline">Bấm để đăng nhập</a>
+            </p>
+          </form>
+          <p class="font-bold md:text-lg dark:text-neutral-200 md:block hidden">
             Đã có tài khoản?
-            <a href="#" class="underline">Bấm để đăng nhập</a>
+            <RouterLink :to="{ name: 'signup' }" class="underline"
+              >Bấm để đăng nhập</RouterLink
+            >
           </p>
-        </form>
+        </div>
       </div>
     </div>
   </div>

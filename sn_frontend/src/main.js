@@ -20,18 +20,20 @@ app.use(router, axios);
 const userStore = useUserStore();
 const pageStore = usePageStore();
 
-router.beforeEach((to, from) => {
-  if (to.path !== "/login" && !userStore.user.isAuthenticated) {
-    return "/login";
+router.beforeEach((to, from, next) => {
+  if (!userStore.user.isAuthenticated) {
+    if(to.path !== "/auth/login" && to.path !== "/auth/signup"){
+      next({ name: 'login' })
+    } else {
+      next ()
+    }
   }
 
-  if (to.path === "/login" && userStore.user.isAuthenticated) {
-    return "/";
+  else if (to.path === "/auth/login" && userStore.user.isAuthenticated || to.path === "/auth/signup" && userStore.user.isAuthenticated) {
+    next({ name: 'feed' })
   }
 
-  if (to.path === "/signup" && userStore.user.isAuthenticated) {
-    return "/";
-  }
+  else next()
 });
 
 app.mount("#app");

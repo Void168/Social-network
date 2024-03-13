@@ -12,7 +12,7 @@
           </div>
           <div
             class="menu-center flex sm:space-x-12 xm:space-x-5 xs:space-x-1"
-            v-if="userStore.user.isAuthenticated"
+            v-if="userStore.user.isAuthenticated && !path.includes('auth')"
           >
             <RouterLink to="/" class="group">
               <svg
@@ -214,7 +214,9 @@ export default {
   mounted() {
     window.addEventListener("resize", this.getDimensions);
     this.getDimensions();
-    this.pageStore.getPagesList(this.userStore.user.id);
+    if(this.userStore.user.id){
+      this.pageStore.getPagesList(this.userStore.user.id);
+    }
     this.pageStore.getActivePage();
   },
 

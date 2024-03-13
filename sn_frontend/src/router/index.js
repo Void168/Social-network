@@ -1,4 +1,5 @@
 import { createRouter, createWebHistory } from "vue-router";
+import AuthView from "../views/auth/AuthView.vue";
 import SignUpView from "../views/auth/SignUpView.vue";
 import LoginView from "../views/auth/LoginView.vue";
 import FeedView from "../views/FeedView.vue";
@@ -46,14 +47,23 @@ const router = createRouter({
   history: createWebHistory(),
   routes: [
     {
-      path: "/signup",
-      name: "signup",
-      component: SignUpView,
-    },
-    {
-      path: "/login",
-      name: "login",
-      component: LoginView,
+      path: "/auth",
+      name: "auth",
+      component: AuthView,
+      props: true,
+      redirect: {name: "login"},
+      children: [
+        {
+          path: "/auth/signup",
+          name: "signup",
+          component: SignUpView,
+        },
+        {
+          path: "/auth/login",
+          name: "login",
+          component: LoginView,
+        },
+      ]
     },
     {
       path: "/",

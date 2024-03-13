@@ -1,9 +1,9 @@
 <template>
   <div>
-    <template v-if="userStore.user.isAuthenticated && userStore.user.id">
+    <template v-if="userStore.user.isAuthenticated && userStore.user.id && !route.path.includes('auth')">
       <div class="flex flex-row items-center gap-3">
         <img
-        loading="lazy"
+          loading="lazy"
           :src="
             pageStore.pageActive.id
               ? pageStore.pageActive.get_avatar
@@ -27,7 +27,7 @@
               }}</span
             >
             <img
-            loading="lazy"
+              loading="lazy"
               :src="userStore.user.avatar"
               class="rounded-full w-8 h-8 sm:hidden xs:block"
               alt="avatar"
@@ -188,7 +188,7 @@
                   >
                     <div class="flex gap-3 items-center">
                       <img
-                      loading="lazy"
+                        loading="lazy"
                         :src="userStore.user.avatar"
                         alt="user-avatar"
                         class="w-10 h-10 rounded-full"
@@ -219,7 +219,7 @@
                   >
                     <div class="flex gap-3 items-center">
                       <img
-                      loading="lazy"
+                        loading="lazy"
                         :src="page.get_avatar"
                         alt="page-avatar"
                         class="w-10 h-10 rounded-full"
@@ -270,11 +270,15 @@
 
     <template v-else>
       <div class="flex justify-between items-center gap-3 py-[6px]">
-        <RouterLink to="/login"
-          ><button class="btn">Đăng nhập</button></RouterLink
+        <RouterLink :to="{ name: 'login' }"
+          ><button class="px-4 py-2 rounded-lg font-semibold">
+            Đăng nhập
+          </button></RouterLink
         >
-        <RouterLink to="/signup"
-          ><button class="bg-gray-300 btn">Đăng ký</button></RouterLink
+        <RouterLink :to="{ name: 'signup' }"
+          ><button class="px-4 py-2 rounded-lg font-semibold">
+            Đăng ký
+          </button></RouterLink
         >
       </div>
     </template>
@@ -396,8 +400,21 @@ export default {
     logout() {
       this.userStore.removeToken();
       this.pageStore.outPage();
-      this.$router.push("/login");
+      this.$router.push("/auth/login");
     },
   },
 };
 </script>
+
+<style scoped>
+.router-link-active {
+  --tw-text-opacity: 1;
+  --tw-shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1);
+  --tw-shadow-colored: 0 4px 6px -1px var(--tw-shadow-color),
+    0 2px 4px -2px var(--tw-shadow-color);
+  background-color: rgb(16 185 129);
+  border-radius: 0.5rem;
+  box-shadow: var(--tw-ring-offset-shadow, 0 0 #0000),
+    var(--tw-ring-shadow, 0 0 #0000), var(--tw-shadow);
+}
+</style>

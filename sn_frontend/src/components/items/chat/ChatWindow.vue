@@ -69,7 +69,11 @@
         class="flex p-4 gap-2 items-center hover:rounded-tl-lg cursor-pointer transition duration-[25ms]"
         :class="[selectedTheme?.hover]"
       >
-        <img loading="lazy" :src="friend.get_avatar" class="rounded-full h-10 w-10" />
+        <img
+          loading="lazy"
+          :src="friend.get_avatar"
+          class="rounded-full h-10 w-10"
+        />
         <span class="font-bold">{{ friend.name }}</span>
         <ChevronDownIcon class="w-6 h-6 rounded-full p-1" />
       </div>
@@ -97,13 +101,21 @@
       </div>
     </div>
     <div
+      id="chatwindow-container"
       ref="chatContainer"
       class="h-[346px] px-4 overflow-auto scrollbar-corner-slate-200 scrollbar-thin scrollbar-thumb-slate-400 scrollbar-track-slate-800 border-b border-gray-200 dark:bg-slate-600 dark:border-slate-700 dark:text-neutral-200"
+      @scroll="infinateScrollToTop"
     >
       <div class="flex flex-col flex-grow p-4">
         <div v-if="listMessages?.length > 0 && conversation">
+          <SkeletonLoadingContainer class="w-10 h-10" v-if="loadMore"/>
           <div
-            v-for="message in listMessages"
+            v-for="message in listMessages.slice(
+              listMessages?.length - 15 * stackPerListMessages >= 0
+                ? listMessages?.length - 15 * stackPerListMessages
+                : 0,
+              listMessages?.length
+            )"
             v-bind:key="message.id"
             :id="message.id"
           >
@@ -133,7 +145,7 @@
                   </span>
                 </p>
                 <img
-                loading="lazy"
+                  loading="lazy"
                   v-if="message.attachments.length > 0"
                   :src="message?.attachments[0]?.get_image"
                   :class="
@@ -167,13 +179,15 @@
             <div class="flex w-full mt-2 space-x-3 max-w-md" v-else>
               <div class="flex-shrink-0 h-10 w-10 rounded-full bg-gray-300">
                 <img
-                loading="lazy"
+                  loading="lazy"
                   :src="message.created_by.get_avatar"
                   alt=""
                   class="w-10 h-10 rounded-full"
                 />
               </div>
-              <div class="flex flex-col w-full space-x-3 items-start max-w-md ml-auto justify-end gap-2">
+              <div
+                class="flex flex-col w-full space-x-3 items-start max-w-md ml-auto justify-end gap-2"
+              >
                 <div
                   v-if="
                     listMessages?.filter(
@@ -181,7 +195,6 @@
                     )
                   "
                   v-bind:key="message.id"
-
                 >
                   <p
                     class="bg-gray-200 max-w-[200px] p-3 rounded-3xl dark:bg-slate-500 dark:border-slate-600 dark:text-neutral-200"
@@ -208,7 +221,7 @@
           class="bg-slate-200 dark:bg-slate-600 dark:border-slate-700 dark:text-neutral-200 flex flex-col justify-center items-center"
         >
           <img
-          loading="lazy"
+            loading="lazy"
             :src="friend.get_avatar"
             alt="non_conversation_avatar"
             class="w-16 h-16 rounded-full"
@@ -224,7 +237,7 @@
       class="flex relative items-center p-4 shadow-md rounded-b-md bg-slate-100 dark:bg-slate-700"
     >
       <img
-      loading="lazy"
+        loading="lazy"
         :src="url"
         class="w-20 h-20 rounded-lg border-[1px] border-slate-200 bg-slate-300 dark:border-slate-500 p-1"
       />
@@ -355,6 +368,7 @@ import "emoji-picker-element";
 
 import ConversationThemeModal from "../../modals/chat/ConversationThemeModal.vue";
 import DeleteConversationModal from "../../modals/chat/DeleteConversationModal.vue";
+import SkeletonLoadingContainer from "../../loadings/SkeletonLoadingContainer.vue";
 
 import { Popover, PopoverButton, PopoverPanel } from "@headlessui/vue";
 import { useUserStore } from "../../../stores/user";
@@ -379,6 +393,7 @@ export default (await import("vue")).defineComponent({
     FaceSmileIcon,
     ConversationThemeModal,
     DeleteConversationModal,
+    SkeletonLoadingContainer
   },
 
   setup() {
@@ -398,7 +413,6 @@ export default (await import("vue")).defineComponent({
   data() {
     return {
       conversation: {},
-      friendsChat: [],
       body: "",
       isOpen: true,
       isDeleteOpen: false,
@@ -406,6 +420,8 @@ export default (await import("vue")).defineComponent({
       isOpenSettings: false,
       isConversationThemeModalOpen: false,
       themes: themes,
+      loadMore: false,
+      stackPerListMessages: 1,
     };
   },
 
@@ -443,16 +459,20 @@ export default (await import("vue")).defineComponent({
   mounted() {
     document.addEventListener("click", this.clickOutside);
     this.getConversation();
+    window.addEventListener("scroll", this.infinateScrollToTop());
     // this.getPusher();
   },
-  
+
   beforeUnmount() {
     document.removeEventListener("click", this.clickOutside);
   },
-  
+
+  unmounted() {
+    window.removeEventListener("scroll", this.infinateScrollToTop());
+  },
+
   updated() {
-    this.scrollToBottom();
-    this.seenMessage()
+    this.seenMessage();
   },
 
   methods: {
@@ -471,13 +491,41 @@ export default (await import("vue")).defineComponent({
       const objDiv = this.$refs.chatContainer;
       objDiv.scrollTop = objDiv.scrollHeight;
     },
+    infinateScrollToTop() {
+        const objDiv = document.getElementById("chatwindow-container");
+        if(objDiv){
+
+          let height = objDiv?.scrollHeight;
+          this.formHeight -
+            this.headerHeight -
+            2 +
+            300 * (this.stackPerListMessages - 1);
+          let scrollY = objDiv.scrollTop;
+          // console.log(scrollY)
+          if (
+            height >= scrollY + height &&
+            this.listMessages?.length >= this.stackPerListMessages * 15
+          ) {
+            this.loadMore = true;
+            setTimeout(() => {
+              objDiv.scrollTop = 60;
+              this.stackPerListMessages++;
+            }, 1000);
+          } else {
+            this.loadMore = false;
+          }
+        }
+    },
     getConversation() {
       axios
         .get(`/api/chat/${this.friend?.id}/get-chat-window/`)
         .then((res) => {
           this.conversation = res.data.conversation;
           // console.log(this.conversation);
-          this.getPusher()
+          this.getPusher();
+        })
+        .then(() => {
+          this.scrollToBottom();
         })
         .catch((error) => console.log(error));
     },
@@ -489,7 +537,7 @@ export default (await import("vue")).defineComponent({
             // console.log(res.data);
           })
           .catch((error) => console.log(error));
-      }, 2000)
+      }, 2000);
     },
     Pick() {
       document

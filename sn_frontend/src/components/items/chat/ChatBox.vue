@@ -9,7 +9,7 @@
         >
           <div class="flex items-center gap-2">
             <img
-            loading="lazy"
+              loading="lazy"
               :src="receivedUser.get_avatar"
               alt=""
               class="w-10 h-10 rounded-full"
@@ -28,13 +28,20 @@
         :style="{
           height: `${toastStore.height - formHeight - headerHeight - 2}px`,
         }"
+        @scroll="infinateScrollToTop"
       >
         <div
           class="flex flex-col flex-grow p-4 overflow-y-auto overflow-x-hidden"
         >
           <div v-if="listMessages?.length > 0">
+            <SkeletonLoadingContainer v-if="loadMore" />
             <div
-              v-for="message in listMessages"
+              v-for="message in listMessages.slice(
+                listMessages?.length - 15 * stackPerListMessages >= 0
+                  ? listMessages?.length - 15 * stackPerListMessages
+                  : 0,
+                listMessages?.length
+              )"
               v-bind:key="message.id"
               :id="message.id"
             >
@@ -76,7 +83,7 @@
                         </p>
                       </div>
                       <img
-                      loading="lazy"
+                        loading="lazy"
                         v-if="message.attachments.length > 0"
                         :src="message?.attachments[0]?.get_image"
                         :class="
@@ -89,7 +96,7 @@
                   </div>
                   <div class="flex-shrink-0 h-10 w-10 rounded-full bg-gray-300">
                     <img
-                    loading="lazy"
+                      loading="lazy"
                       :src="message?.created_by?.get_avatar"
                       alt=""
                       class="w-10 h-10 rounded-full"
@@ -123,7 +130,7 @@
               <div class="flex gap-2" v-else>
                 <div class="flex-shrink-0 h-10 w-10 rounded-full bg-gray-300">
                   <img
-                  loading="lazy"
+                    loading="lazy"
                     :src="message?.created_by?.get_avatar"
                     alt=""
                     class="w-10 h-10 rounded-full"
@@ -178,7 +185,7 @@
           class="flex absolute bottom-0 w-full items-center p-4 shadow-md rounded-b-md bg-slate-100 dark:bg-slate-700"
         >
           <img
-          loading="lazy"
+            loading="lazy"
             :src="url"
             class="w-20 h-20 rounded-lg border-[1px] border-slate-200 bg-slate-300 dark:border-slate-500 p-1"
           />
@@ -243,9 +250,16 @@
           <PlusIcon
             @click="expandOptions"
             class="w-8 p-1 rounded-full bg-slate-700 dark:hover:bg-slate-800"
-            :class="expand ? '-rotate-90 transition duration-100' : '-rotate-0 transition duration-100'"
+            :class="
+              expand
+                ? '-rotate-90 transition duration-100'
+                : '-rotate-0 transition duration-100'
+            "
           />
-          <div class="flex flex-col absolute top-[-100px] bg-slate-800 rounded-2xl" v-if="expand">
+          <div
+            class="flex flex-col absolute top-[-100px] bg-slate-800 rounded-2xl"
+            v-if="expand"
+          >
             <PlusCircleIcon
               class="w-8 h-8 cursor-pointer rounded-full hover:bg-slate-300 dark:hover:bg-slate-700 transition p-1"
               :class="[selectedTheme?.iconColor]"
@@ -333,6 +347,7 @@ import { useUserStore } from "../../../stores/user";
 // import { useConnectionStore } from "../../../stores/connection";
 import { useToastStore } from "../../../stores/toast";
 import { RouterLink } from "vue-router";
+import SkeletonLoadingContainer from "../../loadings/SkeletonLoadingContainer.vue";
 
 import { Popover, PopoverButton, PopoverPanel } from "@headlessui/vue";
 import "emoji-picker-element";
@@ -372,7 +387,9 @@ export default (await import("vue")).defineComponent({
       themes: themes,
       formHeight: null,
       headerHeight: null,
-      expand: false
+      expand: false,
+      loadMore: false,
+      stackPerListMessages: 1,
     };
   },
   computed: {
@@ -399,15 +416,19 @@ export default (await import("vue")).defineComponent({
       immediate: true,
     },
   },
+
   mounted() {
+    window.addEventListener("scroll", this.infinateScrollToTop());
     this.getMessages();
     this.getPusher();
     this.formHeight = this.$refs.formInput.clientHeight;
     this.headerHeight = this.$refs.header.clientHeight;
   },
-  updated() {
-    this.scrollToBottom();
+
+  unmounted() {
+    window.removeEventListener("scroll", this.infinateScrollToTop());
   },
+
   methods: {
     getPusher() {
       Pusher.logToConsole = false;
@@ -423,7 +444,7 @@ export default (await import("vue")).defineComponent({
       channel.bind("message:new", (data) => {
         this.listMessages.push(JSON.parse(data.message));
       });
-      
+
       // channel.bind("pusher:subscription_succeeded", function () {
       //   console.log("Auth went OK!");
       // });
@@ -447,25 +468,48 @@ export default (await import("vue")).defineComponent({
       const objDiv = document.getElementById("chatview-container");
       objDiv.scrollTop = objDiv.scrollHeight;
     },
+    infinateScrollToTop() {
+      const objDiv = document.getElementById("chatview-container");
+      let height = objDiv?.scrollHeight;
+      this.formHeight -
+        this.headerHeight -
+        2 +
+        300 * (this.stackPerListMessages - 1);
+      let scrollY = objDiv.scrollTop;
+      if (
+        height >= scrollY + height && this.listMessages?.length >= this.stackPerListMessages * 15
+      ) {
+        this.loadMore = true;
+        setTimeout(() => {
+          objDiv.scrollTop = 150;
+          this.stackPerListMessages++;
+        }, 1000);
+      } else {
+        this.loadMore = false;
+      }
+    },
     async getMessages() {
-        await axios
-          .get(`/api/chat/${this.$route.params.id}/`)
-          .then((res) => {
-            this.recentConversation = res.data;
-            let users = [];
-            for (let i = 0; i < this.recentConversation.users.length; i++) {
-              users.push(this.recentConversation.users[i]);
-            }
-            const filteredUser = users
-              ?.map((user) => user.id)
-              .filter((id) => id !== this.userStore.user.id);
-            this.receivedUser = users.filter(
-              (user) => user.id === filteredUser[0]
-            )[0];
-          })
-          .catch((error) => {
-            console.log(error);
-          });
+      await axios
+        .get(`/api/chat/${this.$route.params.id}/`)
+        .then((res) => {
+          this.recentConversation = res.data;
+          let users = [];
+          for (let i = 0; i < this.recentConversation.users.length; i++) {
+            users.push(this.recentConversation.users[i]);
+          }
+          const filteredUser = users
+            ?.map((user) => user.id)
+            .filter((id) => id !== this.userStore.user.id);
+          this.receivedUser = users.filter(
+            (user) => user.id === filteredUser[0]
+          )[0];
+        })
+        .then(() => {
+          this.scrollToBottom();
+        })
+        .catch((error) => {
+          console.log(error);
+        });
     },
 
     Pick() {
@@ -478,8 +522,8 @@ export default (await import("vue")).defineComponent({
         });
     },
 
-    expandOptions(){
-      this.expand = !this.expand
+    expandOptions() {
+      this.expand = !this.expand;
     },
 
     onFileChange(e) {
@@ -527,6 +571,7 @@ export default (await import("vue")).defineComponent({
     GifIcon,
     PaperAirplaneIcon,
     PlusIcon,
+    SkeletonLoadingContainer,
   },
 });
 </script>

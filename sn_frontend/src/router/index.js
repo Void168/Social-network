@@ -42,6 +42,7 @@ import EditPageView from "../views/page/EditPageView.vue";
 import PageUsersView from "../views/page/PageUsersView.vue";
 import PageAboutView from "../views/page/PageAboutView.vue"
 import PageImageView from "../views/page/PageImageView.vue"
+import NotFoundView from "../views/NotFoundView.vue"
 
 const router = createRouter({
   history: createWebHistory(),
@@ -278,6 +279,11 @@ const router = createRouter({
       name: "postview",
       component: PostView,
     },
+    {
+      name: 'NotFound',
+      path: '/:pathMatch(.*)*',
+      component: NotFoundView
+    }
   ],
 });
 

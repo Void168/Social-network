@@ -16,7 +16,7 @@ from notification.utils import create_notification
 
 from .forms import PostForm, AttachmentForm, PageAttachmentForm, PagePostForm, MemberAttachmentForm, GroupPostForm, SharePostForm
 from .models import Post, Comment, Like, Trend, PagePost, PageComment, PageLike, GroupPost, MemberLike, MemberComment, GroupPostPoll, PollOption, SharePost
-from .serializers import PostSerializer, PostDetailSerializer, CommentSerializer, TrendSerializer, LikeSerializer, PagePostSerializer, PageLikeSerializer, PageCommentSerializer, PagePostDetailSerializer, GroupPostSerializer, MemberLikeSerializer, MemberCommentSerializer, AnonymousGroupPostSerializer, GroupPostPollSerializer, AnonymousGroupPostPollSerializer, PollOptionSerializer, SharePostSerializer
+from .serializers import PostSerializer, PostDetailSerializer, CommentSerializer, TrendSerializer, LikeSerializer, PagePostSerializer, PageLikeSerializer, PageCommentSerializer, PagePostDetailSerializer, GroupPostSerializer, MemberLikeSerializer, MemberCommentSerializer, AnonymousGroupPostSerializer, GroupPostPollSerializer, AnonymousGroupPostPollSerializer, PollOptionSerializer, SharePostSerializer, SharePostDetailSerializer
 from notification.serializers import NotificationSerializer, NotificationForPageSerializer
 
 # Create your views here.
@@ -95,12 +95,19 @@ def post_detail(request, pk):
         
     for user in User.objects.all():
         user_ids.append(user.id)
-        
-    post= Post.objects.filter(Q(created_by__in=list(user_ids)) | Q(is_private=False) & Q(only_me=False)).get(pk=pk)
     
-    return JsonResponse({
-        'post': PostDetailSerializer(post).data
-    })
+    try:
+        post = Post.objects.filter(Q(created_by__in=list(user_ids)) | Q(is_private=False) & Q(only_me=False)).get(pk=pk)
+        
+        return JsonResponse({
+            'post': PostDetailSerializer(post).data
+        })
+    except Post.DoesNotExist:
+        post = SharePost.objects.filter(Q(created_by__in=list(user_ids)) | Q(is_private=False) & Q(only_me=False)).get(pk=pk)
+        
+        return JsonResponse({
+            'post': SharePostDetailSerializer(post).data
+        })
     
 @api_view(['GET'])
 def page_post_detail(request, pk):

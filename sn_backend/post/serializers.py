@@ -135,6 +135,18 @@ class PostDetailSerializer(serializers.ModelSerializer):
         model = Post
         fields = ('id', 'body', 'likes_count', 'likes','comments_count', 'created_by','is_private','only_me', 'created_at_formatted','comments','attachments','page_likes','page_comments',)
         
+class SharePostDetailSerializer(serializers.ModelSerializer):
+    created_by = UserSerializer(read_only=True)
+    comments = CommentSerializer(read_only=True, many=True)
+    likes = LikeSerializer(read_only=True, many=True)
+    attachments = PostAttachmentSerializer(read_only=True, many=True)
+    page_likes = PageLikeSerializer(read_only=True, many=True)
+    page_comments = PageCommentSerializer(read_only=True, many=True)
+    post = PostLessSerializer(read_only=True)
+    class Meta:
+        model = Post
+        fields = ('id', 'body', 'post', 'likes_count', 'likes','comments_count', 'created_by','is_private','only_me', 'created_at_formatted','comments','attachments','page_likes','page_comments', 'post_to',)
+        
 class PagePostDetailSerializer(serializers.ModelSerializer):
     created_by = PageSerializer(read_only=True)
     comments = PageCommentSerializer(read_only=True, many=True)

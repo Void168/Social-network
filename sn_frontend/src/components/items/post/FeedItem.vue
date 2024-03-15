@@ -169,7 +169,7 @@
 
     <div
     v-if="post.post"
-      class="mx-4 border dark:border-slate-600 rounded-lg p-4 dark:text-neutral-200 space-y-2"
+      class="mx-4 border dark:border-slate-500 rounded-lg p-4 dark:text-neutral-200 space-y-2"
     >
       <div class="flex gap-2 items-center">
         <img :src="post.post.created_by.get_avatar" class="w-8 h-8 rounded-full" />
@@ -197,7 +197,7 @@
         </div>
       </div>
       <h5>
-        {{ post.body }}
+        {{ post.post.body }}
       </h5>
       <div v-if="post.attachments.length">
         <img :src="post.attachments[0].get_image" />

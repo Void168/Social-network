@@ -167,6 +167,43 @@
       />
     </div>
 
+    <div
+    v-if="post.post"
+      class="mx-4 border dark:border-slate-600 rounded-lg p-4 dark:text-neutral-200 space-y-2"
+    >
+      <div class="flex gap-2 items-center">
+        <img :src="post.post.created_by.get_avatar" class="w-8 h-8 rounded-full" />
+        <div>
+          <h5 class="font-semibold text-sm">
+            {{ post.post.created_by.name }}
+          </h5>
+          <div
+            class="dark:text-neutral-300 text-xs text-neutral-400 flex items-center gap-1"
+          >
+            <p>{{ post.post.created_at_formatted }} &middot;</p>
+            <GlobeAsiaAustraliaIcon
+              v-if="!post.post.only_me && !post.post.is_private"
+              class="w-4 h-4"
+            />
+            <UserGroupIcon
+              v-else-if="!post.post.only_me && post.post.is_private"
+              class="w-4 h-4"
+            />
+            <LockClosedIcon
+              v-else-if="post.post.only_me && post.post.is_private"
+              class="w-4 h-4"
+            />
+          </div>
+        </div>
+      </div>
+      <h5>
+        {{ post.body }}
+      </h5>
+      <div v-if="post.attachments.length">
+        <img :src="post.attachments[0].get_image" />
+      </div>
+    </div>
+
     <div class="p-4 my-6 flex justify-between" v-if="!isAdjust">
       <div class="flex space-x-6">
         <div class="flex items-center space-x-2">
@@ -204,10 +241,17 @@
             >{{ post?.comments_count }} bình luận</RouterLink
           >
         </div>
-        <div class="flex items-center space-x-2 cursor-pointer" @click="openShareModal">
+        <div
+          class="flex items-center space-x-2 cursor-pointer"
+          @click="openShareModal"
+        >
           <ShareIcon class="w-6 h-6" />
           <h5 class="text-gray-500 text-xs dark:text-neutral-200">Chia sẻ</h5>
-          <SharePostModal :show="isShareOpen" @closeShareModal="closeShareModal" :post="post"/>
+          <SharePostModal
+            :show="isShareOpen"
+            @closeShareModal="closeShareModal"
+            :post="post"
+          />
         </div>
       </div>
       <div class="absolute right-4 shadow-lg rounded-lg ease-in duration-300">

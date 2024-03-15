@@ -140,11 +140,11 @@
                     <img :src="post.attachments[0].get_image" />
                   </div>
                 </div>
-                <div class="mt-4 flex justify-end gap-3">
+                <div class="mt-4" @click="$emit('closeShareModal')">
                   <button
                     type="button"
                     class="btn inline-flex justify-center rounded-md border border-transparent bg-emerald-400 text-white px-4 py-2 text-sm font-medium hover:bg-emerald-600 focus:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 focus-visible:ring-offset-2 w-full"
-                    @click="$emit('sharePost')"
+                    @click="sharePost"
                   >
                     Chia sẻ
                   </button>
@@ -159,6 +159,7 @@
 </template>
 
 <script>
+import axios from "axios";
 import {
   TransitionRoot,
   TransitionChild,
@@ -173,7 +174,9 @@ import {
   LockClosedIcon,
 } from "@heroicons/vue/24/outline";
 import { useUserStore } from "../../../stores/user";
+import { useToastStore } from "../../../stores/toast";
 import PrivacySelector from "../../dropdown/PrivacySelector.vue";
+
 
 export default (await import("vue")).defineComponent({
   components: {
@@ -190,9 +193,11 @@ export default (await import("vue")).defineComponent({
   },
   setup() {
     const userStore = useUserStore();
+    const toastStore = useToastStore()
 
     return {
       userStore,
+      toastStore
     };
   },
   props: {
@@ -238,6 +243,36 @@ export default (await import("vue")).defineComponent({
 
     removeImage() {
       this.urlPost = null;
+    },
+    sharePost() {
+      let formData = new FormData();
+
+      formData.append("body", this.body);
+      formData.append("is_private", this.is_private);
+      formData.append("only_me", this.only_me);
+
+      axios
+        .post(`/api/posts/create/${this.post.id}/share/`, formData, {
+          headers: {
+            "Content-Type": "multipart/form-data",
+          },
+        })
+        .then((res) => {
+          console.log(res.data);
+          this.toastStore.showToast(
+            3500,
+            "Đã chia sẻ bài viết",
+            "bg-emerald-500 text-white"
+          );
+        })
+        .catch((error) => {
+          console.log(error);
+          this.toastStore.showToast(
+            3500,
+            "Chia sẻ bài viết thất bại",
+            "bg-emerald-500 text-white"
+          );
+        });
     },
   },
 });

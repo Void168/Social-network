@@ -303,9 +303,9 @@ export default (await import("vue")).defineComponent({
     },
     like() {
       const is_like = this.post.likes
-        .map((like) => like.created_by)
+        ?.map((like) => like.created_by)
         .map((created_by) => created_by.id);
-      if (is_like.includes(this.userStore.user.id)) {
+      if (is_like?.includes(this.userStore.user.id)) {
         this.isLike = true;
       }
       // console.log(this.post);

@@ -43,6 +43,7 @@ urlpatterns = [
     path('group/poll/<uuid:pk>/delete/', api.delete_poll, name='delete_poll'),
     path('page/<uuid:pk>/create/', api.page_post_create, name='page_post_create'),
     path('created-to/<uuid:id>/', api.post_created_to, name='post_created_to'),
+    path('create/<uuid:id>/share/', api.create_share_post, name='create_share_post'),
     path('trends/', api.get_trends, name='get_trends'),
     path('posts-trend-list/',api.posts_trend_list, name='posts_trend_list'),
 ]

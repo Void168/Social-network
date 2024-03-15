@@ -1,11 +1,16 @@
 from django.forms import ModelForm
 
-from .models import Post, PostAttachment, PagePost, PagePostAttachment, MemberPostAttachment, GroupPost, GroupPostPoll
+from .models import Post, PostAttachment, PagePost, PagePostAttachment, MemberPostAttachment, GroupPost, GroupPostPoll, SharePost
 
 class PostForm(ModelForm):
     class Meta:
         model = Post
         fields = ('body','is_private','only_me','is_avatar_post',)
+        
+class SharePostForm(ModelForm):
+    class Meta:
+        model = SharePost
+        fields = ('body','is_private','only_me',)
 
 class PagePostForm(ModelForm):
     class Meta:

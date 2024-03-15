@@ -298,7 +298,8 @@ export default {
         await axios
           .get("/api/posts/")
           .then((res) => {
-            this.postsList = res.data.posts.concat(res.data.page_posts);
+            this.postsList = res.data.posts.concat(res.data.page_posts, res.data.share_posts);
+            // console.log(res.data)
             this.postsList.sort(
               (a, b) => new Date(b.created_at) - new Date(a.created_at)
             );

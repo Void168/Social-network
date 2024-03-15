@@ -3,7 +3,7 @@ from rest_framework import serializers
 from account.serializers import UserSerializer, UserLessSerializer
 from page.serializers import PageSerializer
 from group.serializers import MemberSerializer, GroupSerializer
-from .models import Post, PostAttachment, Comment, Trend, Like, PageLike, PageComment, MemberComment, MemberLike, GroupPost, PagePost, PollOption, GroupPostPoll
+from .models import Post, PostAttachment, Comment, Trend, Like, PageLike, PageComment, MemberComment, MemberLike, GroupPost, PagePost, PollOption, GroupPostPoll, SharePost
 
 class PostAttachmentSerializer(serializers.ModelSerializer):
     class Meta:
@@ -63,7 +63,24 @@ class PostSerializer(serializers.ModelSerializer):
     page_comments = PageCommentSerializer(read_only=True, many=True)
     class Meta:
         model = Post
-        fields = ('id', 'body','is_avatar_post', 'is_private','only_me', 'likes_count', 'comments_count', 'comments', 'created_by', 'created_at_formatted', 'created_at', 'attachments','likes', 'post_to','page_likes','page_comments')   
+        fields = ('id', 'body','is_avatar_post', 'is_private','only_me', 'likes_count', 'comments_count', 'comments', 'created_by', 'created_at_formatted', 'created_at', 'attachments','likes', 'post_to','page_likes','page_comments') 
+
+class PostLessSerializer(serializers.ModelSerializer):
+    created_by = UserLessSerializer(read_only=True)
+    attachments = PostAttachmentSerializer(read_only=True, many=True)
+    post_to = UserLessSerializer(read_only=True)
+    class Meta:
+        model = Post
+        fields = ('id', 'body', 'is_private','only_me', 'created_by', 'created_at_formatted', 'created_at', 'attachments', 'post_to',) 
+
+class SharePostSerializer(serializers.ModelSerializer):
+    created_by = UserLessSerializer(read_only=True)
+    attachments = PostAttachmentSerializer(read_only=True, many=True)
+    post_to = UserLessSerializer(read_only=True)
+    post = PostLessSerializer(read_only=True)
+    class Meta:
+        model = Post
+        fields = ('id', 'body', 'post', 'is_private','only_me', 'created_by', 'likes_count', 'comments_count', 'created_at_formatted', 'created_at', 'attachments', 'post_to',)
 
 class PagePostSerializer(serializers.ModelSerializer):
     created_by = PageSerializer(read_only=True)

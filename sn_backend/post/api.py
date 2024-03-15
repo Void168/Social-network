@@ -14,9 +14,9 @@ from account.serializers import UserSerializer, FriendshipRequest
 from notification.models import NotificationForPage
 from notification.utils import create_notification
 
-from .forms import PostForm, AttachmentForm, PageAttachmentForm, PagePostForm, MemberAttachmentForm, GroupPostForm
-from .models import Post, Comment, Like, Trend, PagePost, PageComment, PageLike, GroupPost, MemberLike, MemberComment, GroupPostPoll, PollOption
-from .serializers import PostSerializer, PostDetailSerializer, CommentSerializer, TrendSerializer, LikeSerializer, PagePostSerializer, PageLikeSerializer, PageCommentSerializer, PagePostDetailSerializer, GroupPostSerializer, MemberLikeSerializer, MemberCommentSerializer, AnonymousGroupPostSerializer, GroupPostPollSerializer, AnonymousGroupPostPollSerializer, PollOptionSerializer
+from .forms import PostForm, AttachmentForm, PageAttachmentForm, PagePostForm, MemberAttachmentForm, GroupPostForm, SharePostForm
+from .models import Post, Comment, Like, Trend, PagePost, PageComment, PageLike, GroupPost, MemberLike, MemberComment, GroupPostPoll, PollOption, SharePost
+from .serializers import PostSerializer, PostDetailSerializer, CommentSerializer, TrendSerializer, LikeSerializer, PagePostSerializer, PageLikeSerializer, PageCommentSerializer, PagePostDetailSerializer, GroupPostSerializer, MemberLikeSerializer, MemberCommentSerializer, AnonymousGroupPostSerializer, GroupPostPollSerializer, AnonymousGroupPostPollSerializer, PollOptionSerializer, SharePostSerializer
 from notification.serializers import NotificationSerializer, NotificationForPageSerializer
 
 # Create your views here.
@@ -33,13 +33,16 @@ def post_list(request):
             
     posts = Post.objects.filter(Q(created_by__in=list(user_ids), only_me=False) | Q(created_by__in=list(following), only_me=False) | Q(post_to__in=list(friends), only_me=False))
     page_posts = PagePost.objects.filter(Q(created_by__in=list(pages)))
+    share_posts = SharePost.objects.filter(Q(created_by__in=list(user_ids), only_me=False) | Q(created_by__in=list(following), only_me=False) | Q(post_to__in=list(friends), only_me=False))
     
     post_serializer = PostSerializer(posts, many=True)
     page_posts_serializer = PagePostSerializer(page_posts, many=True)
+    share_posts_serializer = SharePostSerializer(share_posts, many=True)
     
     return JsonResponse({
             'posts':post_serializer.data,
             'page_posts': page_posts_serializer.data,
+            'share_posts': share_posts_serializer.data,
          }, safe=False)
 
 @api_view(['GET'])
@@ -122,21 +125,26 @@ def group_post_detail(request, pk):
 def post_list_profile(request, id):      
     user = User.objects.get(pk=id)
     posts = Post.objects.filter(created_by_id=id)
+    share_posts = SharePost.objects.filter(created_by_id=id)
     receivedPosts = Post.objects.filter(post_to=id)
 
     if not request.user in user.friends.all():
         posts = posts.filter(Q(is_private=False) & Q(only_me=False))
+        share_posts = share_posts.filter(Q(is_private=False) & Q(only_me=False))
     
     if request.user in user.friends.all():
         posts = posts.filter(only_me=False)
+        share_posts = share_posts.filter(Q(only_me=False))
         
     if request.user == user:
         posts = Post.objects.filter(created_by_id=id)
+        share_posts = share_posts.filter(created_by_id=id)
     
     allPosts = posts | receivedPosts
     allPosts.order_by('-created_at')
         
     posts_serializer = PostSerializer(allPosts, many=True)
+    share_posts_serializer = SharePostSerializer(share_posts, many=True)
     user_serializer = UserSerializer(user)
 
     can_send_friendship_request = True
@@ -158,6 +166,7 @@ def post_list_profile(request, id):
 
     return JsonResponse({
         'posts': posts_serializer.data,
+        'share_posts': share_posts_serializer.data,
         'user': user_serializer.data,
         'can_send_friendship_request': can_send_friendship_request
     }, safe=False)
@@ -335,6 +344,37 @@ def post_created_to(request, id):
         user.save()
 
         serializer = PostSerializer(post)
+
+        return JsonResponse(serializer.data, safe=False)
+    else:
+        return JsonResponse({'error': 'add something here later!...'})
+    
+@api_view(['POST'])
+def create_share_post(request, id):
+    post = Post.objects.get(pk=id)
+    form = SharePostForm(request.POST)
+    attachment = None
+    attachment_form = AttachmentForm(request.POST, request.FILES)
+
+    if attachment_form.is_valid():
+        attachment = attachment_form.save(commit=False)
+        attachment.created_by = request.user
+        attachment.save()
+
+    if form.is_valid():
+        share_post = form.save(commit=False)
+        share_post.created_by = request.user
+        share_post.post = post
+        share_post.save()
+
+        if attachment:
+            share_post.attachments.add(attachment)
+
+        user = request.user
+        user.posts_count = user.posts_count + 1
+        user.save()
+
+        serializer = SharePostSerializer(share_post)
 
         return JsonResponse(serializer.data, safe=False)
     else:

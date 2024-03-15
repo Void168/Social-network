@@ -26,7 +26,9 @@
       class="bg-white dark:bg-slate-600 p-4 dark:text-neutral-200 w-full rounded-lg mt-4"
     >
       <p class="text-xl font-bold">Ảnh</p>
-      <div class="grid lg:grid-cols-6 md:grid-cols-4 grid-cols-2 gap-3 my-4 max-h-96">
+      <div
+        class="grid lg:grid-cols-6 md:grid-cols-4 grid-cols-2 gap-3 my-4 max-h-96"
+      >
         <div v-for="image in images.slice(0, 12)" v-bind:key="image.id">
           <ImageShowcase v-bind:post="image" />
         </div>
@@ -77,17 +79,23 @@
       class="bg-white dark:bg-slate-600 p-4 dark:text-neutral-200 w-full rounded-lg mt-4"
     >
       <p class="text-xl font-bold">Phim</p>
-      <div class="max-h-96 min-h-[192px] flex justify-center items-center" v-if="!following.length">
+      <div
+        class="max-h-96 min-h-[192px] flex justify-center items-center"
+        v-if="!following.length"
+      >
         <h2 class="text-2xl font-semibold">
           {{ user.name }} chưa thích bộ phim nào
         </h2>
       </div>
-      <div class="grid lg:grid-cols-6 md:grid-cols-4 grid-cols-2 gap-3 my-4 max-h-96" v-else>
-        <div
-          v-for="movie in moviePage"
-          v-bind:key="movie.id"
-        >
-          <RouterLink :to="{name: 'page', params: {id: movie.id }}" class="relative group">
+      <div
+        class="grid lg:grid-cols-6 md:grid-cols-4 grid-cols-2 gap-3 my-4 max-h-96"
+        v-else
+      >
+        <div v-for="movie in moviePage" v-bind:key="movie.id">
+          <RouterLink
+            :to="{ name: 'page', params: { id: movie.id } }"
+            class="relative group"
+          >
             <button
               class="absolute z-10 group-hover:bg-white/20 w-full h-full cursor-pointer rounded-md transition"
               v-on:click="openModal"
@@ -130,22 +138,26 @@
         class="max-h-96 min-h-[192px] flex justify-center items-center"
         v-if="!following.length"
       >
-        <h2 class="text-2xl font-semibold">
-          Không có gì trong mục đã thích
-        </h2>
+        <h2 class="text-2xl font-semibold">Không có gì trong mục đã thích</h2>
       </div>
-      <div class="grid lg:grid-cols-6 md:grid-cols-4 grid-cols-2 gap-3 my-4 max-h-96" v-else>
+      <div
+        class="grid lg:grid-cols-6 md:grid-cols-4 grid-cols-2 gap-3 my-4 max-h-96"
+        v-else
+      >
         <div
           v-for="followingPage in followingPages.slice(0, 6)"
           v-bind:key="followingPage.id"
         >
-          <RouterLink :to="{name: 'page', params: {id: followingPage.id }}" class="relative group">
+          <RouterLink
+            :to="{ name: 'page', params: { id: followingPage.id } }"
+            class="relative group"
+          >
             <button
               class="absolute z-10 group-hover:bg-white/20 w-full h-full cursor-pointer rounded-md transition"
               v-on:click="openModal"
             ></button>
             <img
-            loading="lazy"
+              loading="lazy"
               :src="followingPage.get_avatar"
               :class="
                 route.name !== 'profile'
@@ -244,9 +256,9 @@ export default {
   },
 
   computed: {
-    moviePage(){
-      return this.followingPages.filter((fp) => fp.page_type === 'Phim ảnh')
-    }
+    moviePage() {
+      return this.followingPages.filter((fp) => fp.page_type === "Phim ảnh");
+    },
   },
 
   beforeMount() {
@@ -259,7 +271,7 @@ export default {
     this.getImages();
     this.getRelationship();
     this.getFriendsShowCase();
-    this.getFollowing()
+    this.getFollowing();
   },
 
   watch: {
@@ -286,9 +298,9 @@ export default {
           console.log(error);
         });
     },
-    getNewPost(data){
-      if(data.id){
-        this.posts?.unshift(data)
+    getNewPost(data) {
+      if (data.id) {
+        this.posts?.unshift(data);
         // console.log(data)
       }
     },
@@ -349,13 +361,15 @@ export default {
           .get(`/api/posts/profile/${this.$route.params.id}/`)
           .then((res) => {
             // console.log(res.data);
-            this.postsList = res.data.posts;
             this.user = res.data.user;
             this.can_send_friendship_request =
               res.data.can_send_friendship_request;
-            this.posts = res.data.posts.slice(0, this.PostToShow);
+            this.postsList = res.data.posts.concat(res.data.share_posts);
+            this.postsList.sort(
+              (a, b) => new Date(b.created_at) - new Date(a.created_at)
+            );
+            this.posts = this.postsList;
 
-            // console.log(res.data);
           })
           .catch((error) => {
             console.log("error", error);
@@ -397,13 +411,16 @@ export default {
         });
     },
 
-    async getFollowing(){
-      await axios.get("/api/page/following/").then((res) => {
-        this.followingPages = res.data
-      }).catch((error) => {
-        console.log(error)
-      })
-    }
+    async getFollowing() {
+      await axios
+        .get("/api/page/following/")
+        .then((res) => {
+          this.followingPages = res.data;
+        })
+        .catch((error) => {
+          console.log(error);
+        });
+    },
   },
 };
 </script>

@@ -1,6 +1,6 @@
 <template>
   <div
-    class="relative justify-end h-[500px] bg-cover bg-no-repeat"
+    class="relative justify-end 2xl:h-[500px] xl:h-[400px] lg:h-[300px] h-[500px] bg-center bg-cover bg-no-repeat"
     :style="bgImage"
   >
     <button @click="openModal" class="bg-gray-200 text-white bg-opacity-20 px-4 py-2 rounded-lg absolute right-4 bottom-4 hover:bg-opacity-70 transition-colors shadow-lg">Chọn ảnh</button>

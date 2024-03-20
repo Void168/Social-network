@@ -59,12 +59,13 @@ export default (await import("vue")).defineComponent({
       .then((res) => {
         this.trends = res.data;
         this.isLoading = false;
-        this.setHeight()
-      })
+      }).then(() => {
+          this.setHeight()
+        })
       .catch((error) => console.log(error));
     },
     setHeight(){
-      this.toastStore.resetTrendsHeight()
+      // this.toastStore.resetTrendsHeight()
       this.toastStore.setTrendsHeight(this.$refs.trendsContainer.clientHeight)
     }
   },

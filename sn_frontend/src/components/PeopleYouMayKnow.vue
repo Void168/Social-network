@@ -1,7 +1,7 @@
 <template>
   <div
-    ref="peopleContainer"
-    class="p-4 bg-white border border-gray-200 dark:bg-slate-600 dark:border-slate-700 dark:text-neutral-200 rounded-bl-lg overflow-y-auto"
+  class="p-4 bg-white border border-gray-200 dark:bg-slate-600 dark:border-slate-700 dark:text-neutral-200 rounded-bl-lg overflow-y-auto"
+  ref="peopleContainer"
   >
     <h3 class="mb-6 xl:text-xl text-center">Người bạn có thể biết</h3>
     <SkeletionLoadingChatBox v-if="isLoading" />
@@ -65,6 +65,7 @@ export default (await import("vue")).defineComponent({
         .then((res) => {
           this.users = res.data;
           this.isLoading = false;
+        }).then(() => {
           this.setHeight()
         })
         .catch((error) => {
@@ -72,9 +73,10 @@ export default (await import("vue")).defineComponent({
         });
     },
     setHeight() {
-      this.toastStore.resetPeopleHeight()
+      // this.toastStore.resetPeopleHeight()
+      console.log(this.$refs.peopleContainer.offsetHeight)
       this.toastStore.setPeopleHeight(
-        this.$refs.peopleContainer.clientHeight
+        this.$refs.peopleContainer.scrollHeight
       );
     },
   },

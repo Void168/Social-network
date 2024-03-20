@@ -25,7 +25,7 @@
             leave-to="opacity-0 scale-95"
           >
             <DialogPanel
-              class="w-full h-screen transform grid grid-cols-5 overflow-hidden bg-slate-200 dark:bg-slate-900 text-left align-middle shadow-xl transition-all"
+              class="w-full h-screen overscroll-y-auto transform grid xl:grid-cols-5 lg: grid-cols-4 overflow-hidden bg-slate-200 dark:bg-slate-900 text-left align-middle shadow-xl transition-all"
             >
               <button
                 @click="removeAll"
@@ -152,7 +152,7 @@
                 </div>
               </div>
               <div
-                class="lg:col-span-4 col-span-5 flex lg:flex-row flex-col items-center gap-6 lg:py-12 lg:pt-0 py-6"
+                class="xl:col-span-4 lg:col-span-3 col-span-5 flex lg:flex-row flex-col items-center gap-6 lg:py-12 lg:pt-0 py-6"
                 :class="
                   isTextStory || url ? 'justify-evenly' : 'justify-center'
                 "
@@ -291,6 +291,7 @@
                   </div>
                 </div>
                 <div
+                  v-if="isTextStory"
                   class="dark:bg-slate-800 bg-white dark:text-neutral-200 border-r-[1px] w-[90%] border-slate-700 flex justify-between lg:hidden overflow-x-scroll rounded-lg py-4 items-center"
                 >
                   <div class="flex">

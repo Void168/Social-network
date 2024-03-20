@@ -1,5 +1,5 @@
 <template>
-  <div class="dark:bg-slate-800 dark:text-neutral-200 bg-white h-screen grid lg:grid-cols-5 grid-cols-4 relative">
+  <div class="dark:bg-slate-800 dark:text-neutral-200 bg-white h-screen grid xl:grid-cols-5 grid-cols-4 relative">
     <div
       class="md:col-span-1 md:block hidden dark:bg-slate-800 overflow-y-auto scrollbar-corner-slate-200 scrollbar-none hover:scrollbar-thin scrollbar-thumb-slate-400 scrollbar-track-slate-800"
     >
@@ -423,7 +423,7 @@
         </div>
       </div>
     </div>
-    <div class="lg:col-span-4 md:col-span-3 col-span-4 dark:bg-slate-900 bg-slate-200 flex flex-col relative h-screen">
+    <div class="xl:col-span-4 md:col-span-3 col-span-4 dark:bg-slate-900 bg-slate-200 flex flex-col relative h-screen">
       <div class="py-4 h-full">
         <Suspense>
           <StoryDetail

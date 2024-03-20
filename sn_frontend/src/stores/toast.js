@@ -49,11 +49,11 @@ export const useToastStore = defineStore({
         setTrendsHeight(data){
             this.trendsHeight = data
         },
-        resetPeopleHeight(){
-            this.peopleYouMayKnowHeight = 0
-        },
-        resetTrendsHeight(){
-            this.peopleYouMayKnowHeight = 0
-        }
+        // resetPeopleHeight(){
+        //     this.peopleYouMayKnowHeight = 0
+        // },
+        // resetTrendsHeight(){
+        //     this.peopleYouMayKnowHeight = 0
+        // }
     }
 })

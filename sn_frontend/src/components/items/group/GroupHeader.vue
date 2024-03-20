@@ -2,7 +2,7 @@
   <div class="flex justify-center items-center w-full mx-auto dark:bg-slate-700 bg-white">
     <div class="flex flex-col 2xl:w-[80%] w-full">
       <div
-        class="relative justify-end lg:h-[500px] sm:h-[300px] h-[200px] bg-cover bg-center bg-no-repeat rounded-b-lg bg-fit w-full"
+        class="relative justify-end xl:h-[500px] sm:h-[300px] h-[200px] bg-cover bg-center bg-no-repeat rounded-b-lg bg-fit w-full"
         :style="bgImage"
       >
         <button

@@ -1,22 +1,28 @@
 <template>
   <div class="grid sm:grid-cols-4 grid-cols-3 max-h-screen">
     <div
-      class="main-left xl:col-span-1 sm:col-span-2 xs:col-span-1 sticky bottom-0"
+      @click="expandChatNavigation"
+      class="fixed flex md:hidden z-20 inset-y-2/4 w-5 h-20 dark:bg-slate-700 bg-white rounded-r-2xl"
+      :class="isExpand ? 'left-[90%]' : 'left-0'"
+    >
+      <ChevronRightIcon class="dark:text-slate-200" v-if="!isExpand" />
+      <ChevronLeftIcon class="dark:text-slate-200" v-else />
+    </div>
+    <div
+      class="main-left xl:col-span-1 sm:col-span-2 sm:sticky sm:block vs:z-10 sm:w-full vs:w-[90%] bottom-0"
+      :class="isExpand ? 'vs:fixed' : 'hidden'"
     >
       <div
         :style="{ height: `${toastStore.height}px` }"
-        class="bg-white overflow-y-scroll scrollbar-corner-slate-200 scrollbar-thin scrollbar-thumb-slate-400 scrollbar-track-slate-800 border border-gray-200 dark:bg-slate-600 dark:border-slate-700 dark:text-neutral-200 rounded-lg h-screen px-2"
+        class="bg-white overflow-y-scroll scrollbar-corner-slate-200 scrollbar-thin scrollbar-thumb-slate-400 scrollbar-track-slate-800 border border-gray-200 dark:bg-slate-600 dark:border-slate-700 dark:text-neutral-200 sm:rounded-lg h-screen px-2"
       >
-        <h3 class="sm:text-xl p-3 xm:block hidden sm:text-left text-center">
+        <h3 class="sm:text-xl p-3 sm:text-left text-center">
           Đoạn hội thoại ({{
             !pageStore.pageId
               ? conversations?.length
               : pageConversations?.length
           }})
         </h3>
-        <div class="flex justify-center items-center xm:hidden p-3">
-          <UserIcon class="w-6" /> ({{ conversations?.length }})
-        </div>
         <div v-for="conversation in conversations" :key="conversation.id">
           <ConversationBox
             v-bind:conversations="conversations"
@@ -93,7 +99,7 @@
 
     <div
       :style="{ minHeight: `${toastStore.height}px` }"
-      class="main-center xl:col-span-3 sm:col-span-2 xs:col-span-2 space-y-4"
+      class="main-center xl:col-span-3 sm:col-span-2 vs:col-span-3 space-y-4"
     >
       <PageChatBox />
     </div>
@@ -112,7 +118,12 @@ import { useToastStore } from "../../stores/toast";
 import { usePageStore } from "../../stores/page";
 
 import { PlusCircleIcon } from "@heroicons/vue/24/outline";
-import { UserIcon, UserGroupIcon } from "@heroicons/vue/24/solid";
+import {
+  UserIcon,
+  UserGroupIcon,
+  ChevronRightIcon,
+  ChevronLeftIcon,
+} from "@heroicons/vue/24/solid";
 
 import { RouterLink } from "vue-router";
 
@@ -138,6 +149,7 @@ export default (await import("vue")).defineComponent({
       body: "",
       listMessages: [],
       lastMessage: {},
+      isExpand: false,
     };
   },
   watch: {
@@ -154,6 +166,9 @@ export default (await import("vue")).defineComponent({
     this.getGroupConversations();
   },
   methods: {
+    expandChatNavigation() {
+      this.isExpand = !this.isExpand;
+    },
     async getConversations() {
       if (!this.pageStore.pageId) {
         await axios
@@ -202,7 +217,7 @@ export default (await import("vue")).defineComponent({
         });
     },
     async seenMessage() {
-      if(!this.pageStore.pageId){
+      if (!this.pageStore.pageId) {
         this.$emit("seenMessage", this.activeConversation.id);
         await axios
           .post(`/api/chat/${this.activeConversation.id}/set_seen/`)
@@ -213,9 +228,9 @@ export default (await import("vue")).defineComponent({
       }
     },
     async seenGroupMessage() {
-      if(!this.pageStore.pageId){
+      if (!this.pageStore.pageId) {
         this.$emit("seenGroupMessage", this.activeConversation.id);
-  
+
         await axios
           .post(`/api/chat/${this.activeConversation.id}/group_set_seen/`)
           .then((res) => {
@@ -267,6 +282,8 @@ export default (await import("vue")).defineComponent({
     PageConversationBox,
     UserIcon,
     UserGroupIcon,
+    ChevronRightIcon,
+    ChevronLeftIcon,
   },
 });
 </script>

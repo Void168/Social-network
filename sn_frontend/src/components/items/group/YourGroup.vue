@@ -1,6 +1,6 @@
 <template>
   <div
-    class="relative rounded-lg dark:bg-slate-700 dark:border-slate-600 bg-white border p-4"
+    class="relative rounded-lg dark:bg-slate-700 dark:border-slate-600 bg-white border xs:p-4 p-2"
   >
     <div class="flex items-center gap-2">
       <RouterLink
@@ -11,10 +11,10 @@
         loading="lazy"
           :src="yourGroup.get_cover_image"
           alt=""
-          class="rounded-lg h-20 w-20"
+          class="rounded-lg sm:h-20 sm:w-20 xm:w-16 xm:h-16 xs:w-12 xs:h-12 vs:w-10 vs:h-10"
         />
       </RouterLink>
-      <div class="flex flex-col space-y-2">
+      <div class="flex flex-col xs:space-y-2">
         <RouterLink
           @click="accessGroup"
           :to="{ name: 'groupdetail', params: { id: yourGroup.id } }"
@@ -22,7 +22,7 @@
         >
           <h4 class="font-semibold">{{ yourGroup.name }}</h4>
         </RouterLink>
-        <h5 class="text-sm">Lần truy cập gần đây nhất: {{ currentMember.last_access_formatted }} trước</h5>
+        <h5 class="xs:text-sm text-xs">Lần truy cập gần đây nhất: {{ currentMember.last_access_formatted }} trước</h5>
       </div>
     </div>
     <div class="mt-4 flex items-center justify-center gap-2 w-full">
@@ -38,7 +38,7 @@
             Xem nhóm
           </button>
         </RouterLink>
-        <EllipsisHorizontalIcon class="w-10" />
+        <EllipsisHorizontalIcon class="sm:w-10 w-6" />
       </div>
     </div>
   </div>

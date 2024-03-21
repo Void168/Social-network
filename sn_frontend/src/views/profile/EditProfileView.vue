@@ -2,9 +2,9 @@
   <div class="max-w-7xl mx-auto grid grid-cols-2 gap-4">
     <div class="main-left md:block lg:col-span-1 col-span-2">
       <div
-        class="p-12 bg-white border border-gray-200 rounded-lg dark:bg-slate-600 dark:border-slate-700 dark:text-neutral-200"
+        class="sm:p-12 p-4 bg-white border border-gray-200 rounded-lg dark:bg-slate-600 dark:border-slate-700 dark:text-neutral-200"
       >
-        <h1 class="mb-6 text-2xl">Chỉnh sửa thông tin</h1>
+        <h1 class="mb-6 text-2xl sm:text-left text-center">Chỉnh sửa thông tin</h1>
         <div class="mb-6">
           <label class="text-lg font-semibold">Tiểu sử</label>
           <div
@@ -13,7 +13,7 @@
           >
             <p
               v-if="userInfo.biography"
-              class="text-lg text-center font-semibold"
+              class="sm:text-lg text-center font-semibold"
             >
               {{ userInfo.biography }}
             </p>
@@ -61,7 +61,7 @@
           >
             <p
               v-if="userInfo.hometown"
-              class="text-lg text-center font-semibold"
+              class="sm:text-lg text-center font-semibold"
             >
               {{ userInfo.hometown }}
             </p>
@@ -73,7 +73,7 @@
             </button>
           </div>
           <form v-else>
-            <div class="flex gap-2">
+            <div class="flex gap-2 sm:flex-row flex-col">
               <div>
                 <p>Quốc gia</p>
                 <SelectCountryForm
@@ -124,7 +124,7 @@
           >
             <p
               v-if="userInfo.living_city"
-              class="text-lg text-center font-semibold"
+              class="sm:text-lg text-center font-semibold"
             >
               {{ userInfo.living_city }}
             </p>
@@ -387,7 +387,7 @@
 
     <div class="main-right flex justify-center col-span-2 lg:col-span-1">
       <div
-        class="p-12 bg-white dark:bg-slate-600 dark:border-slate-700 dark:text-neutral-200 border boder-gray-200 rounded-lg w-full"
+        class="sm:p-12 p-4 bg-white dark:bg-slate-600 dark:border-slate-700 dark:text-neutral-200 border boder-gray-200 rounded-lg w-full"
       >
         <template v-if="errors.length > 0">
           <div
@@ -428,8 +428,8 @@
               class="w-full mt-2 py-2 px-6 border border-gray-200 dark:bg-slate-700 dark:border-slate-800 dark:text-neutral-200 rounded-lg"
             />
           </div>
-          <div class="flex justify-between items-center">
-            <div class="w-[20%]">
+          <div class="flex xm:flex-row flex-col justify-between items-center vs:gap-4 xm:gap-0">
+            <div class="vs:w-full xm:w-auto">
               <p>Giới tính: {{ userInfo.gender }}</p>
               <GenderSelector
                 :genders="genders"
@@ -453,7 +453,7 @@
     </div>
     <div class="main-under flex justify-center col-span-2">
       <div
-        class="w-full p-12 bg-white border border-gray-200 rounded-lg dark:bg-slate-600 dark:border-slate-700 dark:text-neutral-200"
+        class="w-full sm:p-12 p-4 bg-white border border-gray-200 rounded-lg dark:bg-slate-600 dark:border-slate-700 dark:text-neutral-200"
       >
         <h1 class="text-2xl">Liên kết/Liên lạc</h1>
         <div class="grid xl:grid-cols-2 grid-cols-1 gap-4 my-4">

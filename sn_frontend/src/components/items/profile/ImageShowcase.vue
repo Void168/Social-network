@@ -5,7 +5,7 @@
         class="absolute z-10 group-hover:bg-white/20 w-full h-full cursor-pointer rounded-md transition"
         v-on:click="openModal"
       ></button>
-      <img loading="lazy" :src="post.attachments[0].get_image" :class="route.name === 'profiledetail' || route.name === 'pagedetail'  ? 'xl:h-32 lg:h-24 md:w-full sm:h-48 xm:h-32 xs:h-24 cursor-pointer' : 'md:h-48 sm:h-64 xm:h-56 xs:h-32 w-full cursor-pointer'" class="rounded-lg"
+      <img loading="lazy" :src="post.attachments[0].get_image" :class="route.name === 'profiledetail' || route.name === 'pagedetail'  ? 'xl:h-32 lg:h-24 md:w-full sm:h-48 xm:h-32 vs:h-24 cursor-pointer' : 'md:h-48 sm:h-64 xm:h-56 vs:h-32 w-full cursor-pointer'" class="rounded-lg"
       />
     </div>
     <ImagePostModal

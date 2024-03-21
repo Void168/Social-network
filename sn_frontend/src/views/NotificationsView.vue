@@ -30,7 +30,7 @@
               class="p-4 bg-white border border-gray-200 rounded-lg mt-4 cursor-pointer dark:bg-slate-700 dark:border-slate-800 dark:text-neutral-400"
               v-if="notification.is_read"
             >
-              <div class="flex flex-col gap-2">
+              <div class="flex flex-col gap-2 xs:text-base vs:text-sm">
                 <p>{{ notification.body }}</p>
                 <p>{{ formatTime(notification.created_at) }} trước</p>
               </div>
@@ -39,11 +39,11 @@
               class="flex justify-between items-center font-semibold text-emerald-600 p-4 bg-gray-200 dark:bg-slate-700 dark:border-slate-800 dark:text-neutral-200 border rounded-lg mt-4 cursor-pointer"
               v-else
             >
-              <div class="flex flex-col gap-2">
+              <div class="flex flex-col gap-2 xs:text-base vs:text-sm">
                 <p>{{ notification.body }}</p>
                 <p>{{ formatTime(notification.created_at) }} trước</p>
               </div>
-              <span class="w-5 h-5 bg-emerald-600 rounded-full"></span>
+              <span class="xm:w-5 xm:h-5 vs:w-3 vs:h-3 bg-emerald-600 rounded-full"></span>
             </div>
           </div>
           <div class="flex justify-center items-center mt-4">

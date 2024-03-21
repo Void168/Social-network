@@ -36,7 +36,7 @@
             </strong>
           </div>
 
-          <span v-if="post?.is_avatar_post" class="sm:text-base xs:text-sm">{{
+          <span v-if="post?.is_avatar_post" class="sm:text-base xs:text-sm vs:text-xs">{{
             post?.created_by?.is_page
               ? "đã thay đổi ảnh đại diện của họ"
               : "đã thay đổi ảnh đại diện"
@@ -70,7 +70,7 @@
             />
             <div class="relative group md:hidden">
               <p
-                class="text-gray-600 dark:text-neutral-200 sm:text-base xs:text-sm group-hover:underline"
+                class="text-gray-600 dark:text-neutral-200 sm:text-base xs:text-sm vs:text-xs group-hover:underline"
               >
                 {{ post?.created_at_formatted }} trước
               </p>
@@ -125,7 +125,7 @@
       rows="5"
       v-model="post.body"
     ></textarea>
-    <p class="px-4 text-lg" v-else>{{ post?.body }}</p>
+    <p class="px-4 sm:text-lg xs:text-base vs:text-sm" v-else>{{ post?.body }}</p>
 
     <ImagePostModal
       :show="isImagePostOpen"
@@ -152,7 +152,7 @@
         v-for="image in post?.attachments"
         v-bind:key="image?.id"
         :src="image?.get_image"
-        class="absolute top-5 mb-4 rounded-full md:w-96 md:h-96 xm:w-80 xm:h-80 xs:w-64 xs:h-64 shadow-md ring-8 ring-white dark:ring-slate-700"
+        class="absolute top-5 mb-4 rounded-full md:w-96 md:h-96 xm:w-80 xm:h-80 xs:w-64 xs:h-64 vs:w-40 vs:h-40 shadow-md ring-8 ring-white dark:ring-slate-700"
         alt="avatar"
       />
     </div>
@@ -196,7 +196,7 @@
           </div>
         </div>
       </div>
-      <h5>
+      <h5 class="xs:text-base vs:text-sm">
         {{ post.post.body }}
       </h5>
       <div v-if="post.attachments.length">
@@ -225,8 +225,9 @@
             class="w-6 h-6 cursor-pointer text-gray-400 hover:text-rose-500 transition-colors duration-75"
           />
           <span class="text-gray-500 text-xs dark:text-neutral-200"
-            >{{ post?.likes_count }} lượt thích</span
+            >{{ post?.likes_count }}</span
           >
+          <span class="text-gray-500 text-xs dark:text-neutral-200 xm:inline vs:hidden">lượt thích</span>
         </div>
 
         <div class="flex items-center space-x-2">
@@ -238,7 +239,7 @@
               params: { id: post?.id },
             }"
             class="text-gray-500 text-xs dark:text-neutral-200"
-            >{{ post?.comments_count }} bình luận</RouterLink
+            >{{ post?.comments_count }} <span class="text-gray-500 text-xs dark:text-neutral-200 xm:inline vs:hidden">bình luận</span></RouterLink
           >
         </div>
         <div
@@ -246,7 +247,8 @@
           @click="openShareModal"
         >
           <ShareIcon class="w-6 h-6" />
-          <h5 class="text-gray-500 text-xs dark:text-neutral-200">Chia sẻ</h5>
+          <span class="text-gray-500 text-xs dark:text-neutral-200 xm:inline vs:hidden">Chia sẻ</span>
+          <!-- <h5 class="text-gray-500 text-xs dark:text-neutral-200">Chia sẻ</h5> -->
           <SharePostModal
             :show="isShareOpen"
             @closeShareModal="closeShareModal"
@@ -254,11 +256,11 @@
           />
         </div>
       </div>
-      <div class="absolute right-4 shadow-lg rounded-lg ease-in duration-300">
+      <div class="absolute right-4 sm:bottom-4 vs:top-4 vs:bottom-auto sm:top-auto shadow-lg rounded-lg ease-in duration-300">
         <Menu as="div" class="relative inline-block text-left">
           <div>
             <MenuButton
-              class="inline-flex w-full justify-center rounded-md bg-white md:px-3 md:py-2 px-2 py-1 text-gray-900 dark:bg-slate-600 dark:border-slate-700 dark:text-neutral-200 ring-1 ring-inset ring-gray-300 hover:bg-gray-50 hover:text-gray-900"
+              class="inline-flex w-full justify-center rounded-md bg-white md:px-3 md:py-2 px-0 py-0 text-gray-900 dark:bg-slate-600 dark:border-slate-700 dark:text-neutral-200 ring-1 ring-inset ring-gray-300 hover:bg-gray-50 hover:text-gray-900"
             >
               <svg
                 xmlns="http://www.w3.org/2000/svg"

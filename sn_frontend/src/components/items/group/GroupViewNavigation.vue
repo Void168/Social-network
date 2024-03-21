@@ -1,6 +1,6 @@
 <template>
     <div
-        class="xl:col-span-1 md:col-span-2 md:block dark:bg-slate-800 bg-white overflow-y-auto scrollbar-corner-slate-200 scrollbar-none hover:scrollbar-thin scrollbar-thumb-slate-400 scrollbar-track-slate-800 z-20 dark:text-neutral-200"
+        class="xl:col-span-1 md:col-span-2 md:block dark:bg-slate-800 bg-white overflow-y-auto scrollbar-corner-slate-200 scrollbar-none hover:scrollbar-thin scrollbar-thumb-slate-400 scrollbar-track-slate-800 z-20 dark:text-neutral-200 w-[90%]"
         :style="{
           height: `${toastStore.height}px`,
           top: `${toastStore.navbarHeight}px`,
@@ -15,14 +15,14 @@
           </div>
           <div class="relative">
             <MagnifyingGlassIcon
-              class="absolute top-[18px] left-2 sm:w-6 sm:h-6 xs:w-3 xs:h-3 dark:text-neutral-400"
+              class="absolute top-[18px] left-2 sm:w-6 sm:h-6 vs:w-3 vs:h-3 dark:text-neutral-400"
             />
             <!-- @keyup="getQuery" -->
             <input
               ref="input"
               type="text"
               placeholder="Tìm kiếm nhóm"
-              class="w-full my-2 sm:py-2 sm:px-8 xs:py-1 xs:px-6 border border-gray-200 dark:bg-slate-700 dark:border-slate-800 dark:text-neutral-200 rounded-2xl sm:text-base xs:text-sm"
+              class="w-full my-2 sm:py-2 sm:px-8 vs:py-1 vs:px-6 border border-gray-200 dark:bg-slate-700 dark:border-slate-800 dark:text-neutral-200 rounded-2xl sm:text-base vs:text-sm"
             />
           </div>
         </div>

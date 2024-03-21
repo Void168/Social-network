@@ -16,7 +16,7 @@
             />
             <span class="font-bold">{{ receivedUser.name }}</span>
           </div>
-          <span class="font-semibold md:text-base xm:text-sm xs:text-xs"
+          <span class="font-semibold md:text-base xm:text-sm vs:hidden xs:inline xs:text-xs"
             >Đang hoạt động</span
           >
         </div>

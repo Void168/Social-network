@@ -1,13 +1,13 @@
 <template>
   <div class="bg-slate-200 dark:bg-slate-700 p-4 rounded-lg shadow-md">
-    <div class="flex justify-between items-center">
+    <div class="flex md:flex-row flex-col gap-4 justify-between items-center">
       <input
         v-model="number"
         v-if="edit"
         class="w-[60%] mt-2 py-2 px-6 border border-gray-200 dark:bg-slate-800 dark:border-slate-700 dark:text-neutral-200 rounded-lg"
       />
       <p v-else>{{ phoneNumber.phone_number }}</p>
-      <div class="flex gap-2 sm:flex-row xs:flex-col">
+      <div class="flex gap-2 sm:flex-row xs:flex-col w-full sm:w-auto">
         <button
           @click="editWebsite"
           class="px-4 py-2 bg-slate-300 dark:bg-slate-600 sm:text-base xs:text-sm rounded-xl shadow-md font-semibold dark:hover:bg-slate-500 hover:bg-slate-400 transition"
@@ -22,10 +22,10 @@
         </button>
       </div>
     </div>
-    <div class="flex items-center justify-between mt-4">
+    <div class="flex items-center xm:flex-row flex-col gap-4 justify-between mt-4">
       <div class="flex gap-4 items-center xl:w-[60%] sm:w-[40%] min-w-max">
         <div class="flex gap-3 items-center w-full">
-          <p class="xm:block hidden">Quyền riêng tư</p>
+          <p class="sm:block hidden">Quyền riêng tư</p>
           <span
             ><GlobeAsiaAustraliaIcon
               class="w-4 h-4"
@@ -61,7 +61,7 @@
           phoneNumber.only_me === only_me
         "
         @click="submitForm"
-        class="px-4 py-2 bg-slate-300 sm:text-base xs:text-sm dark:bg-slate-600 rounded-xl shadow-md font-semibold dark:hover:bg-slate-500 hover:bg-slate-400 transition"
+        class="px-4 py-2 bg-slate-300 sm:text-base xs:text-sm dark:bg-slate-600 rounded-xl shadow-md font-semibold dark:hover:bg-slate-500 hover:bg-slate-400 transition sm:w-auto w-full"
       >
         Lưu
       </button>

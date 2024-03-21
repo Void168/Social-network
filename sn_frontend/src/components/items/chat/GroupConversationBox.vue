@@ -94,13 +94,13 @@
               alt="avatar-group"
               class="xm:w-14 xm:h-14 h-10 w-10 rounded-full"
             />
-            <p class="text-sm font-bold dark:text-neutral-300 w-full truncate sm:block hidden">
+            <p class="text-sm font-bold dark:text-neutral-300 w-full truncate">
               {{ groupConversation.group_name }}
             </p>
           </div>
         </div>
 
-        <div class="text-sm gap-2 items-center sm:flex hidden">
+        <div class="text-sm gap-2 items-center flex">
           <div
             v-if="groupConversation?.group_messages?.length"
             class="flex gap-1 justify-between items-center w-full"

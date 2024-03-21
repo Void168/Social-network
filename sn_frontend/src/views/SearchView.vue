@@ -251,7 +251,7 @@ export default {
             .catch((error) => {
               console.log(error);
             });
-
+          this.query = keyword.body
           this.$router.push(`/search/?query=${keyword.body}`);
           this.users = res.data.users;
           const page_posts = res.data.page_posts;

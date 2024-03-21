@@ -17,8 +17,8 @@
       >
         <div
           @click="expandGroupNavigation"
-          class="fixed flex md:hidden left-0 z-20 inset-y-2/4 w-5 h-20 dark:bg-slate-700 bg-white rounded-r-2xl"
-          :class="isExpand ? 'translate-x-[332px]' : 'translate-x-0'"
+          class="fixed flex md:hidden  z-20 inset-y-2/4 w-5 h-20 dark:bg-slate-700 bg-white rounded-r-2xl"
+          :class="isExpand ? 'left-[90%]' : 'left-0'"
         >
           <ChevronRightIcon class="dark:text-slate-200" v-if="!isExpand" />
           <ChevronLeftIcon class="dark:text-slate-200" v-else />
@@ -31,7 +31,7 @@
         />
   
         <div
-          class="xl:col-span-4 min-h-screen md:col-span-3 col-span-4 dark:bg-slate-900 bg-slate-200 flex flex-col relative items-center pt-6 py-12 px-6"
+          class="xl:col-span-4 min-h-screen md:col-span-3 col-span-4 dark:bg-slate-900 bg-slate-200 flex flex-col relative items-center pt-6 py-12 xs:px-6 px-2"
         >
           <div v-if="activeTab === 1" class="xl:w-[50%]">
             <div class="py-12">

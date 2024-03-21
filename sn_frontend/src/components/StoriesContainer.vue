@@ -3,6 +3,10 @@
     <Swiper
       :simulateTouch="false"
       :breakpoints="{
+        '0': {
+          slidesPerView: 2,
+          spaceBetween: 5,
+        },
         '320': {
           slidesPerView: 2,
           spaceBetween: 20,
@@ -27,11 +31,11 @@
     >
       <SwiperSlide
         ><div
-          class="relative cursor-pointer dark:bg-slate-700 bg-slate-300 rounded-lg h-[213px]"
+          class="relative cursor-pointer dark:bg-slate-700 bg-slate-300 rounded-lg xs:h-[213px] h-[190px]"
           @click="openModal"
         >
           <img
-          loading="lazy"
+            loading="lazy"
             :src="pageStore.pageId ? pageStore.pageActive.get_avatar : userStore.user.avatar"
             class="rounded-b-none h-[70%] w-full rounded-t-lg"
             alt="create-story"

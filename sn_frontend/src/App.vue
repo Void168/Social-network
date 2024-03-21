@@ -21,7 +21,7 @@
                 viewBox="0 0 24 24"
                 stroke-width="1.5"
                 stroke="currentColor"
-                class="w-6 h-6 m-3 group-hover:text-emerald-600 duration-100"
+                class="xs:w-6 xs:h-6 vs:h-4 m-3 group-hover:text-emerald-600 duration-100"
               >
                 <path
                   stroke-linecap="round"
@@ -30,7 +30,6 @@
                 />
               </svg>
             </RouterLink>
-
             <RouterLink to="/chat" class="group">
               <span class="relative">
                 <svg
@@ -39,7 +38,7 @@
                   viewBox="0 0 24 24"
                   stroke-width="1.5"
                   stroke="currentColor"
-                  class="w-6 h-6 m-3 group-hover:text-emerald-600 duration-100"
+                  class="xs:w-6 xs:h-6 vs:h-4 m-3 group-hover:text-emerald-600 duration-100"
                 >
                   <path
                     stroke-linecap="round"
@@ -48,7 +47,7 @@
                   ></path>
                 </svg>
                 <span
-                  class="text-white text-center w-6 h-6 absolute top-0 right-0 rounded-full bg-rose-400"
+                  class="text-white text-center xs:w-6 xs:h-6 vs:h-4 absolute top-0 right-0 rounded-full xs:text-base vs:text-xs vs:px-1 px-0 bg-rose-400"
                   v-if="!pageStore.pageId"
                 >
                   {{
@@ -57,8 +56,7 @@
                 >
               </span>
             </RouterLink>
-
-            <RouterLink to="/notifications" class="group">
+            <RouterLink to="/notifications" class="group xs:block vs:hidden">
               <span class="relative">
                 <svg
                   xmlns="http://www.w3.org/2000/svg"
@@ -66,7 +64,7 @@
                   viewBox="0 0 24 24"
                   stroke-width="1.5"
                   stroke="currentColor"
-                  class="w-6 h-6 m-3 group-hover:text-emerald-600"
+                  class="xs:w-6 xs:h-6 vs:h-4 m-3 group-hover:text-emerald-600"
                 >
                   <path
                     stroke-linecap="round"
@@ -75,7 +73,7 @@
                   ></path>
                 </svg>
                 <span
-                  class="text-white text-center w-6 h-6 absolute top-0 right-0 rounded-full bg-rose-400"
+                  class="text-white text-center xs:w-6 xs:h-6 vs:h-4 xs:text-base vs:text-xs vs:px-1 px-0 absolute top-0 right-0 rounded-full bg-rose-400"
                   >{{ userNotificationStore.getNotifications() }}</span
                 >
               </span>
@@ -87,7 +85,7 @@
                 viewBox="0 0 24 24"
                 stroke-width="1.5"
                 stroke="currentColor"
-                class="w-6 h-6 m-3 group-hover:text-emerald-600 duration-100"
+                class="xs:w-6 xs:h-6 vs:h-4 m-3 group-hover:text-emerald-600 duration-100"
               >
                 <path
                   stroke-linecap="round"
@@ -96,14 +94,14 @@
                 ></path>
               </svg>
             </RouterLink>
-            <RouterLink to="/groups" class="group">
+            <RouterLink to="/groups" class="group xs:block vs:hidden">
               <svg
                 xmlns="http://www.w3.org/2000/svg"
                 fill="none"
                 viewBox="0 0 24 24"
                 stroke-width="1.5"
                 stroke="currentColor"
-                class="w-6 h-6 m-3 group-hover:text-emerald-600 duration-100"
+                class="xs:w-6 xs:h-6 vs:h-4 m-3 group-hover:text-emerald-600 duration-100"
               >
                 <path
                   stroke-linecap="round"

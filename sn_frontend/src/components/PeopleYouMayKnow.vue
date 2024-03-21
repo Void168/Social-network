@@ -74,7 +74,6 @@ export default (await import("vue")).defineComponent({
     },
     setHeight() {
       // this.toastStore.resetPeopleHeight()
-      console.log(this.$refs.peopleContainer.offsetHeight)
       this.toastStore.setPeopleHeight(
         this.$refs.peopleContainer.scrollHeight
       );

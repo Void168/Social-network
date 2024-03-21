@@ -78,41 +78,44 @@
             @deleteConversation="deleteConversation"
           />
         </div>
-        <div class="flex sm:justify-between justify-center items-center">
-          <div class="flex justify-center items-center gap-3">
+        <div class="flex sm:justify-between xs:justify-start vs:justify-between items-center gap-2">
+          <div class="flex sm:justify-between justify-center items-center gap-3">
             <img
             loading="lazy"
               :src="friend?.get_avatar"
               alt="avatar"
               class="xm:w-14 xm:h-14 h-10 w-10 rounded-full shadow-lg"
             />
-            <p
-              class="text-xs font-bold dark:text-neutral-300 sm:block hidden"
-              v-if="
-              lastMessage &&
-                lastMessage?.seen_by
-                  .map((obj) => obj.created_by.email)
-                  .includes(userStore.user.email) === false
-              "
-            >
-              {{ friend?.name }}
-            </p>
-            <p
-              v-else-if="friend?.id !== userStore.user.id"
-              class="text-sm dark:text-neutral-300 font-semibold sm:block hidden"
-            >
-              {{ friend?.name }}
-            </p>
-          </div>
-
-          <span
+            <div class="flex sm:flex-row flex-col sm:gap-3">
+              <p
+                class="text-xs font-bold dark:text-neutral-300"
+                v-if="
+                lastMessage &&
+                  lastMessage?.seen_by
+                    .map((obj) => obj.created_by.email)
+                    .includes(userStore.user.email) === false
+                "
+              >
+                {{ friend?.name }}
+              </p>
+              <p
+                v-else-if="friend?.id !== userStore.user.id"
+                class="text-sm dark:text-neutral-300 font-semibold"
+              >
+                {{ friend?.name }}
+              </p>
+              <span
             v-if="conversation?.messages?.length && lastMessage"
-            class="text-xs text-gray-600 dark:text-neutral-300 sm:block hidden"
+            class="text-xs text-gray-600 dark:text-neutral-300"
             >{{ lastMessage?.created_at_formatted }} trước</span
           >
+            </div>
+          </div>
+
+          
         </div>
 
-        <div class="text-sm sm:block hidden">
+        <div class="text-sm">
           <div
             v-if="conversation?.messages?.length"
             class="flex gap-1 justify-between"

@@ -137,7 +137,7 @@
                   </p>
                   <div
                     @click="openSeenUsersModal"
-                    v-if="lastMessage?.seen_by?.length"
+                    v-if="lastMessage?.seen_by?.length > 0"
                     class="relative flex items-center justify-end mt-2 gap-1 cursor-pointer"
                   >
                     <SeenUsersModal

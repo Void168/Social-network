@@ -145,7 +145,7 @@
       </Suspense>
     </div>
     <div
-      class="sm:ml-5 mx-5 main-center !shadow-none lg:col-span-4 sm:col-span-2 col-span-3 space-y-4 py-6"
+      class="sm:ml-5 sm:mx-5 main-center !shadow-none lg:col-span-4 sm:col-span-2 col-span-3 space-y-4 xs:py-6"
     >
       <div
         class="p-4 bg-white border border-gray-200 dark:bg-slate-600 dark:border-slate-700 dark:text-neutral-200 rounded-lg"
@@ -181,7 +181,7 @@
         height: `${toastStore.height}px`,
         top: `${toastStore.navbarHeight}px`,
       }"
-      class="main-right ml-auto lg:col-span-2 2xl:w-[80%] sm:col-span-1 sm:block xs:hidden space-y-4 sticky w-full"
+      class="main-right ml-auto lg:col-span-2 2xl:w-[80%] sm:col-span-1 sm:block vs:hidden space-y-4 sticky w-full"
     >
       <PeopleYouMayKnow v-if="!pageStore.pageId" />
       <Trends />

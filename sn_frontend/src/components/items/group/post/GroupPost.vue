@@ -1,60 +1,61 @@
 <template>
-  <div class="relative dark:bg-slate-800 bg-white p-4 my-4 rounded-lg shadow-md">
+  <div class="relative dark:bg-slate-800 bg-white xs:p-4 my-4 rounded-lg shadow-md">
     <div class="mb-2 flex items-center justify-between">
-      <div class="flex items-center space-x-6 p-4">
+      <div class="flex items-center space-x-6 xs:p-4 xs:px-0 vs:px-2">
         <div class="relative">
           <img
           loading="lazy"
             :src="post.group.get_cover_image"
             alt="group-avatar"
-            class="w-10 h-10 rounded-lg"
+            class="xs:w-10 xs:h-10 w-8 h-8 rounded-lg"
           />
           <img
           loading="lazy"
             :src="post.created_by.information.get_avatar"
-            class="w-6 h-6 rounded-full absolute bottom-[-4px] right-[-4px] ring-1 ring-emerald-400"
+            class="xs:w-6 xs:h-6 h-4 w-4 rounded-full absolute bottom-[-4px] right-[-4px] ring-1 ring-emerald-400"
           />
         </div>
 
         <div class="flex flex-col flex-wrap">
           <p class="font-bold">{{ post.group.name }}</p>
           <div class="items-center gap-2 flex">
-            <div class="relative group flex gap-2 items-center">
+            <div class="relative group flex sm:flex-row flex-col sm:gap-2 sm:items-center">
               <p class="text-sm">{{ post.created_by.information.name }}</p>
-              &middot;
-              <p
-                class="text-gray-600 text-sm dark:text-neutral-200 md:block hidden group-hover:underline"
-              >
-                {{ post.created_at_formatted }} trước
-              </p>
-              &middot;
-              <div class="relative group">
-                <UserGroupIcon
-                  class="w-5 h-5 p-1 dark:bg-slate-500/50 rounded-full"
-                  v-if="post.group.is_private_group"
-                />
-                <GlobeAsiaAustraliaIcon
-                  class="w-5 h-5 p-1 dark:bg-slate-500/50 rounded-full"
-                  v-else
-                />
+              <div class="flex gap-2">
+                <p
+                  class="text-gray-600 xs:text-sm text-xs dark:text-neutral-200 group-hover:underline"
+                >
+                &middot; {{ post.created_at_formatted }} &middot; trước
+                </p>
+                
+                <div class="relative group">
+                  <UserGroupIcon
+                    class="w-5 h-5 p-1 dark:bg-slate-500/50 rounded-full"
+                    v-if="post.group.is_private_group"
+                  />
+                  <GlobeAsiaAustraliaIcon
+                    class="w-5 h-5 p-1 dark:bg-slate-500/50 rounded-full"
+                    v-else
+                  />
+                </div>
               </div>
             </div>
           </div>
         </div>
       </div>
-      <EllipsisHorizontalIcon class="w-10" />
+      <EllipsisHorizontalIcon class="sm:w-10 w-6" />
     </div>
 
     <p class="px-4 text-lg">
       {{ post.body }}
     </p>
-    <div class="mt-4 px-4">
+    <div class="mt-4 xs:px-4">
       <img
       loading="lazy"
         v-for="image in post.attachments"
         v-bind:key="image.id"
         :src="image.get_image"
-        class="w-full mb-4 rounded-xl"
+        class="w-full mb-4 xs:rounded-xl"
       />
     </div>
 
@@ -72,8 +73,9 @@
             class="w-6 h-6 cursor-pointer text-gray-400 hover:text-rose-500 transition-colors duration-75"
           />
           <span class="text-gray-500 text-xs dark:text-neutral-200"
-            >{{ post.likes_count }} lượt thích</span
+            >{{ post.likes_count }}</span
           >
+          <span class="text-gray-500 text-xs dark:text-neutral-200 xm:inline vs:hidden">lượt thích</span>
         </div>
 
         <div class="flex items-center space-x-2">
@@ -98,7 +100,7 @@
               params: { postid: post?.id, id: post?.group?.id }
             }"
             class="text-gray-500 text-xs dark:text-neutral-200"
-            >{{ post?.comments_count }} bình luận</RouterLink
+            >{{ post?.comments_count }} <span class="text-gray-500 text-xs dark:text-neutral-200 xm:inline vs:hidden">bình luận</span></RouterLink
           >
         </div>
       </div>
@@ -106,7 +108,7 @@
         <Menu as="div" class="relative inline-block text-left">
           <div>
             <MenuButton
-              class="inline-flex w-full justify-center rounded-md bg-white md:px-3 md:py-2 px-2 py-1 text-gray-900 dark:bg-slate-600 dark:border-slate-700 dark:text-neutral-200 ring-1 ring-inset ring-gray-300 hover:bg-gray-50 hover:text-gray-900"
+              class="inline-flex w-full justify-center rounded-md bg-white md:px-3 md:py-2 px-0 py-0 text-gray-900 dark:bg-slate-600 dark:border-slate-700 dark:text-neutral-200 ring-1 ring-inset ring-gray-300 hover:bg-gray-50 hover:text-gray-900"
             >
               <svg
                 xmlns="http://www.w3.org/2000/svg"

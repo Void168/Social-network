@@ -5,7 +5,7 @@
         v-model="body"
         class="p-4 w-full bg-gray-100 rounded-lg resize-none"
         cols="30"
-        rows="4"
+        rows="3"
         placeholder="Bạn đang nghĩ gì?"
       ></textarea>
       <div class="flex justify-end items-center gap-3" v-if="!page">
@@ -21,7 +21,7 @@
         <Listbox v-model="selectedPrivacy" class="w-[20%]">
           <div class="relative mt-1 flex justify-end min-w-max">
             <ListboxButton
-              class="relative flex justify-center w-full cursor-default rounded-lg font-semibold bg-gray-200 dark:bg-slate-800 dark:border-slate-700 dark:text-neutral-200 py-2 pl-3 pr-10 text-left shadow-md focus:outline-none focus-visible:border-indigo-500 focus-visible:ring-2 focus-visible:ring-white/75 focus-visible:ring-offset-2 focus-visible:ring-offset-orange-300 sm:text-sm"
+              class="relative flex justify-center w-full cursor-default rounded-lg font-semibold bg-gray-200 dark:bg-slate-800 dark:border-slate-700 dark:text-neutral-200 py-2 pl-3 pr-10 text-left shadow-md focus:outline-none focus-visible:border-indigo-500 focus-visible:ring-2 focus-visible:ring-white/75 focus-visible:ring-offset-2 focus-visible:ring-offset-orange-300 sm:text-sm vs:text-xs"
             >
               <span class="block">{{ selectedPrivacy.name }}</span>
               <span
@@ -105,10 +105,10 @@
       </div>
     </div>
 
-    <div class="p-4 border-t border-gray-100 flex justify-between">
+    <div class="p-4 border-t border-gray-100 flex xs:flex-row vs:flex-col justify-between gap-2">
       <label for="doc">
         <div
-          class="py-3 px-6 text-black bg-gray-400 dark:bg-slate-800 dark:border-slate-700 dark:text-neutral-200 dark:hover:bg-white dark:hover:text-slate-800 font-semibold rounded-lg transition-colors hover:bg-gray-600 hover:text-white cursor-pointer"
+          class="py-3 px-6 text-black bg-gray-400 dark:bg-slate-800 dark:border-slate-700 dark:text-neutral-200 dark:hover:bg-white dark:hover:text-slate-800 flex justify-center items-center font-semibold rounded-lg transition-colors hover:bg-gray-600 hover:text-white cursor-pointer"
         >
           <span class="xm:text-base text-xs">Chọn ảnh</span>
         </div>

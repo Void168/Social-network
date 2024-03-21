@@ -9,7 +9,7 @@
               ? pageStore.pageActive.get_avatar
               : userStore.user.avatar
           "
-          class="rounded-full w-12 h-12 xs:hidden sm:block"
+          class="rounded-full w-12 h-12 vs:hidden sm:block"
           alt="avatar"
         />
         <Popover v-slot="{ open }" class="relative">
@@ -19,7 +19,7 @@
             @click="outListPage"
           >
             <span
-              class="text-slate-700 dark:text-neutral-200 xs:hidden sm:block"
+              class="text-slate-700 dark:text-neutral-200 vs:hidden sm:block"
               >{{
                 pageStore.pageActive.id
                   ? pageStore.pageActive.name
@@ -28,8 +28,12 @@
             >
             <img
               loading="lazy"
-              :src="userStore.user.avatar"
-              class="rounded-full w-8 h-8 sm:hidden xs:block"
+              :src="
+            pageStore.pageActive.id
+              ? pageStore.pageActive.get_avatar
+              : userStore.user.avatar
+          "
+              class="rounded-full w-8 h-8 sm:hidden vs:block"
               alt="avatar"
             />
             <ChevronDownIcon
@@ -57,7 +61,7 @@
           >
             <PopoverPanel
               v-slot="{ close }"
-              class="absolute z-50 xs:left-[-90px] xm:left-[-70px] mt-3 w-screen max-w-xs -translate-x-1/2 transform px-4 sm:px-0"
+              class="absolute z-50 xs:left-[-90px] xm:left-[-70px] vs:left-[-20px] mt-3 w-screen max-w-xs -translate-x-1/2 transform px-4 sm:px-0"
             >
               <div
                 v-if="isBack"
@@ -102,6 +106,12 @@
                       </span>
                     </span>
                   </div>
+                  <RouterLink @click="accept(close)" to="/notifications" class="group xs:hidden flow-root rounded-md px-2 py-2 transition duration-150 ease-in-out hover:bg-gray-100 dark:hover:bg-slate-700 focus:outline-none focus-visible:ring focus-visible:ring-orange-500/50 text-sm font-medium text-gray-900 dark:text-neutral-200">
+                    Thông báo
+                  </RouterLink>
+                  <RouterLink @click="accept(close)" to="/groups" class="group xs:hidden flow-root rounded-md px-2 py-2 transition duration-150 ease-in-out hover:bg-gray-100 dark:hover:bg-slate-700 focus:outline-none focus-visible:ring focus-visible:ring-orange-500/50 text-sm font-medium text-gray-900 dark:text-neutral-200">
+                    Nhóm
+                  </RouterLink>
                   <div
                     class="flow-root rounded-md px-2 py-2 transition duration-150 ease-in-out hover:bg-gray-100 dark:hover:bg-slate-700 focus:outline-none focus-visible:ring focus-visible:ring-orange-500/50"
                   >

@@ -34,9 +34,9 @@
             <strong class="text-2xl">{{ user?.name }}</strong>
           </p>
           <p v-if="user.nickname" class="text-xl">({{ user?.nickname }})</p>
-          <p class="mt-6 font-semibold text-lg">{{ user.biography }}</p>
-          <div class="mt-6 flex space-x-8">
-            <ul class="flex flex-col space-y-4 text-lg">
+          <p class="sm:mt-6 font-semibold sm:text-lg">{{ user.biography }}</p>
+          <div class="sm:mt-6 flex space-x-8">
+            <ul class="flex flex-col space-y-4 sm:text-lg xs:text-base text-sm">
               <li
                 class="text-gray-500 dark:text-neutral-200 flex items-center gap-2"
               >
@@ -111,11 +111,11 @@
             class="bg-white dark:bg-slate-600 dark:text-neutral-200 my-4 p-4 shadow-md rounded-lg"
           >
             <div class="flex justify-between items-center mb-4">
-              <p class="font-bold text-2xl">Ảnh</p>
+              <p class="font-bold xs:text-2xl text-xl">Ảnh</p>
               <RouterLink
                 :to="{ name: 'photos', params: { id: userStore.user.id } }"
               >
-                <p class="text-lg hover:underline cursor-pointer">
+                <p class="xs:text-lg hover:underline cursor-pointer">
                   Xem tất cả ảnh
                 </p>
               </RouterLink>
@@ -131,13 +131,13 @@
           >
             <div class="flex justify-between items-center mb-4">
               <div>
-                <h1 class="font-bold text-2xl">Bạn bè</h1>
+                <h1 class="font-bold xs:text-2xl text-xl">Bạn bè</h1>
                 <h3>{{ friends.length }} người bạn</h3>
               </div>
               <RouterLink
                 :to="{ name: 'friends', params: { id: userStore.user.id } }"
               >
-                <p class="text-lg hover:underline cursor-pointer">
+                <p class="xs:text-lg hover:underline cursor-pointer">
                   Xem tất cả bạn bè
                 </p>
               </RouterLink>

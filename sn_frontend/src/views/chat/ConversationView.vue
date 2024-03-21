@@ -1,49 +1,50 @@
 <template>
-  <div class="grid sm:grid-cols-4 grid-cols-3 max-h-screen">
+  <div class="grid sm:grid-cols-4 grid-cols-3 max-h-screen" :class="isExpand ? 'requires-no-scroll' : ''">
     <div
-      class="main-left xl:col-span-1 sm:col-span-2 xs:col-span-1 sticky bottom-0"
+      @click="expandChatNavigation"
+      class="fixed flex md:hidden z-20 inset-y-2/4 w-5 h-20 dark:bg-slate-700 bg-white rounded-r-2xl"
+      :class="isExpand ? 'left-[90%]' : 'left-0'"
+    >
+      <ChevronRightIcon class="dark:text-slate-200" v-if="!isExpand" />
+      <ChevronLeftIcon class="dark:text-slate-200" v-else />
+    </div>
+    <div
+      v-if="isExpand"
+      class="w-full h-full absolute bg-slate-700/50 z-10 duration-100"
+      @click="expandGroupNavigation"
+    ></div>
+    <div
+      class="main-left xl:col-span-1 sm:col-span-2 sm:sticky sm:block vs:z-10 sm:w-full vs:w-[90%] bottom-0"
+      :class="isExpand ? 'vs:fixed' : 'hidden'"
     >
       <div
         :style="{ height: `${toastStore.height}px` }"
-        class="bg-white overflow-y-scroll scrollbar-corner-slate-200 scrollbar-thin scrollbar-thumb-slate-400 scrollbar-track-slate-800 border border-gray-200 dark:bg-slate-600 dark:border-slate-700 dark:text-neutral-200 rounded-lg h-screen px-2"
+        class="bg-white overflow-y-scroll scrollbar-corner-slate-200 scrollbar-thin scrollbar-thumb-slate-400 scrollbar-track-slate-800 border border-gray-200 dark:bg-slate-600 dark:border-slate-700 dark:text-neutral-200 sm:rounded-lg h-screen px-2"
       >
-        <h3 class="sm:text-xl p-3 xm:block hidden sm:text-left text-center">
+        <h3 class="sm:text-xl p-3 sm:text-left text-center">
           Đoạn hội thoại ({{ conversations.length }})
         </h3>
-        <div class="flex justify-center items-center xm:hidden p-3">
-          <UserIcon class="w-6" /> ({{ conversations.length }})
-        </div>
         <div v-for="conversation in conversations" :key="conversation.id">
           <ConversationBox
             v-bind:conversations="conversations"
             v-bind:conversation="conversation"
             @seenMessage="seenMessage"
+            @click="expandChatNavigation"
           />
         </div>
         <div
           class="flex flex-col bg-white dark:bg-slate-600 dark:text-neutral-200 rounded-lg px-2"
         >
-          <h3 class="text-xl p-3 sm:block hidden">
+          <h3 class="sm:text-xl p-3 sm:text-left text-center">
             Đoạn hội thoại nhóm ({{ groupConversations.length }})
           </h3>
-          <h3 class="p-3 sm:hidden text-center xs:hidden xm:block">
-            Chat nhóm ({{ groupConversations.length }})
-          </h3>
-          <div class="flex justify-center items-center xm:hidden p-3">
-            <UserGroupIcon class="w-6" /> ({{ conversations.length }})
-          </div>
           <div
             @click="openModal"
             class="flex gap-2 items-center justify-center px-4 py-2 bg-neutral-200 hover:bg-neutral-300 dark:bg-slate-700 dark:hover:bg-slate-800 transition duration-100 rounded-md shadow-md cursor-pointer"
           >
             <PlusCircleIcon class="w-8 h-8" />
-            <span @click="getFriends" class="sm:block hidden"
+            <span @click="getFriends"
               >Tạo đoạn chat nhóm</span
-            >
-            <span
-              @click="getFriends"
-              class="sm:hidden block sm:text-base xs:hidden"
-              >Tạo nhóm</span
             >
           </div>
           <div
@@ -55,26 +56,23 @@
               @seenGroupMessage="seenGroupMessage"
             />
           </div>
-          <h3 class="sm:text-xl p-3 xm:block hidden sm:text-left text-center">
-          Đoạn hội thoại trang ({{ pageConversations.length }})
-        </h3>
-        <div class="flex justify-center items-center xm:hidden p-3">
-          <UserIcon class="w-6" /> ({{ conversations.length }})
-        </div>
+          <h3 class="sm:text-xl p-3 sm:text-left text-center">
+            Đoạn hội thoại trang ({{ pageConversations.length }})
+          </h3>
 
-        <div
-          v-for="pageConversation in pageConversations"
-          v-bind:key="pageConversation.id"
-        >
-          <PageConversationBox :pageConversation="pageConversation"/>
-        </div>
+          <div
+            v-for="pageConversation in pageConversations"
+            v-bind:key="pageConversation.id"
+          >
+            <PageConversationBox :pageConversation="pageConversation" />
+          </div>
         </div>
       </div>
     </div>
 
     <div
       :style="{ minHeight: `${toastStore.height}px` }"
-      class="main-center xl:col-span-3 sm:col-span-2 xs:col-span-2 space-y-4"
+      class="main-center xl:col-span-3 sm:col-span-2 vs:col-span-3 space-y-4"
     >
       <ChatBox v-bind:chats="conversations" />
     </div>
@@ -92,7 +90,12 @@ import { useUserStore } from "../../stores/user";
 import { useToastStore } from "../../stores/toast";
 
 import { PlusCircleIcon } from "@heroicons/vue/24/outline";
-import { UserIcon, UserGroupIcon } from "@heroicons/vue/24/solid";
+import {
+  UserIcon,
+  UserGroupIcon,
+  ChevronRightIcon,
+  ChevronLeftIcon,
+} from "@heroicons/vue/24/solid";
 
 import { RouterLink } from "vue-router";
 
@@ -116,6 +119,7 @@ export default (await import("vue")).defineComponent({
       body: "",
       listMessages: [],
       lastMessage: {},
+      isExpand: false,
     };
   },
   watch: {
@@ -132,12 +136,15 @@ export default (await import("vue")).defineComponent({
     this.getGroupConversations();
   },
   methods: {
+    expandChatNavigation() {
+      this.isExpand = !this.isExpand;
+    },
     async getConversations() {
       await axios
         .get("/api/chat/")
         .then((res) => {
           this.conversations = res.data.conversations;
-          this.pageConversations = res.data.page_conversations
+          this.pageConversations = res.data.page_conversations;
         })
         .catch((error) => {
           console.log(error);
@@ -197,6 +204,8 @@ export default (await import("vue")).defineComponent({
     PageConversationBox,
     UserIcon,
     UserGroupIcon,
+    ChevronRightIcon,
+    ChevronLeftIcon,
   },
 });
 </script>

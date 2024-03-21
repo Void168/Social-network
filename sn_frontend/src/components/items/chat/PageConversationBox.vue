@@ -78,7 +78,7 @@
             @deleteConversation="deleteConversation"
           /> -->
         </div>
-        <div class="flex sm:justify-between justify-center items-center">
+        <div class="flex sm:justify-between items-center gap-2">
           <div class="flex justify-center items-center gap-3">
             <img
             loading="lazy"
@@ -90,25 +90,27 @@
               alt="avatar"
               class="xm:w-14 xm:h-14 h-10 w-10 rounded-full shadow-lg"
             />
-            <p
-              class="text-sm font-bold dark:text-neutral-300 sm:block hidden"
-            >
-              {{
-                pageStore.pageId
-                  ? pageConversation?.user?.name
-                  : pageConversation?.page?.name
-              }}
-            </p>
+            <div class="flex sm:flex-row flex-col sm:gap-3">
+              <p
+                class="text-sm font-bold dark:text-neutral-300 truncate"
+              >
+                {{
+                  pageStore.pageId
+                    ? pageConversation?.user?.name
+                    : pageConversation?.page?.name
+                }}
+              </p>
+              <span
+                v-if="pageMessages?.length"
+                class="text-xs text-gray-600 dark:text-neutral-300"
+                >{{ lastMessage?.created_at_formatted }} trước</span
+              >
+            </div>
           </div>
-          <span
-            v-if="pageMessages?.length"
-            class="text-xs text-gray-600 dark:text-neutral-300 sm:block hidden"
-            >{{ lastMessage?.created_at_formatted }} trước</span
-          >
         </div>
 
-        <div class="text-sm sm:block hidden">
-          <div v-if="pageMessages?.length" class="flex gap-1 justify-between">
+        <div class="text-sm">
+          <div v-if="pageMessages?.length" class="flex gap-1 justify-between items-center">
             <div class="flex gap-2 px-2 py-1 w-full">
               <span
                 class="font-semibold"

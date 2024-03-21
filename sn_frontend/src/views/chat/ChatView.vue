@@ -1,29 +1,26 @@
 <template>
   <div class="grid sm:grid-cols-4 grid-cols-3 gap-4">
     <div
-      class="main-left xl:col-span-1 sm:col-span-2 xs:col-span-1 sticky bottom-0"
+      class="main-left xl:col-span-1 sm:col-span-2 vs:col-span-3 sticky bottom-0"
     >
       <div
         :style="{ height: `${toastStore.height}px` }"
-        class="bg-white border overflow-y-scroll scrollbar-corner-slate-200 scrollbar-thin scrollbar-thumb-slate-400 scrollbar-track-slate-800 border-b border-gray-200 dark:bg-slate-600 dark:border-slate-700 dark:text-neutral-200 rounded-lg px-2"
+        class="bg-white border overflow-y-scroll scrollbar-corner-slate-200 scrollbar-thin scrollbar-thumb-slate-400 scrollbar-track-slate-800 border-b border-gray-200 dark:bg-slate-600 dark:border-slate-700 dark:text-neutral-200 rounded-lg xs:px-2 vs:px-0"
       >
-        <h3 class="sm:text-xl p-3 xm:block hidden sm:text-left text-center">
+        <h3 class="sm:text-xl p-3 sm:text-left text-center">
           Đoạn hội thoại ({{ pageStore.pageId ? pageConversations.length : conversations.length }})
         </h3>
-        <div class="flex justify-center items-center xm:hidden p-3">
-          <UserIcon class="w-6" /> ({{ pageStore.pageId ? pageConversations.length : conversations.length }})
-        </div>
 
         <div class="relative">
           <MagnifyingGlassIcon
-            class="absolute top-[18px] left-2 sm:w-6 sm:h-6 xs:w-3 xs:h-3 dark:text-neutral-400"
+            class="absolute top-[18px] left-2 sm:w-6 sm:h-6 vs:w-3 vs:h-3 dark:text-neutral-400"
           />
           <input
             @keyup="getQuery"
             ref="input"
             type="text"
             placeholder="Tìm kiếm đoạn hội thoại"
-            class="w-full my-2 sm:py-2 sm:px-8 xs:py-1 xs:px-6 border border-gray-200 dark:bg-slate-700 dark:border-slate-800 dark:text-neutral-200 rounded-2xl sm:text-base xs:text-sm"
+            class="w-full my-2 sm:py-2 sm:px-8 vs:py-1 vs:px-6 border border-gray-200 dark:bg-slate-700 dark:border-slate-800 dark:text-neutral-200 rounded-2xl sm:text-base vs:text-sm"
           />
         </div>
         <div class="flex flex-col bg-white dark:bg-slate-600 dark:text-neutral-200 rounded-lg px-2" v-if="!pageStore.pageId">
@@ -38,27 +35,16 @@
           v-if="!pageStore.pageId"
           class="flex flex-col bg-white dark:bg-slate-600 dark:text-neutral-200 rounded-lg px-2"
         >
-          <h3 class="text-xl p-3 sm:block hidden">
+          <h3 class="sm:text-xl p-3 sm:text-left text-center">
             Đoạn hội thoại nhóm ({{ groupConversations.length }})
           </h3>
-          <h3 class="p-3 sm:hidden text-center xs:hidden xm:block">
-            Chat nhóm ({{ groupConversations.length }})
-          </h3>
-          <div class="flex justify-center items-center xm:hidden p-3">
-            <UserGroupIcon class="w-6" /> ({{ conversations.length }})
-          </div>
           <div
             @click="openModal"
             class="flex gap-2 items-center justify-center px-4 py-2 bg-neutral-200 hover:bg-neutral-300 dark:bg-slate-700 dark:hover:bg-slate-800 transition duration-100 rounded-md shadow-md cursor-pointer"
           >
             <PlusCircleIcon class="w-8 h-8" />
-            <span @click="getFriends" class="sm:block hidden"
+            <span @click="getFriends"
               >Tạo đoạn chat nhóm</span
-            >
-            <span
-              @click="getFriends"
-              class="sm:hidden block sm:text-base xs:hidden"
-              >Tạo nhóm</span
             >
           </div>
           <div
@@ -72,12 +58,9 @@
         </div>
         <div
           class="flex flex-col bg-white dark:bg-slate-600 dark:text-neutral-200 rounded-lg px-2">
-          <h3 class="sm:text-xl p-3 xm:block hidden sm:text-left text-center" v-if="!pageStore.pageId">
+          <h3 class="sm:text-xl p-3 sm:text-left text-center" v-if="!pageStore.pageId">
             Đoạn hội thoại trang ({{ pageConversations.length }})
           </h3>
-          <div class="flex justify-center items-center xm:hidden p-3">
-            <UserIcon class="w-6" /> ({{ pageConversations.length }})
-          </div>
   
           <div
             v-for="pageConversation in pageConversations"
@@ -89,7 +72,7 @@
       </div>
     </div>
     <div
-      class="main-center xl:col-span-3 sm:col-span-2 xs:col-span-2 space-y-4"
+      class="main-center xl:col-span-3 sm:col-span-2 vs:hidden sm:block space-y-4"
     >
       <div
         :style="{ minHeight: `${toastStore.height}px` }"

@@ -1,5 +1,5 @@
 <template>
-  <div class="max-w-7xl xl:mx-auto md:mx-8 mx-2 gap-4 pb-4">
+  <div class="max-w-7xl xl:mx-auto md:mx-8 xs:mx-2 gap-4 pb-4">
     <ProfileHeader
       :user="user"
       :followers="followers"
@@ -23,9 +23,9 @@
     ></router-view>
     <div
       v-if="route.name === 'about' || route.name === 'friends'"
-      class="bg-white dark:bg-slate-600 p-4 dark:text-neutral-200 w-full rounded-lg mt-4"
+      class="bg-white dark:bg-slate-600 p-4 dark:text-neutral-200 w-full sm:rounded-lg mt-4"
     >
-      <p class="text-xl font-bold">Ảnh</p>
+      <p class="sm:text-xl text-lg font-bold">Ảnh</p>
       <div
         class="grid lg:grid-cols-6 md:grid-cols-4 grid-cols-2 gap-3 my-4 max-h-96"
       >
@@ -46,11 +46,11 @@
         route.name === 'friends' ||
         route.name === 'photos'
       "
-      class="bg-white dark:bg-slate-600 p-4 dark:text-neutral-200 w-full rounded-lg mt-4"
+      class="bg-white dark:bg-slate-600 p-4 dark:text-neutral-200 w-full sm:rounded-lg mt-4"
     >
-      <p class="text-xl font-bold">Video</p>
+      <p class="sm:text-xl text-lg font-bold">Video</p>
       <div class="max-h-96 min-h-[192px] flex justify-center items-center">
-        <h2 class="text-2xl font-semibold">
+        <h2 class="sm:text-2xl text-lg font-semibold">
           {{ user.name }} chưa có video nào
         </h2>
       </div>
@@ -61,11 +61,11 @@
         route.name === 'friends' ||
         route.name === 'photos'
       "
-      class="bg-white dark:bg-slate-600 p-4 dark:text-neutral-200 w-full rounded-lg mt-4"
+      class="bg-white dark:bg-slate-600 p-4 dark:text-neutral-200 w-full sm:rounded-lg mt-4"
     >
-      <p class="text-xl font-bold">Check in</p>
+      <p class="sm:text-xl text-lg font-bold">Check in</p>
       <div class="max-h-96 min-h-[192px] flex justify-center items-center">
-        <h2 class="text-2xl font-semibold">
+        <h2 class="sm:text-2xl text-lg font-semibold">
           {{ user.name }} chưa tham quan nơi nào
         </h2>
       </div>
@@ -76,14 +76,14 @@
         route.name === 'friends' ||
         route.name === 'photos'
       "
-      class="bg-white dark:bg-slate-600 p-4 dark:text-neutral-200 w-full rounded-lg mt-4"
+      class="bg-white dark:bg-slate-600 p-4 dark:text-neutral-200 w-full sm:rounded-lg mt-4"
     >
-      <p class="text-xl font-bold">Phim</p>
+      <p class="sm:text-xl text-lg font-bold">Phim</p>
       <div
         class="max-h-96 min-h-[192px] flex justify-center items-center"
         v-if="!following.length"
       >
-        <h2 class="text-2xl font-semibold">
+        <h2 class="sm:text-2xl text-lg font-semibold">
           {{ user.name }} chưa thích bộ phim nào
         </h2>
       </div>
@@ -116,11 +116,11 @@
         route.name === 'friends' ||
         route.name === 'photos'
       "
-      class="bg-white dark:bg-slate-600 p-4 dark:text-neutral-200 w-full rounded-lg mt-4"
+      class="bg-white dark:bg-slate-600 p-4 dark:text-neutral-200 w-full sm:rounded-lg mt-4"
     >
-      <p class="text-xl font-bold">Chương trình TV</p>
+      <p class="sm:text-xl text-lg font-bold">Chương trình TV</p>
       <div class="max-h-96 min-h-[192px] flex justify-center items-center">
-        <h2 class="text-2xl font-semibold">
+        <h2 class="sm:text-2xl text-lg font-semibold">
           {{ user.name }} chưa thích chương trình TV nào
         </h2>
       </div>
@@ -131,9 +131,9 @@
         route.name === 'friends' ||
         route.name === 'photos'
       "
-      class="bg-white dark:bg-slate-600 p-4 dark:text-neutral-200 w-full rounded-lg mt-4"
+      class="bg-white dark:bg-slate-600 p-4 dark:text-neutral-200 w-full sm:rounded-lg mt-4"
     >
-      <p class="text-xl font-bold">Thích</p>
+      <p class="sm:text-xl text-lg font-bold">Thích</p>
       <div
         class="max-h-96 min-h-[192px] flex justify-center items-center"
         v-if="!following.length"

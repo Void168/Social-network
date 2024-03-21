@@ -5,7 +5,7 @@
         <button
           class="absolute z-10 group-hover:bg-white/20 w-full h-full cursor-pointer rounded-md transition"
         ></button>
-        <img loading="lazy" :src="friend?.get_avatar" class="xl:h-32 lg:h-24 w-full sm:h-48 xm:h-32 xs:h-24 cursor-pointer rounded-lg" />
+        <img loading="lazy" :src="friend?.get_avatar" class="xl:h-32 lg:h-24 w-full sm:h-48 xm:h-32 xs:h-24 vs:h-20 cursor-pointer rounded-lg" />
       </div>
       <h4 class="text-sm font-semibold my-2 text-center">{{ friend.name }}</h4>
     </div>

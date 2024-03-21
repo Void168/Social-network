@@ -1,17 +1,17 @@
 <template>
-  <div class="py-4 max-w-7xl mx-auto gap-4">
+  <div class="xs:py-4 max-w-7xl mx-auto gap-4">
     <div
-      class="main-center space-y-4 grid grid-cols-4 dark:bg-slate-600 bg-white rounded-lg"
+      class="main-center space-y-4 grid grid-cols-4 dark:bg-slate-600 bg-white xs:rounded-lg"
     >
       <div class="lg:col-span-1 col-span-4 lg:border-r lg:border-b-0 border-b dark:border-slate-500 py-4">
-        <h2 class="text-2xl font-bold dark:text-neutral-200 px-5">
+        <h2 class="sm:text-2xl text-xl font-bold dark:text-neutral-200 px-5">
           Giới thiệu
         </h2>
         <ul class="px-1 my-4">
           <li
             v-for="navi in navigation"
             :key="navi.name"
-            class="py-2 px-4 duration-75 dark:hover:bg-slate-700 rounded-lg cursor-pointer font-medium"
+            class="py-2 px-4 duration-75 dark:hover:bg-slate-700 rounded-lg cursor-pointer font-medium sm:text-base text-sm"
             :class="
               selectedNavigator?.name === navi?.name
                 ? 'text-emerald-400 dark:bg-emerald-700/50 bg-emerald-700/30'
@@ -23,24 +23,24 @@
           </li>
         </ul>
       </div>
-      <div class="px-4 lg:col-span-3 col-span-4">
+      <div class="px-4 lg:col-span-3 col-span-4 sm:text-base text-sm">
         <div
           class="flex flex-col gap-4 my-8"
           v-if="selectedNavigator?.name === 'Tổng quan'"
         >
           <div class="flex gap-2 items-center dark:text-neutral-300">
-            <BriefcaseIcon class="w-8" />
+            <BriefcaseIcon class="xs:w-8 vs:w-6" />
             <h3 class="font-medium">Không có nơi làm việc để hiển thị</h3>
           </div>
           <div class="flex gap-2 items-center dark:text-neutral-300">
-            <AcademicCapIcon class="w-8" />
+            <AcademicCapIcon class="xs:w-8 vs:w-6" />
             <h3 class="font-medium">Không có trường học nào để hiển thị</h3>
           </div>
           <div
             class="flex gap-2 items-center dark:text-neutral-300"
             v-if="user.living_city"
           >
-            <MapPinIcon class="w-8" />
+            <MapPinIcon class="xs:w-8 vs:w-6" />
             <div class="">
               <h3 class="font-medium">Sống tại {{ user.living_city }}</h3>
             </div>
@@ -49,7 +49,7 @@
             class="flex gap-2 items-center dark:text-neutral-300"
             v-if="user.hometown"
           >
-            <MapPinIcon class="w-8" />
+            <MapPinIcon class="xs:w-8 vs:w-6" />
             <div class="">
               <h3 class="font-medium">Đến từ {{ user.hometown }}</h3>
             </div>
@@ -58,14 +58,14 @@
             class="flex gap-2 items-center dark:text-neutral-300"
             v-if="!user.living_city && !user.hometown"
           >
-            <MapPinIcon class="w-8" />
+            <MapPinIcon class="xs:w-8 vs:w-6" />
             <h3 class="font-medium">Không có địa điểm nào để hiển thị</h3>
           </div>
           <div
             class="flex gap-2 items-center dark:text-neutral-300"
             v-if="user.relationship_status"
           >
-            <HeartIcon class="w-8" />
+            <HeartIcon class="xs:w-8 vs:w-6" />
             <div class="flex gap-1 items-center">
               <h3 class="font-medium">
                 {{ user.relationship_status }}
@@ -86,23 +86,23 @@
           v-if="selectedNavigator?.name === 'Công việc và học vấn'"
         >
           <div class="dark:text-neutral-300 space-y-1">
-            <h3 class="text-lg font-semibold">Công việc</h3>
+            <h3 class="sm:text-lg text-base font-semibold">Công việc</h3>
             <div class="flex gap-2 items-center">
-              <BriefcaseIcon class="w-8" />
+              <BriefcaseIcon class="xs:w-8 vs:w-6" />
               <h3 class="font-medium">Không có nơi làm việc để hiển thị</h3>
             </div>
           </div>
           <div class="dark:text-neutral-300 space-y-1">
-            <h3 class="text-lg font-semibold">Đại học</h3>
+            <h3 class="sm:text-lg text-base font-semibold">Đại học</h3>
             <div class="flex gap-2 items-center">
-              <AcademicCapIcon class="w-8" />
+              <AcademicCapIcon class="w-8 vs:w-6" />
               <h3 class="font-medium">Không có trường học nào để hiển thị</h3>
             </div>
           </div>
           <div class="dark:text-neutral-300 space-y-1">
-            <h3 class="text-lg font-semibold">Trường trung học</h3>
+            <h3 class="sm:text-lg text-base font-semibold">Trường trung học</h3>
             <div class="flex gap-2 items-center">
-              <AcademicCapIcon class="w-8" />
+              <AcademicCapIcon class="w-8 vs:w-6" />
               <h3 class="font-medium">Không có trường học nào để hiển thị</h3>
             </div>
           </div>
@@ -112,12 +112,12 @@
           v-if="selectedNavigator?.name === 'Nơi từng sống'"
         >
           <div class="dark:text-neutral-300 space-y-1">
-            <h3 class="text-lg font-semibold">Công việc</h3>
+            <h3 class="sm:text-lg text-base font-semibold">Công việc</h3>
             <div
               class="flex gap-2 items-center"
               v-if="!user.living_city && !user.hometown"
             >
-              <MapPinIcon class="w-8" />
+              <MapPinIcon class="xs:w-8 w-6" />
               <h3 class="font-medium">Không có địa điểm nào để hiển thị</h3>
             </div>
           </div>
@@ -135,7 +135,7 @@
             class="flex gap-2 items-center dark:text-neutral-300"
             v-if="user.hometown"
           >
-            <MapPinIcon class="w-8" />
+            <MapPinIcon class="xs:w-8 w-6" />
             <div class="">
               <h3 class="font-medium">{{ user.hometown }}</h3>
               <h5 class="text-xs">Quê quán</h5>
@@ -153,13 +153,13 @@
           class="flex flex-col gap-4 my-4"
           v-if="selectedNavigator?.name === 'Thông tin liên hệ và cơ bản'"
         >
-          <h3 class="text-lg font-semibold dark:text-neutral-300">
+          <h3 class="sm:text-lg text-base font-semibold dark:text-neutral-300 ">
             Thông tin liên hệ
           </h3>
           <div class="dark:text-neutral-300" v-if="phoneNumbers.length">
             <div class="dark:text-neutral-300 space-y-1">
               <div class="flex gap-2 items-center">
-                <PhoneIcon class="w-8" />
+                <PhoneIcon class="xs:w-8 w-6" />
                 <div>
                   <h3 class="font-medium">
                     {{ phoneNumbers[0]?.phone_number }}
@@ -171,15 +171,15 @@
             <div class="dark:text-neutral-300 space-y-1">
               <h3 class="text-lg font-semibold"></h3>
               <div class="flex gap-2 items-center">
-                <EnvelopeIcon class="w-8" />
+                <EnvelopeIcon class="xs:w-8 w-6" />
                 <div>
-                  <h3 class="font-medium">{{ user.email }}</h3>
+                  <h3 class="font-medium break-all">{{ user.email }}</h3>
                   <h5 class="text-xs">Email</h5>
                 </div>
               </div>
             </div>
           </div>
-          <h3 class="text-lg font-semibold dark:text-neutral-300">
+          <h3 class="sm:text-lg text-base font-semibold dark:text-neutral-300 ">
             Các trang web và liên kết xã hội
           </h3>
           <div class="dark:text-neutral-300" v-if="websites.length">
@@ -187,7 +187,7 @@
               <div class="flex gap-2 items-center">
                 <GlobeAltIcon class="w-8" />
                 <div>
-                  <h3 class="font-medium">
+                  <h3 class="font-medium break-all">
                     {{ websites[0].url }}
                   </h3>
                   <h5 class="text-xs">Websites</h5>
@@ -208,7 +208,7 @@
             class="flex gap-2 items-center dark:text-neutral-300"
             v-if="!websites.length"
           >
-            <GlobeAltIcon class="w-8" />
+            <GlobeAltIcon class="xs:w-8 vs:w-6" />
             <h3 class="font-medium">
               Không có thông tin liên hệ nào để hiển thị
             </h3>
@@ -219,9 +219,9 @@
           v-if="selectedNavigator?.name === 'Gia đình và các mối quan hệ'"
         >
           <div class="dark:text-neutral-300 space-y-1">
-            <h3 class="text-lg font-semibold">Mối quan hệ</h3>
+            <h3 class="sm:text-lg text-base font-semibold">Mối quan hệ</h3>
             <div class="flex gap-2 items-center" v-if="user.relationship_status">
-              <HeartIcon class="w-8" />
+              <HeartIcon class="xs:w-8 vs:w-6" />
               <div class="flex gap-1 items-center">
               <h3 class="font-medium">
                 {{ user.relationship_status }}
@@ -237,7 +237,7 @@
             </div>
             </div>
             <div v-else class="flex gap-2 items-center">
-              <HeartIcon class="w-8" />
+              <HeartIcon class="xs:w-8 vs:w-6" />
               <h3 class="font-medium">
                 Không có mối quan hệ để hiển thị
               </h3>
@@ -246,7 +246,7 @@
           <div class="dark:text-neutral-300 space-y-1">
             <h3 class="text-lg font-semibold">Thành viên trong gia đình</h3>
             <div class="flex gap-2 items-center">
-              <UserGroupIcon class="w-8" />
+              <UserGroupIcon class="xs:w-8 vs:w-6" />
               <h3 class="font-medium">Không có thành viên gia đình nào để hiển thị</h3>
             </div>
           </div>
@@ -256,7 +256,7 @@
           v-if="selectedNavigator?.name?.includes('Chi tiết về')"
         >
           <div class="dark:text-neutral-300 space-y-1">
-            <h3 class="text-lg font-semibold">Giới thiệu về bản thân</h3>
+            <h3 class="sm:text-lg text-base font-semibold">Giới thiệu về bản thân</h3>
             <div class="flex gap-2 items-center" v-if="user.biography">
               <div class="flex gap-1 items-center">
               <h3 class="font-medium">
@@ -271,7 +271,7 @@
             </div>
           </div>
           <div class="dark:text-neutral-300 space-y-1">
-            <h3 class="text-lg font-semibold">Các tên khác</h3>
+            <h3 class="sm:text-lg text-base font-semibold">Các tên khác</h3>
             <div class="flex gap-2 items-center" v-if="user.nickname">
               <h3 class="font-medium">{{ user.nickname }}</h3>
             </div>
@@ -287,9 +287,9 @@
           v-if="selectedNavigator?.name === 'Sự kiện trong đời'"
         >
           <div class="dark:text-neutral-300 space-y-1">
-            <h3 class="text-lg font-semibold">Sự kiện trong đời</h3>
+            <h3 class="sm:text-lg text-base font-semibold">Sự kiện trong đời</h3>
             <div class="flex gap-2 items-center">
-              <StarIcon class="w-8"/>
+              <StarIcon class="xs:w-8 vs:w-6"/>
               <h3 class="font-medium">
                 Không có sự kiện trong đời để hiển thị
               </h3>

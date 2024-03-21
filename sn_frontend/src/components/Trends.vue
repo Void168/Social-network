@@ -16,7 +16,7 @@
           </p>
         </div>
         <RouterLink :to="{ name: 'trendview', params: { id: trend.hashtag } }"
-          ><button type="button" class="btn lg:py-1 lg:px-2 xl:py-2 xl:px-4">Khám phá</button></RouterLink
+          ><button type="button" class="btn lg:py-1 lg:px-2 xl:py-2 xl:px-4 xm:text-base text-sm">Khám phá</button></RouterLink
         >
       </div>
     </div>
@@ -57,6 +57,7 @@ export default (await import("vue")).defineComponent({
       await axios
       .get(`/api/posts/trends/`)
       .then((res) => {
+        console.log(res.data)
         this.trends = res.data;
         this.isLoading = false;
       }).then(() => {

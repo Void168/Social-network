@@ -1,7 +1,7 @@
 <template>
   <div>
     <div class="mb-6 flex items-center justify-between">
-      <div class="flex items-start gap-3 w-full relative">
+      <div class="flex items-start xm:gap-3 gap-1 w-full relative">
         <div class="group">
           <RouterLink
             :to="{
@@ -12,7 +12,7 @@
             <img
             loading="lazy"
               :src="comment?.created_by?.information?.get_avatar"
-              class="w-10 h-10 rounded-full"
+              class="xm:w-10 xm:h-10 h-[28px] w-8 rounded-full"
             />
           </RouterLink>
           <TooltipProfile
@@ -21,11 +21,11 @@
           />
         </div>
         <div
-          class="flex justify-between border-none bg-gray-200 dark:bg-slate-700 dark:border-slate-800 dark:text-neutral-200 rounded-2xl w-full p-4"
+          class="flex justify-between border-none bg-gray-200 dark:bg-slate-700 dark:border-slate-800 dark:text-neutral-200 rounded-2xl w-full xm:p-4 p-2"
         >
           <div>
             <div class="flex items-center gap-1 group">
-              <strong class="group">
+              <strong class="group xm:text-base text-sm">
                 <RouterLink
                   :to="{
                     name: 'profile',

@@ -11,7 +11,7 @@
     <div
       v-if="isExpand"
       class="w-full h-full absolute bg-slate-700/50 z-10 duration-100"
-      @click="expandGroupNavigation"
+      @click="expandChatNavigation"
     ></div>
     <div
       class="main-left xl:col-span-1 sm:col-span-2 sm:sticky sm:block vs:z-10 sm:w-full vs:w-[90%] bottom-0"

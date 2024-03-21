@@ -6,13 +6,13 @@
       <div class="p-4 border-b dark:border-slate-700 dark:bg-slate-800 sticky top-0">
         <RouterLink to="/" class="w-10 block">
           <XMarkIcon
-            class="dark:text-neutral-200 bg-slate-100 hover:bg-slate-300 text-black dark:hover:bg-slate-600 dark:bg-slate-700 h-10 w-10 cursor-pointer transition p-2  rounded-full "
+            class="dark:text-neutral-200 bg-slate-100 hover:bg-slate-300 text-black dark:hover:bg-slate-600 dark:bg-slate-700 h-10 w-10 cursor-pointer transition p-2 rounded-full "
           />
         </RouterLink>
       </div>
       <div class="p-4">
         <h2 class="text-2xl font-bold">Tin</h2>
-        <div class="mt-4">
+        <div class="xm:mt-4">
           <a href="#" class="text-emerald-400 hover:text-emerald-500"
             >Kho lưu trữ</a
           >
@@ -21,16 +21,16 @@
             >Cài đặt</a
           >
         </div>
-        <div class="my-4 flex flex-col space-y-4">
-          <h2 class="text-xl font-semibold">Tin của bạn</h2>
+        <div class="xm:my-4 my-2 flex flex-col space-y-4">
+          <h2 class="xm:text-xl text-xl font-semibold">Tin của bạn</h2>
           <div class="flex gap-3 items-center">
             <PlusIcon
               @click="openModal"
-              class="text-emerald-300 2xl:h-16 2xl:w-16 xl:w-14 xl:h-[52px] xs:w-10 xs:h-[36px] cursor-pointer transition p-3 dark:bg-slate-700 bg-slate-200 hover:bg-slate-300 rounded-full dark:hover:bg-slate-600"
+              class="text-emerald-300 2xl:h-16 2xl:w-16 xl:w-14 xl:h-[52px] vs:w-10 vs:h-[36px] cursor-pointer transition p-3 dark:bg-slate-700 bg-slate-200 hover:bg-slate-300 rounded-full dark:hover:bg-slate-600"
             />
             <div class="flex flex-col space-y-1">
-              <h4 class="font-semibold text-lg">Tạo tin</h4>
-              <p class="text-neutral-400">Bạn có thể tạo ảnh hoặc viết gì đó</p>
+              <h4 class="font-semibold xm:text-lg">Tạo tin</h4>
+              <p class="text-neutral-400 xm:text-base text-sm">Bạn có thể tạo ảnh hoặc viết gì đó</p>
             </div>
             <CreateStoryModal
               :show="isCreateStoryOpen"
@@ -46,7 +46,7 @@
           @click="otherStory(yourLastStory[0]?.created_by.id)"
         >
           <div
-            class="flex gap-3 items-center p-4 dark:hover:bg-slate-700 hover:bg-slate-200 rounded-lg cursor-pointer"
+            class="flex gap-3 items-center xm:p-4 p-2 dark:hover:bg-slate-700 hover:bg-slate-200 rounded-lg cursor-pointer"
             :class="
               currentStoryStore.activeStory === yourLastStory[0]?.created_by.id
                 ? 'dark:bg-slate-700'
@@ -57,7 +57,7 @@
             loading="lazy"
               :src="userStore.user.avatar"
               alt="story-owner"
-              class="2xl:w-16 2xl:h-16 xl:w-14 xl:h-14 xs:w-10 xs:h-10 rounded-full"
+              class="2xl:w-16 2xl:h-16 xl:w-14 xl:h-14 vs:w-10 vs:h-10 rounded-full"
             />
             <div class="flex flex-col space-y-2">
               <h3 class="text-lg font-semibold">{{ userStore.user.name }}</h3>
@@ -71,7 +71,7 @@
         </div>
       </div>
       <div>
-        <h2 class="text-xl font-semibold ml-4">Tất cả tin</h2>
+        <h2 class="xm:text-xl text-lg font-semibold ml-4">Tất cả tin</h2>
         <div class="my-2">
           <div @click="firstStory">
             <div
@@ -96,7 +96,7 @@
                   currentStoryStore?.currentStory[0]?.created_by?.get_avatar
                 "
                 alt="story-owner"
-                class="2xl:w-16 2xl:h-16 xl:w-14 xl:h-14 xs:w-10 xs:h-10 rounded-full ring-4"
+                class="2xl:w-16 2xl:h-16 xl:w-14 xl:h-14 vs:w-10 vs:h-10 rounded-full ring-4"
                 :class="
                   currentStoryStore?.currentStory[0]?.seen_by?.map(
                     (user) => user.id === userStore.user.id
@@ -109,7 +109,7 @@
                 <h3 class="xl:text-lg font-semibold">
                   {{ currentStoryStore?.currentStory[0]?.created_by?.name }}
                 </h3>
-                <p class="flex 2xl:gap-2 2xl:flex-row xl:text-base xs:text-sm flex-wrap flex-col w-full">
+                <p class="flex 2xl:gap-2 2xl:flex-row xl:text-base vs:text-sm flex-wrap flex-col w-full">
                   <span class="text-emerald-400"
                     >{{ currentStoryStore?.currentStory?.length }} thẻ mới</span
                   >
@@ -140,15 +140,15 @@
     </div>
     <div
       @click="expandListStories"
-      class="absolute flex md:hidden left-0 z-20 inset-y-2/4 w-5 h-20 dark:bg-slate-800 bg-white rounded-r-2xl"
-      :class="isExpand ? 'translate-x-0' : 'translate-x-[300px]'"
+      class="absolute flex md:hidden z-20 inset-y-2/4 w-5 h-20 dark:bg-slate-800 bg-white rounded-r-2xl"
+      :class="isExpand ? 'left-0' : 'left-[90%]'"
     >
       <ChevronLeftIcon class="dark:text-neutral-200 " v-if="!isExpand" />
       <ChevronRightIcon class="dark:text-neutral-200" v-else />
     </div>
     <div
-      class="block md:hidden dark:bg-slate-800 bg-white absolute w-[300px] z-50 h-full overflow-y-auto scrollbar-corner-slate-200 scrollbar-none hover:scrollbar-thin scrollbar-thumb-slate-400 scrollbar-track-slate-800"
-      :class="isExpand ? '-translate-x-[300px]' : 'translate-x-0'"
+      class="md:hidden dark:bg-slate-800 bg-white absolute w-[90%] z-50 h-full overflow-y-auto scrollbar-corner-slate-200 scrollbar-none hover:scrollbar-thin scrollbar-thumb-slate-400 scrollbar-track-slate-800"
+      :class="isExpand ? 'hidden' : 'block'"
     >
       <div class="p-4 border-b dark:border-slate-700 dark:bg-slate-800 sticky top-0">
         <RouterLink to="/" class="w-10 block">
@@ -157,9 +157,9 @@
           />
         </RouterLink>
       </div>
-      <div class="p-4">
+      <div class="xm:p-4 p-2">
         <h2 class="text-2xl font-bold">Tin</h2>
-        <div class="mt-4">
+        <div class="xm:mt-4">
           <a href="#" class="text-emerald-400 hover:text-emerald-500"
             >Kho lưu trữ</a
           >
@@ -168,16 +168,16 @@
             >Cài đặt</a
           >
         </div>
-        <div class="my-4 flex flex-col space-y-4">
-          <h2 class="text-xl font-semibold">Tin của bạn</h2>
+        <div class="xm:my-4 my-2 flex flex-col space-y-4">
+          <h2 class="xm:text-xl text-xl font-semibold">Tin của bạn</h2>
           <div class="flex gap-3 items-center">
             <PlusIcon
               @click="openModal"
-              class="text-emerald-300 2xl:h-16 2xl:w-16 xl:w-14 xl:h-[52px] xs:w-10 xs:h-[36px] cursor-pointer transition p-3 dark:bg-slate-700 rounded-full dark:hover:bg-slate-600 bg-slate-200 hover:bg-slate-300"
+              class="text-emerald-300 2xl:h-16 2xl:w-16 xl:w-14 xl:h-[52px] vs:w-10 vs:h-[36px] cursor-pointer transition p-3 dark:bg-slate-700 rounded-full dark:hover:bg-slate-600 bg-slate-200 hover:bg-slate-300"
             />
             <div class="flex flex-col space-y-1">
-              <h4 class="font-semibold text-lg">Tạo tin</h4>
-              <p class="text-neutral-400">Bạn có thể tạo ảnh hoặc viết gì đó</p>
+              <h4 class="font-semibold xm:text-lg">Tạo tin</h4>
+              <p class="text-neutral-400 xm:text-base text-sm">Bạn có thể tạo ảnh hoặc viết gì đó</p>
             </div>
             <CreateStoryModal
               :show="isCreateStoryOpen"
@@ -193,7 +193,7 @@
           @click="otherStory(yourLastStory[0]?.created_by.id)"
         >
           <div
-            class="flex gap-3 items-center p-4 dark:hover:bg-slate-700 hover:bg-slate-200 rounded-lg cursor-pointer"
+            class="flex gap-3 items-center xm:p-4 p-2 dark:hover:bg-slate-700 hover:bg-slate-200 rounded-lg cursor-pointer"
             :class="
               currentStoryStore.activeStory === yourLastStory[0]?.created_by.id
                 ? 'dark:bg-slate-700'
@@ -204,7 +204,7 @@
             loading="lazy"
               :src="userStore.user.avatar"
               alt="story-owner"
-              class="2xl:w-16 2xl:h-16 xl:w-14 xl:h-14 xs:w-10 xs:h-10 rounded-full"
+              class="2xl:w-16 2xl:h-16 xl:w-14 xl:h-14 vs:w-10 vs:h-10 rounded-full"
             />
             <div class="flex flex-col space-y-2">
               <h3 class="text-lg font-semibold">{{ userStore.user.name }}</h3>
@@ -218,7 +218,7 @@
         </div>
       </div>
       <div>
-        <h2 class="text-xl font-semibold ml-4">Tất cả tin</h2>
+        <h2 class="xm:text-xl text-lg font-semibold ml-4">Tất cả tin</h2>
         <div class="my-2">
           <div @click="firstStory">
             <div
@@ -243,7 +243,7 @@
                   currentStoryStore?.currentStory[0]?.created_by?.get_avatar
                 "
                 alt="story-owner"
-                class="2xl:w-16 2xl:h-16 xl:w-14 xl:h-14 xs:w-10 xs:h-10 rounded-full ring-4"
+                class="2xl:w-16 2xl:h-16 xl:w-14 xl:h-14 vs:w-10 vs:h-10 rounded-full ring-4"
                 :class="
                   currentStoryStore?.currentStory[0]?.seen_by?.map(
                     (user) => user.id === userStore.user.id
@@ -256,7 +256,7 @@
                 <h3 class="xl:text-lg font-semibold">
                   {{ currentStoryStore?.currentStory[0]?.created_by?.name }}
                 </h3>
-                <p class="flex 2xl:gap-2 2xl:flex-row xl:text-base xs:text-sm flex-wrap flex-col w-full">
+                <p class="flex 2xl:gap-2 2xl:flex-row xl:text-base vs:text-sm flex-wrap flex-col w-full">
                   <span class="text-emerald-400"
                     >{{ currentStoryStore?.currentStory?.length }} thẻ mới</span
                   >
@@ -297,7 +297,7 @@
       </div>
       <div class="p-4">
         <h2 class="text-2xl font-bold">Tin</h2>
-        <div class="mt-4">
+        <div class="xm:mt-4">
           <a href="#" class="text-emerald-400 hover:text-emerald-500"
             >Kho lưu trữ</a
           >
@@ -306,16 +306,16 @@
             >Cài đặt</a
           >
         </div>
-        <div class="my-4 flex flex-col space-y-4">
-          <h2 class="text-xl font-semibold">Tin của bạn</h2>
+        <div class="xm:my-4 my-2 flex flex-col space-y-4">
+          <h2 class="xm:text-xl text-xl font-semibold">Tin của bạn</h2>
           <div class="flex gap-3 items-center">
             <PlusIcon
               @click="openModal"
-              class="text-emerald-300 2xl:h-16 2xl:w-16 xl:w-14 xl:h-[52px] xs:w-10 xs:h-[36px] cursor-pointer transition p-3 bg-slate-700 rounded-full hover:bg-slate-600"
+              class="text-emerald-300 2xl:h-16 2xl:w-16 xl:w-14 xl:h-[52px] vs:w-10 vs:h-[36px] cursor-pointer transition p-3 bg-slate-700 rounded-full hover:bg-slate-600"
             />
             <div class="flex flex-col space-y-1">
-              <h4 class="font-semibold text-lg">Tạo tin</h4>
-              <p class="text-neutral-400">Bạn có thể tạo ảnh hoặc viết gì đó</p>
+              <h4 class="font-semibold xm:text-lg">Tạo tin</h4>
+              <p class="text-neutral-400 xm:text-base text-sm">Bạn có thể tạo ảnh hoặc viết gì đó</p>
             </div>
             <CreateStoryModal
               :show="isCreateStoryOpen"
@@ -342,7 +342,7 @@
             loading="lazy"
               :src="userStore.user.avatar"
               alt="story-owner"
-              class="2xl:w-16 2xl:h-16 xl:w-14 xl:h-14 xs:w-10 xs:h-10 rounded-full"
+              class="2xl:w-16 2xl:h-16 xl:w-14 xl:h-14 vs:w-10 vs:h-10 rounded-full"
             />
             <div class="flex flex-col space-y-2">
               <h3 class="text-lg font-semibold">{{ userStore.user.name }}</h3>
@@ -356,7 +356,7 @@
         </div>
       </div>
       <div>
-        <h2 class="text-xl font-semibold ml-4">Tất cả tin</h2>
+        <h2 class="xm:text-xl text-lg font-semibold ml-4">Tất cả tin</h2>
         <div class="my-2">
           <div @click="firstStory">
             <div
@@ -424,7 +424,7 @@
       </div>
     </div>
     <div class="xl:col-span-4 md:col-span-3 col-span-4 dark:bg-slate-900 bg-slate-200 flex flex-col relative h-screen">
-      <div class="py-4 h-full">
+      <div class="xm:py-4 h-full">
         <Suspense>
           <StoryDetail
             :userStories="userStories"
@@ -444,7 +444,7 @@
       </div>
       <div v-if="!isListSeenOpen && currentStoryStore.activeStoryId" class="flex justify-center items-center">
         <div
-          class="flex sm:justify-center sm:px-0 px-6 items-center gap-2 md:max-w-max xs:max-w-96 xs:overflow-x-scroll md:overflow-hidden"
+          class="flex sm:justify-center sm:px-0 px-6 items-center gap-2 md:max-w-max vs:max-w-96 vs:overflow-x-scroll md:overflow-hidden"
           v-if="currentStoryStore.activeStory !== userStore.user.id"
         >
           <input
@@ -459,7 +459,7 @@
             :key="emoji.utf"
           >
             <div
-              class="group p-2 rounded-full lg:w-12 lg:h-12 md:w-10 md:h-10 xs:w-8 xs:h-8 bg-gradient-to-t from-white via-emerald-500 to-green-500 flex justify-center items-center cursor-pointer"
+              class="group p-2 rounded-full lg:w-12 lg:h-12 md:w-10 md:h-10 vs:w-8 vs:h-8 bg-gradient-to-t from-white via-emerald-500 to-green-500 flex justify-center items-center cursor-pointer"
             >
               <span
                 @click="sendReact(emoji.name, currentStoryStore.activeStoryId)"

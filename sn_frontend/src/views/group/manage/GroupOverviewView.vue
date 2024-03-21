@@ -1,11 +1,11 @@
 <template>
   <div
-    class="lg:w-[60%] w-full px-4 flex flex-col justify-center items-center mx-auto my-4 space-y-4"
+    class="lg:w-[60%] w-full xm:px-4 flex flex-col justify-center items-center mx-auto xm:my-4 space-y-4"
   >
-    <div class="dark:bg-slate-800 bg-white w-full rounded-lg p-4 space-y-4">
+    <div class="dark:bg-slate-800 bg-white w-full xm:rounded-lg p-4 space-y-4">
       <div>
-        <h3 class="text-xl font-semibold">Cần xem xét</h3>
-        <h4 class="text-neutral-400">1 thông tin mới cần xem xét</h4>
+        <h3 class="xm:text-xl text-lg font-semibold">Cần xem xét</h3>
+        <h4 class="text-neutral-400 xm:text-base text-sm">1 thông tin mới cần xem xét</h4>
       </div>
       <div class="grid xl:grid-cols-2 grid-cols-1 gap-4">
         <div v-for="navigator in navigators" :key="navigator.name">
@@ -31,24 +31,24 @@
                 v-if="navigators.indexOf(navigator) == 3"
               />
               <div class="space-y-2">
-                <h3 class="text-lg font-semibold">{{ navigator.name }}</h3>
-                <h4 class="text-neutral-400">
+                <h3 class="xm:text-lg font-semibold">{{ navigator.name }}</h3>
+                <h4 class="text-neutral-400 xm:text-base text-sm">
                   {{ navigator.amount }} {{ navigator.content }}
                 </h4>
               </div>
             </div>
             <div class="flex items-center gap-4">
-              <h3 class="text-xl font-semibold">{{ navigator.amount }}</h3>
-              <ChevronRightIcon class="w-6" />
+              <h3 class="xm:text-xl text-lg font-semibold">{{ navigator.amount }}</h3>
+              <ChevronRightIcon class="xm:w-6 w-4" />
             </div>
           </RouterLink>
         </div>
       </div>
     </div>
-    <div class="dark:bg-slate-800 bg-white w-full rounded-lg p-4 space-y-4">
+    <div class="dark:bg-slate-800 bg-white w-full xm:rounded-lg p-4 space-y-4">
       <div>
-        <h3 class="text-xl font-semibold">Tóm tắt thông tin chi tiết</h3>
-        <h4 class="text-neutral-400">Trong 7 ngày qua</h4>
+        <h3 class="xm:text-xl text-lg font-semibold">Tóm tắt thông tin chi tiết</h3>
+        <h4 class="text-neutral-400 xm:text-base text-sm">Trong 7 ngày qua</h4>
       </div>
       <div class="grid xl:grid-cols-2 grid-cols-1 gap-4">
         <div
@@ -58,24 +58,24 @@
         >
           <div class="flex items-center gap-2">
             <DocumentTextIcon
-              class="w-8"
+              class="xm:w-8 w-6"
               v-if="summaries.indexOf(summary) == 0"
             />
             <ChatBubbleLeftEllipsisIcon
-              class="w-8"
+              class="xm:w-8 w-6"
               v-if="summaries.indexOf(summary) == 1"
             />
             <HandThumbUpIcon
-              class="w-8"
+              class="xm:w-8 w-6"
               v-if="summaries.indexOf(summary) == 2"
             />
-            <UserPlusIcon class="w-8" v-if="summaries.indexOf(summary) == 3" />
-            <h4 class="font-semibold">{{ summary.name }}</h4>
+            <UserPlusIcon class="xm:w-8 w-6" v-if="summaries.indexOf(summary) == 3" />
+            <h4 class="font-semibold xm:text-base text-sm">{{ summary.name }}</h4>
           </div>
           <div class="flex items-center gap-2">
-            <h3 class="text-lg font-semibold">{{ summary.amount }}</h3>
+            <h3 class="xm:text-lg font-semibold">{{ summary.amount }}</h3>
             <ArrowRightIcon
-              class="w-6"
+              class="xm:w-6 w-4"
               :class="[
                 summary.rate > 0 ? 'rotate-[-45deg] text-emerald-500' : '',
                 summary.rate < 0 ? 'rotate-45 text-rose-500' : '',

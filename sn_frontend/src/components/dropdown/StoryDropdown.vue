@@ -17,7 +17,7 @@
       leave-to-class="transform opacity-0 scale-95"
     >
       <MenuItems
-        class="absolute right-0 z-10 mt-2 w-56 origin-top-right divide-y divide-gray-100 rounded-md bg-white shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none"
+        class="absolute right-0 z-10 mt-2 w-56 origin-top-right divide-y divide-gray-100 rounded-md bg-white shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none xm:max-w-none max-w-max"
       >
         <div class="py-1" v-if="yourStory?.created_by?.id === userStore.user.id">
           <MenuItem v-slot="{ active }" @click="$emit('openModal')">

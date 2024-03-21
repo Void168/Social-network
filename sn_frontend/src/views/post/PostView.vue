@@ -1,15 +1,23 @@
 <template>
-  <SkeletonLoadingPost v-if="isLoading"/>
-  <div class="max-w-7xl mx-auto flex justify-center items-center gap-4" v-else>
-    <div class="space-y-4 xl:w-6/12 md:w-8/12 mx-2 md:mx-0">
+  <SkeletonLoadingPost v-if="isLoading" />
+  <div
+    class="max-w-7xl mx-auto flex justify-center gap-4"
+    v-else
+    :style="{
+      height: `${
+        toastStore.height 
+      }px`,
+    }"
+  >
+    <div class="space-y-4 xl:w-6/12 md:w-8/12 w-full sm:mx-2 md:mx-0">
       <div
         v-if="post.id"
-        class="p-4 bg-white border border-gray-200 rounded-lg mt-4 shadow-md dark:bg-slate-600 dark:border-slate-700 dark:text-neutral-200"
+        class="p-4 bg-white border border-gray-200 sm:rounded-lg sm:mt-4 shadow-md dark:bg-slate-600 dark:border-slate-700 dark:text-neutral-200"
       >
         <FeedItem v-bind:post="post" />
       </div>
       <div
-        class="p-4 bg-white border border-gray-200 rounded-lg shadow-md dark:bg-slate-600 dark:border-slate-700 dark:text-neutral-200"
+        class="sm:p-4 bg-white border border-gray-200 sm:rounded-lg shadow-md dark:bg-slate-600 dark:border-slate-700 dark:text-neutral-200"
       >
         <form v-on:submit.prevent="submitForm" method="post">
           <div class="p-4">
@@ -59,7 +67,7 @@
                   class="hover:bg-slate-300 dark:hover:bg-slate-700 p-4 flex items-center gap-2 cursor-pointer"
                 >
                   <img
-                  loading="lazy"
+                    loading="lazy"
                     :src="friend.get_avatar"
                     class="w-10 h-10 rounded-full"
                   />
@@ -72,7 +80,7 @@
       </div>
 
       <div
-        class="p-4 bg-white border border-gray-200 rounded-lg sm:ml-10 shadow-md dark:bg-slate-600 dark:border-slate-700 dark:text-neutral-200"
+        class="p-4 bg-white border border-gray-200 sm:rounded-lg sm:ml-10 shadow-md dark:bg-slate-600 dark:border-slate-700 dark:text-neutral-200"
       >
         <div
           v-if="!post.comments?.length"
@@ -113,6 +121,7 @@ import SkeletonLoadingPost from "../../components/loadings/SkeletonLoadingPost.v
 import CommentItem from "../../components/items/post/CommentItem.vue";
 import { useUserStore } from "../../stores/user";
 import { usePageStore } from "../../stores/page";
+import { useToastStore } from "../../stores/toast";
 
 export default {
   name: "PostView",
@@ -126,10 +135,13 @@ export default {
 
   setup() {
     const userStore = useUserStore();
-    const pageStore = usePageStore()
+    const pageStore = usePageStore();
+    const toastStore = useToastStore();
+
     return {
       userStore,
-      pageStore
+      pageStore,
+      toastStore,
     };
   },
 
@@ -147,7 +159,7 @@ export default {
       queries: [],
       tagInfo: {},
       tags: [],
-      isLoading: false
+      isLoading: false,
     };
   },
 
@@ -165,9 +177,9 @@ export default {
           .includes(this.queries[this.queries.length - 1]?.slice(1))
       );
     },
-    allComments(){
-      return this.post?.comments.concat(this.post?.page_comments)
-    }
+    allComments() {
+      return this.post?.comments.concat(this.post?.page_comments);
+    },
   },
 
   mounted() {
@@ -182,14 +194,14 @@ export default {
 
   methods: {
     async getPost() {
-      this.isLoading = true
+      this.isLoading = true;
       await axios
         .get(`/api/posts/${this.$route.params.id}`)
         .then((res) => {
           // console.log("data", res.data);
-          
+
           this.post = res.data.post;
-          this.isLoading = false
+          this.isLoading = false;
         })
         .catch((error) => {
           console.log(error);
@@ -214,7 +226,7 @@ export default {
     getWords() {
       const commentContent = this.$refs.content;
       this.body = commentContent.innerHTML.replace(/&nbsp;/g, " ");
-      this.words = this.body.split(" ").map(name => name.toLowerCase());
+      this.words = this.body.split(" ").map((name) => name.toLowerCase());
       this.queries = this.words.filter((word) => word.indexOf("@") === 0);
       if (
         this.words[this.words.length - 1].indexOf("@") === 0 &&
@@ -232,7 +244,11 @@ export default {
     getTag(friend) {
       const commentContent = this.$refs.content;
       this.queries[this.queries.length - 1] = friend.name;
-      commentContent.innerHTML = commentContent.innerHTML.slice(0, commentContent.innerHTML.lastIndexOf('@') + 1) + friend.name;
+      commentContent.innerHTML =
+        commentContent.innerHTML.slice(
+          0,
+          commentContent.innerHTML.lastIndexOf("@") + 1
+        ) + friend.name;
       this.tagInfo = friend;
       this.tags.push(this.tagInfo);
 
@@ -254,14 +270,14 @@ export default {
         axios
           .post(`/api/posts/${this.$route.params.id}/comment/`, {
             body: this.body,
-            tags: this.tags
+            tags: this.tags,
           })
           .then((res) => {
             // console.log("data", res.data);
 
             this.words = [];
             this.body = "";
-            this.tags = []
+            this.tags = [];
             this.$refs.content.innerHTML = "";
             this.post.comments.unshift(res.data);
             this.post.comments_count += 1;
@@ -269,19 +285,21 @@ export default {
           .catch((error) => {
             console.log("error", error);
           });
-      }
-      else if (this.body.length > 0 && this.pageStore.pageId){
+      } else if (this.body.length > 0 && this.pageStore.pageId) {
         axios
-          .post(`/api/posts/page/${this.pageStore.pageId}/${this.$route.params.id}/comment-by-page/`, {
-            body: this.body,
-            tags: this.tags
-          })
+          .post(
+            `/api/posts/page/${this.pageStore.pageId}/${this.$route.params.id}/comment-by-page/`,
+            {
+              body: this.body,
+              tags: this.tags,
+            }
+          )
           .then((res) => {
             // console.log("data", res.data);
 
             this.words = [];
             this.body = "";
-            this.tags = []
+            this.tags = [];
             this.$refs.content.innerHTML = "";
             this.post.comments.unshift(res.data);
             this.post.comments_count += 1;

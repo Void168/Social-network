@@ -6,7 +6,7 @@
         <Trends />
       </div>
       <div class="p-4 bg-white dark:bg-slate-700 border border-gray-200 dark:border-slate-500 rounded-b-lg">
-        <h2 class="text-xl dark:text-slate-200">Xu hướng: #{{ $route.params.id }}</h2>
+        <h2 class="sm:text-xl dark:text-slate-200">Xu hướng: #{{ $route.params.id }}</h2>
       </div>
       <div
         class="p-4 bg-white dark:bg-slate-700 border border-gray-200 dark:border-slate-500 dark:text-slate-200 rounded-lg mt-4"

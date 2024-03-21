@@ -12,7 +12,7 @@
         :class="haveSeen.length ? 'ring-slate-500' : 'ring-emerald-300'"
       />
       <div
-        class="relative h-[213px] flex items-center justify-center overflow-hidden shadow-sm rounded-lg cursor-pointer"
+        class="relative xs:h-[213px] h-[190px] flex items-center justify-center overflow-hidden shadow-sm rounded-lg cursor-pointer"
       >
         <div
           alt="story-image"
@@ -34,7 +34,7 @@
         :class="haveSeen.length ? 'ring-slate-500' : 'ring-emerald-300'"
       />
       <div
-        class="relative h-[213px] flex items-center justify-center overflow-hidden shadow-sm rounded-lg cursor-pointer"
+        class="relative xs:h-[213px] h-[190px] flex items-center justify-center overflow-hidden shadow-sm rounded-lg cursor-pointer"
       >
         <div
           alt="story-image"

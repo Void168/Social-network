@@ -17,7 +17,7 @@
       v-model="body"
       class="my-4"
     />
-    <div class="py-4 flex justify-center items-center gap-2" v-if="!isUpdate">
+    <div class="py-4 flex xs:flex-row flex-col justify-center items-center gap-2" v-if="!isUpdate">
       <button
         @click="openUpdateQuestion"
         class="py-2 px-4 font-semibold text-emerald-200 rounded-lg bg-emerald-500/70 hover:bg-emerald-500/50 duration-75 w-full"

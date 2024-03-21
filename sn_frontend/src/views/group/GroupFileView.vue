@@ -1,20 +1,20 @@
 <template>
   <div
-    class="w-full min-h-[700px] px-4"
+    class="w-full xs:min-h-[700px] xs:px-4"
   >
-  <div class="lg:w-[80%] mx-auto gap-4 my-6 bg-white dark:bg-slate-700 p-4 rounded-md dark:text-neutral-200">
+  <div class="lg:w-[80%] mx-auto gap-4 xs:my-6 bg-white dark:bg-slate-700 p-4 xs:rounded-md dark:text-neutral-200">
       <div class="flex justify-between items-center xm:flex-nowrap flex-wrap">
         <h2 class="text-xl font-semibold">File</h2>
         <div class="flex items-center xm:gap-4 gap-2 xm:flex-nowrap flex-wrap">
           <div class="relative w-full">
             <MagnifyingGlassIcon
-              class="absolute top-[18px] left-2 sm:w-6 sm:h-6 xs:w-3 xs:h-3 dark:text-neutral-400"
+              class="absolute top-[18px] left-2 sm:w-6 sm:h-6 vs:w-3 vs:h-3 dark:text-neutral-400"
             />
             <input
               ref="input"
               type="text"
               placeholder="Tìm kiếm file"
-              class="w-full my-2 sm:py-2 sm:px-8 xs:py-1 xs:px-6 border border-gray-200 dark:bg-slate-800 dark:border-slate-700 dark:text-neutral-200 rounded-2xl sm:text-base xs:text-sm"
+              class="w-full my-2 sm:py-2 sm:px-8 vs:py-1 vs:px-6 border border-gray-200 dark:bg-slate-800 dark:border-slate-700 dark:text-neutral-200 rounded-2xl sm:text-base xs:text-sm"
             />
           </div>
           <div

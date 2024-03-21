@@ -2,7 +2,7 @@
   <div class="flex justify-center items-center w-full mx-auto dark:bg-slate-700 bg-white">
     <div class="flex flex-col 2xl:w-[80%] w-full">
       <div
-        class="relative justify-end xl:h-[500px] sm:h-[300px] h-[200px] bg-cover bg-center bg-no-repeat rounded-b-lg bg-fit w-full"
+        class="relative justify-end xl:h-[500px] sm:h-[300px] h-[200px] bg-cover bg-center bg-no-repeat md:rounded-b-lg bg-fit w-full"
         :style="bgImage"
       >
         <button
@@ -20,14 +20,14 @@
         class="flex sm:justify-between sm:flex-row flex-col sm:my-8 my-4 md:mx-1 lm:mx-4 mx-4"
       >
         <div class="flex flex-col gap-2">
-          <h1 class="sm:text-2xl text-3xl font-bold">{{ group.name }}</h1>
+          <h1 class="sm:text-2xl xs:text-3xl vs:text-xl font-bold">{{ group.name }}</h1>
           <div class="flex items-center gap-2">
             <GlobeAsiaAustraliaIcon
               v-if="!group.is_private_group"
               class="w-4"
             />
             <LockClosedIcon v-else class="w-4" />
-            <h4 class="sm:text-sm">
+            <h4 class="sm:text-sm vs:text-xs">
               {{ group.is_private_group ? "Nhóm riêng tư" : "Nhóm công khai" }}
               &middot; {{ group.members_count }} thành viên
             </h4>
@@ -52,26 +52,26 @@
         </div>
         <div class="flex flex-col justify-end">
           <div
-            class="flex lg:gap-4 gap-2 lg:text-lg md:text-xs"
+            class="flex lg:gap-4 gap-2 lg:text-lg md:text-xs xs:flex-nowrap flex-wrap"
             v-if="isUserInGroup"
           >
             <button
-              class="flex items-center justify-center gap-1 sm:px-4 sm:py-2 font-semibold bg-emerald-500 hover:bg-emerald-400 rounded-lg duration-75 sm:max-w-max w-full sm:text-base md:text-sm text-xs"
+              class="flex items-center justify-center gap-1 sm:px-4 sm:py-2 font-semibold bg-emerald-500 hover:bg-emerald-400 rounded-lg duration-75 sm:max-w-max xs:w-full w-auto sm:text-base md:text-sm text-xs xs:px-0 vs:px-3 vs:py-3"
             >
               <PlusIcon class="w-4" />
-              Mời</button
+              <span class="xs:inline vs:hidden">Mời</span></button
             ><button
-              class="flex items-center justify-center gap-1 sm:px-4 sm:py-2 font-semibold dark:bg-slate-800 bg-slate-300 dark:hover:bg-slate-900 rounded-lg duration-75 sm:max-w-max w-full sm:text-base md:text-sm text-xs"
+              class="flex items-center justify-center gap-1 sm:px-4 sm:py-2 font-semibold dark:bg-slate-800 bg-slate-300 dark:hover:bg-slate-900 rounded-lg duration-75 sm:max-w-max xs:w-full w-auto sm:text-base md:text-sm text-xs xs:px-0 vs:px-3 vs:py-3"
             >
               <ShareIcon class="w-4" />
-              Chia sẻ
+              <span class="xs:inline vs:hidden">Chia sẻ</span>
             </button>
             <button
               @click="leaveGroup"
-              class="flex items-center justify-center gap-1 sm:px-4 sm:py-2 font-semibold dark:bg-slate-800 bg-slate-300 dark:hover:bg-slate-900 rounded-lg duration-75 sm:max-w-max w-full sm:text-base md:text-sm text-xs"
+              class="flex items-center justify-center gap-1 sm:px-4 sm:py-2 font-semibold dark:bg-slate-800 bg-slate-300 dark:hover:bg-slate-900 rounded-lg duration-75 sm:max-w-max xs:w-full w-auto sm:text-base md:text-sm text-xs xs:px-0 vs:px-3 vs:py-3"
             >
               <UserMinusIcon class="w-4" />
-              Rời nhóm
+              <span class="xs:inline vs:hidden">Rời nhóm</span>
             </button>
             <div class="flex items-center gap-2 sm:hidden">
               <MagnifyingGlassIcon
@@ -114,9 +114,9 @@
         </div>
       </div>
       <hr class="border dark:border-slate-600 mx-4" />
-      <div class="flex sm:justify-between justify-end items-center xm:mx-4">
+      <div class="flex sm:justify-between justify-end items-center xm:pr-4 xs:pr-0 vs:pr-4 w-full">
         <div
-          class="flex items-center lg:text-base md:text-sm sm:text-base xm:text-sm text-xs"
+          class="flex items-center lg:text-base md:text-sm sm:text-base xm:text-sm xs:text-xs vs:text-vs"
         >
           <RouterLink
             :to="{ name: 'groupdiscuss', params: { id: group?.id } }"

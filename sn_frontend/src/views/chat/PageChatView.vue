@@ -1,6 +1,11 @@
 <template>
   <div class="grid sm:grid-cols-4 grid-cols-3 max-h-screen">
     <div
+      v-if="isExpand || isNavigationExpand"
+      class="w-full h-full absolute bg-slate-700/50 z-10 duration-100"
+      @click="expandChatNavigation"
+    ></div>
+    <div
       @click="expandChatNavigation"
       class="fixed flex md:hidden z-20 inset-y-2/4 w-5 h-20 dark:bg-slate-700 bg-white rounded-r-2xl"
       :class="isExpand ? 'left-[90%]' : 'left-0'"

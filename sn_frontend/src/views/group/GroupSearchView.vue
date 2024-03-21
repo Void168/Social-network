@@ -1,6 +1,6 @@
 <template>
   <div
-    class="dark:bg-slate-900 bg-slate-200 pt-6 py-12 px-6 w-[50%]"
+    class="dark:bg-slate-900 bg-slate-200 pt-6 py-12 px-6 md:w-[70%] lg:w-[50%]"
   >
   <div class="flex flex-col gap-4 relative items-center" v-if="members?.length || groupPosts?.length">
     <div

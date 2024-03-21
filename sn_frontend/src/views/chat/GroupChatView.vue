@@ -7,7 +7,7 @@
     <div
       v-if="isExpand || isNavigationExpand"
       class="w-full h-full absolute bg-slate-700/50 z-10 duration-100"
-      @click="expandGroupNavigation"
+      @click="expandChatNavigation"
     ></div>
     <div
       @click="expandChatNavigation"

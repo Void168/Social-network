@@ -19,6 +19,9 @@ module.exports = {
       rotate: {
         '270': '270deg',
       },
+      fontSize: {
+        vs: ['10px', '14px'],
+      }
     },
     screens: {
       'vs':'0px',

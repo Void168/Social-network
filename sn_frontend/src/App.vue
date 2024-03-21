@@ -7,10 +7,10 @@
     >
       <div class="max-w-7xl mx-auto">
         <div class="flex items-center sm:justify-between justify-center">
-          <div class="menu-left sm:block hidden">
+          <div class="menu-left md:block hidden">
             <a href="/" class="text-xl">SN</a>
           </div>
-          <div
+        <div
             class="menu-center flex sm:space-x-12 xm:space-x-5 xs:space-x-1"
             v-if="userStore.user.isAuthenticated && !path.includes('auth')"
           >
@@ -21,7 +21,7 @@
                 viewBox="0 0 24 24"
                 stroke-width="1.5"
                 stroke="currentColor"
-                class="xs:w-6 xs:h-6 vs:h-4 m-3 group-hover:text-emerald-600 duration-100"
+                class="xs:w-6 xs:h-6 vs:h-6 m-3 group-hover:text-emerald-600 duration-100"
               >
                 <path
                   stroke-linecap="round"
@@ -38,7 +38,7 @@
                   viewBox="0 0 24 24"
                   stroke-width="1.5"
                   stroke="currentColor"
-                  class="xs:w-6 xs:h-6 vs:h-4 m-3 group-hover:text-emerald-600 duration-100"
+                  class="xs:w-6 xs:h-6 vs:h-6 m-3 group-hover:text-emerald-600 duration-100"
                 >
                   <path
                     stroke-linecap="round"
@@ -85,7 +85,7 @@
                 viewBox="0 0 24 24"
                 stroke-width="1.5"
                 stroke="currentColor"
-                class="xs:w-6 xs:h-6 vs:h-4 m-3 group-hover:text-emerald-600 duration-100"
+                class="xs:w-6 xs:h-6 vs:h-6 m-3 group-hover:text-emerald-600 duration-100"
               >
                 <path
                   stroke-linecap="round"

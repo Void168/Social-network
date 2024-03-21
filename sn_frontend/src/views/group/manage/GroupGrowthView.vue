@@ -2,14 +2,14 @@
   <div
     class="xl:w-[60%] w-full flex flex-col justify-center items-center mx-auto my-4 space-y-4 px-4"
   >
-    <div class="flex justify-between items-center w-full">
+    <div class="flex justify-between xm:flex-row flex-col gap-2 items-center w-full">
       <Listbox v-model="selectedDistance">
-        <div class="relative mt-1">
+        <div class="relative mt-1 xm:w-auto w-full">
           <ListboxButton
             class="relative w-full cursor-default rounded-lg bg-white dark:bg-slate-700 py-2 pl-3 pr-10 text-left shadow-md focus:outline-none focus-visible:border-indigo-500 focus-visible:ring-2 focus-visible:ring-white/75 focus-visible:ring-offset-2 focus-visible:ring-offset-orange-300 sm:text-sm"
           >
             <span
-              class="block truncate dark:text-neutral-200 font-semibold text-lg"
+              class="block truncate dark:text-neutral-200 font-semibold xm:text-lg"
               >{{ selectedDistance.name }}</span
             >
             <span
@@ -62,7 +62,7 @@
         </div>
       </Listbox>
       <div
-        class="flex items-center px-4 py-2 font-semibold dark:bg-slate-700 rounded-lg cursor-pointer duration-75 dark:hover:bg-slate-600"
+        class="flex items-center justify-center px-4 py-2 xm:w-auto w-full font-semibold dark:bg-slate-700 rounded-lg cursor-pointer duration-75 dark:hover:bg-slate-600"
       >
         <ArrowDownTrayIcon class="w-6" />
         Tải xuống
@@ -70,7 +70,7 @@
     </div>
     <div class="dark:bg-slate-800 bg-white w-full rounded-lg p-4 space-y-4">
       <div>
-        <h3 class="text-lg font-semibold">
+        <h3 class="xm:text-lg font-semibold">
           Tổng số thành viên: {{ group.members_count }}
         </h3>
         <h5 class="text-sm text-neutral-400">{{ today }}</h5>
@@ -79,7 +79,7 @@
     </div>
     <div class="dark:bg-slate-800 bg-white w-full rounded-lg p-4 space-y-4">
       <div>
-        <h3 class="text-lg font-semibold">
+        <h3 class="xm:text-lg font-semibold">
           Yêu cầu làm thành viên: {{ joinRequestsLength }}
         </h3>
         <h5
@@ -109,7 +109,7 @@
       <div class="flex justify-center items-center">
         <RouterLink
           :to="{ name: 'groupjoinrequest', params: { id: group.id } }"
-          class="px-4 py-2 dark:bg-slate-600 rounded-lg max-w-max font-semibold cursor-pointer dark:hover:bg-slate-500 duration-75"
+          class="xm:text-base text-sm xm:px-4 xm:py-2 px-2 py-1 text-center dark:bg-slate-600 rounded-lg max-w-max font-semibold cursor-pointer dark:hover:bg-slate-500 duration-75"
         >
           Xem tất cả yêu cầu làm thành viên
         </RouterLink>
@@ -119,13 +119,13 @@
       <div class="dark:bg-slate-800 bg-white rounded-lg p-4 space-y-4">
         <div class="flex justify-between sm:flex-row flex-col gap-3 items-center">
           <div>
-            <h3 class="text-lg font-semibold" v-if="selected === categories[0]">
+            <h3 class="xm:text-lg font-semibold" v-if="selected === categories[0]">
               Bài viết: {{ postsLength }}
             </h3>
-            <h3 class="text-lg font-semibold" v-if="selected === categories[1]">
+            <h3 class="xm:text-lg font-semibold" v-if="selected === categories[1]">
               Bình luận: {{ commentsLength }}
             </h3>
-            <h3 class="text-lg font-semibold" v-if="selected === categories[2]">
+            <h3 class="xm:text-lg font-semibold" v-if="selected === categories[2]">
               Cảm xúc: {{ likesLength }}
             </h3>
             <h5
@@ -152,7 +152,7 @@
               <button
                 @click="getCategory(category)"
                 :class="[
-                  'min-w-max rounded-lg px-4 py-2 text-sm font-medium leading-5 ',
+                  'min-w-max rounded-lg xm:px-4 xm:py-2 px-2 py-1 xm:text-sm text-xs font-medium leading-5 ',
                   'ring-slate-600/60 focus:outline-none focus:ring-2 ',
                   selected === category
                     ? 'bg-white dark:bg-slate-500 dark:text-neutral-200 shadow'
@@ -185,7 +185,7 @@
       </div>
       <div class="dark:bg-slate-800 bg-white rounded-lg p-4 space-y-4">
         <div>
-          <h3 class="text-lg font-semibold">
+          <h3 class="xm:text-lg font-semibold">
             Thành viên hoạt động: {{ activeMembersLength }}
           </h3>
           <h5

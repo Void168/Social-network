@@ -1,21 +1,21 @@
 <template>
   <SkeletonLoadingPost v-if="isLoading" />
   <div
-    class="max-w-7xl w-full mx-auto flex justify-center items-center gap-4 my-6 relative"
+    class="max-w-7xl w-full mx-auto flex justify-center items-center gap-4 sm:my-6 relative"
     v-else
   >
     <RouterLink
       :to="{ name: 'groupdiscuss', params: { id: group.id } }"
-      class="absolute top-0 left-0"
+      class="absolute top-2 left-2 z-10"
     >
       <XMarkIcon
         class="w-10 h-10 cursor-pointer p-1 dark:bg-slate-800 rounded-full dark:hover:bg-slate-700 duration-75"
       />
     </RouterLink>
-    <div class="space-y-4 xl:w-6/12 md:w-8/12 mx-2 md:mx-0">
+    <div class="space-y-4 xl:w-6/12 md:w-8/12 w-full sm:mx-2 md:mx-0">
       <div
         v-if="groupPost.id"
-        class="p-4 bg-white border border-gray-200 rounded-lg shadow-md dark:bg-slate-600 dark:border-slate-700 dark:text-neutral-200"
+        class="p-4 bg-white border border-gray-200 sm:rounded-lg shadow-md dark:bg-slate-600 dark:border-slate-700 dark:text-neutral-200"
       >
         <GroupPost
           :post="groupPost"
@@ -24,7 +24,7 @@
         />
       </div>
       <div
-        class="p-4 bg-white border border-gray-200 rounded-lg shadow-md dark:bg-slate-600 dark:border-slate-700 dark:text-neutral-200"
+        class="sm:p-4 bg-white border border-gray-200 sm:rounded-lg shadow-md dark:bg-slate-600 dark:border-slate-700 dark:text-neutral-200"
       >
         <form v-on:submit.prevent="submitForm" method="post">
           <div class="p-4">
@@ -54,7 +54,7 @@
               :class="
                 body.length
                   ? 'btn'
-                  : ' bg-slate-300 font-semibold dark:bg-slate-500 dark:text-neutral-200 px-4 py-2 rounded-md shadow-md cursor-auto'
+                  : ' bg-slate-300 font-semibold dark:bg-slate-500 dark:text-neutral-200 xm:px-4 xm:py-2 px-2 py-1 rounded-md shadow-md cursor-auto'
               "
               :disabled="body.length < 0"
             >
@@ -65,18 +65,17 @@
               v-if="autoComplete === true && filteredFriends.length > 0"
             >
               <ul
-                v-for="friend in filteredFriends"
-                :key="friend.id"
-                class="w-full h-20"
               >
                 <li
+                v-for="friend in filteredFriends"
+                :key="friend.id"
                   @click="getTag(friend)"
-                  class="hover:bg-slate-300 dark:hover:bg-slate-700 p-4 flex items-center gap-2 cursor-pointer"
+                  class="hover:bg-slate-300 dark:hover:bg-slate-700 p-4 flex items-center gap-2 cursor-pointer sm:h-20 h-16 w-full "
                 >
                   <img
-                  loading="lazy"
+                    loading="lazy"
                     :src="friend.get_avatar"
-                    class="w-10 h-10 rounded-full"
+                    class="xm:w-10 xm:h-10 h-6 w-6 rounded-full"
                   />
                   <span>{{ friend.name }}</span>
                 </li>
@@ -87,7 +86,7 @@
       </div>
 
       <div
-        class="p-4 bg-white border border-gray-200 rounded-lg sm:ml-10 shadow-md dark:bg-slate-600 dark:border-slate-700 dark:text-neutral-200"
+        class="xm:p-4 p-2 bg-white border border-gray-200 sm:rounded-lg sm:ml-10 shadow-md dark:bg-slate-600 dark:border-slate-700 dark:text-neutral-200"
       >
         <div
           v-if="!groupPost.comments?.length"

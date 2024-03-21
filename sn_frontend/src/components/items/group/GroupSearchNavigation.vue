@@ -3,9 +3,9 @@
     <div class="py-2 px-4">
       <div class="flex items-center gap-2">
         <div class="flex flex-col space-y-2">
-          <h1 class="font-bold text-2xl">Kết quả tìm kiếm</h1>
+          <h1 class="font-bold xm:text-2xl text-xl">Kết quả tìm kiếm</h1>
           <div class="flex items-center gap-2">
-            <h4 class="">trong {{ group.name }}</h4>
+            <h4 class="xm:text-base text-sm">trong {{ group.name }}</h4>
           </div>
         </div>
       </div>
@@ -16,7 +16,7 @@
     >
       <div class="relative">
         <MagnifyingGlassIcon
-          class="absolute top-[18px] left-2 sm:w-6 sm:h-6 xs:w-3 xs:h-3 dark:text-neutral-400"
+          class="absolute top-[18px] left-2 sm:w-6 sm:h-6 vs:w-3 vs:h-3 dark:text-neutral-400"
         />
         <form v-on:submit.prevent="submitForm" @keyup.enter="$emit('getQuery', query)">
           <input
@@ -24,56 +24,56 @@
             ref="input"
             type="text"
             placeholder="Tìm kiếm trong nhóm này"
-            class="w-full my-2 sm:py-2 sm:px-8 xs:py-1 xs:px-6 border border-gray-200 dark:bg-slate-700 dark:border-slate-800 dark:text-neutral-200 rounded-2xl sm:text-base xs:text-sm"
+            class="w-full my-2 sm:py-2 sm:px-8 vs:py-1 vs:px-6 border border-gray-200 dark:bg-slate-700 dark:border-slate-800 dark:text-neutral-200 rounded-2xl sm:text-base vs:text-sm"
           />
         </form>
       </div>
     </div>
     <hr class="border dark:border-slate-700 mx-4" />
     <div class="p-4">
-      <h3 class="font-semibold text-lg">Bộ lọc</h3>
-      <div class="pl-12 py-4 flex flex-col gap-4">
+      <h3 class="font-semibold xm:text-lg">Bộ lọc</h3>
+      <div class="xm:pl-12 py-4 flex flex-col gap-4">
         <div class="flex justify-between items-center">
-          <h4>Bài viết bạn đã xem</h4>
+          <h4 class="xm:text-base text-sm">Bài viết bạn đã xem</h4>
           <Switch
             v-model="enabled"
             :class="enabled ? 'bg-emerald-500' : 'bg-slate-700'"
-            class="relative inline-flex h-[24px] w-[48px] shrink-0 cursor-pointer rounded-full border-2 border-transparent transition-colors duration-200 ease-in-out focus:outline-none focus-visible:ring-2 focus-visible:ring-white/75"
+            class="relative inline-flex xm:h-[24px] xm:w-[48px] h-[16px] w-[36px] shrink-0 cursor-pointer rounded-full border-2 border-transparent transition-colors duration-200 ease-in-out focus:outline-none focus-visible:ring-2 focus-visible:ring-white/75"
           >
             <span class="sr-only">Use setting</span>
             <span
               aria-hidden="true"
-              :class="enabled ? 'translate-x-6' : 'translate-x-[1px]'"
-              class="pointer-events-none inline-block h-[20px] w-[20px] transform rounded-full bg-white shadow-lg ring-0 transition duration-200 ease-in-out"
+              :class="enabled ? 'xm:translate-x-6 translate-x-5' : 'xm:translate-x-[1px] translate-x-[2px]'"
+              class="pointer-events-none inline-block xm:h-[20px] xm:w-[20px] h-[12px] w-[12px] transform rounded-full bg-white shadow-lg ring-0 transition duration-200 ease-in-out"
             />
           </Switch>
         </div>
         <div class="flex justify-between items-center">
-          <h4>Gần đây nhất</h4>
+          <h4 class="xm:text-base text-sm">Gần đây nhất</h4>
           <Switch
             v-model="enabled"
             :class="enabled ? 'bg-emerald-500' : 'bg-slate-700'"
-            class="relative inline-flex h-[24px] w-[48px] shrink-0 cursor-pointer rounded-full border-2 border-transparent transition-colors duration-200 ease-in-out focus:outline-none focus-visible:ring-2 focus-visible:ring-white/75"
+            class="relative inline-flex xm:h-[24px] xm:w-[48px] h-[16px] w-[36px] shrink-0 cursor-pointer rounded-full border-2 border-transparent transition-colors duration-200 ease-in-out focus:outline-none focus-visible:ring-2 focus-visible:ring-white/75"
           >
             <span class="sr-only">Use setting</span>
             <span
               aria-hidden="true"
-              :class="enabled ? 'translate-x-6' : 'translate-x-[1px]'"
-              class="pointer-events-none inline-block h-[20px] w-[20px] transform rounded-full bg-white shadow-lg ring-0 transition duration-200 ease-in-out"
+              :class="enabled ? 'xm:translate-x-6 translate-x-5' : 'xm:translate-x-[1px] translate-x-[2px]'"
+              class="pointer-events-none inline-block xm:h-[20px] xm:w-[20px] h-[12px] w-[12px] transform rounded-full bg-white shadow-lg ring-0 transition duration-200 ease-in-out"
             />
           </Switch>
         </div>
         <div class="flex justify-between items-center">
-          <h4>Người đăng</h4>
-          <ChevronDownIcon class="w-8" />
+          <h4 class="xm:text-base text-sm">Người đăng</h4>
+          <ChevronDownIcon class="xm:w-8 w-6" />
         </div>
         <div class="flex justify-between items-center">
-          <h4>Vị trí được gắn thẻ</h4>
-          <ChevronDownIcon class="w-8" />
+          <h4 class="xm:text-base text-sm">Vị trí được gắn thẻ</h4>
+          <ChevronDownIcon class="xm:w-8 w-6" />
         </div>
         <div class="flex justify-between items-center">
-          <h4>Ngày đăng</h4>
-          <ChevronDownIcon class="w-8" />
+          <h4 class="xm:text-base text-sm">Ngày đăng</h4>
+          <ChevronDownIcon class="xm:w-8 w-6" />
         </div>
       </div>
     </div>

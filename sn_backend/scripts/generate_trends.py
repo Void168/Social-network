@@ -29,7 +29,7 @@ for trend in Trend.objects.all():
 # a_week = this_hour - timedelta(hours=144)
 
 # for post in Post.objects.filter(created_at__gte=a_week).filter(is_private=False):
-for post in Post.objects.all().filter(is_private=False):
+for post in Post.objects.all().filter(is_private=False, only_me=False):
     extract_hashtags(post.body, trends)
 
 for trend in Counter(trends).most_common(10):

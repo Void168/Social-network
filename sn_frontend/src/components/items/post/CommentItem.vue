@@ -1,7 +1,7 @@
 <template>
   <div>
     <div class="mb-6 flex items-center justify-between">
-      <div class="flex items-start gap-3 w-full relative">
+      <div class="flex items-start xm:gap-3 gap-1 w-full relative">
         <div class="group">
           <RouterLink
             :to="{
@@ -10,9 +10,9 @@
             }"
           >
             <img
-            loading="lazy"
+              loading="lazy"
               :src="comment?.created_by?.get_avatar"
-              class="w-10 h-10 rounded-full"
+              class="xm:w-10 xm:h-10 h-[28px] w-8 rounded-full"
             />
           </RouterLink>
           <TooltipProfile
@@ -21,7 +21,7 @@
           />
         </div>
         <div
-          class="flex justify-between border-none bg-gray-200 dark:bg-slate-700 dark:border-slate-800 dark:text-neutral-200 rounded-2xl w-full p-4"
+          class="flex justify-between border-none bg-gray-200 dark:bg-slate-700 dark:border-slate-800 dark:text-neutral-200 rounded-2xl w-full xm:p-4 p-2"
         >
           <div>
             <div class="flex items-center gap-1 group">
@@ -39,11 +39,16 @@
                 />
               </strong>
               <CommentDropDownVue
-                v-if="comment?.created_by?.id === userStore.user.id && !pageStore.pageId"
+                v-if="
+                  comment?.created_by?.id === userStore.user.id &&
+                  !pageStore.pageId
+                "
                 @deleteComment="deleteComment"
               />
               <CommentDropDownVue
-                v-if="pageStore.pageId === post?.created_by?.id && pageStore.pageId"
+                v-if="
+                  pageStore.pageId === post?.created_by?.id && pageStore.pageId
+                "
                 @deleteComment="deleteComment"
               />
             </div>
@@ -67,8 +72,15 @@
                 <span v-else>{{ word }}</span>
               </span>
             </div>
+            <p
+              class="text-gray-600 dark:text-neutral-200 sm:text-base xs:text-xs vs:text-vs xm:hidden block"
+            >
+              {{ comment?.created_at_formatted }} trước
+            </p>
           </div>
-          <p class="text-gray-600 dark:text-neutral-200 sm:text-base text-xs px-1">
+          <p
+            class="text-gray-600 dark:text-neutral-200 sm:text-base text-xs px-1 xm:block hidden"
+          >
             {{ comment?.created_at_formatted }} trước
           </p>
         </div>
@@ -89,16 +101,16 @@ export default (await import("vue")).defineComponent({
   setup() {
     const userStore = useUserStore();
     const toastStore = useToastStore();
-    const pageStore = usePageStore()
+    const pageStore = usePageStore();
     return {
       userStore,
       toastStore,
-      pageStore
+      pageStore,
     };
   },
   props: {
     comment: Object,
-    post: Object
+    post: Object,
   },
   data() {
     return {
@@ -115,12 +127,12 @@ export default (await import("vue")).defineComponent({
 
   mounted() {
     this.checkTag();
-    console.log(this.comment)
+    console.log(this.comment);
   },
 
   methods: {
     checkTag() {
-      if(this.tags){
+      if (this.tags) {
         const tagNames = this.tags.map((tag) => tag.name);
         tagNames.forEach((name) => {
           const filter = this.words.filter((word) => word.includes(name));
@@ -129,9 +141,11 @@ export default (await import("vue")).defineComponent({
       }
     },
     deleteComment() {
-      if(!this.post?.created_by?.is_page){
+      if (!this.post?.created_by?.is_page) {
         axios
-          .delete(`/api/posts/${this.$route.params.id}/comment/${this.comment.id}/delete/`)
+          .delete(
+            `/api/posts/${this.$route.params.id}/comment/${this.comment.id}/delete/`
+          )
           .then((res) => {
             if (res.data.message === "comment deleted") {
               this.toastStore.showToast(
@@ -149,7 +163,9 @@ export default (await import("vue")).defineComponent({
           });
       } else {
         axios
-          .delete(`/api/posts/page/${this.$route.params.id}/comment/${this.comment.id}/delete/`)
+          .delete(
+            `/api/posts/page/${this.$route.params.id}/comment/${this.comment.id}/delete/`
+          )
           .then((res) => {
             if (res.data.message === "comment deleted") {
               this.toastStore.showToast(

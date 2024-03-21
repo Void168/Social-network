@@ -8,15 +8,15 @@
     "
   >
     <div class="space-y-1">
-      <h3 class="text-lg font-semibold">{{ name }}</h3>
-      <h5 class="text-sm" v-if="!isOpen">
+      <h3 class="xm:text-lg font-semibold">{{ name }}</h3>
+      <h5 class="xm:text-sm text-xs" v-if="!isOpen">
         {{ selectedOption ? options[0]?.content : options[1]?.content }}
       </h5>
     </div>
     <PencilIcon
       v-if="!isOpen"
       @click="$emit('toggle')"
-      class="w-8 dark:text-neutral-400 cursor-pointer p-1 rounded-full hover:dark:bg-slate-600 duration-75"
+      class="xm:w-8 w-6 dark:text-neutral-400 cursor-pointer p-1 rounded-full hover:dark:bg-slate-600 duration-75"
     />
     <div v-else class="w-full">
       <CustomListRadio

@@ -2,10 +2,10 @@
   <div class="xl:w-[50%] sm:w-[80%] sm:my-12 my-4 space-y-4 dark:text-neutral-200">
     <div class="dark:bg-slate-700 bg-white sm:rounded-lg p-4">
       <div>
-        <h3 class="text-lg font-semibold">
+        <h3 class="xm:text-lg font-semibold">
           Thành viên &middot; {{ group.members_count }}
         </h3>
-        <h4 class="text-neutral-400">
+        <h4 class="text-neutral-400 xm:text-base text-sm">
           Người và Trang mới tham gia nhóm này sẽ hiển thị tại đây.
           <strong class="dark:text-neutral-200 hover:underline cursor-pointer"
             >Tìm hiểu thêm</strong
@@ -13,18 +13,18 @@
         </h4>
         <div class="relative w-full">
           <MagnifyingGlassIcon
-            class="absolute top-[18px] left-2 sm:w-6 sm:h-6 xs:w-3 xs:h-3 dark:text-neutral-400"
+            class="absolute top-[18px] left-2 sm:w-6 sm:h-6 vs:w-3 vs:h-3 dark:text-neutral-400"
           />
           <input
             ref="input"
             type="text"
             placeholder="Tìm thành viên"
-            class="w-full my-2 sm:py-2 sm:px-8 xs:py-1 xs:px-6 border border-gray-200 dark:bg-slate-800 dark:border-slate-800 dark:text-neutral-200 rounded-2xl sm:text-base xs:text-sm"
+            class="w-full my-2 sm:py-2 sm:px-8 vs:py-1 vs:px-6 border border-gray-200 dark:bg-slate-800 dark:border-slate-800 dark:text-neutral-200 rounded-2xl sm:text-base vs:text-sm"
           />
         </div>
       </div>
       <hr class="border my-4 dark:border-slate-600" />
-      <div class="flex justify-between items-center px-4 py-2">
+      <div class="flex justify-between items-center xs:px-4 py-2">
         <div class="flex items-center gap-2">
           <img
           loading="lazy"
@@ -43,12 +43,12 @@
       </div>
       <hr class="border my-4 dark:border-slate-600" />
       <div>
-        <h3 class="text-lg font-semibold">
+        <h3 class="xm:text-lg font-semibold">
           Chủ nhóm & quản trị viên &middot;
           {{ 1 + group?.moderators?.length }}
         </h3>
         <div class="flex flex-col gap-2">
-          <div class="flex justify-between items-center px-4 py-2">
+          <div class="flex justify-between items-center xs:px-4 py-2">
             <div class="flex items-center gap-2">
               <img
               loading="lazy"
@@ -66,7 +66,7 @@
             <div
               v-for="moderator in group?.moderators"
               :key="moderator.id"
-              class="px-4 py-2 flex items-center gap-2"
+              class="xs:px-4 py-2 flex items-center gap-2"
             >
               <img
               loading="lazy"
@@ -84,23 +84,23 @@
             <button
               class="flex gap-2 xm:text-base text-xs items-center xm:px-4 xm:py-2 px-2 py-1 rounded-lg dark:bg-slate-800 dark:hover:bg-slate-600 bg-slate-200 hover:bg-slate-300 duration-75 font-medium"
             >
-              <UserPlusIcon class="w-6" />
-              Thêm bạn bè
+              <UserPlusIcon class="xm:w-6 w-4" />
+              <span class="xs:inline hidden">Thêm bạn bè</span>
             </button>
           </div>
         </div>
       </div>
       <hr class="border my-4 dark:border-slate-600" />
       <div>
-        <h3 class="text-lg font-semibold">
+        <h3 class="xm:text-lg font-semibold">
           Bạn bè &middot;
           {{ 1 + group?.moderators?.length }}
         </h3>
-        <div class="flex flex-col px-4 py-2">
+        <div class="flex flex-col xs:px-4 py-2">
           <div
             v-for="friend in friends.slice(0, 3)"
             :key="friend.id"
-            class="flex justify-between items-center px-4 py-2"
+            class="flex justify-between items-center xs:px-4 py-2"
           >
             <RouterLink
               :to="{
@@ -125,8 +125,10 @@
             <button
               class="flex gap-2 items-center xm:text-base text-xs xm:px-4 xm:py-2 px-2 py-1 rounded-lg dark:bg-slate-800 dark:hover:bg-slate-600 bg-slate-200 hover:bg-slate-300 duration-75 font-medium"
             >
-              <ChatBubbleLeftEllipsisIcon class="w-6" />
-              Nhắn tin
+              <ChatBubbleLeftEllipsisIcon class="xm:w-6 w-4" />
+              <span class="xs:inline hidden">
+                Nhắn tin
+              </span>
             </button>
           </div>
         </div>
@@ -139,8 +141,8 @@
       </div>
       <hr class="border my-4 dark:border-slate-600" />
       <div>
-        <h3 class="text-lg font-semibold">Thành viên ở gần bạn &middot; 10</h3>
-        <div class="flex flex-col justify-between items-center px-4 py-2 gap-2">
+        <h3 class="xm:text-lg font-semibold">Thành viên ở gần bạn &middot; 10</h3>
+        <div class="flex flex-col justify-between items-center xs:px-4 py-2 gap-2">
           <div
             v-for="n in 3"
             :key="n"
@@ -169,8 +171,10 @@
             <button
               class="flex gap-2 items-center xm:text-base text-xs xm:px-4 xm:py-2 px-2 py-1 rounded-lg dark:bg-slate-800 dark:hover:bg-slate-600 bg-slate-200 hover:bg-slate-300 duration-75 font-medium"
             >
-              <UserPlusIcon class="w-6" />
-              Thêm bạn bè
+              <UserPlusIcon class="xm:w-6 w-4" />
+              <span class="xs:inline hidden">
+                Thêm bạn bè
+              </span>
             </button>
           </div>
         </div>
@@ -182,14 +186,14 @@
       </div>
       <div class="my-4">
         <div class="my-4">
-          <h3 class="text-lg font-semibold">Mới vào nhóm</h3>
+          <h3 class="xm:text-lg font-semibold">Mới vào nhóm</h3>
           <h5 class="text-xs">
             Danh sách này bao gồm những người đã tham gia nhóm và những người
             đang xem trước nhóm. Bất kỳ người nào được mời và được phê duyệt đều
             có thể xem trước nội dung trong nhóm.
           </h5>
         </div>
-        <div class="flex flex-col justify-between items-center px-4 py-2 gap-2">
+        <div class="flex flex-col justify-between items-center xs:px-4 py-2 gap-2">
           <div
             v-for="member in group.members"
             :key="member.id"
@@ -300,7 +304,7 @@ export default {
         .get(`/api/group/${this.$route.params.id}/`)
         .then((res) => {
           this.group = res.data;
-          //   console.log(res.data);
+            // console.log(res.data);
         })
         .catch((error) => {
           console.log(error);

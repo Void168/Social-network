@@ -1,5 +1,5 @@
 <template>
-  <Menu as="div" class="relative inline-block text-left">
+  <Menu as="div" class="relative inline-block text-left" ref="menu">
     <div>
       <MenuButton
         class="flex gap-2 items-center dark:bg-slate-700 rounded-lg dark:hover:bg-slate-600 duration-75"
@@ -9,16 +9,17 @@
     </div>
 
     <transition
-      enter-active-class="transition ease-out duration-100"
+      enter-active-class="transition ease-out duration-150"
       enter-from-class="transform opacity-0 scale-95"
       enter-to-class="transform opacity-100 scale-100"
-      leave-active-class="transition ease-in duration-75"
+      leave-active-class="transition ease-in duration-150"
       leave-from-class="transform opacity-100 scale-100"
       leave-to-class="transform opacity-0 scale-95"
     >
       <MenuItems
-        class="absolute left-[-200px] z-[10000] mt-2 w-56 origin-top-right divide-y divide-gray-100 rounded-md bg-white shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none"
-      >
+        class="absolute xs:left-[-200px] vs:left-[-190px] z-[50] w-56 origin-top-right divide-y divide-gray-100 rounded-md bg-white shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none"
+        :class="height ? 'top-[-170px]' : 'top-10'"
+        >
         <div class="py-1">
           <MenuItem v-slot="{ active }">
             <RouterLink
@@ -97,6 +98,7 @@ import {
 import { RouterLink } from "vue-router";
 import { useUserStore } from "../../stores/user";
 import { usePageStore } from "../../stores/page";
+
 export default {
   components: {
     Menu,
@@ -123,5 +125,32 @@ export default {
     member: Object,
     group: Object,
   },
+
+  data() {
+    return {
+      height: false
+    }
+  },
+
+  mounted(){
+    this.getHeight()
+  },
+
+  watch:{
+    height(val){
+      if(val){
+        this.getHeight()
+      }
+    }
+  },
+
+  methods: {
+    getHeight(){
+      const rect = this.$refs.menu.$el.getBoundingClientRect();
+      if(rect.top > document.body.scrollHeight - 150){
+        this.height = true
+      }
+    },
+  }
 };
 </script>

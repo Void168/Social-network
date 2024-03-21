@@ -5,19 +5,19 @@
       loading="lazy"
         src="https://www.call2customer.com/wp-content/uploads/2020/01/brochure.png"
         alt=""
-        class="w-32 h-32"
+        class="xm:w-32 xm:h-32 w-24 h-24"
       />
       <div class="dark:text-neutral-400">
         <h2 class="text-2xl text-center font-semibold">
           Câu hỏi chọn thành viên
         </h2>
-        <h3 class="text-center">
+        <h3 class="text-center xm:text-base text-sm">
           Đặt tối đa 3 câu hỏi chọn thành viên cho người muốn tham gia nhóm. Chỉ
           quản trị viên và người kiểm duyệt mới xem được câu trả lời.
         </h3>
       </div>
       <div v-for="question in questions" :key="question.id" class="w-full">
-        <GroupQuestion :question="question" :index="questions.indexOf(question) + 1"/>
+        <GroupQuestion :question="question" :inpdex="questions.indexOf(question) + 1"/>
       </div>
       <div
         @click="openModal"

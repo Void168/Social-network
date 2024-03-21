@@ -5,11 +5,11 @@
       :breakpoints="{
         '0': {
           slidesPerView: 2,
-          spaceBetween: 5,
+          spaceBetween: 10,
         },
         '320': {
           slidesPerView: 2,
-          spaceBetween: 20,
+          spaceBetween: 10,
         },
         '440': {
           slidesPerView: 3,
@@ -64,7 +64,7 @@
             class="absolute top-4 left-4 w-10 h-10 rounded-full ring-4 ring-emerald-300 z-20"
           />
           <div
-            class="relative h-[213px] flex items-center justify-center overflow-hidden shadow-sm rounded-lg cursor-pointer"
+            class="relative xs:h-[213px] h-[190px] flex items-center justify-center overflow-hidden shadow-sm rounded-lg cursor-pointer"
           >
             <div
               alt="story-image"

@@ -8,13 +8,13 @@
     >
       <div class="flex gap-2 items-center w-[80%]">
         <EyeIcon
-          class="w-10 p-2 rounded-full dark:bg-slate-600 bg-slate-100"
+          class="xm:w-10 w-6 xm:p-2 p-1 rounded-full dark:bg-slate-600 bg-slate-100"
           v-if="option.id === 1"
         />
-        <EyeSlashIcon class="w-10 p-2 rounded-full dark:bg-slate-600 bg-slate-100" v-else />
+        <EyeSlashIcon class="xm:w-10 w-6 xm:p-2 p-1 rounded-full dark:bg-slate-600 bg-slate-100" v-else />
         <div class="flex flex-col gap-1">
-          <h4 class="font-medium">{{ option.name }}</h4>
-          <h5 class="text-sm">{{ option.content }}</h5>
+          <h4 class="font-medium xm:text-base text-sm">{{ option.name }}</h4>
+          <h5 class="xm:text-sm text-xs">{{ option.content }}</h5>
         </div>
       </div>
       <div class="relative sm:w-10 sm:h-10 h-6 w-6 rounded-full dark:bg-slate-600 bg-slate-200">
@@ -31,13 +31,13 @@
     <div class="flex justify-end items-center gap-2">
       <button
         @click="$emit('toggle')"
-        class="px-4 py-2 font-medium text-emerald-500 dark:bg-slate-700 dark:hover:bg-slate-600 duration-75 rounded-lg"
+        class="xm:px-4 xm:py-2 px-2 py-1 font-medium text-emerald-500 dark:bg-slate-700 dark:hover:bg-slate-600 duration-75 rounded-lg"
       >
         Hủy
       </button>
       <button
         @click="$emit('submit')"
-        class="px-4 py-2 font-medium rounded-lg"
+        class="xm:px-4 xm:py-2 px-2 py-1 font-medium rounded-lg"
         :class="'text-emerald-500 dark:bg-slate-700 dark:hover:bg-slate-600 duration-75'"
       >
         Lưu

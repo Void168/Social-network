@@ -8,16 +8,16 @@
     >
       <img
         src="https://www.facebook.com/images/comet/empty_states_icons/permissions/permissions_dark_mode.svg"
-        class="w-32 h-32 shadow-none"
+        class="xm:w-32 xm:h-32 h-20 w-20 shadow-none"
       />
-      <h3 class="font-bold text-xl">Bạn hiện không xem được nội dung này</h3>
-      <h4 class="dark:text-neutral-400">
+      <h3 class="font-bold xm:text-xl">Bạn hiện không xem được nội dung này</h3>
+      <h4 class="dark:text-neutral-400 xm:text-base text-sm">
         Lỗi này thường do chủ sở hữu chỉ chia sẻ nội dung với một nhóm nhỏ, thay
         đổi người được xem hoặc đã xóa nội dung.
       </h4>
       <RouterLink
         :to="{ name: 'feed' }"
-        class="px-6 py-2 font-semibold bg-emerald-500 hover:bg-emerald-400 duration-75 rounded-lg"
+        class="px-6 py-2 font-semibold xm:text-base text-sm bg-emerald-500 hover:bg-emerald-400 duration-75 rounded-lg"
       >
         Đi tới bảng tin
       </RouterLink>

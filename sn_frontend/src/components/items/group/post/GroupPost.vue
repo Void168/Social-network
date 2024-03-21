@@ -1,7 +1,7 @@
 <template>
   <div class="relative dark:bg-slate-800 bg-white xs:p-4 my-4 rounded-lg shadow-md">
     <div class="mb-2 flex items-center justify-between">
-      <div class="flex items-center space-x-6 xs:p-4 xs:px-0 vs:px-2">
+      <div class="flex items-center space-x-6 xs:p-4 xs:px-0 vs:p-2">
         <div class="relative">
           <img
           loading="lazy"

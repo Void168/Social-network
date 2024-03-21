@@ -1,9 +1,9 @@
 <template>
   <div class="w-full flex flex-col justify-center items-center">
-    <div class="flex xl:w-[80%] w-full my-4 gap-4 px-4">
+    <div class="flex xl:w-[80%] w-full xm:my-4 gap-4 xm:px-4">
       <div class="lg:w-[60%] w-full " id="feed-frame">
         <div v-if="isUserInGroup" class="flex flex-col space-y-4">
-          <div class="dark:bg-slate-700 bg-white rounded-lg px-4">
+          <div class="dark:bg-slate-700 bg-white xm:rounded-lg xm:px-4">
             <div class="py-4 flex items-start gap-2 p-2 rounded-lg">
               <div>
                 <img
@@ -27,7 +27,7 @@
                 v-model="body"
                 class="p-4 w-full bg-gray-100 rounded-lg resize-none"
                 cols="30"
-                rows="4"
+                rows="3"
                 placeholder="Bạn đang nghĩ gì?"
               ></textarea>
             </div>
@@ -85,21 +85,23 @@
               </span>
               </div>
             </div>
-            <button
-              @click="submitForm"
-              class="w-full mb-4 font-semibold"
-              :class="
-                !body
-                  ? 'dark:bg-slate-600 bg-slate-200 text-neutral-400 py-2 rounded-lg  duration-75'
-                  : 'btn'
-              "
-              :disabled="!body"
-              v-if="!isPollOpen"
-            >
-              Đăng bài viết
-            </button>
+            <div class="px-4 xm:px-0">
+              <button
+                @click="submitForm"
+                class="w-full mb-4 font-semibold"
+                :class="
+                  !body
+                    ? 'dark:bg-slate-600 bg-slate-200 text-neutral-400 py-2 rounded-lg  duration-75'
+                    : 'btn'
+                "
+                :disabled="!body"
+                v-if="!isPollOpen"
+              >
+                Đăng bài viết
+              </button>
+            </div>
           </div>
-          <div class="flex items-center flex-wrap gap-2 justify-between">
+          <div class="flex items-center flex-wrap gap-2 justify-between xm:px-0 px-4">
             <div class="flex items-center gap-2 text-emerald-500 font-bold xm:text-base text-sm">
               Bài viết mới nhất
               <ChevronDownIcon class="w-5" />
@@ -146,7 +148,7 @@
             <SkeletonLoadingPost v-if="isLoading" />
             <div v-else>
               <div
-                class="dark:bg-slate-700 bg-white rounded-lg px-4"
+                class="dark:bg-slate-700 bg-white xm:rounded-lg px-4"
                 v-for="groupPost in groupPosts"
                 :key="groupPost.id"
               >

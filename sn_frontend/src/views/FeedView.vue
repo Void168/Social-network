@@ -145,15 +145,17 @@
       </Suspense>
     </div>
     <div
-      class="sm:ml-5 sm:mx-5 main-center !shadow-none lg:col-span-4 sm:col-span-2 col-span-3 space-y-4 xs:py-6"
+      class="sm:ml-5 sm:mx-5 main-center !shadow-none lg:col-span-4 sm:col-span-2 col-span-3 space-y-4 xm:py-6"
     >
       <div
-        class="p-4 bg-white border border-gray-200 dark:bg-slate-600 dark:border-slate-700 dark:text-neutral-200 rounded-lg"
+        class="p-4 bg-white border border-gray-200 dark:bg-slate-600 dark:border-slate-700 dark:text-neutral-200 xm:rounded-lg overflow-x-hidden"
+        :style="{maxWidth: `${toastStore.width}px`}"
       >
         <StoriesContainer />
       </div>
       <div
         class="p-4 bg-white border border-gray-200 dark:bg-slate-600 dark:border-slate-700 dark:text-neutral-200 rounded-lg"
+        :style="{maxWidth: toastStore.width < 320 ? `${toastStore.width}px` : '100%'}"
       >
         <PostForm v-bind:user="null" v-bind:posts="posts" @getNewPost="getNewPost"/>
         <SkeletonLoadingPostVue v-if="isLoading" />

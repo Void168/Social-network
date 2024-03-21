@@ -1,7 +1,7 @@
 <template>
-  <div class="flex flex-col items-center justify-center py-6 gap-4 xl:w-[50%] lg:w-[70%] w-full px-4">
-    <div class="w-full dark:bg-slate-800 bg-white rounded-lg p-4">
-      <h1 class="font-bold text-2xl">Thiết lập nhóm</h1>
+  <div class="flex flex-col items-center justify-center xm:py-6 gap-4 xl:w-[50%] lg:w-[70%] w-full xm:px-4">
+    <div class="w-full dark:bg-slate-800 bg-white xm:rounded-lg p-4">
+      <h1 class="font-bold xm:text-2xl text-xl">Thiết lập nhóm</h1>
       <div class="my-4">
         <div
           class="flex"
@@ -11,11 +11,11 @@
               : 'items-center justify-between'
           "
         >
-          <h3 class="text-lg font-semibold">Tên và mô tả</h3>
+          <h3 class="xm:text-lg font-semibold">Tên và mô tả</h3>
           <PencilIcon
             @click="toggleEditName"
             v-if="!isNameOpen"
-            class="w-8 dark:text-neutral-400 cursor-pointer p-1 rounded-full hover:dark:bg-slate-600 duration-75"
+            class="xm:w-8 w-6 dark:text-neutral-400 cursor-pointer p-1 rounded-full hover:dark:bg-slate-600 duration-75"
           />
           <div v-else class="w-full space-y-2">
             <MUILikedInput
@@ -66,13 +66,13 @@
         <hr class="border border-slate-700 my-4" />
         <div class="flex items-center justify-between">
           <div class="space-y-1">
-            <h3 class="text-lg font-semibold">Vị trí</h3>
-            <h5 class="text-sm">
+            <h3 class="xm:text-lg font-semibold">Vị trí</h3>
+            <h5 class="xm:text-sm text-xs">
               {{ group?.show_group ? "Ẩn" : "Hiên thị" }}
             </h5>
           </div>
           <PencilIcon
-            class="w-8 dark:text-neutral-400 cursor-pointer p-1 rounded-full hover:dark:bg-slate-600 duration-75"
+            class="xm:w-8 w-6 dark:text-neutral-400 cursor-pointer p-1 rounded-full hover:dark:bg-slate-600 duration-75"
           />
         </div>
         <hr class="border border-slate-700 my-4" />
@@ -85,8 +85,8 @@
           "
         >
           <div class="space-y-1">
-            <h3 class="text-lg font-semibold">Địa chỉ web</h3>
-            <h5 class="text-sm" v-if="!isUrlOpen">
+            <h3 class="xm:text-lg font-semibold">Địa chỉ web</h3>
+            <h5 class="xm:text-sm text-xs break-all" v-if="!isUrlOpen">
               {{
                 baseUrl + route.path.slice(0, route.path.length - 5) || this.url
               }}
@@ -134,8 +134,8 @@
         </div>
       </div>
     </div>
-    <div class="w-full dark:bg-slate-800 bg-white rounded-lg p-4">
-      <h1 class="font-bold text-2xl">Quản lý thành viên</h1>
+    <div class="w-full dark:bg-slate-800 bg-white xm:rounded-lg p-4">
+      <h1 class="font-bold xm:text-2xl text-xl">Quản lý thành viên</h1>
       <div class="my-4">
         <EditGroupRadioItem
           :name="'Ai có thể tham gia nhóm'"
@@ -151,11 +151,11 @@
         <div v-if="userStore.user.id === group?.admin?.id">
           <div class="flex items-center justify-between">
             <div class="space-y-1">
-              <h3 class="text-lg font-semibold">Quản trị viên</h3>
+              <h3 class="xm:text-lg font-semibold">Quản trị viên</h3>
             </div>
             <PencilIcon
               @click="openAddModeratorsModal"
-              class="w-8 dark:text-neutral-400 cursor-pointer p-1 rounded-full hover:dark:bg-slate-600 duration-75"
+              class="xm:w-8 w-6 dark:text-neutral-400 cursor-pointer p-1 rounded-full hover:dark:bg-slate-600 duration-75"
             />
             <AddModeratorsModal
               :group="group"
@@ -166,7 +166,7 @@
           </div>
           <div v-for="moderator in group?.moderators" :key="moderator?.id" class="flex justify-between items-center my-4">
             <div class="flex gap-2 items-center px-4">
-              <img loading="lazy" :src="moderator?.information?.get_avatar" alt="moderator-avatar" class="w-10 h-10 rounded-full">
+              <img loading="lazy" :src="moderator?.information?.get_avatar" alt="moderator-avatar" class="xm:w-10 xm:h-10 h-6 w-6 rounded-full">
               <h4 class="font-semibold">{{ moderator?.information?.name }}</h4>
             </div>
             <ModeratorDropDown :moderator="moderator" @removeModerator="removeModerator(moderator)"/>
@@ -176,17 +176,17 @@
         <div>
           <div class="flex items-center justify-between">
             <div class="space-y-1">
-              <h3 class="text-lg font-semibold">Danh sách cấm</h3>
+              <h3 class="xm:text-lg font-semibold">Danh sách cấm</h3>
             </div>
             <PencilIcon
-              class="w-8 dark:text-neutral-400 cursor-pointer p-1 rounded-full hover:dark:bg-slate-600 duration-75"
+              class="xm:w-8 w-6 dark:text-neutral-400 cursor-pointer p-1 rounded-full hover:dark:bg-slate-600 duration-75"
             />
           </div>
         </div>
       </div>
     </div>
-    <div class="w-full dark:bg-slate-800 bg-white rounded-lg p-4">
-      <h1 class="font-bold text-2xl">Quản lý nội dung thảo luận</h1>
+    <div class="w-full dark:bg-slate-800 bg-white xm:rounded-lg p-4">
+      <h1 class="font-bold xm:text-2xl text-xl">Quản lý nội dung thảo luận</h1>
       <div class="my-4">
         <EditGroupRadioItem
           :name="'Đăng ẩn danh'"

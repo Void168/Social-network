@@ -10,7 +10,7 @@
     >
       <div class="xl:w-[60%] w-full py-6 px-4">
         <div class="flex justify-between items-center sm:flex-nowrap flex-wrap">
-          <h1 class="font-bold text-2xl">
+          <h1 class="font-bold xm:text-2xl text-lg">
             Bài viết đang chờ &middot; {{ pendingPosts.length }}
           </h1>
           <div
@@ -32,22 +32,22 @@
             </button>
           </div>
         </div>
-        <div class="flex items-center gap-2 my-2">
+        <div class="flex xm:flex-row flex-col items-center gap-2 my-2">
           <div class="relative w-full">
             <MagnifyingGlassIcon
-              class="absolute top-[18px] left-2 sm:w-6 sm:h-6 xs:w-3 xs:h-3 dark:text-neutral-400"
+              class="absolute top-[18px] left-2 sm:w-6 sm:h-6 vs:w-3 vs:h-3 dark:text-neutral-400"
             />
             <input
               ref="input"
               type="text"
               placeholder="Tìm kiếm"
-              class="w-full my-2 sm:py-2 sm:px-8 xs:py-1 xs:px-6 border border-gray-200 dark:bg-slate-700 dark:border-slate-800 dark:text-neutral-200 rounded-2xl sm:text-base xs:text-sm"
+              class="w-full my-2 sm:py-2 sm:px-8 vs:py-1 vs:px-6 border border-gray-200 dark:bg-slate-700 dark:border-slate-800 dark:text-neutral-200 rounded-2xl sm:text-base vs:text-sm"
             />
           </div>
           <div
-            class="flex px-4 py-2 gap-2 items-center dark:bg-slate-700 bg-slate-300 dark:hover:bg-slate-600 rounded-lg duration-75 cursor-pointer min-w-max"
+            class="flex px-4 py-2 gap-2 items-center dark:bg-slate-700 bg-slate-300 dark:hover:bg-slate-600 rounded-lg duration-75 cursor-pointer min-w-max xm:w-auto w-full xm:justify-start justify-center"
           >
-            <h3 class="font-semibold">Mới nhất trước</h3>
+            <h3 class="font-semibold xm:text-sm text-xs">Mới nhất trước</h3>
             <ChevronDownIcon class="w-4" />
           </div>
         </div>
@@ -58,36 +58,36 @@
           <div
             class="flex px-4 py-2 gap-2 items-center dark:bg-slate-700 bg-slate-300 dark:hover:bg-slate-600 rounded-lg duration-75 cursor-pointer min-w-max"
           >
-            <h4 class="font-semibold text-sm">Xóa bộ lọc</h4>
+            <h4 class="font-semibold xm:text-sm text-xs">Xóa bộ lọc</h4>
           </div>
           <div
             class="flex px-4 py-2 gap-2 items-center dark:bg-slate-700 bg-slate-300 dark:hover:bg-slate-600 rounded-lg duration-75 cursor-pointer min-w-max"
           >
-            <h4 class="font-semibold text-sm">Liên kết</h4>
+            <h4 class="font-semibold xm:text-sm text-xs">Liên kết</h4>
             <ChevronDownIcon class="w-4" />
           </div>
           <div
             class="flex px-4 py-2 gap-2 items-center dark:bg-slate-700 bg-slate-300 dark:hover:bg-slate-600 rounded-lg duration-75 cursor-pointer min-w-max"
           >
-            <h4 class="font-semibold text-sm">Chọn ngày</h4>
+            <h4 class="font-semibold xm:text-sm text-xs">Chọn ngày</h4>
             <ChevronDownIcon class="w-4" />
           </div>
           <div
             class="flex px-4 py-2 gap-2 items-center dark:bg-slate-700 bg-slate-300 dark:hover:bg-slate-600 rounded-lg duration-75 cursor-pointer min-w-max"
           >
-            <h4 class="font-semibold text-sm">Tác giả</h4>
+            <h4 class="font-semibold xm:text-sm text-xs">Tác giả</h4>
             <ChevronDownIcon class="w-4" />
           </div>
           <div
             class="flex px-4 py-2 gap-2 items-center dark:bg-slate-700 bg-slate-300 dark:hover:bg-slate-600 rounded-lg duration-75 cursor-pointer min-w-max"
           >
-            <h4 class="font-semibold text-sm">Loại nội dung</h4>
+            <h4 class="font-semibold xm:text-sm text-xs">Loại nội dung</h4>
             <ChevronDownIcon class="w-4" />
           </div>
         </div>
       </div>
     </div>
-    <div class="xl:w-[50%] w-full my-12 space-y-4 dark:text-neutral-200 px-4">
+    <div class="xl:w-[50%] w-full xm:my-12 my-4 space-y-4 dark:text-neutral-200 px-4">
       <div
         v-for="post in pendingPosts"
         :key="post.id"
@@ -117,11 +117,11 @@
             class="w-8 p-1 rounded-lg dark:hover:bg-slate-600 duration-75 cursor-pointer"
           />
         </div>
-        <h2 class="text-2xl font-medium my-4">
+        <h2 class="xm:text-2xl text-xl font-medium my-4">
             {{ post.body }}
         </h2>
         <div class="flex justify-between items-start w-full">
-          <div class="flex w-full gap-3">
+          <div class="flex xs:flex-row flex-col w-full items-end gap-3">
             <button
               @click="
                 handleRequest(
@@ -147,7 +147,7 @@
               Từ chối
             </button>
             <EllipsisHorizontalIcon
-              class="w-24 p-1 shadow-md dark:bg-slate-800 rounded-lg font-semibold dark:hover:bg-slate-600 duration-75 cursor-pointer"
+              class="xs:w-24 w-10 p-1 shadow-md dark:bg-slate-800 rounded-lg font-semibold dark:hover:bg-slate-600 duration-75 cursor-pointer"
             />
           </div>
         </div>

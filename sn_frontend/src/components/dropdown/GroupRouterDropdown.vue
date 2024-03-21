@@ -5,7 +5,7 @@
   >
     <div>
       <MenuButton class="flex gap-2 items-center">
-        <span>Xem thêm</span>
+        <span class="xs:inline vs:hidden">Xem thêm</span>
         <ChevronDownIcon class="w-5" />
       </MenuButton>
     </div>
@@ -19,7 +19,7 @@
       leave-to-class="transform opacity-0 scale-95"
     >
       <MenuItems
-        class="absolute left-[-100px] top-10 z-50 mt-2 w-56 origin-top-right bg-white dark:bg-slate-600 shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none"
+        class="absolute xm:left-[-10px] xs:left-[-36px] vs:left-[-100px] xm:top-10 xs:top-7 z-20 mt-2 w-56 origin-top-right bg-white dark:bg-slate-600 shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none vs:max-w-max"
       >
         <div class="py-1">
           <MenuItem v-slot="{ active }">

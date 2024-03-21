@@ -11,7 +11,7 @@
           "
           class="w-12 h-12 rounded-full"
         />
-        <div class="flex gap-1 items-center flex-wrap">
+        <div class="flex xm:flex-row flex-col gap-1 xm:items-center flex-wrap">
           <strong class="group" v-if="!post.is_anonymous">
             <RouterLink
               :to="{
@@ -28,11 +28,11 @@
 
           <strong class="group" v-else> Người tham gia ẩn danh </strong>
           <div class="md:hidden items-center gap-2 flex">
-            <UserGroupIcon class="w-6" v-if="group?.is_private_group" />
-            <GlobeAsiaAustraliaIcon class="w-6" v-else />
+            <UserGroupIcon class="xs:w-6 vs:w-4" v-if="group?.is_private_group" />
+            <GlobeAsiaAustraliaIcon class="xs:w-6 vs:w-4" v-else />
             <div class="relative group md:hidden">
               <p
-                class="text-gray-600 dark:text-neutral-200 sm:text-base xs:text-sm group-hover:underline"
+                class="text-gray-600 dark:text-neutral-200 sm:text-base xs:text-sm vs:text-xs group-hover:underline"
               >
                 {{ post.created_at_formatted }} trước
               </p>
@@ -57,32 +57,9 @@
       </div>
     </div>
 
-    <p class="px-4 text-lg">{{ post.body }}</p>
+    <p class="px-4 sm:text-lg xs:text-base vs:text-sm">{{ post.body }}</p>
 
-    <div
-      v-if="post.attachments?.length && post.is_avatar_post"
-      class="mt-4 flex justify-center relative sm:h-[400px] xm:h-[350px] xs:h-[300px]"
-    >
-      <div class="w-full">
-        <img
-        loading="lazy"
-          :src="post.created_by.get_cover_image"
-          alt="cover_image"
-          class="max-h-[300px] w-full rounded-none"
-        />
-      </div>
-
-      <img
-      loading="lazy"
-        v-for="image in post.attachments"
-        v-bind:key="image.id"
-        :src="image.get_image"
-        class="absolute top-5 mb-4 rounded-full md:w-96 md:h-96 xm:w-80 xm:h-80 xs:w-64 xs:h-64 shadow-md ring-8 ring-white dark:ring-slate-700"
-        alt="avatar"
-      />
-    </div>
-
-    <div v-else class="mt-4 px-4">
+    <div v-if="post.attachments.length" class="mt-4 xm:px-4">
       <img
       loading="lazy"
         v-for="image in post.attachments"
@@ -92,7 +69,7 @@
       />
     </div>
 
-    <div class="p-4 my-6 flex justify-between">
+    <div class="p-4 sm:my-6 flex justify-between">
       <div class="flex space-x-6">
         <div class="flex items-center space-x-2">
           <HeartLike
@@ -106,7 +83,7 @@
             class="w-6 h-6 cursor-pointer text-gray-400 hover:text-rose-500 transition-colors duration-75"
           />
           <span class="text-gray-500 text-xs dark:text-neutral-200"
-            >{{ post.likes_count }} lượt thích</span
+            >{{ post.likes_count }} <span class="xs:inline hidden">lượt thích</span></span
           >
         </div>
 
@@ -132,15 +109,15 @@
               params: { postid: post.id },
             }"
             class="text-gray-500 text-xs dark:text-neutral-200"
-            >{{ post?.comments_count }} bình luận</RouterLink
+            >{{ post?.comments_count }} <span class="xs:inline hidden">bình luận</span></RouterLink
           >
         </div>
       </div>
-      <div class="absolute right-4 bottom-4 shadow-lg rounded-lg ease-in duration-300">
+      <div class="absolute right-4 xm:bottom-4 xm:top-auto vs:top-4 vs:bottom-auto sm:top-auto shadow-lg rounded-lg ease-in duration-300">
         <Menu as="div" class="relative inline-block text-left">
           <div>
             <MenuButton
-              class="inline-flex w-full justify-center rounded-md bg-white md:px-3 md:py-2 px-2 py-1 text-gray-900 dark:bg-slate-600 dark:border-slate-700 dark:text-neutral-200 ring-1 ring-inset ring-gray-300 hover:bg-gray-50 hover:text-gray-900"
+              class="inline-flex w-full justify-center rounded-md bg-white md:px-3 md:py-2 px-0 py-0 text-gray-900 dark:bg-slate-600 dark:border-slate-700 dark:text-neutral-200 ring-1 ring-inset ring-gray-300 hover:bg-gray-50 hover:text-gray-900"
             >
               <svg
                 xmlns="http://www.w3.org/2000/svg"
@@ -168,7 +145,7 @@
             leave-to-class="transform opacity-0 scale-95"
           >
             <MenuItems
-              class="absolute right-0 z-10 mt-2 w-56 origin-top-right divide-y divide-gray-100 rounded-md bg-white shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none"
+              class="absolute right-0 z-10 mt-2 w-56 origin-top-right divide-y divide-gray-100 rounded-md bg-white shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none xs:max-w-none max-w-max"
             >
               <div
                 class="py-1"

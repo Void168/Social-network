@@ -27,11 +27,11 @@
             leave-to="opacity-0 scale-95"
           >
             <DialogPanel
-              class="w-full max-w-md h-96 transform overflow-hidden rounded-2xl bg-white dark:bg-slate-700 p-6 text-left align-middle shadow-xl transition-all"
+              class="w-full max-w-md h-96 transform overflow-hidden rounded-2xl bg-white dark:bg-slate-700 xm:p-6 p-3 text-left align-middle shadow-xl transition-all"
             >
               <DialogTitle
                 as="h3"
-                class="text-xl font-bold leading-6 text-gray-900 dark:text-slate-200 flex justify-between items-center"
+                class="xm:text-2xl text-xl font-bold leading-6 text-gray-900 dark:text-slate-200 flex justify-between items-center"
               >
                 <h2 class="w-full text-center">{{ option.body }}</h2>
                 <button
@@ -46,7 +46,7 @@
               </DialogTitle>
               <hr class="border border-slate-600 my-2" />
               <div class="mt-4 gap-3 dark:text-slate-200">
-                <h2 class="text-xl font-bold">
+                <h2 class="xm:text-xl font-bold">
                   {{
                     totalVote > 0
                       ? Math.round((voteCount / totalVote) * 100, 0)
@@ -55,8 +55,8 @@
                 </h2>
                 <div class="my-4" v-for="user in option.vote_by" :key="user.id">
                   <div class="flex items-center gap-2">
-                    <img loading="lazy" :src="user?.information?.get_avatar" class="w-10 h-10 rounded-full" alt="vote-avatar"/>
-                    <h4 class="font-semibold">{{ user?.information?.name }}</h4>
+                    <img loading="lazy" :src="user?.information?.get_avatar" class="xm:w-10 xm:h-10 h-6 w-6 rounded-full" alt="vote-avatar"/>
+                    <h4 class="font-semibold xm:text-base text-sm">{{ user?.information?.name }}</h4>
                   </div>
                 </div>
               </div>

@@ -27,17 +27,17 @@
             leave-to="opacity-0 scale-95"
           >
             <DialogPanel
-              class="w-full flex flex-col justify-between relative max-w-md h-80 transform overflow-hidden rounded-2xl bg-white p-6 text-left align-middle shadow-xl transition-all"
+              class="w-full flex flex-col justify-between relative max-w-md h-80 transform overflow-hidden rounded-2xl dark:bg-slate-700 bg-white p-6 text-left align-middle shadow-xl transition-all"
             >
               <div>
                 <DialogTitle
                   as="h3"
-                  class="text-2xl font-medium leading-6 text-gray-900 text-center"
+                  class="xm:text-2xl text-xl font-medium leading-6 text-gray-900 text-center dark:text-neutral-200"
                 >
                   Tạo một đoạn chat nhóm
                 </DialogTitle>
                 <div class="my-2 flex justify-center font-semibold">
-                  <p class="text-lg text-gray-500">
+                  <p class="xm:text-lg text-gray-500 dark:text-neutral-200">
                     Người tạo nhóm {{ userStore.user.name }}
                   </p>
                 </div>

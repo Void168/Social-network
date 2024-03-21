@@ -31,13 +31,13 @@
             >
               <DialogTitle
                 as="h3"
-                class="text-2xl font-medium leading-6 text-gray-900 dark:text-neutral-200 text-center"
+                class="xm:text-2xl text-xl font-medium leading-6 text-gray-900 dark:text-neutral-200 text-center"
               >
                 Tạo cuộc thăm dò ý kiến
               </DialogTitle>
               <div class="mt-2">
                 <div class="my-6">
-                  <label for="" class="text-lg dark:text-neutral-200"
+                  <label for="" class="xm:text-lg dark:text-neutral-200"
                     >Tên cuộc thăm dò</label
                   >
                   <input

@@ -18,7 +18,7 @@
       </div>
       <TransitionRoot @after-leave="query = ''">
         <ComboboxOptions
-          class="absolute z-10 mt-1 max-h-60 w-full overflow-auto scrollbar-none hover:scrollbar-thin scrollbar-thumb-slate-400 scrollbar-track-slate-800 rounded-md bg-white dark:bg-slate-700 py-1 text-base shadow-lg ring-1 ring-black/5 focus:outline-none sm:text-sm"
+          class="absolute z-10 mt-1 max-h-60 w-full overflow-auto scrollbar-none hover:scrollbar-thin scrollbar-thumb-slate-400 scrollbar-track-slate-800 rounded-md bg-white dark:bg-slate-700 py-1 shadow-lg ring-1 ring-black/5 focus:outline-none xm:text-base text-xs"
         >
           <div
             v-if="filteredTypes.length === 0 && query !== ''"

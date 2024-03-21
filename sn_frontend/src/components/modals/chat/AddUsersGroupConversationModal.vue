@@ -27,18 +27,18 @@
             leave-to="opacity-0 scale-95"
           >
             <DialogPanel
-              class="w-full flex flex-col justify-between max-w-md transform overflow-hidden rounded-2xl h-80 bg-white p-6 text-left align-middle shadow-xl transition-all"
+              class="w-full flex flex-col justify-between max-w-md transform overflow-hidden rounded-2xl h-80 dark:bg-slate-700 bg-white p-6 text-left align-middle shadow-xl transition-all"
             >
               <div>
                 <DialogTitle
                   as="h3"
-                  class="text-2xl font-medium leading-6 text-gray-900 text-center"
+                  class="xm:text-2xl text-xl font-medium leading-6 text-gray-900 dark:text-neutral-200 text-center"
                 >
                   Thêm người khác vào nhóm
                 </DialogTitle>
                 <div class="mt-2">
                   <div>
-                    <p class="text-lg font-semibold mb-2">Bạn bè</p>
+                    <p class="text-lg font-semibold mb-2 dark:text-neutral-200">Bạn bè</p>
                     <Multiselect
                       v-model="value"
                       mode="tags"
@@ -51,7 +51,7 @@
                       :on-create="getValue(value)"
                     >
                     </Multiselect>
-                    <p class="text-lg font-semibold my-2">Người khác</p>
+                    <p class="text-lg font-semibold my-2 dark:text-neutral-200">Người khác</p>
                     <!-- v-model="" -->
                     <input
                       v-model="profileId"

@@ -1,6 +1,6 @@
 <template>
   <TransitionRoot @click="$emit('closeQuestionModal')" appear as="template">
-    <Dialog as="div" class="relative z-10">
+    <Dialog as="div" class="relative z-50">
       <TransitionChild
         as="template"
         enter="duration-300 ease-out"
@@ -49,10 +49,10 @@
                   loading="lazy"
                     :src="group.get_cover_image"
                     alt=""
-                    class="rounded-lg h-16 w-16"
+                    class="rounded-lg xm:h-16 xm:w-16 h-10 w-10"
                   />
                 </RouterLink>
-                <div class="flex flex-col space-y-2">
+                <div class="flex flex-col xm:space-y-2">
                   <h4 class="font-semibold">{{ group.name }}</h4>
                   <div class="flex items-center gap-2">
                     <GlobeAsiaAustraliaIcon
@@ -74,10 +74,10 @@
               <div
                 class="my-2 dark:bg-slate-800 dark:text-neutral-200 rounded-lg p-4"
               >
-                <h3 class="text-lg font-semibold">
+                <h3 class="xm:text-lg font-semibold">
                   Yêu cầu tham gia của bạn đang chờ phê duyệt
                 </h3>
-                <h4 class="">
+                <h4 class="xm:text-base text-sm">
                   Hãy trả lời những câu hỏi sau của quản trị viên nhóm để họ có
                   thể xem xét yêu cầu tham gia của bạn. Câu trả lời của bạn sẽ
                   chỉ hiển thị với quản trị viên và người kiểm duyệt.
@@ -89,7 +89,7 @@
               >
                 <GroupAnswer :question="question" @getAnswer="getAnswer" :index="questions.indexOf(question) + 1"/>
               </div>
-              <div class="mt-4 flex justify-between items-center">
+              <div class="mt-4 flex xm:flex-row flex-col gap-2 justify-between items-center">
                 <h5 class="dark:text-neutral-200 text-xs">
                   Không nhập mật khẩu hoặc thông tin nhạy cảm khác tại đây, ngay
                   cả khi quản trị viên nhóm {{ group.name }} yêu cầu.

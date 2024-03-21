@@ -27,12 +27,12 @@
             leave-to="opacity-0 scale-95"
           >
             <DialogPanel
-              class="w-full max-w-md transform overflow-hidden rounded-2xl bg-white dark:bg-slate-800 p-6 text-left align-middle shadow-xl transition-all"
+              class="w-full max-w-md transform overflow-hidden rounded-2xl bg-white dark:bg-slate-800 xm:p-6 p-3 text-left align-middle shadow-xl transition-all"
             >
               <div class="flex justify-between items-center">
                 <DialogTitle
                   as="h3"
-                  class="text-2xl font-medium leading-6 text-gray-900 dark:text-slate-200"
+                  class="xm:text-2xl text-xl font-medium leading-6 text-gray-900 dark:text-slate-200"
                 >
                   Tìm kiếm
                 </DialogTitle>
@@ -44,7 +44,7 @@
               <div class="mt-2">
                 <div class="relative">
                   <MagnifyingGlassIcon
-                    class="absolute top-[18px] left-2 sm:w-6 sm:h-6 xs:w-3 xs:h-3 dark:text-neutral-400"
+                    class="absolute top-[18px] left-2 sm:w-6 sm:h-6 vs:w-3 vs:h-3 dark:text-neutral-400"
                   />
                   <form
                     v-on:submit.prevent="submitForm"
@@ -57,13 +57,13 @@
                       ref="input"
                       type="text"
                       placeholder="Tìm kiếm trong nhóm này"
-                      class="w-full my-2 sm:py-2 sm:px-8 xs:py-1 xs:px-6 border border-gray-200 dark:bg-slate-700 dark:border-slate-800 dark:text-neutral-200 rounded-2xl sm:text-base xs:text-sm"
+                      class="w-full my-2 sm:py-2 sm:px-8 vs:py-1 vs:px-6 border border-gray-200 dark:bg-slate-700 dark:border-slate-800 dark:text-neutral-200 rounded-2xl sm:text-base vs:text-sm"
                     />
                   </form>
                 </div>
               </div>
-              <div class="my-4 flex justify-between gap-2 items-center">
-                <h3 class="text-lg font-semibold">Tìm kiếm gần đây</h3>
+              <div class="my-4 flex justify-between xm:flex-row flex-col gap-2 items-center">
+                <h3 class="xl:text-lg font-semibold">Tìm kiếm gần đây</h3>
                 <h4
                   class="text-emerald-400 px-4 py-2 hover:bg-slate-400 dark:hover:bg-slate-600 rounded-lg duration-75 cursor-pointer"
                 >
@@ -72,7 +72,7 @@
               </div>
               <div v-if="!query">
                 <div
-                  class="px-4 flex flex-col dark:text-neutral-200 py-2 rounded-lg dark:hover:bg-slate-700 duration-75 cursor-pointer"
+                  class="xm:px-4 flex flex-col dark:text-neutral-200 xm:py-2 px-2 py-1 rounded-lg dark:hover:bg-slate-700 duration-75 cursor-pointer"
                   v-for="keyword in keywords.slice(0, 6)"
                   :key="keyword.id"
                 >
@@ -85,7 +85,7 @@
                         <ClockIcon
                           class="w-8 p-1 dark:bg-slate-900 rounded-full"
                         />
-                        <h3>{{ keyword.body }}</h3>
+                        <h3 class="truncate xm:text-base text-sm">{{ keyword.body }}</h3>
                       </div>
                     </div>
                     <div @click="$emit('deleteKeyWord', keyword)">

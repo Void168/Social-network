@@ -1,6 +1,6 @@
 <template>
   <TransitionRoot @click="$emit('closeModal')" appear as="template">
-    <Dialog as="div" class="relative z-10">
+    <Dialog as="div" class="relative z-50">
       <TransitionChild
         as="template"
         enter="duration-300 ease-out"
@@ -27,11 +27,11 @@
             leave-to="opacity-0 scale-95"
           >
             <DialogPanel
-              class="w-full max-w-md transform overflow-hidden rounded-2xl bg-white p-6 text-left align-middle shadow-xl transition-all"
+              class="w-full max-w-md transform overflow-hidden rounded-2xl dark:bg-slate-700 bg-white p-6 text-left align-middle shadow-xl transition-all"
             >
               <DialogTitle
                 as="h3"
-                class="text-2xl font-medium leading-6 text-gray-900 text-center"
+                class="text-2xl font-medium leading-6 text-gray-900 text-center dark:text-neutral-200"
               >
                 Thay đổi ảnh đoạn chat nhóm
               </DialogTitle>

@@ -27,18 +27,18 @@
             leave-to="opacity-0 scale-95"
           >
             <DialogPanel
-              class="w-full flex flex-col justify-between max-w-md transform overflow-hidden h-80 rounded-2xl bg-white p-6 text-left align-middle shadow-xl transition-all"
+              class="w-full flex flex-col justify-between max-w-md transform overflow-hidden h-80 rounded-2xl dark:bg-slate-700 bg-white p-6 text-left align-middle shadow-xl transition-all"
             >
               <div>
                 <DialogTitle
                   as="h3"
-                  class="text-2xl font-medium leading-6 text-gray-900 text-center"
+                  class="xm:text-2xl text-xl font-medium leading-6 text-gray-900 text-center dark:text-neutral-200"
                 >
                   Thêm quản trị viên
                 </DialogTitle>
                 <div class="mt-2">
                   <div>
-                    <p class="text-lg font-semibold mb-2">Thành viên</p>
+                    <p class="xm:text-lg font-semibold mb-2 dark:text-neutral-200">Thành viên</p>
                     <Multiselect
                       v-model="value"
                       mode="tags"

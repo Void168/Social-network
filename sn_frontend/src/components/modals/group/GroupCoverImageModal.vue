@@ -31,14 +31,14 @@
               >
                 <DialogTitle
                   as="h3"
-                  class="text-2xl font-medium leading-6 text-gray-900 dark:text-slate-200 text-center"
+                  class="xm:text-2xl text-xl font-medium leading-6 text-gray-900 dark:text-slate-200 text-center"
                 >
                   Chọn ảnh bìa
                 </DialogTitle>
                 <div class="flex flex-col justify-center items-center my-4">
-                  <div class="h-64 w-full border-4 border-dashed p-2">
+                  <div class="xm:h-64 h-36 w-full border-4 border-dashed xm:p-2 p-1">
                     <div v-if="url" class="relative mt-1">
-                      <img loading="lazy" :src="url" class="w-full h-56 rounded-lg" />
+                      <img loading="lazy" :src="url" class="w-full xm:h-56 h-32 rounded-lg" />
                       <span
                         class="absolute top-3 right-3 cursor-pointer"
                         @click="removeImage"
@@ -67,7 +67,7 @@
                     <div class="p-4 flex justify-end">
                       <label for="cover-image">
                         <div
-                          class="py-3 px-6 text-white bg-gray-400 font-semibold rounded-lg transition-colors hover:bg-gray-600 cursor-pointer"
+                          class="xm:py-3 xm:px-6 py-1 px-2 text-white bg-gray-400 font-semibold rounded-lg transition-colors hover:bg-gray-600 cursor-pointer"
                         >
                           <span>Chọn ảnh</span>
                         </div>

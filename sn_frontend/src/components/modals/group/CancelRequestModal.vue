@@ -1,6 +1,6 @@
 <template>
     <TransitionRoot @click="$emit('closeModal')" appear as="template">
-      <Dialog as="div" class="relative z-10">
+      <Dialog as="div" class="relative z-50">
         <TransitionChild
           as="template"
           enter="duration-300 ease-out"
@@ -31,12 +31,12 @@
               >
                 <DialogTitle
                   as="h3"
-                  class="text-2xl font-medium leading-6 text-gray-900 dark:text-neutral-200 text-center"
+                  class="xm:text-2xl text-xl font-medium leading-6 text-gray-900 dark:text-neutral-200 text-center"
                 >
                 Hủy yêu cầu tham gia nhóm
                 </DialogTitle>
                 <div class="mt-2">
-                  <p class="text-sm text-gray-500 dark:text-neutral-200">
+                  <p class="xm:text-sm text-xs text-gray-500 dark:text-neutral-200">
                     Bạn chắc chắn chấm muốn hủy tham gia nhóm này?
                   </p>
                 </div>

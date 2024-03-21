@@ -27,18 +27,18 @@
             leave-to="opacity-0 scale-95"
           >
             <DialogPanel
-              class="w-full max-w-md transform overflow-hidden rounded-2xl bg-white p-6 text-left align-middle shadow-xl transition-all"
+              class="w-full max-w-md transform overflow-hidden rounded-2xl dark:bg-slate-700 bg-white p-6 text-left align-middle shadow-xl transition-all"
             >
               <DialogTitle
                 as="h3"
-                class="text-2xl font-medium leading-6 text-gray-900 text-center"
+                class="text-2xl font-medium leading-6 text-gray-900 text-center dark:text-neutral-200"
               >
                 Thay đổi tên đoạn chat nhóm
               </DialogTitle>
               <div class="mt-4">
                 <form>
                   <div class="flex gap-2 items-center">
-                    <PencilSquareIcon class="w-6 h-6"/>
+                    <PencilSquareIcon class="w-6 h-6 dark:text-neutral-200"/>
                     <input
                       v-model="form.name"
                       type="text"

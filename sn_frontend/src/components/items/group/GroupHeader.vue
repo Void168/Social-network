@@ -86,7 +86,7 @@
           </div>
           <button
             @click="joinGroup"
-            class="flex items-center gap-1 px-4 py-2 font-semibold bg-emerald-500 hover:bg-emerald-400 rounded-lg duration-75 sm:max-w-max w-full"
+            class="flex justify-center items-center gap-1 px-4 py-2 font-semibold bg-emerald-500 hover:bg-emerald-400 rounded-lg duration-75 sm:max-w-max w-full"
             v-else-if="!isJoinRequest"
           >
             <UserPlusIcon class="w-4" />
@@ -94,7 +94,7 @@
           </button>
           <button
             @click="openCancelRequestModal"
-            class="flex items-center gap-1 px-4 py-2 font-semibold bg-emerald-500 hover:bg-emerald-400 rounded-lg duration-75 sm:max-w-max w-full"
+            class="flex items-center justify-center gap-1 px-4 py-2 font-semibold bg-emerald-500 hover:bg-emerald-400 rounded-lg duration-75 sm:max-w-max w-full"
             v-else-if="isJoinRequest"
           >
             <UserPlusIcon class="w-4" />

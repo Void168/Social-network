@@ -196,18 +196,18 @@
         </div>
         <div
           v-else-if="!isUserInGroup && group.is_private_group"
-          class="flex flex-col justify-center items-center dark:bg-slate-700 h-[500px] rounded-lg"
+          class="flex flex-col justify-center items-center dark:bg-slate-700 h-[500px] rounded-lg xm:px-0 px-4"
         >
           <img
           loading="lazy"
             src="https://th.bing.com/th/id/R.0b658885df48a3649d297aa3cb9b701c?rik=O%2bnowdCCiEHMBw&riu=http%3a%2f%2fwww.freeiconspng.com%2fuploads%2fyellow-lock-icon-1.png&ehk=vmtKzvuDRyuDCuxWRt5bkcNNyst9WtJzTsByLmk4QOI%3d&risl=&pid=ImgRaw&r=0"
             alt="lock"
-            class="w-40 h-40 shadow-none"
+            class="xm:w-40 xm:h-40 h-20 w-20 shadow-none"
           />
-          <h2 class="font-bold text-xl dark:text-neutral-300">
+          <h2 class="font-bold xm:text-xl text-lg dark:text-neutral-300">
             Đây là nhóm riêng tư
           </h2>
-          <h3 class="text-lg dark:text-neutral-400">
+          <h3 class="xm:text-lg dark:text-neutral-400">
             Hãy tham gia nhóm này để xem hoặc cùng thảo luận nhé.
           </h3>
         </div>

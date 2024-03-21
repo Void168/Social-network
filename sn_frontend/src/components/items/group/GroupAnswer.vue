@@ -16,7 +16,7 @@
         @keyup="$emit('getAnswer', answer, index)"
         type="text"
         class="form-control w-full p-4 rounded-lg resize-none"
-        rows="3"
+        rows="2"
         v-model="answer"
         placeholder="Viết câu trả lời..."
       ></textarea>

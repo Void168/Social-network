@@ -31,7 +31,7 @@
             >
               <DialogTitle
                 as="h3"
-                class="text-xl font-bold leading-6 text-gray-900 dark:text-slate-200"
+                class="xm:text-2xl text-xl font-bold leading-6 text-gray-900 dark:text-slate-200"
               >
                 Tạo quy tắc
                 <XMarkIcon
@@ -41,7 +41,7 @@
               </DialogTitle>
               <hr class="border border-slate-600 my-4" />
               <h3
-                class="text-lg font-bold text-left leading-6 text-gray-900 dark:text-slate-200"
+                class="xm:text-lg font-bold text-left leading-6 text-gray-900 dark:text-slate-200"
               >
                 Quy tắc mẫu
               </h3>
@@ -49,7 +49,7 @@
                 <div
                   v-for="rule in ruleTemplates"
                   :key="rule.id"
-                  class="py-2 px-4 rounded-full w-52 cursor-pointer"
+                  class="xm:py-2 xm:px-4 px-2 py-1 rounded-full w-52 cursor-pointer"
                   :class="
                     index === rule.id
                       ? 'bg-emerald-800/50 dark:text-emerald-400'
@@ -57,13 +57,13 @@
                   "
                   @click="chooseRuleTemplate(rule)"
                 >
-                  <h4 class="truncate font-semibold">
+                  <h4 class="truncate font-semibold xm:text-base text-sm">
                     {{ rule.name }}
                   </h4>
                 </div>
               </div>
               <h3
-                class="text-lg font-bold text-left leading-6 text-gray-900 dark:text-slate-200 mt-4"
+                class="xm:text-lg font-bold text-left leading-6 text-gray-900 dark:text-slate-200 mt-4"
               >
                 Viết quy tắc riêng
               </h3>
@@ -74,7 +74,7 @@
                 <textarea
                   type="text"
                   class="form-control resize-none w-full rounded-lg p-4"
-                  rows="4"
+                  rows="3"
                   placeholder="Mô tả"
                   v-model="body"
                 ></textarea>

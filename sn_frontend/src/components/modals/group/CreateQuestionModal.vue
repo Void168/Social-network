@@ -27,11 +27,11 @@
             leave-to="opacity-0 scale-95"
           >
             <DialogPanel
-              class="w-full max-w-md transform overflow-hidden rounded-2xl bg-white dark:bg-slate-700 p-6 text-left align-middle shadow-xl transition-all"
+              class="w-full max-w-md transform overflow-hidden rounded-2xl bg-white dark:bg-slate-700 xm:p-6 p-3 text-left align-middle shadow-xl transition-all"
             >
               <DialogTitle
                 as="h3"
-                class="text-xl font-bold leading-6 text-gray-900 dark:text-slate-200 flex justify-between items-center"
+                class="xm:text-2xl text-xl font-bold leading-6 text-gray-900 dark:text-slate-200 flex justify-between items-center"
               >
                 Chỉnh sửa câu hỏi
                 <XMarkIcon

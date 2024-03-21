@@ -4,7 +4,7 @@
     appear
     as="template"
   >
-    <Dialog as="div" class="relative z-10">
+    <Dialog as="div" class="relative z-50">
       <TransitionChild
         as="template"
         enter="duration-300 ease-out"
@@ -42,9 +42,9 @@
               <div class="text-xl dark:text-neutral-200 my-2">
                 <p>Chủ đề hiện tại:</p>
                 <div class="flex flex-col items-center">
-                  <div class="rounded-full h-24 w-24 shadow-md my-2" :class="selectedTheme?.background"></div>
+                  <div class="rounded-full xm:h-24 xm:w-24 xs:h-16 xs:w-16 h-10 w-10 shadow-md my-2" :class="selectedTheme?.background"></div>
                   
-                  <p>{{ chosenTheme }}</p>
+                  <p class="xm:text-base text-sm">{{ chosenTheme }}</p>
                 </div>
               </div>
               <div class="grid grid-cols-4 gap-4">
@@ -59,7 +59,7 @@
               <div class="mt-4 flex justify-end gap-3">
                 <button
                   type="button"
-                  class="btn inline-flex justify-center rounded-md border border-transparent bg-rose-400 text-white px-4 py-2 text-sm font-medium hover:bg-rose-600 focus:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 focus-visible:ring-offset-2"
+                  class="btn inline-flex justify-center rounded-md border border-transparent bg-rose-400 text-white xm:px-4 xm:py-2 px-2 py-1 text-sm font-medium hover:bg-rose-600 focus:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 focus-visible:ring-offset-2"
                   @click="$emit('closeGroupConversationThemeModal')"
                 >
                   Hủy
@@ -67,7 +67,7 @@
                 <div @click="$emit('closeGroupConversationThemeModal')">
                   <button
                     type="button"
-                    class="btn inline-flex justify-center rounded-md border border-transparent bg-emerald-400 text-white px-4 py-2 text-sm font-medium hover:bg-emerald-600 focus:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 focus-visible:ring-offset-2"
+                    class="btn inline-flex justify-center rounded-md border border-transparent bg-emerald-400 text-white xm:px-4 xm:py-2 px-2 py-1 text-sm font-medium hover:bg-emerald-600 focus:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 focus-visible:ring-offset-2"
                     @click="confirmGroupConversationTheme"
                   >
                     Đồng ý

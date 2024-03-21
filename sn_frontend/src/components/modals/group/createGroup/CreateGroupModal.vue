@@ -34,8 +34,8 @@
               ></div>
               <div
                 @click="expandNavigation"
-                class="fixed flex lg:hidden left-0 z-20 inset-y-2/4 w-5 h-20 bg-slate-800 rounded-r-2xl"
-                :class="isExpand ? 'translate-x-[320px]' : 'translate-x-0'"
+                class="fixed flex lg:hidden z-20 inset-y-2/4 w-5 h-20 bg-slate-800 rounded-r-2xl"
+                :class="isExpand ? 'left-[90%]' : 'left-0'"
               >
                 <ChevronRightIcon
                   class="dark:text-slate-200"
@@ -54,7 +54,7 @@
               </button>
               <div
                 class="lg:col-span-1 dark:bg-slate-800 dark:text-neutral-200 border-r-[1px] border-slate-700 flex-col justify-between h-screen lg:static fixed z-50"
-                :class="isExpand ? 'block w-[320px]' : 'hidden lg:flex'"
+                :class="isExpand ? 'block w-[90%]' : 'hidden lg:flex'"
               >
                 <div>
                   <button

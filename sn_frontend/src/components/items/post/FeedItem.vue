@@ -122,7 +122,7 @@
       v-if="isAdjust"
       type="text"
       class="form-control resize-none w-full px-4 text-lg"
-      rows="5"
+      rows="3"
       v-model="post.body"
     ></textarea>
     <p class="px-4 sm:text-lg xs:text-base vs:text-sm" v-else>{{ post?.body }}</p>
@@ -204,7 +204,7 @@
       </div>
     </div>
 
-    <div class="p-4 my-6 flex justify-between" v-if="!isAdjust">
+    <div class="p-4 xm:my-6 mt-16 xm:mt-0 flex justify-between" v-if="!isAdjust">
       <div class="flex space-x-6">
         <div class="flex items-center space-x-2">
           <HeartLike
@@ -348,7 +348,7 @@
         />
       </div>
     </div>
-    <div class="mt-4 flex justify-end gap-3 p-4" v-else>
+    <div class="xm:mt-4 mt-12 flex justify-end gap-3 p-4" v-else>
       <button
         type="button"
         class="btn inline-flex justify-center rounded-md border border-transparent bg-rose-400 text-white px-4 py-2 text-sm font-medium hover:bg-rose-600 focus:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 focus-visible:ring-offset-2"

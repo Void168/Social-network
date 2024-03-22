@@ -136,7 +136,7 @@
             </button>
           </div>
           <form v-else action="" class="flex flex-col">
-            <div class="flex gap-2">
+            <div class="flex gap-2 xm:flex-row flex-col">
               <div>
                 <p>Quốc gia</p>
                 <SelectCountryForm

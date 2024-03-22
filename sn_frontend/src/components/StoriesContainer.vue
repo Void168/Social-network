@@ -16,6 +16,10 @@
           spaceBetween: 20,
         },
         '640': {
+          slidesPerView: 2,
+          spaceBetween: 10,
+        },
+        '770': {
           slidesPerView: 3,
           spaceBetween: 20,
         },

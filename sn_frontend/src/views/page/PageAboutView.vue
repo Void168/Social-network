@@ -4,14 +4,14 @@
       class="main-center space-y-4 grid grid-cols-4 dark:bg-slate-600 rounded-lg"
     >
       <div class="lg:col-span-1 col-span-4 lg:border-r lg:border-b-0 border-b dark:border-slate-500 py-4">
-        <h2 class="text-2xl font-bold dark:text-neutral-200 px-5">
+        <h2 class="sm:text-2xl text-xl font-bold dark:text-neutral-200 px-5">
           Giới thiệu
         </h2>
         <ul class="px-1 my-4">
           <li
             v-for="navi in navigation"
             :key="navi.name"
-            class="py-2 px-4 duration-75 dark:hover:bg-slate-700 rounded-lg cursor-pointer font-medium"
+            class="py-2 px-4 duration-75 dark:hover:bg-slate-700 rounded-lg cursor-pointer font-medium sm:text-base text-sm"
             :class="
               selectedNavigator?.name === navi?.name
                 ? 'text-emerald-400 bg-emerald-700/50'
@@ -23,19 +23,19 @@
           </li>
         </ul>
       </div>
-      <div class="px-4 lg:py-0 py-4 lg:col-span-3 col-span-4">
+      <div class="px-4 pb-4 lg:col-span-3 col-span-4 sm:text-base text-sm">
         <div
           class="flex flex-col gap-4"
           v-if="selectedNavigator?.name === 'Thông tin liên hệ và cơ bản'"
         >
           <div>
-            <h3 class="text-lg font-semibold dark:text-neutral-300">
+            <h3 class="xm:text-lg font-semibold dark:text-neutral-300">
               Hạng mục
             </h3>
             <div class="dark:text-neutral-300">
               <div class="dark:text-neutral-300 space-y-1">
                 <div class="flex gap-2 items-center">
-                  <FolderIcon class="w-8" />
+                  <FolderIcon class="xs:w-8 vs:w-6" />
                   <h3 class="font-medium">
                     {{ page.page_type }}
                   </h3>
@@ -44,9 +44,9 @@
             </div>
           </div>
           <div class="dark:text-neutral-300">
-            <h3 class="text-lg font-semibold">Thông tin liên hệ</h3>
+            <h3 class="xm:text-lg font-semibold">Thông tin liên hệ</h3>
             <div class="flex gap-2 items-center">
-              <EnvelopeIcon class="w-8" />
+              <EnvelopeIcon class="xs:w-8 vs:w-6" />
               <div>
                 <h3 class="font-medium">{{ page.email }}</h3>
                 <h5 class="text-xs">Email</h5>
@@ -54,13 +54,13 @@
             </div>
           </div>
           <div>
-            <h3 class="text-lg font-semibold dark:text-neutral-300">
+            <h3 class="xm:text-lg font-semibold dark:text-neutral-300">
               Các trang web và liên kết xã hội
             </h3>
             <div class="dark:text-neutral-300">
               <div class="dark:text-neutral-300 space-y-1">
                 <div class="flex gap-2 items-center">
-                  <GlobeAltIcon class="w-8" />
+                  <GlobeAltIcon class="xs:w-8 vs:w-6" />
                   <div>
                     <h3 class="font-medium"></h3>
                     <h5 class="text-xs">Websites</h5>
@@ -71,34 +71,16 @@
           </div>
         </div>
         <div
-          class="flex flex-col gap-6"
-          v-if="selectedNavigator?.name?.includes('Chi tiết về')"
-        >
-          <div class="dark:text-neutral-300 space-y-1">
-            <h3 class="text-lg font-semibold">Giới thiệu về bản thân</h3>
-            <div class="flex gap-2 items-center" v-if="page.biography">
-              <div class="flex gap-1 items-center">
-                <h3 class="font-medium">
-                  {{ page.biography }}
-                </h3>
-              </div>
-            </div>
-            <div v-else class="flex gap-2 items-center">
-              <h3 class="font-medium">Chưa có lời giới thiệu</h3>
-            </div>
-          </div>
-        </div>
-        <div
           class="flex flex-col gap-6 mb-4"
           v-if="selectedNavigator?.name === 'Tính minh bạch của trang'"
         >
           <div class="dark:text-neutral-300 space-y-2">
             <div>
                 <h3 class="text-lg font-semibold">Tính minh bạch của Trang</h3>
-                <h4 class="text-sm">Social Network hiển thị thông tin để bạn hiểu rõ mục đích của Trang này.</h4>
+                <h4 class="xm:text-sm text-xs">Social Network hiển thị thông tin để bạn hiểu rõ mục đích của Trang này.</h4>
             </div>
             <div class="flex gap-2 items-center">
-              <FlagIcon class="w-8" />
+              <FlagIcon class="xm:w-8 w-6" />
               <div>
                   <h3 class="font-medium">
                     {{ page.id }}
@@ -107,7 +89,7 @@
               </div>
             </div>
             <div class="flex gap-2 items-center">
-              <ClockIcon class="w-8" />
+              <ClockIcon class="xm:w-8 w-6" />
               <div>
                   <h3 class="font-medium">
                     {{ page.created_at.slice(8, 10) }}/{{ page.created_at.slice(5, 7) }}/{{ page.created_at.slice(0, 4) }}
@@ -125,7 +107,7 @@
               </div>
             </div>
             <div class="flex gap-2 items-center">
-              <TvIcon class="w-8" />
+              <TvIcon class="xm:w-8 w-6" />
               <div>
                   <h3 class="font-medium">
                     Trang này hiện không chạy quảng cáo.
@@ -141,9 +123,9 @@
           "
         >
           <div class="dark:text-neutral-300 space-y-1">
-            <h3 class="text-lg font-semibold">Thông tin pháp lý và quyền riêng tư</h3>
+            <h3 class="xm:text-lg font-semibold">Thông tin pháp lý và quyền riêng tư</h3>
             <div class="flex gap-2 items-center">
-              <ExclamationCircleIcon class="w-8" />
+              <ExclamationCircleIcon class="xm:w-8 w-6" />
               <div>
                   <h3 class="font-medium">
                     From {{ page.created_at.slice(8, 10) }}/{{ page.created_at.slice(5, 7) }}/{{ page.created_at.slice(0, 4) }}
@@ -212,9 +194,6 @@ export default {
       },
       {
         name: "Tính minh bạch của trang",
-      },
-      {
-        name: `Chi tiết về ${userStore.user.name}`,
       },
     ];
 

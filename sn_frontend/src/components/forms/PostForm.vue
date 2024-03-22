@@ -1,6 +1,6 @@
 <template>
   <form v-on:submit.prevent="submitForm" method="post">
-    <div class="p-4">
+    <div class="xm:p-4">
       <textarea
         v-model="body"
         class="p-4 w-full bg-gray-100 rounded-lg resize-none"

@@ -36,7 +36,7 @@
             <p>
               <strong class="text-2xl">{{ page.name }}</strong>
             </p>
-            <p class="mt-6 font-semibold text-lg">{{ page.biography }}</p>
+            <p class="sm:mt-6 font-semibold sm:text-lg">{{ page.biography }}</p>
           </div>
           <RouterLink
             :to="{ name: 'pageabout', params: { id: page.id } }"
@@ -82,13 +82,13 @@
                 v-if="page.location"
               >
                 <MapPinIcon class="w-6 h-6 dark:text-neutral-200" />
-                <p>{{ page.location }}</p>
+                <p class="break-words">{{ page.location }}</p>
               </li>
               <li
                 class="text-gray-500 dark:text-neutral-300 flex items-center gap-2"
               >
                 <ClockIcon class="w-6 h-6 dark:text-neutral-200" />
-                <p>
+                <p class="break-words">
                   Đã tạo vào Tháng {{ page?.created_at?.slice(5, 7) }} năm
                   {{ page?.created_at?.slice(0, 4) }}
                 </p>
@@ -113,9 +113,9 @@
             class="bg-white dark:bg-slate-600 dark:text-neutral-200 my-4 p-4"
           >
             <div class="flex justify-between items-center mb-4">
-              <p class="font-bold text-2xl">Ảnh</p>
+              <p class="font-bold xs:text-2xl text-xl">Ảnh</p>
               <RouterLink :to="{ name: 'pagephotos', params: { id: page.id } }">
-                <p class="text-lg hover:underline cursor-pointer">
+                <p class="xs:text-lg hover:underline cursor-pointer">
                   Xem tất cả ảnh
                 </p>
               </RouterLink>
@@ -139,7 +139,7 @@
         >
           <PostForm :user="user" :posts="posts" :page="page" />
         </div>
-        <p class="font-semibold text-2xl">Bài viết của {{ page.name }}</p>
+        <p class="font-semibold xm:text-2xl text-xl">Bài viết của {{ page.name }}</p>
         <div v-if="posts?.length">
           <div
             class="bg-white border border-gray-200 rounded-lg mt-4 dark:bg-slate-700 dark:border-slate-800 dark:text-neutral-200"

@@ -1,7 +1,7 @@
 <template>
   <div class="col-span-3 grid grid-cols-3 gap-4 relative">
     <div class="col-span-1 lg:block hidden"></div>
-    <div class="col-span-3 grid grid-cols-3 gap-4 relative">
+    <div class="col-span-3 grid grid-cols-3 gap-4 relative lg:mt-0 mt-4">
       <div class="main-left top-0 lg:col-span-1 col-span-4">
         <div class="h-20 frame !shadow-none"></div>
         <div
@@ -11,6 +11,7 @@
             class="icon relative w-[200px] h-[100px] bg-gray-200 dark:bg-slate-700 rounded-bl-[100px] rounded-br-[100px] before:content-[''] after:content-[''] before:absolute after:absolute before:top-0 after:top-0 before:left-[-50px] before:w-[55px] before:h-[35px] before:bg-transparent before:rounded-tr-[50px] before:shadow-[20px_-20px_0_20px_rgba(229,231,235,1)] after:right-[-50px] after:w-[55px] after:h-[35px] after:bg-transparent after:rounded-tl-[50px] after:shadow-[-20px_-20px_0_20px_rgba(229,231,235,1)] before:dark:shadow-[20px_-20px_0_20px_rgba(51,65,85,1)] after:dark:shadow-[-20px_-20px_0_20px_rgba(51,65,85,1)]"
           >
             <span
+              v-if="userStore.user.id === user.id"
               @click="openAvatarModal"
               class="mb-6 rounded-full w-8 h-8 shadow-xl absolute flex justify-center items-center top-16 right-6 z-10 bg-neutral-200 dark:bg-slate-700 hover:ring-2 hover:ring-slate-300 dark:hover:ring-slate-500 transition cursor-pointer"
             >
@@ -68,14 +69,14 @@
                 v-if="user.hometown"
               >
                 <MapPinIcon class="w-6 h-6 dark:text-neutral-200" />
-                <p>Đến từ {{ user.hometown }}</p>
+                <p class="break-words">Đến từ {{ user.hometown }}</p>
               </li>
               <li
                 class="text-gray-500 dark:text-neutral-200 flex items-center gap-2"
                 v-if="user.hometown"
               >
                 <HomeIcon class="w-6 h-6 dark:text-neutral-200" />
-                <p>Sống tại {{ user.living_city }}</p>
+                <p class="break-words">Sống tại {{ user.living_city }}</p>
               </li>
               <li
                 class="text-gray-500 dark:text-neutral-200 flex items-center gap-2"
@@ -165,7 +166,7 @@
           v-else-if="friends.map((fr) => fr.id).includes(userStore.user.id)"
           class="p-4 bg-white rounded-lg dark:bg-slate-600 dark:border-slate-700 dark:text-neutral-200"
         >
-          <div class="text-lg px-4">Viết gì đó cho {{ user.name }}</div>
+          <div class="xm:text-lg px-4 xm:mb-0 mb-4">Viết gì đó cho {{ user.name }}</div>
           <PostToForm v-bind:user="user" v-bind:posts="posts" />
         </div>
         <div
@@ -233,7 +234,7 @@
 
           <hr />
         </div>
-        <p class="font-semibold text-2xl">Bài viết của {{ user.name }}</p>
+        <p class="font-semibold xm:text-2xl text-xl">Bài viết của {{ user.name }}</p>
         <div v-if="posts?.length">
           <div
             class="bg-white border border-gray-200 rounded-lg mt-4 dark:bg-slate-700 dark:border-slate-800 dark:text-neutral-200"

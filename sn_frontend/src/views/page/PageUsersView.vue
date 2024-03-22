@@ -21,18 +21,18 @@
       <div
         class="dark:text-neutral-200 space-y-4 p-4 dark:bg-slate-800/50 rounded-lg"
       >
-        <div class="flex justify-between items-center">
+        <div class="flex justify-between xm:flex-row flex-col items-center">
           <h2 class="sm:text-2xl xm:text-lg text-sm font-bold">Người theo dõi</h2>
           <div class="relative">
             <MagnifyingGlassIcon
-              class="absolute top-[18px] left-2 sm:w-6 sm:h-6 xs:w-3 xs:h-3 dark:text-neutral-400"
+              class="absolute top-[18px] left-2 sm:w-6 sm:h-6 vs:w-3 vs:h-3 dark:text-neutral-400"
             />
             <input
               @keyup="getQuery"
               ref="searchInput"
               type="text"
               placeholder="Tìm kiếm"
-              class="w-full my-2 sm:py-2 sm:px-8 xs:py-1 xs:px-6 border border-gray-200 dark:bg-slate-700 dark:border-slate-800 dark:text-neutral-200 rounded-2xl sm:text-base xs:text-sm"
+              class="w-full my-2 sm:py-2 sm:px-8 vs:py-1 vs:px-6 border border-gray-200 dark:bg-slate-700 dark:border-slate-800 dark:text-neutral-200 rounded-2xl sm:text-base vs:text-sm"
             />
           </div>
         </div>
@@ -81,7 +81,7 @@
                 <div
                   v-for="follower in allFollowers"
                   v-bind:key="follower.id"
-                  class="p-4 bg-gray-200 dark:bg-slate-700 dark:border-slate-800 dark:text-neutral-200 text-center rounded-lg"
+                  class="xm:p-4 p-2 bg-gray-200 dark:bg-slate-700 dark:border-slate-800 dark:text-neutral-200 text-center rounded-lg"
                 >
                 <UserItem :user="follower" v-if="!follower.is_page"/>
                 <PageItem :page="follower" v-else/>
@@ -102,7 +102,7 @@
                 <div
                   v-for="following in allFollowings"
                   v-bind:key="following.id"
-                  class="p-4 bg-gray-200 dark:bg-slate-700 dark:border-slate-800 dark:text-neutral-200 text-center rounded-lg"
+                  class="xm:p-4 p-2 bg-gray-200 dark:bg-slate-700 dark:border-slate-800 dark:text-neutral-200 text-center rounded-lg"
                 >
                 <UserItem :user="following" v-if="!following.is_page"/>
                 <PageItem :page="following" v-else/>
@@ -123,7 +123,7 @@
                 <div
                   v-for="like in allLikes"
                   v-bind:key="like.id"
-                  class="p-4 bg-gray-200 dark:bg-slate-700 dark:border-slate-800 dark:text-neutral-200 text-center rounded-lg"
+                  class="xm:p-4 p-2 bg-gray-200 dark:bg-slate-700 dark:border-slate-800 dark:text-neutral-200 text-center rounded-lg"
                 >
                 <UserItem :user="like" v-if="!like.is_page"/>
                 <PageItem :page="like" v-else/>

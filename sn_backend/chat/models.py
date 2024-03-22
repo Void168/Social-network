@@ -152,3 +152,5 @@ class GroupPoll(models.Model):
     created_by = models.ForeignKey(User, related_name='user_create_poll', on_delete=models.CASCADE)
     time_end = models.DateTimeField()
     
+    class Meta:
+        ordering = ('-created_at',)

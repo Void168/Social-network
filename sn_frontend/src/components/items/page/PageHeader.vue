@@ -1,14 +1,14 @@
 <template>
   <div class="col-span-3">
     <CoverImage
-      class="md:max-h-[400px] sm:max-h-[300px] xs:max-h-[200px] lg:max-h-max"
+      class="md:max-h-[400px] sm:max-h-[300px] vs:max-h-[200px] lg:max-h-max"
       :page="page"
     />
     <div class="col-span-3 grid grid-cols-3 lg:gap-4 relative py-4">
       <div
-        class="lg:col-span-2 col-span-3 flex lg:justify-between justify-center items-center px-4 py-2 gap-4 lg:text-lg md:text-base xm:text-sm xs:text-xs font-semibold dark:text-neutral-200"
+        class="lg:col-span-2 col-span-3 flex vs:flex-col xs:flex-row lg:justify-between justify-center items-center xs:px-4 py-2 gap-4 lg:text-lg md:text-base xm:text-sm vs:text-xs font-semibold dark:text-neutral-200"
       >
-        <div class="flex gap-6 lm:text-base xm:text-sm items-center">
+        <div class="flex gap-4 xs:w-auto vs:w-full vs:justify-center items-center xs:justify-start">
           <RouterLink :to="{ name: 'pagedetail', params: { id: page.id } }"
             >Bài viết</RouterLink
           >

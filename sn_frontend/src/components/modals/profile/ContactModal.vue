@@ -31,19 +31,19 @@
             >
               <DialogTitle
                 as="h3"
-                class="text-3xl font-medium leading-6 text-center"
+                class="md:text-3xl xm:text-2xl text-xl font-medium leading-6 text-center"
               >
                 Thông tin liên lạc
               </DialogTitle>
               <div class="my-4">
-                <p class="text-xl dark:text-gray-200 mb-2">Liên kết</p>
+                <p class="xm:text-xl dark:text-gray-200 mb-2">Liên kết</p>
                 <hr />
                 <ul v-for="website in websites" v-bind:key="website.id">
                   <li class="text-center my-2 break-all">{{ website.url }}</li>
                 </ul>
               </div>
               <div class="my-4">
-                <p class="text-xl dark:text-gray-200 mb-2">Liên lạc</p>
+                <p class="xm:text-xl dark:text-gray-200 mb-2">Liên lạc</p>
                 <hr />
                 <ul v-for="phoneNumber in phoneNumbers" v-bind:key="phoneNumber.id">
                   <li class="text-center my-2">{{ phoneNumber.phone_number }}</li>

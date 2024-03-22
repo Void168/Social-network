@@ -1,15 +1,15 @@
 <template>
   <SkeletonLoadingPost v-if="isLoading" />
   <div
-    class="max-w-7xl mx-auto flex justify-center gap-4"
+    class="max-w-7xl mx-auto flex justify-center gap-4 xm:max-h-max max-h-none"
     v-else
     :style="{
-      height: `${
+      height: toastStore.width < 440 ? `${
         toastStore.height 
-      }px`,
+      }px` : '',
     }"
   >
-    <div class="space-y-4 xl:w-6/12 md:w-8/12 w-full sm:mx-2 md:mx-0">
+    <div class="space-y-4 xl:w-6/12 md:w-8/12 w-full sm:mx-2 md:mx-0 xm:mb-4">
       <div
         v-if="post.id"
         class="p-4 bg-white border border-gray-200 sm:rounded-lg sm:mt-4 shadow-md dark:bg-slate-600 dark:border-slate-700 dark:text-neutral-200"

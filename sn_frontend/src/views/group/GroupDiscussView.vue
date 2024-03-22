@@ -4,7 +4,7 @@
       <div class="lg:w-[60%] w-full " id="feed-frame">
         <div v-if="isUserInGroup" class="flex flex-col space-y-4">
           <div class="dark:bg-slate-700 bg-white xm:rounded-lg xm:px-4">
-            <div class="py-4 flex items-start gap-2 p-2 rounded-lg">
+            <div class="py-4 flex items-start xm:gap-2 p-2 rounded-lg">
               <div>
                 <img
                 loading="lazy"
@@ -14,7 +14,7 @@
                       : currentMember?.information?.get_avatar
                   "
                   alt="member-avatar"
-                  class="w-10 h-10 rounded-full"
+                  class="w-10 h-10 rounded-full xm:block hidden"
                 />
               </div>
               <GroupPollForm

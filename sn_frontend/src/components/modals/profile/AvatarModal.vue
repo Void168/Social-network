@@ -29,7 +29,7 @@
             >
               <DialogTitle
                 as="h3"
-                class="text-2xl font-medium leading-6 text-gray-900 dark:text-neutral-200 text-center"
+                class="xm:text-2xl text-xl font-medium leading-6 text-gray-900 dark:text-neutral-200 text-center"
               >
                 Chọn ảnh đại diện
               </DialogTitle>
@@ -49,7 +49,7 @@
                   @getOption="getOption"
                   :privacies="privacies"
                   v-model="privacy"
-                  class="text-left"
+                  class="text-left lg:mt-0 mt-4"
                   :style="''"
                 />
               </div>
@@ -57,7 +57,7 @@
                 class="relative flex flex-col justify-center items-center my-4"
               >
                 <div
-                  class="xm:h-96 xm:w-96 xs:h-72 xs:w-72 border-4 border-dashed px-2 py-1 rounded-full"
+                  class="xm:h-96 xm:w-96 xs:h-72 xs:w-72 vs:h-48 vs:w-48 border-4 border-dashed px-2 py-1 rounded-full"
                 >
                   <div v-if="url" class="relative mt-1">
                     <img
@@ -93,7 +93,7 @@
                   <div class="p-4 flex justify-center">
                     <label for="avatar-image">
                       <div
-                        class="py-3 px-6 text-white bg-gray-400 font-semibold rounded-lg transition-colors hover:bg-gray-600 dark:hover:bg-gray-500 cursor-pointer"
+                        class="xm:py-3 xm:px-6 py-1 px-2 text-white bg-gray-400 font-semibold rounded-lg transition-colors hover:bg-gray-600 dark:hover:bg-gray-500 cursor-pointer"
                       >
                         <span>Chọn ảnh</span>
                       </div>
@@ -120,14 +120,14 @@
               <div class="my-4 flex justify-center gap-3">
                 <button
                   type="button"
-                  class="btn inline-flex justify-center rounded-md border border-transparent bg-rose-400 text-white px-6 py-3 text-sm font-medium hover:bg-rose-600 focus:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 focus-visible:ring-offset-2"
+                  class="btn inline-flex justify-center rounded-md border border-transparent bg-rose-400 text-white xm:px-6 xm:py-3 py-1 px-2 text-sm font-medium hover:bg-rose-600 focus:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 focus-visible:ring-offset-2"
                   @click="$emit('closeAvatarModal')"
                 >
                   Hủy
                 </button>
                 <button
                   type="button"
-                  class="btn inline-flex justify-center rounded-md border border-transparent bg-emerald-400 text-white px-6 py-3 text-sm font-medium hover:bg-emerald-600 focus:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 focus-visible:ring-offset-2"
+                  class="btn inline-flex justify-center rounded-md border border-transparent bg-emerald-400 text-white xm:px-6 xm:py-3 py-1 px-2 text-sm font-medium hover:bg-emerald-600 focus:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 focus-visible:ring-offset-2"
                   @click="submitForm"
                   v-on:click="$emit('closeAvatarModal')"
                 >
@@ -146,7 +146,7 @@
                     class="h-[10px] w-[10px] bg-neutral-200 rounded-full absolute top-[3.2px] left-[3.3px]"
                   ></span>
                 </span>
-                <span class="text-lg">Chia sẻ lên trang cá nhân</span>
+                <span class="xm:text-lg xs:text-base vs:text-sm">Chia sẻ lên trang cá nhân</span>
               </div>
             </DialogPanel>
           </TransitionChild>

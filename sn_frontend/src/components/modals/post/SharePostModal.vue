@@ -78,7 +78,7 @@
                     class="w-full rounded-lg"
                   />
                 </div>
-                <div class="flex justify-between items-center">
+                <div class="flex xm:flex-row flex-col justify-between items-center w-full">
                   <label for="doc-share">
                     <div
                       class="py-3 px-6 text-black bg-gray-400 dark:bg-slate-800 dark:border-slate-700 dark:text-neutral-200 dark:hover:bg-white dark:hover:text-slate-800 font-semibold rounded-lg transition-colors hover:bg-gray-600 hover:text-white cursor-pointer"

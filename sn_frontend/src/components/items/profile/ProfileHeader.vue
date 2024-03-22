@@ -7,7 +7,7 @@
     <div class="col-span-3 grid grid-cols-3 gap-4 relative py-4">
       <div class="col-span-1 lg:block hidden"></div>
       <div
-        class="lg:col-span-2 col-span-3 flex vs:flex-col xs:flex-row lg:justify-between justify-center items-center xs:px-4 py-2 gap-4 lg:text-lg md:text-base xm:text-sm vs:text-xs font-semibold dark:text-neutral-200"
+        class="lg:col-span-2 col-span-3 flex vs:flex-col xm:flex-row lg:justify-between justify-center items-center xs:px-4 py-2 gap-4 lg:text-lg md:text-base xm:text-sm vs:text-xs font-semibold dark:text-neutral-200"
       >
         <div class="flex gap-4 xs:w-auto vs:w-full vs:justify-center xs:justify-start">
           <RouterLink :to="{ name: 'profiledetail', params: { id: user.id } }"
@@ -45,7 +45,7 @@
             <UnfollowedModal
               :followers="followers"
               :show="isUnfollowedOpen"
-              @closeDeleteFriendModal="closeUnfollowedModal"
+              @closeUnfollowedModal="closeUnfollowedModal"
               @unfollowed="unfollowed"
             />
             <div v-if="filtered.includes(userStore.user.id)">
@@ -87,6 +87,7 @@
 </template>
 
 <script>
+import axios from "axios";
 import CoverImage from "../../CoverImage.vue";
 import DeleteFriendModal from "../../modals/profile/DeleteFriendModal.vue";
 import UnfollowedModal from "../../modals/profile/UnfollowedModal.vue";

@@ -1,15 +1,19 @@
 <template>
   <SkeletonLoadingPost v-if="isLoading" />
-  <div class="max-w-7xl mx-auto flex justify-center items-center gap-4" v-else>
-    <div class="space-y-4 xl:w-6/12 md:w-8/12 mx-2 md:mx-0">
+  <div class="max-w-7xl mx-auto flex justify-center gap-4" v-else :style="{
+      height: `${
+        toastStore.height 
+      }px`,
+    }">
+    <div class="space-y-4 xl:w-6/12 md:w-8/12 w-full sm:mx-2 md:mx-0">
       <div
         v-if="page_post.id"
-        class="p-4 bg-white border border-gray-200 rounded-lg mt-4 shadow-md dark:bg-slate-600 dark:border-slate-700 dark:text-neutral-200"
+        class="p-4 bg-white border border-gray-200 sm:rounded-lg sm:mt-4 shadow-md dark:bg-slate-600 dark:border-slate-700 dark:text-neutral-200"
       >
         <FeedItem v-bind:post="page_post" />
       </div>
       <div
-        class="p-4 bg-white border border-gray-200 rounded-lg shadow-md dark:bg-slate-600 dark:border-slate-700 dark:text-neutral-200"
+        class="sm:p-4 bg-white border border-gray-200 sm:rounded-lg shadow-md dark:bg-slate-600 dark:border-slate-700 dark:text-neutral-200"
       >
         <form v-on:submit.prevent="submitForm" method="post">
           <div class="p-4">
@@ -112,6 +116,7 @@ import SkeletonLoadingPost from "../../components/loadings/SkeletonLoadingPost.v
 import CommentItem from "../../components/items/post/CommentItem.vue";
 import { useUserStore } from "../../stores/user";
 import { usePageStore } from "../../stores/page";
+import { useToastStore } from "../../stores/toast";
 
 export default {
   name: "PostView",
@@ -126,10 +131,12 @@ export default {
   setup() {
     const userStore = useUserStore();
     const pageStore = usePageStore();
+    const toastStore = useToastStore()
 
     return {
       userStore,
       pageStore,
+      toastStore,
     };
   },
 

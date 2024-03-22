@@ -7,16 +7,16 @@
         class="w-[60%] mt-2 py-2 px-6 border border-gray-200 dark:bg-slate-800 dark:border-slate-700 dark:text-neutral-200 rounded-lg"
       />
       <p v-else>{{ phoneNumber.phone_number }}</p>
-      <div class="flex gap-2 sm:flex-row xs:flex-col w-full sm:w-auto">
+      <div class="flex gap-2 sm:flex-row vs:flex-col w-full sm:w-auto">
         <button
           @click="editWebsite"
-          class="px-4 py-2 bg-slate-300 dark:bg-slate-600 sm:text-base xs:text-sm rounded-xl shadow-md font-semibold dark:hover:bg-slate-500 hover:bg-slate-400 transition"
+          class="px-4 py-2 bg-slate-300 dark:bg-slate-600 sm:text-base vs:text-sm rounded-xl shadow-md font-semibold dark:hover:bg-slate-500 hover:bg-slate-400 transition"
         >
           Chỉnh sửa
         </button>
         <button
           @click="openModal"
-          class="px-4 py-2 bg-slate-300 dark:bg-slate-600 sm:text-base xs:text-sm rounded-xl shadow-md font-semibold dark:hover:bg-slate-500 hover:bg-slate-400 transition"
+          class="px-4 py-2 bg-slate-300 dark:bg-slate-600 sm:text-base vs:text-sm rounded-xl shadow-md font-semibold dark:hover:bg-slate-500 hover:bg-slate-400 transition"
         >
           Xóa
         </button>
@@ -61,7 +61,7 @@
           phoneNumber.only_me === only_me
         "
         @click="submitForm"
-        class="px-4 py-2 bg-slate-300 sm:text-base xs:text-sm dark:bg-slate-600 rounded-xl shadow-md font-semibold dark:hover:bg-slate-500 hover:bg-slate-400 transition sm:w-auto w-full"
+        class="px-4 py-2 bg-slate-300 sm:text-base vs:text-sm dark:bg-slate-600 rounded-xl shadow-md font-semibold dark:hover:bg-slate-500 hover:bg-slate-400 transition sm:w-auto w-full"
       >
         Lưu
       </button>

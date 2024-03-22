@@ -7,7 +7,7 @@
     <p>
       <strong> {{ user.name }}</strong>
     </p>
-    <div class="mt-6 flex space-x-8 justify-around" v-if="route.name === 'pageusers'">
+    <div class="mt-6 flex xm:flex-row flex-col xm:space-x-8 xm:justify-around" v-if="route.name === 'pageusers'">
       <p class="text-xs text-gray-500 dark:text-neutral-200">
         {{ user.friends_count }} người bạn
       </p>

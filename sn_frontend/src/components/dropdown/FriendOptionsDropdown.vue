@@ -20,7 +20,7 @@
       leave-to-class="transform opacity-0 scale-95"
     >
       <MenuItems
-        class="absolute left-0 z-[10000] mt-2 w-56 origin-top-right divide-y divide-gray-100 rounded-md bg-white shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none"
+        class="absolute sm:left-0 xs:left-[-44px] vs:left-0 z-50 mt-2 w-56 origin-top-right divide-y divide-gray-100 rounded-md bg-white shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none xm:max-w-none max-w-max"
       >
         <div class="py-1">
           <MenuItem v-slot="{ active }" @click="$emit('openUnfollowedModal')" v-if="checkFollowers">

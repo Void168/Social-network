@@ -56,7 +56,7 @@
                 <div
                   class="relative 2xl:col-span-1 xl:col-span-2 overflow-y-scroll scrollbar-none scrollbar scrollbar-corner-slate-200 hover:scrollbar-thin scrollbar-thumb-slate-400 scrollbar-track-slate-800 h-screen border border-gray-200 shadow-md dark:bg-slate-600 dark:border-slate-700 dark:text-neutral-200"
                 >
-                  <div class="mb-6 flex items-center justify-between p-4">
+                  <div class="mb-6 flex xm:flex-row flex-col xm:items-center justify-between p-4">
                     <div class="flex items-center space-x-4">
                       <img
                       loading="lazy"

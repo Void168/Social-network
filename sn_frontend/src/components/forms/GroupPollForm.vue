@@ -5,7 +5,7 @@
         v-model="title"
         class="p-4 w-full bg-gray-100 rounded-lg resize-none"
         cols="30"
-        rows="4"
+        rows="3"
         placeholder="Bạn đang nghĩ gì?"
       ></textarea>
       <div
@@ -34,9 +34,9 @@
             </div>
           </div>
         </div>
-        <div class="flex items-center gap-2 w-full">
+        <div class="flex xm:flex-row flex-col xm:items-center items-end gap-2 w-full">
           <div
-            class="px-4 py-2 dark:bg-slate-700 font-semibold dark:hover:bg-slate-600 cursor-pointer rounded-lg justify-center flex items-center w-full gap-2"
+            class="px-4 py-2 dark:bg-slate-700 font-semibold dark:hover:bg-slate-600 cursor-pointer rounded-lg justify-center flex xm:items-center w-full gap-2"
             @click="addOption"
           >
             <PlusIcon class="w-5" />
@@ -48,13 +48,13 @@
             <Cog8ToothIcon class="w-6" @click="openSetting" />
             <div
               v-if="isSettingOpen"
-              class="absolute w-96 z-10 left-[-386px] top-10 dark:bg-slate-800 p-4 space-y-2 rounded-lg shadow-md"
+              class="absolute xm:w-96 z-10 xm:left-[-305px] left-[-150px] top-10 dark:bg-slate-800 xm:p-4 p-2 space-y-2 rounded-lg shadow-md"
             >
               <div class="flex justify-between items-center">
-                <h4>Cho phép mọi người chọn nhiều câu trả lời</h4>
+                <h4 class="break-words xm:text-base text-sm">Cho phép mọi người chọn nhiều câu trả lời</h4>
                 <div
                   @click="toggleMultipleOptions"
-                  class="relative w-6 h-6 border dark:border-slate-400 rounded-full"
+                  class="relative xm:w-6 w-[38px] h-6 border dark:border-slate-400 rounded-full"
                 >
                   <span
                     v-if="isMultipleOptions"
@@ -63,10 +63,10 @@
                 </div>
               </div>
               <div class="flex justify-between items-center">
-                <h4>Cho phép mọi người thêm lựa chọn</h4>
+                <h4 class="break-words xm:text-base text-sm">Cho phép mọi người thêm lựa chọn</h4>
                 <div
                   @click="toggleAddOptions"
-                  class="relative w-6 h-6 border dark:border-slate-400 rounded-full"
+                  class="relative xm:w-6 w-8 h-6 border dark:border-slate-400 rounded-full"
                 >
                   <span
                     v-if="isAddOptions"

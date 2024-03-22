@@ -65,9 +65,9 @@
       "
       class="bg-neutral-200 dark:bg-slate-600 p-4 dark:text-neutral-200 w-full rounded-lg mt-4"
     >
-      <p class="text-xl font-bold">Video</p>
+      <p class="sm:text-xl text-lg font-bold">Video</p>
       <div class="max-h-96 min-h-[192px] flex justify-center items-center">
-        <h2 class="text-2xl font-semibold">
+        <h2 class="sm:text-2xl text-lg font-semibold">
           {{ user.name }} chưa có video nào
         </h2>
       </div>
@@ -80,12 +80,12 @@
       "
       class="bg-neutral-200 dark:bg-slate-600 p-4 dark:text-neutral-200 w-full rounded-lg mt-4"
     >
-      <p class="text-xl font-bold">Thích</p>
+      <p class="sm:text-xl text-lg font-bold">Thích</p>
       <div
         class="max-h-96 min-h-[192px] flex justify-center items-center"
         v-if="!pageFollowing?.length"
       >
-        <h2 class="text-2xl font-semibold">Không có gì trong mục đã thích</h2>
+        <h2 class="sm:text-2xl text-lg font-semibold">Không có gì trong mục đã thích</h2>
       </div>
       <div
         class="grid md:grid-cols-6 xm:grid-cols-4 grid-cols-2 gap-3 my-4 max-h-96"

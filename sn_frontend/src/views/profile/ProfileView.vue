@@ -27,7 +27,7 @@
     >
       <p class="sm:text-xl text-lg font-bold">Ảnh</p>
       <div
-        class="grid lg:grid-cols-6 md:grid-cols-4 grid-cols-2 gap-3 my-4 max-h-96"
+        class="grid lg:grid-cols-6 md:grid-cols-4 grid-cols-2 gap-3 my-4 md:max-h-96"
       >
         <div v-for="image in images.slice(0, 12)" v-bind:key="image.id">
           <ImageShowcase v-bind:post="image" />
@@ -88,7 +88,7 @@
         </h2>
       </div>
       <div
-        class="grid lg:grid-cols-6 md:grid-cols-4 grid-cols-2 gap-3 my-4 max-h-96"
+        class="grid lg:grid-cols-6 md:grid-cols-4 grid-cols-2 gap-3 my-4 md:max-h-96"
         v-else
       >
         <div v-for="movie in moviePage" v-bind:key="movie.id">
@@ -138,10 +138,10 @@
         class="max-h-96 min-h-[192px] flex justify-center items-center"
         v-if="!following.length"
       >
-        <h2 class="text-2xl font-semibold">Không có gì trong mục đã thích</h2>
+        <h2 class="sm:text-2xl text-lg font-semibold">Không có gì trong mục đã thích</h2>
       </div>
       <div
-        class="grid lg:grid-cols-6 md:grid-cols-4 grid-cols-2 gap-3 my-4 max-h-96"
+        class="grid lg:grid-cols-6 md:grid-cols-4 grid-cols-2 gap-3 my-4 md:max-h-96"
         v-else
       >
         <div

@@ -7,16 +7,16 @@
         class="w-[60%] mt-2 py-2 px-6 border border-gray-200 dark:bg-slate-800 dark:border-slate-700 dark:text-neutral-200 rounded-lg"
       />
       <a v-else href="{website.url}" target="_blank" class=" break-all">{{ website?.url }}</a>
-      <div class="flex gap-2 sm:flex-row xs:flex-col w-full sm:w-auto">
+      <div class="flex gap-2 sm:flex-row vs:flex-col w-full sm:w-auto">
         <button
           @click="editWebsite"
-          class="px-4 py-2 bg-slate-300 sm:text-base xs:text-sm dark:bg-slate-600 rounded-xl shadow-md font-semibold dark:hover:bg-slate-500 hover:bg-slate-400 transition"
+          class="px-4 py-2 bg-slate-300 sm:text-base vs:text-sm dark:bg-slate-600 rounded-xl shadow-md font-semibold dark:hover:bg-slate-500 hover:bg-slate-400 transition"
         >
           Chỉnh sửa
         </button>
         <button
           @click="openModal"
-          class="px-4 py-2 bg-slate-300 sm:text-base xs:text-sm dark:bg-slate-600 rounded-xl shadow-md font-semibold dark:hover:bg-slate-500 hover:bg-slate-400 transition"
+          class="px-4 py-2 bg-slate-300 sm:text-base vs:text-sm dark:bg-slate-600 rounded-xl shadow-md font-semibold dark:hover:bg-slate-500 hover:bg-slate-400 transition"
         >
           Xóa
         </button>
@@ -26,7 +26,7 @@
       <div class="flex gap-4 items-center xl:w-[60%] sm:w-[40%] min-w-max">
         <div class="flex gap-3 items-center w-full">
           <p class="sm:block hidden">Quyền riêng tư</p>
-          <span
+          <span class="xs:block vs:hidden"
             ><GlobeAsiaAustraliaIcon
               class="w-4 h-4"
               v-if="

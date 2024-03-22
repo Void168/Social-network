@@ -27,7 +27,7 @@
             leave-to="opacity-0 scale-95"
           >
             <DialogPanel
-              class="w-full max-w-md transform overflow-hidden rounded-2xl bg-white dark:bg-neutral-700 dark:text-neutral-200 p-6 text-left align-middle shadow-xl transition-all"
+              class="w-full max-w-md transform overflow-hidden rounded-2xl bg-white dark:bg-neutral-700 dark:text-neutral-200 xm:p-6 p-3 text-left align-middle shadow-xl transition-all"
             >
               <button>
                 <XMarkIcon
@@ -37,7 +37,7 @@
               </button>
               <DialogTitle
                 as="h3"
-                class="text-2xl font-medium leading-6 text-gray-900 dark:text-neutral-200 text-center mb-4"
+                class="xm:text-2xl text-xl font-medium leading-6 text-gray-900 dark:text-neutral-200 text-center mb-4"
               >
                 Danh sách cuộc thảo luận
               </DialogTitle>
@@ -55,7 +55,7 @@
                     class="w-full flex flex-col justify-around items-center"
                   >
                     <div
-                      class="p-4 bg-neutral-200 dark:bg-slate-600 rounded-xl shadow-md mb-2 w-[70%]"
+                      class="p-4 bg-neutral-200 dark:bg-slate-600 rounded-xl shadow-md mb-2 xm:w-[70%]"
                     >
                       <p class="font-semibold text-center">
                         {{ poll.poll_name }}
@@ -90,7 +90,7 @@
                   </div>
                   <div
                     v-else
-                    class="p-4 bg-neutral-200 dark:bg-slate-600 rounded-xl shadow-md my-2 w-[70%]"
+                    class="p-4 bg-neutral-200 dark:bg-slate-600 rounded-xl shadow-md my-2 xm:w-[70%]"
                   >
                     <p class="font-semibold text-center">
                       {{ poll.poll_name }}

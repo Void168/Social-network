@@ -169,7 +169,7 @@
 
     <div
     v-if="post.post"
-      class="mx-4 border dark:border-slate-500 rounded-lg p-4 dark:text-neutral-200 space-y-2"
+      class="mx-4 border dark:border-slate-500 rounded-lg p-4 dark:text-neutral-200 space-y-2 mb-4"
     >
       <div class="flex gap-2 items-center">
         <img :src="post.post.created_by.get_avatar" class="w-8 h-8 rounded-full" />

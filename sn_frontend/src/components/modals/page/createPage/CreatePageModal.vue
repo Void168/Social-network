@@ -412,7 +412,7 @@ export default (await import("vue")).defineComponent({
 
   computed: {
     isDisabled() {
-      return this.name === "" || !this.type;
+      return !this.name || !this.type.name;
     },
   },
 

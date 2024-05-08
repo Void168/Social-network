@@ -90,11 +90,11 @@
                 @click="submitForm"
                 class="w-full mb-4 font-semibold"
                 :class="
-                  !body
+                  !body && !urlPost
                     ? 'dark:bg-slate-600 bg-slate-200 text-neutral-400 py-2 rounded-lg  duration-75'
                     : 'btn'
                 "
-                :disabled="!body"
+                :disabled="!body && !urlPost"
                 v-if="!isPollOpen"
               >
                 Đăng bài viết
@@ -329,15 +329,16 @@
         </div>
         <div class="dark:bg-slate-700 bg-white rounded-lg p-4 space-y-2" v-if="isUserInGroup">
           <h3 class="font-semibold text-lg">File phương tiện mới đây</h3>
-          <div
-            v-for="image in groupImages?.slice(0, 4)"
-            :key="image.id"
-            class="grid grid-cols-2"
-          >
-            <GroupImageShowcase
-              :groupPost="image"
-              :index="groupImages.indexOf(image)"
-            />
+          <div class="grid grid-cols-2 gap-2">
+            <div
+              v-for="image in groupImages?.slice(0, 4)"
+              :key="image.id"
+            >
+              <GroupImageShowcase
+                :groupPost="image"
+                :index="groupImages.indexOf(image)"
+              />
+            </div>
           </div>
           <div
             v-if="groupImages.length"

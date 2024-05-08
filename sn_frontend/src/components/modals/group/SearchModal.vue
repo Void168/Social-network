@@ -73,7 +73,7 @@
               <div v-if="!query">
                 <div
                   class="xm:px-4 flex flex-col dark:text-neutral-200 xm:py-2 px-2 py-1 rounded-lg dark:hover:bg-slate-700 duration-75 cursor-pointer"
-                  v-for="keyword in keywords?.slice(0, 6)"
+                  v-for="keyword in keywords?.slice(0, 6) || []"
                   :key="keyword.id"
                 >
                   <div class="flex justify-between items-center">
